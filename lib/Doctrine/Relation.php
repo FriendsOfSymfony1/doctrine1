@@ -169,11 +169,13 @@ abstract class Doctrine_Relation implements ArrayAccess
         return $this->definition['equal'];
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->definition[$offset]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (isset($this->definition[$offset])) {
@@ -183,6 +185,7 @@ abstract class Doctrine_Relation implements ArrayAccess
         return null;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if (isset($this->definition[$offset])) {
@@ -190,6 +193,7 @@ abstract class Doctrine_Relation implements ArrayAccess
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->definition[$offset] = false;

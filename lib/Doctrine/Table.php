@@ -1982,6 +1982,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      *
      * @return integer number of records in the table
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->createQuery()->count();
@@ -2979,12 +2980,44 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
         throw new Doctrine_Table_Exception(sprintf('Unknown method %s::%s', get_class($this), $method));
     }
 
+    /**
+     * serialize
+     * this method is automatically called when an instance of Doctrine_Record is serialized
+     *
+     * @return string
+     */
     public function serialize()
     {
+        $data = $this->__serialize();
+
+        return serialize($data);
+    }
+
+    /**
+     * this method is automatically called everytime an instance is unserialized
+     *
+     * @param string $serialized                Doctrine_Record as serialized string
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+
+        $this->__unserialize($data);
+    }
+
+
+    /**
+     * Serializes the current instance for php 7.4+
+     *
+     * @return array
+     */
+    public function __serialize() {
+
         $options = $this->_options;
         unset($options['declaringClass']);
 
-        return serialize(array(
+        return array(
             $this->_identifier,
             $this->_identifierType,
             $this->_columns,
@@ -2996,25 +3029,29 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
             $options,
             $this->_invokedMethods,
             $this->_useIdentityMap,
-        ));
+        );
     }
 
-    public function unserialize($data)
-    {
-        $all = unserialize($data);
+    /**
+     * Unserializes a Doctrine_Record instance for php 7.4+
+     *
+     * @param array $serialized
+     */
+    public function __unserialize($data) {
 
-        $this->_identifier = $all[0];
-        $this->_identifierType = $all[1];
-        $this->_columns = $all[2];
-        $this->_uniques = $all[3];
-        $this->_fieldNames = $all[4];
-        $this->_columnNames = $all[5];
-        $this->columnCount = $all[6];
-        $this->hasDefaultValues = $all[7];
-        $this->_options = $all[8];
-        $this->_invokedMethods = $all[9];
-        $this->_useIdentityMap = $all[10];
+        $this->_identifier = $data[0];
+        $this->_identifierType = $data[1];
+        $this->_columns = $data[2];
+        $this->_uniques = $data[3];
+        $this->_fieldNames = $data[4];
+        $this->_columnNames = $data[5];
+        $this->columnCount = $data[6];
+        $this->hasDefaultValues = $data[7];
+        $this->_options = $data[8];
+        $this->_invokedMethods = $data[9];
+        $this->_useIdentityMap = $data[10];
     }
+
 
     public function initializeFromCache(Doctrine_Connection $conn)
     {

@@ -68,6 +68,7 @@ class Doctrine_Record_Iterator extends ArrayIterator
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $value = parent::current();

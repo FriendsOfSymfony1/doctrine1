@@ -75,7 +75,7 @@ class Doctrine_Migration_Builder extends Doctrine_Builder
         if ($migrationsPath instanceof Doctrine_Migration) {
             $this->setMigrationsPath($migrationsPath->getMigrationClassesDirectory());
             $this->migration = $migrationsPath;
-        } else if (is_dir($migrationsPath)) {
+        } else if (is_dir((string) $migrationsPath)) {
             $this->setMigrationsPath($migrationsPath);
             $this->migration = new Doctrine_Migration($migrationsPath);
         }

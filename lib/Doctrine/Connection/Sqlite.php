@@ -65,9 +65,15 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
                           'identifier_quoting'   => true,
                           'pattern_escaping'     => false,
                           );
-         parent::__construct($manager, $adapter);
+        parent::__construct($manager, $adapter);
 
         if ($this->isConnected) {
+
+            // PHP8.1 require default to true to keep BC
+            // https://www.php.net/manual/en/migration81.incompatible.php#migration81.incompatible.pdo.sqlite
+            // Can be overwritten by user later
+            $this->dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+
             $this->dbh->sqliteCreateFunction('mod',    array('Doctrine_Expression_Sqlite', 'modImpl'), 2);
             $this->dbh->sqliteCreateFunction('concat', array('Doctrine_Expression_Sqlite', 'concatImpl'));
             $this->dbh->sqliteCreateFunction('md5', 'md5', 1);
@@ -87,7 +93,17 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
             return false;
         }
 
+        // If customer configure it
+        $hasConfigureStringify = (isset($this->pendingAttributes[Doctrine_Core::ATTR_STRINGIFY_FETCHES]));
+
         parent::connect();
+
+        if(!$hasConfigureStringify) {
+            // PHP8.1 require default to true to keep BC
+            // https://www.php.net/manual/en/migration81.incompatible.php#migration81.incompatible.pdo.sqlite
+            // Can be overwritten by user later
+            $this->dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+        }
 
         $this->dbh->sqliteCreateFunction('mod',    array('Doctrine_Expression_Sqlite', 'modImpl'), 2);
         $this->dbh->sqliteCreateFunction('concat', array('Doctrine_Expression_Sqlite', 'concatImpl'));

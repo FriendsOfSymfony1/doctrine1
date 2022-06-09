@@ -160,6 +160,7 @@ class Doctrine_Node implements IteratorAggregate
      * @param string $type                      type of iterator (Pre | Post | Level)
      * @param array $options                    options
      */
+    #[\ReturnTypeWillChange]
     public function getIterator($type = null, $options = null)
     {
         if ($type === null) {

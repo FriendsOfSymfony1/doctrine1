@@ -39,7 +39,7 @@ class Doctrine_Ticket_982_TestCase extends Doctrine_UnitTestCase
 		$this->assertIdentical($myModelZero->id, '0');
 		$this->assertIdentical($myModelZero->parentid, '0');
 		$this->assertTrue($myModelZero->parent->exists());
-		$this->assertTrue(ctype_digit($myModelZero->parent->id));
+		$this->assertTrue(ctype_digit((string) $myModelZero->parent->id));
 		$this->assertIdentical($myModelZero, $myModelZero->parent);
 		$this->assertIdentical($myModelZero->parent->id, '0');
 		$this->assertIdentical($myModelZero->parent->parentid, '0');		
@@ -49,7 +49,7 @@ class Doctrine_Ticket_982_TestCase extends Doctrine_UnitTestCase
         $this->assertIdentical($myModelOne->id, '1');
 		$this->assertIdentical($myModelOne->parentid, '0');
 		$this->assertTrue($myModelOne->parent->exists());
-		$this->assertTrue(ctype_digit($myModelOne->parent->id));
+		$this->assertTrue(ctype_digit((string) $myModelOne->parent->id));
 		$this->assertIdentical($myModelOne->parent->id, '0');
 		$this->assertIdentical($myModelOne->parent->parentid, '0');
 		

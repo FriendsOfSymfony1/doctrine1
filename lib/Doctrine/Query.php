@@ -1423,7 +1423,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 // Remove identifier quoting if it exists
                 $e = $this->_tokenizer->bracketExplode($part, ' ');
                 foreach ($e as $f) {
-                    if ($f == 0 || $f % 2 == 0) {
+                    if ($f == 0 || (int) $f % 2 == 0) {
                         $partOriginal = str_replace(',', '', trim($f));
                         $e = explode('.', $partOriginal);
                         foreach ($e as &$v) {
@@ -2134,6 +2134,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
      * @param array $params        an array of prepared statement parameters
      * @return integer             the count of this query
      */
+    #[\ReturnTypeWillChange]
     public function count($params = array())
     {
         $q = $this->getCountSqlQuery();

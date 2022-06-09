@@ -51,7 +51,7 @@ class Doctrine_Ticket_1254_TestCase extends Doctrine_UnitTestCase
             $x = new RelX();
 	        $x->name = "x $i";
 		    $x->category = $cats[$i % 2];
-		    $x->set('created_at', strftime("%Y-%m-%d %H:%M:%S", $age));
+		    $x->set('created_at', date('Y-m-d H:i:s', $age));
 	        $x->save();
         
 	        for ($j = 0; $j < 10; $j++) {
