@@ -1132,6 +1132,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
            $alias = $this->getComponentName();
         }
 
+        // Php8.1 require a string
+        if(null === $orderBy) {
+            $orderBy = '';
+        }
+
         if ( ! is_array($orderBy)) {
             $e1 = explode(',', $orderBy);
         } else {

@@ -53,7 +53,7 @@ abstract class Doctrine_Task
     {
         $this->dispatcher = $dispatcher;
 
-        $taskName = $this->getTaskName();
+        $taskName = (string)$this->getTaskName();
 
         //Derive the task name only if it wasn't entered at design-time
         if (! strlen($taskName)) {

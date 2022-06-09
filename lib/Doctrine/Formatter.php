@@ -270,6 +270,6 @@ class Doctrine_Formatter extends Doctrine_Connection_Module
     public function getTableName($table)
     {
         $format = $this->conn->getAttribute(Doctrine_Core::ATTR_TBLNAME_FORMAT);
-        return sprintf($format, str_replace(sprintf($format, null), null, $table));
+        return sprintf($format, str_replace(sprintf($format, null), '', $table));
     }
 }
