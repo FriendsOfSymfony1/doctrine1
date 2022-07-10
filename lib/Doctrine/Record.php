@@ -815,7 +815,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $array = unserialize($serialized);
 
         $this->__unserialize($array);
-
     }
 
     /**

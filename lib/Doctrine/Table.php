@@ -31,8 +31,6 @@
  * @version     $Revision$
  * @link        www.doctrine-project.org
  * @since       1.0
- * @method mixed findBy*(mixed $value) magic finders; @see __call()
- * @method mixed findOneBy*(mixed $value) magic finders; @see __call()
  */
 class Doctrine_Table extends Doctrine_Configurable implements Countable, Serializable
 {
@@ -561,7 +559,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
     /**
      * Checks whether a column is inherited from a component further up in the hierarchy.
      *
-     * @param $columnName  The column name
+     * @param string $columnName The column name
      * @return boolean     TRUE if column is inherited, FALSE otherwise.
      */
     public function isInheritedColumn($columnName)
@@ -1133,7 +1131,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
         }
 
         // Php8.1 require a string
-        if(null === $orderBy) {
+        if (null === $orderBy) {
             $orderBy = '';
         }
 
@@ -3035,7 +3033,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
     /**
      * Unserializes a Doctrine_Record instance for php 7.4+
      *
-     * @param array $serialized
+     * @param array $data
      */
     public function __unserialize($data) {
 
@@ -3052,7 +3050,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
         $this->_useIdentityMap = $data[10];
     }
 
-
+    /**
+     * Creates new instance and initialize it from cache.
+     *
+     */
     public function initializeFromCache(Doctrine_Connection $conn)
     {
         $this->_conn = $conn;

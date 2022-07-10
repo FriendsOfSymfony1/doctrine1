@@ -107,7 +107,7 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
      * get
      *
      * @param mixed $key
-     * @return Doctrine_Event
+     * @return Doctrine_Event|null
      */
     public function get($key)
     {
@@ -121,7 +121,7 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
      * getAll
      * returns all profiled events as an array
      *
-     * @return array        all events in an array
+     * @return Doctrine_Event[] All events in an array
      */
     public function getAll()
     {
@@ -154,7 +154,7 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
     /**
      * pop the last event from the event stack
      *
-     * @return Doctrine_Event
+     * @return Doctrine_Event|null
      */
     public function pop()
     {

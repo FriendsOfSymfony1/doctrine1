@@ -90,7 +90,7 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
     public function connect() 
     {
         if ($this->isConnected) {
-            return false;
+            return;
         }
 
         // If customer configure it
