@@ -85,7 +85,7 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
      * initializes database functions missing in sqlite
      *
      * @see Doctrine_Expression
-     * @return void
+     * @return boolean
      */
     public function connect() 
     {
@@ -96,7 +96,7 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
         // If customer configure it
         $hasConfigureStringify = (isset($this->pendingAttributes[Doctrine_Core::ATTR_STRINGIFY_FETCHES]));
 
-        parent::connect();
+        $connected = parent::connect();
 
         if(!$hasConfigureStringify) {
             // PHP8.1 require default to true to keep BC
@@ -109,6 +109,8 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
         $this->dbh->sqliteCreateFunction('concat', array('Doctrine_Expression_Sqlite', 'concatImpl'));
         $this->dbh->sqliteCreateFunction('md5', 'md5', 1);
         $this->dbh->sqliteCreateFunction('now', array('Doctrine_Expression_Sqlite', 'nowImpl'), 0);
+
+        return $connected;
     }
 
     /**
