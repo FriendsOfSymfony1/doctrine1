@@ -33,12 +33,8 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Task_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Task_TestCase extends UnitTestCase
 {
-    public function setUp() {}
-
-    public function tearDown() {}
-
     public function testDerivetasknameReturnsTheNameOfATaskFromItsClassName()
     {
         $this->assertEqual('migrate', Doctrine_Task::deriveTaskName('Doctrine_Task_Migrate'));

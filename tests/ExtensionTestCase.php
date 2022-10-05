@@ -59,6 +59,8 @@ class Doctrine_Extension_TestCase extends Doctrine_UnitTestCase
     public function tearDown()
     {
         spl_autoload_unregister(array('Doctrine_Core', 'extensionsAutoload'));
+
+        parent::tearDown();
     }
 }
 

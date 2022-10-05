@@ -28,8 +28,14 @@ jobs:
         - php: 5.6
           dist: trusty
 
+services:
+  - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+
 install:
-    - composer install --prefer-dist --no-progress --no-suggest -o
+  - composer install --prefer-dist --no-progress --no-suggest -o
 
 script:
-    - php -dshort_open_tag=Off -dmagic_quotes_gpc=Off tests/index.php
+  - "cd tests && php -dshort_open_tag=Off -dmagic_quotes_gpc=Off run.php"

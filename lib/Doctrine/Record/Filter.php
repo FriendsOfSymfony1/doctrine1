@@ -50,18 +50,24 @@ abstract class Doctrine_Record_Filter
     }
 
     /**
-     * filterSet
-     * defines an implementation for filtering the set() method of Doctrine_Record
+     * Provides a way for setting property or relation value to the given record.
      *
-     * @param mixed $name                       name of the property or related component
+     * @param string $propertyOrRelation
+     *
+     * @return Doctrine_Record the given record
+     *
+     * @thrown Doctrine_Exception when this way is not available
      */
-    abstract public function filterSet(Doctrine_Record $record, $name, $value);
+    abstract public function filterSet(Doctrine_Record $record, $propertyOrRelation, $value);
 
     /**
-     * filterGet
-     * defines an implementation for filtering the get() method of Doctrine_Record
+     * Provides a way for getting property or relation value from the given record.
      *
-     * @param mixed $name                       name of the property or related component
+     * @param string $propertyOrRelation
+     *
+     * @return mixed
+     *
+     * @thrown Doctrine_Exception when this way is not available
      */
-    abstract public function filterGet(Doctrine_Record $record, $name);
+    abstract public function filterGet(Doctrine_Record $record, $propertyOrRelation);
 }

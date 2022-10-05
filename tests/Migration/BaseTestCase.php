@@ -30,9 +30,14 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Migration_Base_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Migration_Base_TestCase extends UnitTestCase
 {
-    public function setUp() {}
+    public function tearDown()
+    {
+        Doctrine_Migration_Base::setDefaultTableOptions(array());
+
+        parent::tearDown();
+    }
 
     public function testIsAbstract()
     {
@@ -57,11 +62,6 @@ class Doctrine_Migration_Base_TestCase extends Doctrine_UnitTestCase
             Doctrine_Migration_Base::setDefaultTableOptions($fixture);
             $this->assertEqual($fixture, Doctrine_Migration_Base::getDefaultTableOptions());
         }
-    }
-
-    public function tearDown()
-    {
-        Doctrine_Migration_Base::setDefaultTableOptions(array());
     }
 
     public function testCreatetableMergesTheDefaultTableOptionsWithTheSpecifiedOptions()
