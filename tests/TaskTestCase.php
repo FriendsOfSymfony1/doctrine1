@@ -33,8 +33,12 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Task_TestCase extends UnitTestCase
+class Doctrine_Task_TestCase extends Doctrine_UnitTestCase 
 {
+    public function setUp() {}
+
+    public function tearDown() {}
+
     public function testDerivetasknameReturnsTheNameOfATaskFromItsClassName()
     {
         $this->assertEqual('migrate', Doctrine_Task::deriveTaskName('Doctrine_Task_Migrate'));
@@ -57,6 +61,20 @@ class Doctrine_Task_TestCase extends UnitTestCase
         $oTask = new Doctrine_Task_TestCase_TestTask001();
         $this->assertEqual('test-case--test-task001', $oTask->taskName);  /*@todo Temporary, maybe*/
         $this->assertEqual('test-case--test-task001', $oTask->getTaskName());
+    }
+
+    public function testNameByDefaultIsDerivedFromTheNameOfTheClass_withEmptyTaskNamePropertySetsByChildClass()
+    {
+        $task = new Doctrine_Task_TestCase_EmptyTaskNameTestTask();
+
+        $this->assertEqual('test-case--empty-task-name-test-task', $task->getTaskName());
+    }
+
+    public function testNameUseCustomNameThroughGetTaskNameMethod()
+    {
+        $task = new Doctrine_Task_TestCase_OverwrittenGetTaskNameMethodTestTask();
+
+        $this->assertEqual('foo', $task->getTaskName());
     }
 
     public function testSettasknameSetsTheNameOfTheTask()
@@ -150,4 +168,21 @@ class Doctrine_Task_TestCase_TestTask003 extends Doctrine_Task
     public $taskName = 'better-task-name';
 
     public function execute() {}
+}
+
+class Doctrine_Task_TestCase_EmptyTaskNameTestTask extends Doctrine_Task
+{
+    public $taskName = '';
+
+    public function execute() {}
+}
+
+class Doctrine_Task_TestCase_OverwrittenGetTaskNameMethodTestTask extends Doctrine_Task
+{
+    public function execute() {}
+
+    public function getTaskName()
+    {
+        return 'foo';
+    }
 }
