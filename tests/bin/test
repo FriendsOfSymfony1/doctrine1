@@ -17,7 +17,7 @@ skipPHPVersions='php8'
 # Commands
 #
 dcexec="docker-compose exec -u `id -u`:`id -g`"
-composerUpdate='composer update --prefer-dist --no-suggest --optimize-autoloader'
+composerUpdate='composer update --prefer-dist --optimize-autoloader'
 doctrineTestSuite='run.php'
 
 # Parse arguments
