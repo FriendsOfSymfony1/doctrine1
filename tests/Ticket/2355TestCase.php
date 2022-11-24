@@ -32,6 +32,12 @@
  */
 class Doctrine_Ticket_2355_TestCase extends Doctrine_UnitTestCase 
 {
+    public function setUp()
+    {
+        Doctrine_Manager::getInstance()->reset();
+        parent::setUp();
+    }
+
     public function prepareTables()
     {
         $this->tables[] = 'News';
