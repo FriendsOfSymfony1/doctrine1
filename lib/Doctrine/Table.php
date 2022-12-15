@@ -1704,7 +1704,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      * Find records basing on a field.
      *
      * @param string $column            field for the WHERE clause
-     * @param string $value             prepared statement parameter
+     * @param string|array $value       prepared statement parameter
      * @param int $hydrationMode        Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
      * @return Doctrine_Collection|array
      */
@@ -1719,7 +1719,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      * Finds the first record that satisfy the clause.
      *
      * @param string $column            field for the WHERE clause
-     * @param string $value             prepared statement parameter
+     * @param string|array $value       prepared statement parameter
      * @param int $hydrationMode        Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
      * @return Doctrine_Record
      */
