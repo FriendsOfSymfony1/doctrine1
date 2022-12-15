@@ -146,6 +146,7 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
      *
      * @return integer
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->_definition);
@@ -156,6 +157,7 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
      *
      * @return ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator() 
     {
         return new ArrayIterator($this->_definition);

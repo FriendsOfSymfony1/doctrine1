@@ -44,6 +44,7 @@ class Doctrine_Export_Reporter implements IteratorAggregate
         return array_pop($this->messages);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->messages);
