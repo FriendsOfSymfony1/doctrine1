@@ -118,7 +118,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
             $coll->takeSnapshot();
         }
         $this->_initializedRelations = null;
-        $this->_collections = null;
+        $this->_collections = array();
         $this->_tables = null;
     }
 }
