@@ -179,6 +179,25 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     protected $_phpDocEmail = '##EMAIL##';
 
+
+    /**
+     * Contains the actAs columns after running buildSetUp
+     *
+     * @var array<string, array{
+     *     name: string,
+     *     type: string,
+     *     disabled?: bool,
+     *     alias?: string,
+     *     length?: int,
+     *     unique?: bool,
+     *     fixed?: bool,
+     *     primary?: bool,
+     *     notblank?: bool,
+     *     default?: mixed,
+     * }>
+     */
+    private $actAsColumns = array();
+
     /**
      * _tpl
      *
@@ -396,9 +415,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     /**
      * buildSetUp
      *
-     * @param  array $options
-     * @param  array $columns
-     * @param  array $relations
+     * @param  array $definition
      * @return string
      */
     public function buildSetUp(array $definition)
@@ -858,20 +875,32 @@ class Doctrine_Import_Builder extends Doctrine_Builder
     }
 
     /**
+     * find class matching $name
+     *
+     * @param $name
+     * @return class-string<Doctrine_Template>
+     */
+    private function findTemplateClassMatchingName($name)
+    {
+        $classname = $name;
+        if (class_exists("Doctrine_Template_$name", true)) {
+            $classname = "Doctrine_Template_$name";
+        }
+
+        return $classname;
+    }
+
+    /**
      * emit a behavior assign
      *
      * @param int $level
      * @param string $name
      * @param string $option
+     * @param class-string $classname
      * @return string assignation code
      */
-    private function emitAssign($level, $name, $option)
+    private function emitAssign($level, $name, $option, $classname)
     {
-        // find class matching $name
-        $classname = $name;
-        if (class_exists("Doctrine_Template_$name", true)) {
-            $classname = "Doctrine_Template_$name";
-        }
         return "        \$" . strtolower($name) . "$level = new $classname($option);". PHP_EOL;
     }
 
@@ -943,6 +972,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $currentParent = $parent;
         if (is_array($actAs)) {
             foreach($actAs as $template => $options) {
+                $className = $this->findTemplateClassMatchingName($template);
                 if ($template == 'actAs') {
                     // found another actAs
                     $build .= $this->innerBuildActAs($options, $level + 1, $parent, $emittedActAs);
@@ -959,7 +989,8 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                     }
 
                     $optionPHP = $this->varExport($realOptions);
-                    $build .= $this->emitAssign($level, $template, $optionPHP);
+                    $build .= $this->emitAssign($level, $template, $optionPHP, $className);
+                    $this->determineActAsColumns($className, $realOptions);
                     if ($level == 0) {
                         $emittedActAs[] = $this->emitActAs($level, $template);
                     } else {
@@ -969,7 +1000,8 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                     $parent = $template;
                     $build .= $this->innerBuildActAs($leftActAs, $level, $template, $emittedActAs);
                 } else {
-                    $build .= $this->emitAssign($level, $template, null);
+                    $build .= $this->emitAssign($level, $template, null, $className);
+                    $this->determineActAsColumns($className, array($options));
                     if ($level == 0) {
                         $emittedActAs[] = $this->emitActAs($level, $template);
                     } else {
@@ -979,7 +1011,9 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 }
             }
         } else {
-            $build .= $this->emitAssign($level, $actAs, null);
+            $className = $this->findTemplateClassMatchingName($actAs);
+            $build .= $this->emitAssign($level, $actAs, null, $className);
+            $this->determineActAsColumns($className, array());
             if ($level == 0) {
                 $emittedActAs[] = $this->emitActAs($level, $actAs);
             } else {
@@ -989,6 +1023,87 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         return $build;
     }
+
+    /**
+     * Adds the columns of the used actAs behaviors to the comment block.
+     *
+     * @param class-string $className
+     * @param array $instanceOptions
+     *
+     * @throws Doctrine_Import_Builder_Exception
+     */
+    private function determineActAsColumns($className, $instanceOptions)
+    {
+        // No class specified or class does not exist.
+        if (!$className || !class_exists($className)) {
+            return;
+        }
+
+        // PHP >= 7.4 is planned as a minimum version for the upcoming release of doctrine1,
+        // therefore we simply skip the generation of actAs columns if run below 7.0, as
+        // instantiation exceptions are not supported before PHP 7
+        if (PHP_VERSION_ID <= 70000) {
+            return;
+        }
+
+        try {
+            $actAsInstance = new $className($instanceOptions);
+        } catch (Error $e) {
+            // The class can't be instantiated, skipping it
+            return;
+        }
+
+        if (!$actAsInstance || !method_exists($actAsInstance, 'getOptions')) {
+            return;
+        }
+
+        $options = $actAsInstance->getOptions();
+
+        // Some behaviors do not contain an array of columns, e.g. SoftDelete.
+        if (!is_array(reset($options))) {
+            $options = array($options);
+        }
+
+        foreach ($options as $name => $column) {
+            if (!is_array($column) || !array_key_exists('name', $column) || !array_key_exists('type', $column)) {
+                // 'name' or 'type' not found.
+                continue;
+            }
+
+            if (array_key_exists('disabled', $column) && $column['disabled']) {
+                // Column has been disabled.
+                continue;
+            }
+
+            // Add field, if it does not exist already.
+            if (array_key_exists($name, $this->actAsColumns)) {
+                continue;
+            }
+
+            $this->actAsColumns[$name] = $column;
+        }
+    }
+
+    private function mergeDefinitionAndActAsColumns(array $definitionColumns, array $actAsColumns)
+    {
+        $result = $definitionColumns;
+
+        foreach ($actAsColumns as $actAsOptionName => $actAsColumn) {
+            $actAsColumnName = isset($actAsColumn['name']) ? $actAsColumn['name'] : $actAsOptionName;
+
+            foreach ($result as $optionName => $column) {
+                $name = isset($column['name']) ? $column['name'] : $optionName;
+                if ($name === $actAsColumnName) {
+                    continue 2;
+                }
+            }
+
+            $result[$actAsOptionName] = $actAsColumn;
+        }
+
+        return $result;
+    }
+
 
     /**
      * Build php code for adding record listeners
@@ -1122,6 +1237,8 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $className = $definition['className'];
         $extends = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends']:$this->_baseClassName;
 
+        // Clear actAsColumns
+        $this->actAsColumns = array();
         if ( ! (isset($definition['no_definition']) && $definition['no_definition'] === true)) {
             $tableDefinitionCode = $this->buildTableDefinition($definition);
             $setUpCode = $this->buildSetUp($definition);
@@ -1136,6 +1253,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
         $setUpCode.= $this->buildToString($definition);
 
+        $definition['columns'] = $this->mergeDefinitionAndActAsColumns($definition['columns'], $this->actAsColumns);
         $docs = PHP_EOL . $this->buildPhpDocs($definition);
 
         $content = sprintf(self::$_tpl, $docs, $abstract,
