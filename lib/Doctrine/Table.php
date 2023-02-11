@@ -1179,6 +1179,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
             return $this->_columnNames[$fieldName];
         }
 
+        if (null === $fieldName) {
+            return '';
+        }
+
         return strtolower($fieldName);
     }
 
