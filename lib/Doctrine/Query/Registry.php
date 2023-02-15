@@ -40,12 +40,12 @@ class Doctrine_Query_Registry
             $query = clone $query;
         }
 
-    	if (strpos($key, '/') === false) {
+    	if (strpos((string) $key, '/') === false) {
             $this->_queries[$key] = $query;
         } else {
             // namespace found
             
-            $e = explode('/', $key);
+            $e = explode('/', (string) $key);
 
             $this->_queries[$e[0]][$e[1]] = $query;
         }

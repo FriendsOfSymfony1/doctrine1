@@ -532,7 +532,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         $build = null;
         foreach ($columns as $name => $column) {
             // An alias cannot passed via column name and column alias definition
-            if (isset($column['name']) && stripos($column['name'], ' as ') && isset($column['alias'])) {
+            if (isset($column['name']) && stripos((string) $column['name'], ' as ') && isset($column['alias'])) {
                 throw new Doctrine_Import_Exception(
                     sprintf('When using a column alias you cannot pass it via column name and column alias definition (column: %s).', $column['name'])
                 );
@@ -545,7 +545,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
             $columnName = isset($column['name']) ? $column['name']:$name;
             if ($manager->getAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE)) {
-                $e = explode(' as ', $columnName);
+                $e = explode(' as ', (string) $columnName);
                 $fieldName = isset($e[1]) ? $e[1] : $e[0];
                 $classified = Doctrine_Inflector::classify($fieldName);
                 $getter = 'get' . $classified;
@@ -657,14 +657,14 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             foreach ($definition['columns'] as $name => $column) {
                 $name = isset($column['name']) ? $column['name']:$name;
                 // extract column name & field name
-                if (stripos($name, ' as '))
+                if (stripos((string) $name, ' as '))
                 {
-                    if (strpos($name, ' as')) {
-                        $parts = explode(' as ', $name);
+                    if (strpos((string) $name, ' as')) {
+                        $parts = explode(' as ', (string) $name);
                     }
                     else
                     {
-                        $parts = explode(' AS ', $name);
+                        $parts = explode(' AS ', (string) $name);
                     }
 
                     if (count($parts) > 1) {
@@ -772,7 +772,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
                 $comment = join(", ",$commentOptions);
 
-                $fieldName = trim($fieldName);
+                $fieldName = trim((string) $fieldName);
 
                 $properties[] = array($phpType, $fieldName, $comment);
                 $getters[] = array($phpType, Doctrine_Inflector::classify($fieldName), $comment);
@@ -803,20 +803,20 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $maxNameSize = 0;
             foreach ($properties as $propItem)
             {
-                $maxTypeSize = max($maxTypeSize, strlen($propItem[0]));
-                $maxNameSize = max($maxNameSize, strlen($propItem[1])+1);
+                $maxTypeSize = max($maxTypeSize, strlen((string) $propItem[0]));
+                $maxNameSize = max($maxNameSize, strlen((string) $propItem[1])+1);
             }
 
             foreach ($getters as $getterItem)
             {
-                $maxTypeSize = max($maxTypeSize, strlen($getterItem[0]));
-                $maxNameSize = max($maxNameSize, strlen($getterItem[1])+5);
+                $maxTypeSize = max($maxTypeSize, strlen((string) $getterItem[0]));
+                $maxNameSize = max($maxNameSize, strlen((string) $getterItem[1])+5);
             }
 
             foreach ($setters as $setterItem)
             {
-                $maxTypeSize = max($maxTypeSize, strlen($setterItem[0]));
-                $maxNameSize = max($maxNameSize, strlen($setterItem[1])+strlen($setterItem[2])+9);
+                $maxTypeSize = max($maxTypeSize, strlen((string) $setterItem[0]));
+                $maxNameSize = max($maxNameSize, strlen((string) $setterItem[1])+strlen((string) $setterItem[2])+9);
             }
 
             $maxNameSize+=1;
@@ -825,21 +825,21 @@ class Doctrine_Import_Builder extends Doctrine_Builder
 
             foreach ($properties as $propItem)
             {
-                $ret[] = sprintf("@property %s $%s %s", str_pad($propItem[0], $maxTypeSize, " "), str_pad($propItem[1], $maxNameSize-1, " "), $propItem[2]);
+                $ret[] = sprintf("@property %s $%s %s", str_pad((string) $propItem[0], $maxTypeSize, " "), str_pad((string) $propItem[1], $maxNameSize-1, " "), $propItem[2]);
             }
             $ret[] = " ";
 
             foreach ($getters as $getterItem)
             {
-                $methodName = sprintf("get%s()",ucfirst($getterItem[1]));
-                $ret[] = sprintf("@method %s %s %s", str_pad($getterItem[0], $maxTypeSize+2, " "), str_pad(($methodName), $maxNameSize, " "), $getterItem[2]);
+                $methodName = sprintf("get%s()",ucfirst((string) $getterItem[1]));
+                $ret[] = sprintf("@method %s %s %s", str_pad((string) $getterItem[0], $maxTypeSize+2, " "), str_pad(($methodName), $maxNameSize, " "), $getterItem[2]);
             }
             $ret[] = " ";
 
             foreach ($setters as $setterItem)
             {
-                $methodName = sprintf('set%s(%s $val)',ucfirst($setterItem[1]), $setterItem[2]);
-                $ret[] = sprintf("@method %s %s %s", str_pad($setterItem[0], $maxTypeSize+2, " "), str_pad(($methodName), $maxNameSize, " "), $setterItem[3]);
+                $methodName = sprintf('set%s(%s $val)',ucfirst((string) $setterItem[1]), $setterItem[2]);
+                $ret[] = sprintf("@method %s %s %s", str_pad((string) $setterItem[0], $maxTypeSize+2, " "), str_pad(($methodName), $maxNameSize, " "), $setterItem[3]);
             }
             //$ret = array_merge($ret, $getter, $setter);
         }
@@ -872,7 +872,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
         if (class_exists("Doctrine_Template_$name", true)) {
             $classname = "Doctrine_Template_$name";
         }
-        return "        \$" . strtolower($name) . "$level = new $classname($option);". PHP_EOL;
+        return "        \$" . strtolower((string) $name) . "$level = new $classname($option);". PHP_EOL;
     }
 
     /**
@@ -885,7 +885,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     private function emitAddChild($level, $parent, $name)
     {
-        return "        \$" . strtolower($parent) . ($level - 1) . "->addChild(\$" . strtolower($name) . "$level);" . PHP_EOL;
+        return "        \$" . strtolower((string) $parent) . ($level - 1) . "->addChild(\$" . strtolower((string) $name) . "$level);" . PHP_EOL;
     }
 
     /**
@@ -898,7 +898,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
      */
     private function emitActAs($level, $name)
     {
-        return "        \$this->actAs(\$" . strtolower($name) . "$level);" . PHP_EOL;
+        return "        \$this->actAs(\$" . strtolower((string) $name) . "$level);" . PHP_EOL;
     }
 
     /**
@@ -1037,7 +1037,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
                 }
 
                 foreach ($value as $attr) {
-                    $const = "Doctrine_Core::" . strtoupper($key) . "_" . strtoupper($attr);
+                    $const = "Doctrine_Core::" . strtoupper($key) . "_" . strtoupper((string) $attr);
                     if (defined($const)) {
                         $values[] = $const;
                     } else {
@@ -1171,7 +1171,7 @@ class Doctrine_Import_Builder extends Doctrine_Builder
             $definition['is_package'] = (isset($definition['package']) && $definition['package']) ? true:false;
 
             if ($definition['is_package']) {
-                $e = explode('.', trim($definition['package']));
+                $e = explode('.', trim((string) $definition['package']));
                 $definition['package_name'] = $e[0];
 
                 $definition['package_path'] = ! empty($e) ? implode(DIRECTORY_SEPARATOR, $e):$definition['package_name'];

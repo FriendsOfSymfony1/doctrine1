@@ -653,18 +653,18 @@ class Doctrine_Core
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
 
                 foreach ($it as $file) {
-                    $e = explode('.', $file->getFileName());
+                    $e = explode('.', (string) $file->getFileName());
 
-                    if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
+                    if (end($e) === 'php' && strpos((string) $file->getFileName(), '.inc') === false) {
                         if ($modelLoading == Doctrine_Core::MODEL_LOADING_PEAR) {
-                            $className = str_replace($dir . DIRECTORY_SEPARATOR, null, $file->getPathName());
+                            $className = str_replace($dir . DIRECTORY_SEPARATOR, '', (string) $file->getPathName());
                             $className = str_replace(DIRECTORY_SEPARATOR, '_', $className);
                             $className = substr($className, 0, strpos($className, '.'));
                         } else {
                             $className = $e[0];
                         }
 
-                        if ($classPrefix && $classPrefix != substr($className, 0, strlen($classPrefix))) {
+                        if ($classPrefix && $classPrefix != substr($className, 0, strlen((string) $classPrefix))) {
                             $className = $classPrefix . $className;
                         }
 
@@ -1167,7 +1167,7 @@ class Doctrine_Core
                 return true;
             }
         } else {
-            $class = self::$_modelsDirectory . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+            $class = self::$_modelsDirectory . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, (string) $className) . '.php';
 
             if (file_exists($class)) {
                 require $class;

@@ -183,7 +183,7 @@ class Doctrine_Hook
             return false;
         }
         foreach ($params as $name) {
-            $e = explode(' ', $name);
+            $e = explode(' ', (string) $name);
 
             $order = 'ASC';
 

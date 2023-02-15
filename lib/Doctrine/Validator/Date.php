@@ -43,7 +43,7 @@ class Doctrine_Validator_Date extends Doctrine_Validator_Driver
         if (is_null($value)) {
             return true;
         }
-        $e = explode('-', $value);
+        $e = explode('-', (string) $value);
 
         if (count($e) !== 3) {
             return false;

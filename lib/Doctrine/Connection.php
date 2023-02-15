@@ -469,7 +469,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
         $this->getListener()->preConnect($event);
 
-        $e     = explode(':', $this->options['dsn']);
+        $e     = explode(':', (string) $this->options['dsn']);
         $found = false;
 
         if (extension_loaded('pdo')) {

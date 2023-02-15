@@ -364,7 +364,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
         }
 
         // Postgres enum type by name containing enum
-        if (strpos($field['type'], 'enum') !== false){
+        if (strpos((string) $field['type'], 'enum') !== false){
             $field['type'] = 'enum';            
         }
 
@@ -458,7 +458,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
             $field['name'] = '';
         }
 
-        $dbType = strtolower($field['type']);
+        $dbType = strtolower((string) $field['type']);
 
         // Default from field for enum support
         $default = isset($field['default']) ? $field['default'] : null;
@@ -483,7 +483,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $length = 2;
                 if ($length == '2') {
                     $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/', $field['name'])) {
+                    if (preg_match('/^(is|has)/', (string) $field['name'])) {
                         $type = array_reverse($type);
                     }
                 }
@@ -523,7 +523,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $type[] = 'string';
                 if ($length == '1') {
                     $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/', $field['name'])) {
+                    if (preg_match('/^(is|has)/', (string) $field['name'])) {
                         $type = array_reverse($type);
                     }
                 } elseif (strstr($dbType, 'text')) {
@@ -537,7 +537,7 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                 $type[] = 'enum';
                 $length = $length ? $length :255;
                 if($default) {
-                    $default = preg_replace('/\'(\w+)\'.*/', '${1}', $default);
+                    $default = preg_replace('/\'(\w+)\'.*/', '${1}', (string) $default);
                 }
                 break;
             case 'date':

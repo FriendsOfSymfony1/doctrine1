@@ -340,7 +340,7 @@ class Doctrine_Relation_Parser
      */
     public function getIdentifiers(Doctrine_Table $table)
     {
-        $componentNameToLower = strtolower($table->getComponentName());
+        $componentNameToLower = strtolower((string) $table->getComponentName());
         if (is_array($table->getIdentifier())) {
             $columns = array();
             foreach ((array) $table->getIdentifierColumnNames() as $identColName) {
@@ -474,7 +474,7 @@ class Doctrine_Relation_Parser
                     $table = $conn->getTable($class);
                     $identifierColumnNames = $table->getIdentifierColumnNames();
                     $idColumnName = array_pop($identifierColumnNames);
-                    $column = strtolower($table->getComponentName())
+                    $column = strtolower((string) $table->getComponentName())
                             . '_' . $idColumnName;
 
                     foreach ($foreignClasses as $class2) {
@@ -491,7 +491,7 @@ class Doctrine_Relation_Parser
                     $table  = $conn->getTable($class);
                     $identifierColumnNames = $table->getIdentifierColumnNames();
                     $idColumnName = array_pop($identifierColumnNames);
-                    $column = strtolower($table->getComponentName())
+                    $column = strtolower((string) $table->getComponentName())
                             . '_' . $idColumnName;
 
                     foreach ($localClasses as $class2) {
@@ -509,7 +509,7 @@ class Doctrine_Relation_Parser
                 $columns = array();
                 foreach ((array) $this->_table->getIdentifierColumnNames() as $id) {
                     // ?? should this not be $this->_table->getComponentName() ??
-                    $column = strtolower($table->getComponentName())
+                    $column = strtolower((string) $table->getComponentName())
                             . '_' . $id;
 
                     $col = $this->_table->getColumnDefinition($id);

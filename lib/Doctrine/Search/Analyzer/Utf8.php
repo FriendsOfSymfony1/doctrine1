@@ -42,11 +42,11 @@ class Doctrine_Search_Analyzer_Utf8 extends Doctrine_Search_Analyzer_Standard
         }
 
         // check that $text encoding is utf-8, if not convert it
-        if (strcasecmp($encoding, 'utf-8') != 0 && strcasecmp($encoding, 'utf8') != 0) {
-            $text = iconv($encoding, 'UTF-8', $text);
+        if (strcasecmp((string) $encoding, 'utf-8') != 0 && strcasecmp((string) $encoding, 'utf8') != 0) {
+            $text = iconv((string) $encoding, 'UTF-8', (string) $text);
         }
 
-        $text = preg_replace('/[^\p{L}\p{N}]+/u', ' ', $text);
+        $text = preg_replace('/[^\p{L}\p{N}]+/u', ' ', (string) $text);
         $text = str_replace('  ', ' ', $text);
 
         $terms = explode(' ', $text);

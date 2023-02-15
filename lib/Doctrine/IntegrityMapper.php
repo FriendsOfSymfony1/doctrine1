@@ -138,7 +138,7 @@ class Doctrine_IntegrityMapper
             }
             $components[] = $componentName;
 
-            $alias = strtolower(substr($relation->getAlias(), 0, 1));
+            $alias = strtolower(substr((string) $relation->getAlias(), 0, 1));
 
             if ( ! isset($indexes[$alias])) {
                 $indexes[$alias] = 1;

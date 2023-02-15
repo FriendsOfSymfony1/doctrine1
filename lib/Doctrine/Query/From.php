@@ -49,7 +49,7 @@ class Doctrine_Query_From extends Doctrine_Query_Part
 
         $operator = false;
 
-        switch (trim($parts[0])) {
+        switch (trim((string) $parts[0])) {
             case 'INNER':
                 $operator = ':';
             case 'LEFT':
@@ -60,7 +60,7 @@ class Doctrine_Query_From extends Doctrine_Query_Part
         $last = '';
 
         foreach ($parts as $k => $part) {
-            $part = trim($part);
+            $part = trim((string) $part);
 
             if (empty($part)) {
                 continue;
@@ -74,7 +74,7 @@ class Doctrine_Query_From extends Doctrine_Query_Part
             $part = implode(' ', $e);
 
             foreach ($this->_tokenizer->bracketExplode($part, ',') as $reference) {
-                $reference = trim($reference);
+                $reference = trim((string) $reference);
                 $e = explode(' ', $reference);
                 $e2 = explode('.', $e[0]);
 

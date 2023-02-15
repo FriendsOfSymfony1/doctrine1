@@ -193,7 +193,7 @@ class Doctrine_UnitTestCase extends UnitTestCase
                     case 'Transaction':
                     case 'Sequence':
                     case 'Expression':
-                        $lower = strtolower($module);
+                        $lower = strtolower((string) $module);
 
                         $this->$lower = $this->connection->$lower;
                     break;

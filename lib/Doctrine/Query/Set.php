@@ -47,7 +47,7 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
             $lftExpr = (($hasAggExpression) ? $matches[1] . '(' : '');
             $rgtExpr = (($hasAggExpression) ? $matches[3] . ')' : '');
 	
-	        preg_match_all("/^([a-zA-Z0-9_]+[\.[a-zA-Z0-9_]+]*)(\sAS\s[a-zA-Z0-9_]+)?/i", $term, $m, PREG_SET_ORDER);
+	        preg_match_all("/^([a-zA-Z0-9_]+[\.[a-zA-Z0-9_]+]*)(\sAS\s[a-zA-Z0-9_]+)?/i", (string) $term, $m, PREG_SET_ORDER);
             
             if (isset($m[0])) {
                 $processed = array();
@@ -80,7 +80,7 @@ class Doctrine_Query_Set extends Doctrine_Query_Part
 
     protected function _processPossibleAggExpression(& $expr, & $matches = array())
     {
-        $hasAggExpr = preg_match('/(.*[^\s\(\=])\(([^\)]*)\)(.*)/', $expr, $matches);
+        $hasAggExpr = preg_match('/(.*[^\s\(\=])\(([^\)]*)\)(.*)/', (string) $expr, $matches);
         
         if ($hasAggExpr) {
             $expr = $matches[2];

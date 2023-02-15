@@ -409,7 +409,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
                   }
               } catch (Exception $e) {}
 
-              $definitions[strtolower($definition['className'])] = $definition;
+              $definitions[strtolower((string) $definition['className'])] = $definition;
               $classes[] = $definition['className'];
           }
 
@@ -424,7 +424,7 @@ class Doctrine_Import extends Doctrine_Connection_Module
                       $alias = $className;
                   }
                   $relClasses[] = $relation['class'];
-                  $definitions[strtolower($relation['class'])]['relations'][$alias] = array(
+                  $definitions[strtolower((string) $relation['class'])]['relations'][$alias] = array(
                     'type' => Doctrine_Relation::MANY,
                     'alias' => $alias,
                     'class' => $className,

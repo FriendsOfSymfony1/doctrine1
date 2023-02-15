@@ -54,7 +54,7 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
                     continue;
                 }
                 // cache general information like the column name <-> field name mapping
-                $e = explode('__', $key);
+                $e = explode('__', (string) $key);
                 $columnName = strtolower(array_pop($e)); 
                 $cache[$key]['dqlAlias'] = $this->_tableAliases[strtolower(implode('__', $e))];
                 $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];

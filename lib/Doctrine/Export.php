@@ -119,7 +119,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function dropIndexSql($table, $name)
     {
         $name = $this->conn->quoteIdentifier($this->conn->formatter->getIndexName($name));
-        
+
         return 'DROP INDEX ' . $name;
     }
 
@@ -135,7 +135,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     {
         $table = $this->conn->quoteIdentifier($table);
         $name  = $this->conn->quoteIdentifier($name);
-        
+
         return $this->conn->exec('ALTER TABLE ' . $table . ' DROP CONSTRAINT ' . $name);
     }
 
@@ -254,12 +254,12 @@ class Doctrine_Export extends Doctrine_Connection_Module
                 // append only created index declarations
                 if ( ! is_null($indexDeclaration)) {
                     $queryFields .= ', '.$indexDeclaration;
-                } 
+                }
             }
         }
 
         $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields;
-        
+
         $check = $this->getCheckDeclaration($fields);
 
         if ( ! empty($check)) {
@@ -376,7 +376,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function createConstraint($table, $name, $definition)
     {
         $sql = $this->createConstraintSql($table, $name, $definition);
-        
+
         return $this->conn->exec($sql);
     }
 
@@ -472,11 +472,11 @@ class Doctrine_Export extends Doctrine_Connection_Module
         $table  = $this->conn->quoteIdentifier($table);
         $name   = $this->conn->quoteIdentifier($name);
         $type   = '';
-        
+
         if (isset($definition['type'])) {
-            switch (strtolower($definition['type'])) {
+            switch (strtolower((string) $definition['type'])) {
                 case 'unique':
-                    $type = strtoupper($definition['type']) . ' ';
+                    $type = strtoupper((string) $definition['type']) . ' ';
                 break;
                 default:
                     throw new Doctrine_Export_Exception(
@@ -494,7 +494,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         $query .= ' (' . implode(', ', $fields) . ')';
 
         return $query;
-    }    
+    }
     /**
      * createForeignKeySql
      *
@@ -520,7 +520,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function createForeignKey($table, array $definition)
     {
         $sql = $this->createForeignKeySql($table, $definition);
-        
+
         return $this->conn->execute($sql);
     }
 
@@ -616,7 +616,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function alterTable($name, array $changes, $check = false)
     {
         $sql = $this->alterTableSql($name, $changes, $check);
-        
+
         if (is_string($sql) && $sql) {
             $this->conn->execute($sql);
         }
@@ -783,7 +783,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
         return $default;
     }
-    
+
 
     /**
      * getNotNullFieldDeclaration
@@ -797,7 +797,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     {
         return (isset($definition['notnull']) && $definition['notnull']) ? ' NOT NULL' : '';
     }
-    
+
 
     /**
      * Obtain DBMS specific SQL code portion needed to set a CHECK constraint
@@ -840,8 +840,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
         $type   = '';
 
         if (isset($definition['type'])) {
-            if (strtolower($definition['type']) == 'unique') {
-                $type = strtoupper($definition['type']) . ' ';
+            if (strtolower((string) $definition['type']) == 'unique') {
+                $type = strtoupper((string) $definition['type']) . ' ';
             } else {
                 throw new Doctrine_Export_Exception(
                     'Unknown type ' . $definition['type'] . ' for index ' . $name
@@ -1123,7 +1123,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
              // We need these to happen first
              foreach ($sql as $key => $query) {
                  // If create table statement
-                 if (substr($query, 0, strlen('CREATE TABLE')) == 'CREATE TABLE') {
+                 if (substr((string) $query, 0, strlen('CREATE TABLE')) == 'CREATE TABLE') {
                      $connections[$connectionName]['create_tables'][] = $query;
 
                      unset($sql[$key]);
@@ -1131,7 +1131,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
 
                  // If create sequence statement
-                 if (substr($query, 0, strlen('CREATE SEQUENCE')) == 'CREATE SEQUENCE') {
+                 if (substr((string) $query, 0, strlen('CREATE SEQUENCE')) == 'CREATE SEQUENCE') {
                      $connections[$connectionName]['create_sequences'][] = $query;
 
                      unset($sql[$key]);
@@ -1147,8 +1147,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
 
                  // If alter table statement or oracle anonymous block enclosing alter
-                 if (substr($query, 0, strlen('ALTER TABLE')) == 'ALTER TABLE'
-                       || substr($query, 0, strlen('DECLARE')) == 'DECLARE') {
+                 if (substr((string) $query, 0, strlen('ALTER TABLE')) == 'ALTER TABLE'
+                       || substr((string) $query, 0, strlen('DECLARE')) == 'DECLARE') {
                      $connections[$connectionName]['alters'][] = $query;
 
                      unset($sql[$key]);
@@ -1156,7 +1156,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
 
                  // If create trgger statement
-                 if (substr($query, 0, strlen('CREATE TRIGGER')) == 'CREATE TRIGGER') {
+                 if (substr((string) $query, 0, strlen('CREATE TRIGGER')) == 'CREATE TRIGGER') {
                      $connections[$connectionName]['create_triggers'][] = $query;
 
                  	 unset($sql[$key]);
@@ -1164,7 +1164,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
 
                  // If comment statement
-                 if (substr($query, 0, strlen('COMMENT ON')) == 'COMMENT ON') {
+                 if (substr((string) $query, 0, strlen('COMMENT ON')) == 'COMMENT ON') {
                      $connections[$connectionName]['comments'][] = $query;
 
                      unset($sql[$key]);
@@ -1237,9 +1237,9 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function exportClassesSql(array $classes)
     {
         $models = Doctrine_Core::filterInvalidModels($classes);
-        
+
         $sql = array();
-        
+
         foreach ($models as $name) {
             $record = new $name();
             $table = $record->getTable();
@@ -1271,14 +1271,14 @@ class Doctrine_Export extends Doctrine_Connection_Module
             if ($table->getAttribute(Doctrine_Core::ATTR_EXPORT) & Doctrine_Core::EXPORT_PLUGINS) {
                 $sql = array_merge($sql, $this->exportGeneratorsSql($table));
             }
-            
+
             // DC-474: Remove dummy $record from repository to not pollute it during export
             $table->getRepository()->evict($record->getOid());
             unset($record);
         }
-        
+
         $sql = array_unique($sql);
-        
+
         rsort($sql);
 
         return $sql;
@@ -1296,13 +1296,13 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
         foreach ($table->getGenerators() as $name => $generator) {
             if ($generator === null) {
-                continue;                     	
+                continue;
             }
 
             $generators[] = $generator;
 
             $generatorTable = $generator->getTable();
-            
+
             if ($generatorTable instanceof Doctrine_Table) {
                 $generators = array_merge($generators, $this->getAllGenerators($generatorTable));
             }
@@ -1324,7 +1324,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
         foreach ($this->getAllGenerators($table) as $name => $generator) {
             $table = $generator->getTable();
-            
+
             // Make sure plugin has a valid table
             if ($table instanceof Doctrine_Table) {
                 $data = $table->getExportableFormat();
@@ -1360,7 +1360,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         } else {
             $models = Doctrine_Core::getLoadedModels();
         }
-        
+
         return $this->exportSortedClassesSql($models, false);
     }
 

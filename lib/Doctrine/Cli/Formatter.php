@@ -95,13 +95,13 @@ class Doctrine_Cli_Formatter
             $size = $this->_size;
         }
 
-        if (strlen($text) < $size) {
+        if (strlen((string) $text) < $size) {
             return $text;
         }
 
         $subsize = floor(($size - 3) / 2);
 
-        return substr($text, 0, $subsize).'...'.substr($text, -$subsize);
+        return substr((string) $text, 0, $subsize).'...'.substr((string) $text, -$subsize);
     }
 
     /**

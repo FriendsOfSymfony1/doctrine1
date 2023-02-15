@@ -371,7 +371,7 @@ class Doctrine_Migration_Diff
      */
     protected function _generateModels($prefix, $item)
     {
-        $path = $this->_tmpPath . DIRECTORY_SEPARATOR . strtolower($prefix) . '_doctrine_tmp_dirs';
+        $path = $this->_tmpPath . DIRECTORY_SEPARATOR . strtolower((string) $prefix) . '_doctrine_tmp_dirs';
         $options = array(
             'classPrefix' => $prefix,
             'generateBaseClasses' => false
@@ -418,7 +418,7 @@ class Doctrine_Migration_Diff
         }
 
         // clean up tmp directories
-        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower(self::$_fromPrefix) . '_doctrine_tmp_dirs');
-        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower(self::$_toPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower((string) self::$_fromPrefix) . '_doctrine_tmp_dirs');
+        Doctrine_Lib::removeDirectories($this->_tmpPath . DIRECTORY_SEPARATOR . strtolower((string) self::$_toPrefix) . '_doctrine_tmp_dirs');
     }
 }

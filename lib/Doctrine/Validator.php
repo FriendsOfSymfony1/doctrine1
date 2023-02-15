@@ -47,7 +47,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     public static function getValidator($name)
     {
         if ( ! isset(self::$validators[$name])) {
-            $class = 'Doctrine_Validator_' . ucwords(strtolower($name));
+            $class = 'Doctrine_Validator_' . ucwords(strtolower((string) $name));
             if (class_exists($class)) {
                 self::$validators[$name] = new $class;
             } else if (class_exists($name)) {
@@ -97,7 +97,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
         } else if ($type == 'array' || $type == 'object') {
             $length = strlen(serialize($value));
         } else if ($type == 'decimal' || $type == 'float') {
-            $value = abs($value);
+            $value = abs((float)$value);
 
             $localeInfo = localeconv();
             $decimalPoint = $localeInfo['mon_decimal_point'] ? $localeInfo['mon_decimal_point'] : $localeInfo['decimal_point'];

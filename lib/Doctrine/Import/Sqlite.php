@@ -98,7 +98,7 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
         $query = "SELECT sql FROM sqlite_master WHERE type='index' AND ";
 
         if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
-            $query .= 'LOWER(tbl_name) = ' . strtolower($table);
+            $query .= 'LOWER(tbl_name) = ' . strtolower((string) $table);
         } else {
             $query .= 'tbl_name = ' . $table;
         }
@@ -107,7 +107,7 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
 
         $result = array();
         foreach ($indexes as $sql) {
-            if (preg_match("/^create unique index ([^ ]+) on /i", $sql, $tmp)) {
+            if (preg_match("/^create unique index ([^ ]+) on /i", (string) $sql, $tmp)) {
                 $index = $this->conn->formatter->fixIndexName($tmp[1]);
                 if ( ! empty($index)) {
                     $result[$index] = true;
@@ -207,7 +207,7 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
 
         $result = array();
         foreach ($views as $row) {
-            if (preg_match("/^create view .* \bfrom\b\s+\b{$table}\b /i", $row['sql'])) {
+            if (preg_match("/^create view .* \bfrom\b\s+\b{$table}\b /i", (string) $row['sql'])) {
                 if ( ! empty($row['name'])) {
                     $result[$row['name']] = true;
                 }

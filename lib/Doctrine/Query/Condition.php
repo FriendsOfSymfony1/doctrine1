@@ -61,9 +61,9 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
             for ($i = 0, $l = count($parts); $i < $l; $i++) {
                 $test = $this->_tokenizer->sqlExplode($parts[$i]);
 
-                if (count($test) == 3 && strtoupper($test[1]) == 'BETWEEN') {
+                if (count($test) == 3 && strtoupper((string) $test[1]) == 'BETWEEN') {
                     $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
-                } else if (count($test) == 4 && strtoupper($test[1]) == 'NOT' && strtoupper($test[2]) == 'BETWEEN') {
+                } else if (count($test) == 4 && strtoupper((string) $test[1]) == 'NOT' && strtoupper((string) $test[2]) == 'BETWEEN') {
                     $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
                 } else {
                     $tmp[] = $parts[$i];
@@ -82,12 +82,12 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                 $r = implode(' AND ', $ret);
             } else {
                 // Fix for #710
-                if (substr($parts[0],0,1) == '(' && substr($parts[0], -1) == ')') {
-                    return $this->parse(substr($parts[0], 1, -1));
+                if (substr((string) $parts[0],0,1) == '(' && substr((string) $parts[0], -1) == ')') {
+                    return $this->parse(substr((string) $parts[0], 1, -1));
                 } else {
                     // Processing NOT here
-                    if (strtoupper(substr($parts[0], 0, 4)) === 'NOT ') {
-                        $r = 'NOT ('.$this->parse(substr($parts[0], 4)).')';
+                    if (strtoupper(substr((string) $parts[0], 0, 4)) === 'NOT ') {
+                        $r = 'NOT ('.$this->parse(substr((string) $parts[0], 4)).')';
                     } else {
                         return $this->load($parts[0]);
                     }
@@ -115,7 +115,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
             $value = $this->query->getConnection()
                      ->dataDict->parseBoolean($value);
 
-            $a = explode('.', $value);
+            $a = explode('.', (string) $value);
 
             if (count($a) > 1) {
             // either a float or a component..

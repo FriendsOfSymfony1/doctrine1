@@ -123,7 +123,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
      */
     public function getPortableDeclaration($field)
     {
-        $db_type = preg_replace('/[\d\(\)]/','', strtolower($field['type']) );
+        $db_type = preg_replace('/[\d\(\)]/','', strtolower((string) $field['type']) );
         $length  = (isset($field['length']) && $field['length'] > 0) ? $field['length'] : null;
 
         $type = array();
@@ -174,7 +174,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 $type[0] = 'string';
                 if ($length == '1') {
                     $type[] = 'boolean';
-                    if (preg_match('/^[is|has]/', $field['name'])) {
+                    if (preg_match('/^[is|has]/', (string) $field['name'])) {
                         $type = array_reverse($type);
                     }
                 } elseif (strstr($db_type, 'text')) {

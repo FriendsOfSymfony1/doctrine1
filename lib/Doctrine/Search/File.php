@@ -73,7 +73,7 @@ class Doctrine_Search_File extends Doctrine_Search
                                                 RecursiveIteratorIterator::LEAVES_ONLY);
                                                 
         foreach ($it as $file) {
-            if (strpos($file, DIRECTORY_SEPARATOR . '.svn') !== false) {
+            if (strpos((string) $file, DIRECTORY_SEPARATOR . '.svn') !== false) {
                 continue;
             }
 

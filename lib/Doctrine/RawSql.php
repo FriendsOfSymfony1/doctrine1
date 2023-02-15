@@ -112,7 +112,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      */
     private function _parseSelectFields($queryPart)
     {
-        preg_match_all('/{([^}{]*)}/U', $queryPart, $m);
+        preg_match_all('/{([^}{]*)}/U', (string) $queryPart, $m);
         $this->fields = $m[1];
         $this->_sqlParts['select'] = array();
     }
@@ -136,7 +136,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
 
         $parts = array();
         foreach ($tokens as $key => $part) {
-            $partLowerCase = strtolower($part);
+            $partLowerCase = strtolower((string) $part);
             switch ($partLowerCase) {
                 case 'select':
                 case 'from':
@@ -152,7 +152,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
                 case 'order':
                 case 'group':
                     $i = $key + 1;
-                    if (isset($tokens[$i]) && strtolower($tokens[$i]) === 'by') {
+                    if (isset($tokens[$i]) && strtolower((string) $tokens[$i]) === 'by') {
                         $type = $partLowerCase . 'by';
                         $parts[$type] = array();
                     } else {
@@ -203,7 +203,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
         $formatter = $this->getConnection()->formatter;
 
         foreach ($this->fields as $field) {
-            $e = explode('.', $field);
+            $e = explode('.', (string) $field);
             if ( ! isset($e[1])) {
                 throw new Doctrine_RawSql_Exception('All selected fields in Sql query must be in format tableAlias.fieldName');
             }
@@ -382,7 +382,7 @@ class Doctrine_RawSql extends Doctrine_Query_Abstract
      */
     public function addComponent($tableAlias, $path)
     {
-        $tmp           = explode(' ', $path);
+        $tmp           = explode(' ', (string) $path);
         $originalAlias = (count($tmp) > 1) ? end($tmp) : null;
 
         $e = explode('.', $tmp[0]);

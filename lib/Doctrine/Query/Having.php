@@ -81,7 +81,7 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
     private function _parseAliases($value)
     {
         if ( ! is_numeric($value)) {
-            $a = explode('.', $value);
+            $a = explode('.', (string) $value);
 
             if (count($a) > 1) {
                 $field = array_pop($a);

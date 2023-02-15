@@ -152,12 +152,12 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
 
         $ownerClassName = $this->_options['table']->getComponentName();
         $className = $this->_options['className'];
-        $this->_options['className'] = str_replace('%CLASS%', $ownerClassName, $className);
+        $this->_options['className'] = str_replace('%CLASS%', $ownerClassName, (string) $className);
 
         if (isset($this->_options['tableName'])) {
             $ownerTableName = $this->_options['table']->getTableName();
             $tableName = $this->_options['tableName'];
-            $this->_options['tableName'] = str_replace('%TABLE%', $ownerTableName, $tableName);
+            $this->_options['tableName'] = str_replace('%TABLE%', $ownerTableName, (string) $tableName);
         }
 
         // check that class doesn't exist (otherwise we cannot create it)

@@ -236,7 +236,7 @@ class Doctrine_Import_Schema
                                                       RecursiveIteratorIterator::LEAVES_ONLY);
 
                 foreach ($it as $file) {
-                    $e = explode('.', $file->getFileName());
+                    $e = explode('.', (string) $file->getFileName());
                     if (end($e) === $format) {
                         $array = array_merge($array, $this->parseSchema($file->getPathName(), $format));
                     }
@@ -378,7 +378,7 @@ class Doctrine_Import_Schema
                     $this->_validateSchemaElement('column', array_keys($field), $className . '->columns->' . $colDesc['name']);
 
                     // Support short type(length) syntax: my_column: { type: integer(4) }
-                    $e = explode('(', $field['type']);
+                    $e = explode('(', (string) $field['type']);
                     if (isset($e[0]) && isset($e[1])) {
                         $colDesc['type'] = $e[0];
                         $value = substr($e[1], 0, strlen($e[1]) - 1);
@@ -570,8 +570,8 @@ class Doctrine_Import_Schema
                 foreach ($properties['columns'] as $column) {
                     // Check if the column we are inflecting has a _id on the end of it before trying to inflect it and find
                     // the class name for the column
-                    if (strpos($column['name'], '_id')) {
-                        $columnClassName = Doctrine_Inflector::classify(str_replace('_id', '', $column['name']));
+                    if (strpos((string) $column['name'], '_id')) {
+                        $columnClassName = Doctrine_Inflector::classify(str_replace('_id', '', (string) $column['name']));
                         if (isset($array[$columnClassName]) && !isset($array[$className]['relations'][$columnClassName])) {
                             $array[$className]['relations'][$columnClassName] = array();
 

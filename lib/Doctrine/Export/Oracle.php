@@ -218,7 +218,7 @@ END;';
     public function getAdvancedForeignKeyOptions(array $definition)
     {
         $query = '';
-        if (isset($definition['onDelete']) && strtoupper(trim($definition['onDelete'])) != 'NO ACTION') {
+        if (isset($definition['onDelete']) && strtoupper(trim((string) $definition['onDelete'])) != 'NO ACTION') {
             $query .= ' ON DELETE ' . $definition['onDelete'];
         }
         if (isset($definition['deferrable'])) {
@@ -334,7 +334,7 @@ END;';
             foreach ($options['indexes'] as $indexName => $definition) {
                 // create nonunique indexes, as they are a part od CREATE TABLE DDL
                 if ( ! isset($definition['type']) || 
-                    (isset($definition['type']) && strtolower($definition['type']) != 'unique')) {
+                    (isset($definition['type']) && strtolower((string) $definition['type']) != 'unique')) {
                     $sql[] = $this->createIndexSql($name, $indexName, $definition);
                 }
             }
@@ -583,8 +583,8 @@ END;';
         
         if ( isset($definition['type']))
         {
-            if (strtolower($definition['type']) == 'unique') {
-                $type = strtoupper($definition['type']);
+            if (strtolower((string) $definition['type']) == 'unique') {
+                $type = strtoupper((string) $definition['type']);
             } else {
                 throw new Doctrine_Export_Exception(
                     'Unknown type '.$definition['type'] .' for index '.$name

@@ -60,7 +60,7 @@ class Doctrine_Inflector
 
         if (!isset($cache[$word])) {
             $word = preg_replace('/[$]/', '', $word);
-            $classify = preg_replace_callback('~(_?)([-_])([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower($word)));
+            $classify = preg_replace_callback('~(_?)([-_])([\w])~', array("Doctrine_Inflector", "classifyCallback"), ucfirst(strtolower((string) $word)));
             $cache[$word] = $classify;
         }
         return $cache[$word];
@@ -74,7 +74,7 @@ class Doctrine_Inflector
      */
     public static function classifyCallback($matches)
     {
-        return $matches[1] . strtoupper($matches[3]);
+        return $matches[1] . strtoupper((string) $matches[3]);
     }
 
     /**
@@ -259,9 +259,9 @@ class Doctrine_Inflector
 
         if (function_exists('mb_strtolower'))
         {
-            $text = mb_strtolower($text);
+            $text = mb_strtolower((string) $text);
         } else {
-            $text = strtolower($text);
+            $text = strtolower((string) $text);
         }
 
         // Remove all none word characters

@@ -62,9 +62,9 @@ class Doctrine_Query_Tokenizer
         $parts = array();
 
         foreach ($tokens as $index => $token) {
-            $token = trim($token);
+            $token = trim((string) $token);
 
-            switch (strtolower($token)) {
+            switch (strtolower((string) $token)) {
                 case 'delete':
                 case 'update':
                 case 'select':
@@ -82,7 +82,7 @@ class Doctrine_Query_Tokenizer
                 case 'order':
                 case 'group':
                     $i = ($index + 1);
-                    if (isset($tokens[$i]) && strtolower($tokens[$i]) === 'by') {
+                    if (isset($tokens[$i]) && strtolower((string) $tokens[$i]) === 'by') {
                         $p = $token;
                         $parts[$token] = '';
                         //$parts[$token] = array();
@@ -163,7 +163,7 @@ class Doctrine_Query_Tokenizer
 
         // Trim is here for historical reasons
         foreach ($terms as $value) {
-            $res[] = trim($value[0]);
+            $res[] = trim((string) $value[0]);
         }
 
         return $res;
@@ -201,7 +201,7 @@ class Doctrine_Query_Tokenizer
         $res = array();
 
         foreach ($terms as $val) {
-            $res[] = trim($val[0]);
+            $res[] = trim((string) $val[0]);
         }
 
         return $res;
@@ -246,7 +246,7 @@ class Doctrine_Query_Tokenizer
         $res = array();
 
         foreach ($terms as $value) {
-            $res[] = trim($value[0]);
+            $res[] = trim((string) $value[0]);
         }
 
         return $res;
@@ -300,8 +300,8 @@ class Doctrine_Query_Tokenizer
     private function getSplitRegExpFromArray(array $d)
     {
         foreach ($d as $key => $string) {
-            $escapedString = preg_quote($string);
-            if (preg_match('#^\w+$#', $string)) {
+            $escapedString = preg_quote((string) $string);
+            if (preg_match('#^\w+$#', (string) $string)) {
                 $escapedString = "\W$escapedString\W";
             }
             $d[$key] = $escapedString;
@@ -367,8 +367,8 @@ class Doctrine_Query_Tokenizer
                 $subterms = $this->clauseExplodeNonQuoted($val, $regexp);
 
                 foreach ($subterms as &$sub) {
-                    $c1 = substr_count($sub[0], $e1);
-                    $c2 = substr_count($sub[0], $e2);
+                    $c1 = substr_count((string) $sub[0], (string) $e1);
+                    $c2 = substr_count((string) $sub[0], (string) $e2);
 
                     $sub[2] = $c1 - $c2;
                 }
@@ -424,7 +424,7 @@ class Doctrine_Query_Tokenizer
      */
     private function clauseExplodeNonQuoted($str, $regexp)
     {
-        $str = preg_split($regexp, $str, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $str = preg_split($regexp, (string) $str, -1, PREG_SPLIT_DELIM_CAPTURE);
         $term = array();
         $i = 0;
 
@@ -518,7 +518,7 @@ class Doctrine_Query_Tokenizer
             $v = preg_quote($v);
         }
         $split = '#(' . implode('|', $split) . ')#';
-        $str = preg_split($split, $str, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $str = preg_split($split, (string) $str, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         $parts = array();
         $mode = false; // Mode is either ' or " if the loop is inside a string quoted with ' or "

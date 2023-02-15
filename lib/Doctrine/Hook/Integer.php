@@ -46,7 +46,7 @@ class Doctrine_Hook_Integer extends Doctrine_Hook_Parser_Complex
      */
     public function parseSingle($alias, $field, $value)
     {
-        $e = explode(' ', $value);
+        $e = explode(' ', (string) $value);
 
         foreach ($e as $v) {
              $v = trim($v);

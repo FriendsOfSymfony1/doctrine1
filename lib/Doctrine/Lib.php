@@ -417,7 +417,7 @@ class Doctrine_Lib
      */
     public static function isValidClassName($className)
     {
-        if (preg_match('~(^[a-z])|(_[a-z])|([\W])|(_{2})~', $className)) {
+        if (preg_match('~(^[a-z])|(_[a-z])|([\W])|(_{2})~', (string) $className)) {
             return false;
         }
 

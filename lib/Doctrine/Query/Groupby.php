@@ -45,19 +45,19 @@ class Doctrine_Query_Groupby extends Doctrine_Query_Part
         $str = '';
 
         foreach ($terms as $term) {
-            $pos = strpos($term[0], '(');
+            $pos = strpos((string) $term[0], '(');
             $hasComma = false;
 
             if ($pos !== false) {
-                $name = substr($term[0], 0, $pos);
+                $name = substr((string) $term[0], 0, $pos);
 
                 $term[0] = $this->query->parseFunctionExpression($term[0]);
             } else {
-                if (substr($term[0], 0, 1) !== "'" && substr($term[0], -1) !== "'") {
+                if (substr((string) $term[0], 0, 1) !== "'" && substr((string) $term[0], -1) !== "'") {
 
-                    if (strpos($term[0], '.') !== false) {
+                    if (strpos((string) $term[0], '.') !== false) {
                         if ( ! is_numeric($term[0])) {
-                            $e = explode('.', $term[0]);
+                            $e = explode('.', (string) $term[0]);
 
                             $field = array_pop($e);
                             
@@ -111,15 +111,15 @@ class Doctrine_Query_Groupby extends Doctrine_Query_Part
                     } else {
                         if ( ! empty($term[0]) &&
                              ! is_numeric($term[0]) &&
-                            $term[0] !== '?' && substr($term[0], 0, 1) !== ':') {
+                            $term[0] !== '?' && substr((string) $term[0], 0, 1) !== ':') {
 
                             $componentAlias = $this->query->getRootAlias();
 
                             $found = false;
                             
                             // Check if field name still has comma
-                            if (($pos = strpos($term[0], ',')) !== false) {
-                                $term[0] = substr($term[0], 0, $pos);
+                            if (($pos = strpos((string) $term[0], ',')) !== false) {
+                                $term[0] = substr((string) $term[0], 0, $pos);
                                 $hasComma = true;
                             }
 

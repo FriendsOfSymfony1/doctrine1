@@ -129,7 +129,7 @@ class AdapterMock implements Doctrine_Adapter_Interface {
     public function getAttribute($attribute)
     {
         if ($attribute == PDO::ATTR_DRIVER_NAME) {
-            return strtolower($this->name);
+            return strtolower((string) $this->name);
         }
     }
 

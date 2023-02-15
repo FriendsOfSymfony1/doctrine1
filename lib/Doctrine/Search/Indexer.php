@@ -43,7 +43,7 @@ class Doctrine_Search_Indexer
         $files = array();
         foreach ($it as $file) {
             $name = $file->getPathName();
-            if (strpos($name, '.svn') === false) {
+            if (strpos((string) $name, '.svn') === false) {
                 $files[] = $name;
             }
         }

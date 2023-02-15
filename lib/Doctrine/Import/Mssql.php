@@ -103,8 +103,8 @@ class Doctrine_Import_Mssql extends Doctrine_Import
         foreach ($result as $key => $val) {
             $val = array_change_key_case($val, CASE_LOWER);
 
-            if (strstr($val['type_name'], ' ')) {
-                list($type, $identity) = explode(' ', $val['type_name']);
+            if (strstr((string) $val['type_name'], ' ')) {
+                list($type, $identity) = explode(' ', (string) $val['type_name']);
             } else {
                 $type = $val['type_name'];
                 $identity = '';
@@ -119,7 +119,7 @@ class Doctrine_Import_Mssql extends Doctrine_Import
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
 
             $isIdentity = (bool) (strtoupper(trim($identity)) == 'IDENTITY');
-            $isNullable = (bool) (strtoupper(trim($val['is_nullable'])) == 'NO');
+            $isNullable = (bool) (strtoupper(trim((string) $val['is_nullable'])) == 'NO');
             $isPrimary = in_array($val['column_name'], $primary);
 
             $description  = array(
@@ -208,8 +208,8 @@ class Doctrine_Import_Mssql extends Doctrine_Import
         $pkName = 'PK_NAME';
         if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
             if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER) {
-                $keyName = strtolower($keyName);
-                $pkName  = strtolower($pkName);
+                $keyName = strtolower((string) $keyName);
+                $pkName  = strtolower((string) $pkName);
             } else {
                 $keyName = strtoupper($keyName);
                 $pkName  = strtoupper($pkName);

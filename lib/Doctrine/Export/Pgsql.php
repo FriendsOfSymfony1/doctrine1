@@ -38,13 +38,13 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
     /**
      * createDatabaseSql
      *
-     * @param string $name 
+     * @param string $name
      * @return void
      */
     public function createDatabaseSql($name)
     {
         $query  = 'CREATE DATABASE ' . $this->conn->quoteIdentifier($name);
-        
+
         return $query;
     }
 
@@ -58,7 +58,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
     public function dropDatabaseSql($name)
     {
         $query  = 'DROP DATABASE ' . $this->conn->quoteIdentifier($name);
-        
+
         return $query;
     }
 
@@ -125,7 +125,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         if ($check) {
             return true;
         }
-        
+
         $sql = array();
 
         if (isset($changes['add']) && is_array($changes['add'])) {
@@ -178,10 +178,10 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
             $changeName = $this->conn->quoteIdentifier($changes['name'], true);
             $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' RENAME TO ' . $changeName;
         }
-        
+
         return $sql;
     }
-    
+
     /**
      * alter an existing table
      *
@@ -277,7 +277,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         foreach ($sql as $query) {
             $this->conn->exec($query);
         }
-        return true;    
+        return true;
     }
 
     /**
@@ -325,7 +325,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         if ( ! $name) {
             throw new Doctrine_Export_Exception('no valid table name specified');
         }
-        
+
         if (empty($fields)) {
             throw new Doctrine_Export_Exception('no fields specified for table ' . $name);
         }
@@ -358,7 +358,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
                 $sql[] = $this->createIndexSql($name, $index, $definition);
             }
         }
-        
+
         if (isset($options['foreignKeys'])) {
 
             foreach ((array) $options['foreignKeys'] as $k => $definition) {
@@ -375,7 +375,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
 
      /**
      * Get the stucture of a field into an array.
-     * 
+     *
      * @param string    $table         name of the table on which the index is to be created
      * @param string    $name          name of the index to be created
      * @param array     $definition    associative array that defines properties of the index to be created.

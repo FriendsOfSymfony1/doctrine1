@@ -255,7 +255,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
      */
     public function getPortableDeclaration(array $field)
     {
-        $dbType = strtolower($field['type']);
+        $dbType = strtolower((string) $field['type']);
         $dbType = strtok($dbType, '(), ');
         if ($dbType == 'national') {
             $dbType = strtok('(), ');
@@ -284,31 +284,31 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'tinyint':
                 $type[] = 'integer';
                 $type[] = 'boolean';
-                if (preg_match('/^(is|has)/', $field['name'])) {
+                if (preg_match('/^(is|has)/', (string) $field['name'])) {
                     $type = array_reverse($type);
                 }
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
                 $length = 1;
             break;
             case 'smallint':
                 $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
                 $length = 2;
             break;
             case 'mediumint':
                 $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
                 $length = 3;
             break;
             case 'int':
             case 'integer':
                 $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
                 $length = 4;
             break;
             case 'bigint':
                 $type[] = 'integer';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
                 $length = 8;
             break;
             case 'tinytext':
@@ -323,7 +323,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $type[] = 'string';
                 if ($length == '1') {
                     $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/', $field['name'])) {
+                    if (preg_match('/^(is|has)/', (string) $field['name'])) {
                         $type = array_reverse($type);
                     }
                 } elseif (strstr($dbType, 'text')) {
@@ -338,17 +338,17 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             break;
             case 'enum':
                 $type[] = 'enum';
-                preg_match_all('/\'((?:\'\'|[^\'])*)\'/', $field['type'], $matches);
+                preg_match_all('/\'((?:\'\'|[^\'])*)\'/', (string) $field['type'], $matches);
                 $length = 0;
                 $fixed = false;
                 if (is_array($matches)) {
                     foreach ($matches[1] as &$value) {
-                        $value = str_replace('\'\'', '\'', $value);
+                        $value = str_replace('\'\'', '\'', (string) $value);
                         $length = max($length, strlen($value));
                     }
                     if ($length == '1' && count($matches[1]) == 2) {
                         $type[] = 'boolean';
-                        if (preg_match('/^(is|has)/', $field['name'])) {
+                        if (preg_match('/^(is|has)/', (string) $field['name'])) {
                             $type = array_reverse($type);
                         }
                     }
@@ -379,7 +379,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'double':
             case 'real':
                 $type[] = 'float';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
             break;
             case 'unknown':
             case 'decimal':
@@ -388,7 +388,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 }
             case 'numeric':
                 $type[] = 'decimal';
-                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $unsigned = preg_match('/ unsigned/i', (string) $field['type']);
             break;
             case 'tinyblob':
             case 'mediumblob':

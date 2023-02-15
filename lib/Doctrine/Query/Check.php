@@ -119,7 +119,7 @@ class Doctrine_Query_Check
     
     public function parseSingle($part)
     {
-        $e = explode(' ', $part);
+        $e = explode(' ', (string) $part);
         
         $e[0] = $this->parseFunction($e[0]);
 
@@ -140,9 +140,9 @@ class Doctrine_Query_Check
 
     public function parseFunction($dql) 
     {
-        if (($pos = strpos($dql, '(')) !== false) {
-            $func  = substr($dql, 0, $pos);
-            $value = substr($dql, ($pos + 1), -1);
+        if (($pos = strpos((string) $dql, '(')) !== false) {
+            $func  = substr((string) $dql, 0, $pos);
+            $value = substr((string) $dql, ($pos + 1), -1);
             
             $expr  = $this->table->getConnection()->expression;
 

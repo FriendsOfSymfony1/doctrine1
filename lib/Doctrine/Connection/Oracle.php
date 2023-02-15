@@ -99,8 +99,8 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection_Common
     {
         $limit = (int) $limit;
         $offset = (int) $offset;
-        if (preg_match('/^\s*SELECT/i', $query)) {
-            if ( ! preg_match('/\sFROM\s/i', $query)) {
+        if (preg_match('/^\s*SELECT/i', (string) $query)) {
+            if ( ! preg_match('/\sFROM\s/i', (string) $query)) {
                 $query .= " FROM dual";
             }
             if ($limit > 0) {

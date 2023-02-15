@@ -878,7 +878,7 @@ abstract class Doctrine_Query_Abstract
     public function generateSqlTableAlias($componentAlias, $tableName)
     {
         preg_match('/([^_|\d])/', $tableName, $matches);
-        $char = strtolower($matches[0]);
+        $char = strtolower((string) $matches[0]);
 
         $alias = $char;
 
@@ -1244,7 +1244,7 @@ abstract class Doctrine_Query_Abstract
         $queryComponents = array();
         $cachedComponents = $cached[1];
         foreach ($cachedComponents as $alias => $components) {
-            $e = explode('.', $components['name']);
+            $e = explode('.', (string) $components['name']);
             if (count($e) === 1) {
                 $manager = Doctrine_Manager::getInstance();
                 if ( ! $this->_passedConn && $manager->hasConnectionForComponent($e[0])) {
@@ -2252,7 +2252,7 @@ abstract class Doctrine_Query_Abstract
     protected function _getParser($name)
     {
         if ( ! isset($this->_parsers[$name])) {
-            $class = 'Doctrine_Query_' . ucwords(strtolower($name));
+            $class = 'Doctrine_Query_' . ucwords(strtolower((string) $name));
 
             Doctrine_Core::autoload($class);
 

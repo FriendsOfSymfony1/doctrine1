@@ -43,7 +43,7 @@ class Doctrine_Validator_Minlength extends Doctrine_Validator_Driver
         if (is_null($value)) {
             return true;
         }
-        if (isset($this->args) && strlen($value) < $this->args) {
+        if (isset($this->args) && strlen((string) $value) < $this->args) {
             return false;
         }
 

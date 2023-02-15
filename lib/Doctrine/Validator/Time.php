@@ -46,7 +46,7 @@ class Doctrine_Validator_Time extends Doctrine_Validator_Driver
             return true;
         }
 
-		if ( ! preg_match('/^\s*(\d{2}):(\d{2})(:(\d{2}))?(\.(\d{1,6}))?([+-]\d{1,2}(:(\d{2}))?)?\s*$/', $value, $matches)) {
+		if ( ! preg_match('/^\s*(\d{2}):(\d{2})(:(\d{2}))?(\.(\d{1,6}))?([+-]\d{1,2}(:(\d{2}))?)?\s*$/', (string) $value, $matches)) {
             return false;
         }
 

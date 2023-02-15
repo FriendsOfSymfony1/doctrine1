@@ -227,11 +227,11 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 
         $similarSlugs = array();
         foreach ($similarSlugResult as $key => $value) {
-            $similarSlugs[$key] = strtolower($value[$name]);
+            $similarSlugs[$key] = strtolower((string) $value[$name]);
         }
 
         $i = 1;
-        while (in_array(strtolower($slug), $similarSlugs)) {
+        while (in_array(strtolower((string) $slug), $similarSlugs)) {
             $slug = call_user_func_array($this->_options['builder'], array($proposal.'-'.$i, $record));
             $i++;
         }
@@ -239,8 +239,8 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         // If slug is longer then the column length then we need to trim it
         // and try to generate a unique slug again
         $length = $table->getFieldLength($this->_options['name']);
-        if (strlen($slug) > $length) {
-            $slug = substr($slug, 0, $length - (strlen($i) + 1));
+        if (strlen((string) $slug) > $length) {
+            $slug = substr((string) $slug, 0, $length - (strlen($i) + 1));
             $slug = $this->getUniqueSlug($record, $slug);
         }
 

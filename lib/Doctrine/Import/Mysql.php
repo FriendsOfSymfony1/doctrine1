@@ -69,8 +69,8 @@ class Doctrine_Import_Mysql extends Doctrine_Import
         $nonUnique = 'Non_unique';
         if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
             if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER) {
-                $keyName = strtolower($keyName);
-                $nonUnique = strtolower($nonUnique);
+                $keyName = strtolower((string) $keyName);
+                $nonUnique = strtolower((string) $nonUnique);
             } else {
                 $keyName = strtoupper($keyName);
                 $nonUnique = strtoupper($nonUnique);
@@ -162,10 +162,10 @@ class Doctrine_Import_Mysql extends Doctrine_Import
                           'fixed'         => (bool) $decl['fixed'],
                           'unsigned'      => (bool) $decl['unsigned'],
                           'values'        => $values,
-                          'primary'       => (strtolower($val['key']) == 'pri'),
+                          'primary'       => (strtolower((string) $val['key']) == 'pri'),
                           'default'       => $val['default'],
                           'notnull'       => (bool) ($val['null'] != 'YES'),
-                          'autoincrement' => (bool) (strpos($val['extra'], 'auto_increment') !== false),
+                          'autoincrement' => (bool) (strpos((string) $val['extra'], 'auto_increment') !== false),
                           );
             if (isset($decl['scale'])) {
                 $description['scale'] = $decl['scale'];
@@ -188,8 +188,8 @@ class Doctrine_Import_Mysql extends Doctrine_Import
         $nonUnique = 'Non_unique';
         if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
             if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER) {
-                $keyName = strtolower($keyName);
-                $nonUnique = strtolower($nonUnique);
+                $keyName = strtolower((string) $keyName);
+                $nonUnique = strtolower((string) $nonUnique);
             } else {
                 $keyName = strtoupper($keyName);
                 $nonUnique = strtoupper($nonUnique);

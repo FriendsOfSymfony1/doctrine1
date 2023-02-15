@@ -263,7 +263,7 @@ class Doctrine_Search_Analyzer_Standard extends Doctrine_Search_Analyzer impleme
 
     public function analyze($text, $encoding = null)
     {
-        $text = preg_replace('/[\'`´"]/', '', $text);
+        $text = preg_replace('/[\'`´"]/', '', (string) $text);
         $text = Doctrine_Inflector::unaccent($text);
         $text = preg_replace('/[^A-Za-z0-9]/', ' ', $text);
         $text = str_replace('  ', ' ', $text);

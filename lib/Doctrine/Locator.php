@@ -147,7 +147,7 @@ class Doctrine_Locator implements Countable, IteratorAggregate
 
                 $name = explode('.', $name);
                 foreach ($name as &$v) {
-                    $v = ucfirst(strtolower($v));
+                    $v = ucfirst(strtolower((string) $v));
                 }
                 $name = implode('_', $name);
 

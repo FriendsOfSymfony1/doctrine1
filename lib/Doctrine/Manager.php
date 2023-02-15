@@ -292,7 +292,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             if ( ! isset($adapter[0])) {
                 throw new Doctrine_Manager_Exception('Empty data source name given.');
             }
-            $e = explode(':', $adapter[0]);
+            $e = explode(':', (string) $adapter[0]);
 
             if ($e[0] == 'uri') {
                 $e[0] = 'odbc';
@@ -466,7 +466,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                     throw new Doctrine_Manager_Exception('No database available in data source name');
                 }
                 if (isset($parts['path'])) {
-                    $parts['database'] = substr($parts['path'], 1);
+                    $parts['database'] = substr((string) $parts['path'], 1);
                 }
                 if ( ! isset($parts['host'])) {
                     throw new Doctrine_Manager_Exception('No hostname set in data source name');
@@ -489,7 +489,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                     throw new Doctrine_Manager_Exception('No database available in data source name');
                 }
                 if (isset($parts['path'])) {
-                    $parts['database'] = substr($parts['path'], 1);
+                    $parts['database'] = substr((string) $parts['path'], 1);
                 }
                 if ( ! isset($parts['host'])) {
                     throw new Doctrine_Manager_Exception('No hostname set in data source name');

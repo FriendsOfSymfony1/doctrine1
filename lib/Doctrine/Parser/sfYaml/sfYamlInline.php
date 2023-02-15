@@ -102,19 +102,19 @@ class sfYamlInline
         return "'$value'";
       case is_numeric($value) && false === strpbrk($value, "\f\n\r\t\v"):
         return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : (is_string($value) ? "'$value'" : $value);
-      case false !== strpos($value, "\n") || false !== strpos($value, "\r"):
-        return sprintf('"%s"', str_replace(array('"', "\n", "\r"), array('\\"', '\n', '\r'), $value));
-      case preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \# \?] | \A[ - ? | < > = ! % @ ` ]/x', $value):
-        return sprintf("'%s'", str_replace('\'', '\'\'', $value));
+      case false !== strpos((string) $value, "\n") || false !== strpos((string) $value, "\r"):
+        return sprintf('"%s"', str_replace(array('"', "\n", "\r"), array('\\"', '\n', '\r'), (string) $value));
+      case preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \# \?] | \A[ - ? | < > = ! % @ ` ]/x', (string) $value):
+        return sprintf("'%s'", str_replace('\'', '\'\'', (string) $value));
       case '' == $value:
         return "''";
-      case preg_match(self::getTimestampRegex(), $value):
+      case preg_match(self::getTimestampRegex(), (string) $value):
         return "'$value'";
-      case in_array(strtolower($value), $trueValues):
+      case in_array(strtolower((string) $value), $trueValues):
         return "'$value'";
-      case in_array(strtolower($value), $falseValues):
+      case in_array(strtolower((string) $value), $falseValues):
         return "'$value'";
-      case in_array(strtolower($value), array('null', '~')):
+      case in_array(strtolower((string) $value), array('null', '~')):
         return "'$value'";
       default:
         return $value;
@@ -388,7 +388,7 @@ class sfYamlInline
 
     switch (true)
     {
-      case 'null' == strtolower($scalar):
+      case 'null' == strtolower((string) $scalar):
       case '' == $scalar:
       case '~' == $scalar:
         return null;
@@ -402,9 +402,9 @@ class sfYamlInline
         $raw = $scalar;
         $cast = intval($scalar);
         return '0' == $scalar[0] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
-      case in_array(strtolower($scalar), $trueValues):
+      case in_array(strtolower((string) $scalar), $trueValues):
         return true;
-      case in_array(strtolower($scalar), $falseValues):
+      case in_array(strtolower((string) $scalar), $falseValues):
         return false;
       case is_numeric($scalar):
         return '0x' == $scalar[0].$scalar[1] ? hexdec($scalar) : floatval($scalar);

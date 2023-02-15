@@ -271,7 +271,7 @@ class Doctrine_Pager_Layout
      */ 
     public function addMaskReplacement($oldMask, $newMask, $asValue = false)
     {
-        if (($oldMask = trim($oldMask)) != 'page_number') {
+        if (($oldMask = trim((string) $oldMask)) != 'page_number') {
             $this->_maskReplacements[$oldMask] = array(
                 'newMask' => $newMask,
                 'asValue' => ($asValue === false) ? false : true

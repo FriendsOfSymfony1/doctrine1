@@ -46,14 +46,14 @@ class Doctrine_Validator_Email extends Doctrine_Validator_Driver
         }
 
         if (isset($this->args) && (! isset($this->args['check_mx']) || $this->args['check_mx'] == true)) {
-            $parts = explode('@', $value);
+            $parts = explode('@', (string) $value);
 
             if (isset($parts[1]) && $parts[1] && ! $this->_checkMX($parts[1])) {
                 return false;
             }
         }
 
-        $e = explode('.', $value);
+        $e = explode('.', (string) $value);
         $tld = end($e);
 
         if (preg_match("/[^a-zA-Z]/", $tld)) {
@@ -82,7 +82,7 @@ class Doctrine_Validator_Email extends Doctrine_Validator_Driver
         $localPart = "$word(\\x2e$word)*";
         $addrSpec = "$localPart\\x40$domain";
         
-        return (bool) preg_match("!^$addrSpec$!D", $value);
+        return (bool) preg_match("!^$addrSpec$!D", (string) $value);
     }
     
     /**

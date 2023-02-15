@@ -46,7 +46,7 @@ class Doctrine_Task_Dql extends Doctrine_Task
         $query = Doctrine_Query::create();
 
         $params = $this->getArgument('params');
-        $params = $params ? explode(',', $params):array();
+        $params = $params ? explode(',', (string) $params):array();
 
         $this->notify('executing: "' . $dql . '" (' . implode(', ', $params) . ')');
 

@@ -243,7 +243,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
         // cache server_info
         $this->serverInfo = $serverInfo;
         if ( ! $native) {
-            if (preg_match('/([0-9]+)\.([0-9]+)\.([0-9]+)/', $serverInfo, $tmp)) {
+            if (preg_match('/([0-9]+)\.([0-9]+)\.([0-9]+)/', (string) $serverInfo, $tmp)) {
                 $serverInfo = array(
                     'major' => $tmp[1],
                     'minor' => $tmp[2],
@@ -355,7 +355,7 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
         $settingNullIdentifier = false;
         $fields = array_change_key_case($fields);
         foreach($identifiers as $identifier) {
-            $lcIdentifier = strtolower($identifier);
+            $lcIdentifier = strtolower((string) $identifier);
 
             if(array_key_exists($lcIdentifier, $fields)) {
                 if(is_null($fields[$lcIdentifier])) {

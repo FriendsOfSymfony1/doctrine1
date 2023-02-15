@@ -66,7 +66,7 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
 
         foreach($array as $key => $value)
         {
-            $key = preg_replace('/[^a-z]/i', '', $key);
+            $key = preg_replace('/[^a-z]/i', '', (string) $key);
 
             if (is_array($value) && ! empty($value)) {
                 $node = $xml->addChild($key);
@@ -83,8 +83,8 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
                 $xml->addChild($value, 'true');
             } else {
                 $charset = $charset ? $charset : 'utf-8';
-                if (strcasecmp($charset, 'utf-8') !== 0 && strcasecmp($charset, 'utf8') !== 0) {
-                    $value = iconv($charset, 'UTF-8', $value);
+                if (strcasecmp((string) $charset, 'utf-8') !== 0 && strcasecmp((string) $charset, 'utf8') !== 0) {
+                    $value = iconv((string) $charset, 'UTF-8', (string) $value);
                 }
                 $value = htmlspecialchars((string) $value, ENT_COMPAT, 'UTF-8');
                 $xml->addChild($key, $value);

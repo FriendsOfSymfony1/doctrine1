@@ -167,11 +167,11 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
 
             if ($val['type'] == 'character varying') {
                 // get length from varchar definition
-                $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
+                $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', (string) $val['complete_type']);
                 $val['length'] = $length;
-            } else if (strpos($val['complete_type'], 'character varying') !== false) {
+            } else if (strpos((string) $val['complete_type'], 'character varying') !== false) {
                 // get length from varchar definition
-                $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
+                $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', (string) $val['complete_type']);
                 $val['length'] = $length;
             }
             
@@ -196,7 +196,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                 $t_result = $this->conn->fetchAssoc(sprintf('select enum_range(null::%s) as range ', $decl['enum_name']));                
                 if (isset($t_result[0])){
                     $range =  $t_result[0]['range'];
-                    $range = str_replace('{','',$range);
+                    $range = str_replace('{','',(string) $range);
                     $range = str_replace('}','',$range);
                     $range = explode(',',$range);
                     $description['values'] = $range;
@@ -205,12 +205,12 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
 
             $matches = array(); 
 
-            if (preg_match("/^nextval\('(.*)'(::.*)?\)$/", $description['default'], $matches)) { 
+            if (preg_match("/^nextval\('(.*)'(::.*)?\)$/", (string) $description['default'], $matches)) { 
                 $description['sequence'] = $this->conn->formatter->fixSequenceName($matches[1]); 
                 $description['default'] = null; 
-            } else if (preg_match("/^'(.*)'::character varying$/", $description['default'], $matches)) {
+            } else if (preg_match("/^'(.*)'::character varying$/", (string) $description['default'], $matches)) {
                 $description['default'] = $matches[1];
-            } else if (preg_match("/^(.*)::character varying$/", $description['default'], $matches)) {
+            } else if (preg_match("/^(.*)::character varying$/", (string) $description['default'], $matches)) {
                 $description['default'] = $matches[1];
             } else if ($description['type'] == 'boolean') {
                 if ($description['default'] === 'true') {
@@ -290,7 +290,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
 
         $results = $this->conn->fetchAssoc($sql, $param);
         foreach ($results as $result) {
-            preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', $result['condef'], $values);
+            preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', (string) $result['condef'], $values);
             if ((strpos($values[1], ',') === false) && (strpos($values[3], ',') === false)) {
                 $tableName = trim($values[2], '"');
                 $relations[] = array('table'   => $tableName,

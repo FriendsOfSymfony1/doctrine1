@@ -72,7 +72,7 @@ class Doctrine_Search_Query
 
     public function query($text, $includeRelevance = true)
     {
-        $text = trim($text);
+        $text = trim((string) $text);
 
         $foreignId = current(array_diff($this->_table->getColumnNames(), array('keyword', 'field', 'position')));
 
@@ -148,7 +148,7 @@ class Doctrine_Search_Query
                 $return = $this->parseTerm($clause);
             } else {
                 foreach ($terms as $k => $term) {
-                    $term = trim($term);
+                    $term = trim((string) $term);
     
                     if ($term === 'AND') {
                         continue;
@@ -180,7 +180,7 @@ class Doctrine_Search_Query
 
     public function isExpression($term)
     {
-        if (strpos($term, '(') !== false) {
+        if (strpos((string) $term, '(') !== false) {
             return true;
         } else {
             $terms = $this->_tokenizer->quoteExplode($term);
@@ -193,10 +193,10 @@ class Doctrine_Search_Query
     {
         $negation = false;
 
-        if (strpos($term, "'") === false) {
+        if (strpos((string) $term, "'") === false) {
             $where = $this->parseWord($term);
         } else {
-            $term = trim($term, "' ");
+            $term = trim((string) $term, "' ");
 
             $terms = $this->_tokenizer->quoteExplode($term);
             $where = $this->parseWord($terms[0]);
@@ -213,12 +213,12 @@ class Doctrine_Search_Query
 
     public function parseWord($word)
     {
-        $this->_words[] = str_replace('*', '', $word);
+        $this->_words[] = str_replace('*', '', (string) $word);
 
-        if (strpos($word, '?') !== false ||
-            strpos($word, '*') !== false) {
+        if (strpos((string) $word, '?') !== false ||
+            strpos((string) $word, '*') !== false) {
 
-            $word = str_replace('*', '%', $word);
+            $word = str_replace('*', '%', (string) $word);
 
             $where = 'keyword LIKE ?';
 

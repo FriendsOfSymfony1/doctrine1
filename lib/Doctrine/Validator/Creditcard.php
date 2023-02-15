@@ -54,7 +54,7 @@ class Doctrine_Validator_Creditcard extends Doctrine_Validator_Driver
             "/^3[68]\d{12}$/"               => 'diners',
         );
         foreach ($card_regexes as $regex => $type) {
-            if (preg_match($regex, $value)) {
+            if (preg_match($regex, (string) $value)) {
                  $cardType = $type;
                  break;
             }
@@ -63,7 +63,7 @@ class Doctrine_Validator_Creditcard extends Doctrine_Validator_Driver
             return false;
         }
         /* mod 10 checksum algorithm */
-        $revcode = strrev($value);
+        $revcode = strrev((string) $value);
         $checksum = 0;
         for ($i = 0; $i < strlen($revcode); $i++) {
             $currentNum = intval($revcode[$i]);

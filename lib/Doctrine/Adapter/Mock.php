@@ -277,7 +277,7 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     public function getAttribute($attribute)
     {
         if ($attribute == Doctrine_Core::ATTR_DRIVER_NAME) {
-            return strtolower($this->_name);
+            return strtolower((string) $this->_name);
         }
     }
 

@@ -129,7 +129,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
             throw new Doctrine_DataDict_Exception('Native oracle definition must have a data_type key specified');
         }
         
-        $dbType = strtolower($field['data_type']);
+        $dbType = strtolower((string) $field['data_type']);
         $type = array();
         $length = $unsigned = $fixed = null;
         if ( ! empty($field['data_length'])) {
@@ -147,7 +147,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                 $type[] = 'integer';
                 if ($length == '1') {
                     $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/i', $field['column_name'])) {
+                    if (preg_match('/^(is|has)/i', (string) $field['column_name'])) {
                         $type = array_reverse($type);
                     }
                 }
@@ -161,7 +161,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                 $type[] = 'string';
                 if ($length == '1') {
                     $type[] = 'boolean';
-                    if (preg_match('/^(is|has)/i', $field['column_name'])) {
+                    if (preg_match('/^(is|has)/i', (string) $field['column_name'])) {
                         $type = array_reverse($type);
                     }
                 }
@@ -184,7 +184,7 @@ class Doctrine_DataDict_Oracle extends Doctrine_DataDict
                     $type[] = 'integer';
                     if ((int)$length == '1') {
                         $type[] = 'boolean';
-                        if (preg_match('/^(is|has)/i', $field['column_name'])) {
+                        if (preg_match('/^(is|has)/i', (string) $field['column_name'])) {
                             $type = array_reverse($type);
                         } else {
                             $length = 1; //TINYINT
