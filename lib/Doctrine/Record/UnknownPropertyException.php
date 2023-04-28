@@ -31,4 +31,14 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Record_UnknownPropertyException extends Doctrine_Record_Exception
-{ }
+{
+    public static function createFromRecordAndProperty(Doctrine_Record $record, $propertyOrRelation)
+    {
+        $message = sprintf('Unknown record property / related component "%s" on "%s"',
+            $propertyOrRelation,
+            get_class($record)
+        );
+
+        return new Doctrine_Record_UnknownPropertyException($message);
+    }
+}
