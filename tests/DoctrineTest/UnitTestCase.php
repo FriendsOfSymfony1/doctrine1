@@ -11,12 +11,27 @@ class UnitTestCase
 
     protected static $_lastRunsPassesAndFails = array('passes' => array(), 'fails' => array());
 
+    /**
+     * @var string
+     */
+    private $_expectedExceptionClass;
+
+    /**
+     * @var string
+     */
+    private $_currentMethod;
+
     public function setUp()
     {
     }
 
     public function tearDown()
     {
+    }
+
+    protected function expectException($class)
+    {
+        $this->_expectedExceptionClass = $class;
     }
 
     public function init()
@@ -64,6 +79,15 @@ class UnitTestCase
     public function assertIdentical($value, $value2)
     {
         if ($value === $value2) {
+            $this->pass();
+        } else {
+            $this->_fail();
+        }
+    }
+
+    public function assertNotIdentical($value, $value2)
+    {
+        if ($value !== $value2) {
             $this->pass();
         } else {
             $this->_fail();
@@ -126,41 +150,75 @@ class UnitTestCase
 
     public function fail($message = "")
     {
-        $this->_fail($message);    
+        $this->_fail($message);
     }
 
     public function _fail($message = "")
     {
+        $stack = $this->findTestMethodStack();
+
+        $this->appendMessage($stack['class'], $stack['method'], $stack['line'], $message);
+
+        $this->_failed++;
+
+        $class = get_class($this);
+
+        if (isset(self::$_passesAndFails['passes'][$class])) {
+            unset(self::$_passesAndFails['passes'][$class]);
+        }
+
+        self::$_passesAndFails['fails'][$class] = $class;
+    }
+
+    private function findTestMethodStack()
+    {
         $trace = debug_backtrace();
         array_shift($trace);
 
-
         foreach ($trace as $stack) {
-            if (substr($stack['function'], 0, 4) === 'test') {
+            if ($this->isTestMethod($stack['function'])) {
                 $class = new ReflectionClass($stack['class']);
 
                 if ( ! isset($line)) {
                     $line = $stack['line'];
                 }
 
-                $errorMessage = $class->getName() . ' : method ' . $stack['function'] . ' failed on line ' . $line;
-                $this->_messages[] =  $errorMessage . " " . $message;
-                break;
+                return array(
+                    'class' => $class->getName(),
+                    'method' => $stack['function'],
+                    'line' => $line,
+                );
             }
+
             $line = $stack['line'];
         }
-        $this->_failed++;
-        $class = get_class($this);
-        if (isset(self::$_passesAndFails['passes'][$class])) {
-            unset(self::$_passesAndFails['passes'][$class]);
+
+        return array(
+            'class' => get_class($this),
+            'method' => $this->_currentMethod,
+            'line' => null,
+        );
+    }
+
+    private function appendMessage($testCase, $testFuntion, $line = null, $message = "")
+    {
+        $lineMessage = '';
+
+        if (null !== $line) {
+            $lineMessage = 'on line '.$line;
         }
-        self::$_passesAndFails['fails'][$class] = $class;
+
+        $errorMessage = $testCase . ' : method ' . $testFuntion . ' failed '.$lineMessage;
+
+        $this->_messages[] =  $errorMessage . " " . $message;
     }
 
     public function run(DoctrineTest_Reporter $reporter = null, $filter = null)
     {
         foreach (get_class_methods($this) as $method) {
             if ($this->isTestMethod($method)) {
+                $this->_currentMethod = $method;
+
                 $this->runTest($method);
             }
         }
@@ -294,8 +352,49 @@ class UnitTestCase
 
         $finally();
 
+        if (null !== $this->_expectedExceptionClass) {
+            $this->assertThrownException($thrownException);
+
+            return;
+        }
+
         if (null !== $thrownException) {
             throw $thrownException;
         }
+    }
+
+    private function assertThrownException($thrownException)
+    {
+        $expectedExceptionClass = $this->_expectedExceptionClass;
+
+        $this->_expectedExceptionClass = null;
+
+        if (null === $thrownException) {
+            $message = sprintf('Assert that exception "%s" is thrown.',
+                $expectedExceptionClass
+            );
+
+            $this->fail($message);
+
+            return;
+        }
+
+        $thrownExceptionClass = get_class($thrownException);
+
+        if (
+            $expectedExceptionClass === $thrownExceptionClass
+            || is_subclass_of($thrownExceptionClass, $expectedExceptionClass)
+        ) {
+            $this->pass();
+
+            return;
+        }
+
+        $message = sprintf('Assert that exception "%s" is thrown, but was "%s".',
+            $expectedExceptionClass,
+            $thrownExceptionClass
+        );
+
+        $this->fail($message);
     }
 }
