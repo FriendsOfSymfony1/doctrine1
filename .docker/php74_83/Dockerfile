@@ -3,7 +3,19 @@ FROM php:${PHP_VERSION}-cli
 
 RUN docker-php-ext-install pdo
 RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install mbstring
+
+# Install mbstring PHP extension
+#
+RUN set -eux; \
+  apt-get update; \
+  apt-get install -y --force-yes --no-upgrade --no-install-recommends \
+    libonig-dev \
+  ; \
+  \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/*; \
+  \
+  docker-php-ext-install mbstring
 
 # Install APCu PHP extension
 #
@@ -32,7 +44,7 @@ RUN set -eux; \
   pecl install memcache-${MEMCACHE_VERSION}; \
   docker-php-ext-enable memcache; \
   \
-  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=true \
+  apt-get purge -y --force-yes --auto-remove -o APT::AutoRemove::RecommendsImportant=true \
     $buildDeps \
   ; \
   apt-get clean; \

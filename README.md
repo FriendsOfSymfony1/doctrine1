@@ -24,7 +24,6 @@ Using [Composer](http://getcomposer.org/doc/00-intro.md) as dependency managemen
     composer install
 
 
-
 Tests
 -----
 
@@ -35,7 +34,11 @@ Tests
 
 ### How to execute all tests on all supported PHP versions and dependencies?
 
-    tests/bin/test
+    test/bin/test
+
+### Want to do specific test ? Ask help with the option.
+
+    test/bin/test --help
 
 ### When you finish your work day, do not forget to clean up your desk
 
