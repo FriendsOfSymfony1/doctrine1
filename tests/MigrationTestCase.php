@@ -127,4 +127,35 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
             $this->assertTrue($code);
         }
     }
+
+    public function test_afterSuccessfullMigration_willSetMigratedVersionAsCurrentVersionInMysqlDB()
+    {
+        $this->openAndBindMysqlConnection();
+
+        parent::prepareTables();
+
+        $migration = new Doctrine_Migration('migration_classes');
+        $migration->setCurrentVersion(3);
+
+        $migration->migrate(4);
+        $this->assertEqual(4, $migration->getCurrentVersion());
+    }
+
+    public function test_afterFailedMigration_willKeepCurrentVersionInMysqlDB()
+    {
+        $this->openAndBindMysqlConnection();
+
+        parent::prepareTables();
+
+        $migration = new Doctrine_Migration('migration_classes');
+        $migration->setCurrentVersion(0);
+
+        try {
+            $migration->migrate(1);
+
+            $this->fail('migration must fail');
+        } catch (Doctrine_Migration_Exception $e) {
+            $this->assertEqual(0, $migration->getCurrentVersion());
+        }
+    }
 }

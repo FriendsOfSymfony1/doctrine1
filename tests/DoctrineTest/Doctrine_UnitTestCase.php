@@ -142,13 +142,14 @@ class Doctrine_UnitTestCase extends UnitTestCase
 
             if (count($e) > 3) {
                 $driver = $e[2];
-                switch($e[2]) {
+
+                switch($driver) {
                     case 'Mysql':
                     case 'Mssql':
                     case 'Oracle':
                     case 'Pgsql':
                     case 'Sqlite':
-                        $this->driverName = $e[2];
+                        $this->driverName = $driver;
                     break;
                 }
             }
@@ -227,7 +228,14 @@ class Doctrine_UnitTestCase extends UnitTestCase
 
             }
         }
-        $this->conn->export->exportClasses($this->tables);
+
+        foreach ($this->tables as $table) {
+            try {
+                $this->conn->export->exportClasses(array($table));
+            } catch (Doctrine_Export_Exception $e) {
+            }
+        }
+
         $this->objTable = $this->connection->getTable('User');
     }
     public function prepareData()
@@ -307,6 +315,13 @@ class Doctrine_UnitTestCase extends UnitTestCase
         return $this->dataDict->getPortableDeclaration(array('type' => $type, 'name' => 'colname', 'length' => 1, 'fixed' => true));
     }
 
+    protected function openAndBindMysqlConnection()
+    {
+        $this->dbh = new PDO(getenv('MYSQL_DSN'));
+
+        $this->conn = $this->connection = $this->openAdditionalConnection($this->dbh);
+    }
+
     protected function openAdditionalConnection($adapter = null, $name = null)
     {
         $connection = $this->manager->openConnection($adapter, $name);
@@ -321,5 +336,7 @@ class Doctrine_UnitTestCase extends UnitTestCase
         foreach ($this->additionalConnections as $connection) {
             $this->manager->closeConnection($connection);
         }
+
+        $this->conn = $this->connection = Doctrine_Manager::getInstance()->getCurrentConnection();
     }
 }
