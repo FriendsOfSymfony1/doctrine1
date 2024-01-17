@@ -32,6 +32,9 @@
  */
 class Doctrine_Hydrator_RecordHierarchyDriver extends Doctrine_Hydrator_RecordDriver
 {
+    /**
+     * @return Doctrine_Collection
+     */
     public function hydrateResultSet($stmt)
     {
         return parent::hydrateResultSet($stmt)->toHierarchy();

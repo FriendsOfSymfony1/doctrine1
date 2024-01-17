@@ -50,6 +50,9 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
         return isset($this->_queryComponents[$alias]['map']) ? $this->_queryComponents[$alias]['map'] : null;
     }
 
+    /**
+     * @return Doctrine_Collection|mixed
+     */
     public function hydrateResultSet($stmt)
     {
         // Used variables during hydration

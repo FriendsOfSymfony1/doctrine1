@@ -32,6 +32,9 @@
  */
 class Doctrine_Hydrator_ArrayHierarchyDriver extends Doctrine_Hydrator_ArrayDriver
 {
+    /**
+     * @return array
+     */
     public function hydrateResultSet($stmt)
     {
         $collection = parent::hydrateResultSet($stmt);

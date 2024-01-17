@@ -51,7 +51,7 @@ class Doctrine_Hydrator
     /**
      * Set the hydration mode
      *
-     * @param mixed $hydrationMode  One of the Doctrine_Core::HYDRATE_* constants or 
+     * @param mixed $hydrationMode  One of the Doctrine_Core::HYDRATE_* constants or
      *                              a string representing the name of the hydration mode or
      *                              or an instance of the hydration class
      */
@@ -112,9 +112,9 @@ class Doctrine_Hydrator
     /**
      * Get an instance of the hydration driver for the passed hydration mode
      *
-     * @param string $mode 
-     * @param array $tableAliases 
-     * @return object Doctrine_Hydrator_Abstract
+     * @param string $mode
+     * @param array $tableAliases
+     * @return Doctrine_Hydrator_Abstract
      */
     public function getHydratorDriver($mode, $tableAliases)
     {
@@ -138,8 +138,8 @@ class Doctrine_Hydrator
      * Hydrate the query statement in to its final data structure by one of the
      * hydration drivers.
      *
-     * @param object $stmt 
-     * @param array $tableAliases 
+     * @param object $stmt
+     * @param array $tableAliases
      * @return mixed $result
      */
     public function hydrateResultSet($stmt, $tableAliases)

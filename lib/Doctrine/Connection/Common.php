@@ -38,12 +38,13 @@ class Doctrine_Connection_Common extends Doctrine_Connection
      * @param string $query
      * @param mixed $limit
      * @param mixed $offset
+     * @return string
      */
     public function modifyLimitQuery($query, $limit = false,$offset = false,$isManip=false)
     {
         $limit = (int) $limit;
         $offset = (int) $offset;
-        
+
         if ($limit && $offset) {
             $query .= ' LIMIT ' . $limit . ' OFFSET ' . $offset;
         } elseif ($limit && ! $offset) {
