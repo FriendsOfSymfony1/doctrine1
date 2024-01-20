@@ -94,13 +94,13 @@ configureWithArguments ()
     # Commands
     #
     DOCKER_COMPOSE_EXEC="${DOCKER_COMPOSE} exec -u `id -u`:`id -g`"
-    COMPOSER_UPDATE='composer update --working-dir=/app --prefer-dist --no-suggest --optimize-autoloader'
+    COMPOSER_UPDATE='composer update --prefer-dist --no-suggest --optimize-autoloader'
 
     # Default Options
     #
     DEPENDENCY_PREFERENCES='highest'
     PHP_VERSIONS='all'
-    PHP_TEST_RUNTIME='run.php'
+    PHP_TEST_RUNTIME='tests/run.php'
     hasHelpOption=false
 
     parseOperands ${1+"$@"}

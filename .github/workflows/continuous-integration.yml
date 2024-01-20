@@ -46,6 +46,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
+          ini-values: apc.enable_cli=on,apc.use_request_time=off,memory_limit=-1,short_open_tag=off,magic_quotes_gpc=off,date.timezone="UTC"
 
       - name: Get composer cache directory
         id: composer-cache
@@ -62,4 +63,4 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Run Tests
-        run: cd tests && php run.php
+        run: php tests/run.php

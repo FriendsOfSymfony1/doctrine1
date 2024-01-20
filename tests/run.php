@@ -1,5 +1,7 @@
 <?php
 
+chdir(__DIR__);
+
 $_SERVER['DOCTRINE_DIR'] = dirname(__DIR__);
 
 require 'bootstrap.php';
