@@ -648,6 +648,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
                 $this->_queryComponents[$componentAlias]['agg'][$index] = $alias;
 
+                if (preg_match('/^([^\(]+)\.(\'?)(.*?)(\'?)$/', $expression, $field)) {
+                    $this->_queryComponents[$componentAlias]['agg_field'][$index] = $field[3];
+                }
+
                 $this->_neededTables[] = $tableAlias;
             } else {
                 $e = explode('.', $terms[0]);
