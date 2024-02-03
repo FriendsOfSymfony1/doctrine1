@@ -32,6 +32,7 @@
  */
 class Doctrine_Collection_Iterator_Expandable extends Doctrine_Collection_Iterator
 {
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         if ($this->index < $this->count) {

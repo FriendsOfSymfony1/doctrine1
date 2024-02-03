@@ -35,6 +35,7 @@ class Doctrine_Collection_Iterator_Normal extends Doctrine_Collection_Iterator
     /**
      * @return boolean                          whether or not the iteration will continue
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return ($this->index < $this->count);
