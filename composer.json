@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3",
+        "php": ">=7.4",
         "ext-zlib": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
