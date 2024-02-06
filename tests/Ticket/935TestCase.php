@@ -20,18 +20,20 @@
  */
 
 /**
- * Doctrine_Ticket935_TestCase
+ * Doctrine_Ticket935_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_935_TestCase extends Doctrine_UnitTestCase {
-
+class Doctrine_Ticket_935_TestCase extends Doctrine_UnitTestCase
+{
     public function prepareData()
     {
         $d = new EnumUpdateBug();
@@ -39,7 +41,8 @@ class Doctrine_Ticket_935_TestCase extends Doctrine_UnitTestCase {
         $d->save();
     }
 
-    public function prepareTables() {
+    public function prepareTables()
+    {
         $this->tables[] = 'EnumUpdateBug';
         parent::prepareTables();
     }
@@ -47,37 +50,39 @@ class Doctrine_Ticket_935_TestCase extends Doctrine_UnitTestCase {
     public function testTicket()
     {
         try {
-          $q = new Doctrine_Query();
-          $q->update('EnumUpdateBug')
-            ->set('bla_id', '?', 5)
-            ->set('separator', '?', 'pipe')
-            ->where('id = 1')
-            ->execute();
+            $q = new Doctrine_Query();
+            $q->update('EnumUpdateBug')
+                ->set('bla_id', '?', 5)
+                ->set('separator', '?', 'pipe')
+                ->where('id = 1')
+                ->execute()
+            ;
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
-        
+
         $q = new Doctrine_Query();
         $row = $q->select('a.*')
-                 ->from('EnumUpdateBug a')
-                 ->where('a.id = 1')
-                 ->fetchOne();
-        
+            ->from('EnumUpdateBug a')
+            ->where('a.id = 1')
+            ->fetchOne()
+        ;
+
         $this->assertEqual($row->bla_id, 5);
     }
 }
 
 class EnumUpdateBug extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-      $this->setTableName('enumupdatebug');
-      $this->hasColumn('id', 'integer', 3, array('autoincrement' => true, 'unsigned' => true, 'primary' => true, 'notnull' => true));
-      $this->hasColumn('bla_id', 'integer', 2, array('unsigned' => true));
-      $this->hasColumn('separator', 'enum', 1, array('values' =>  array(  0 => 'comma',   1 => 'pipe', )));
-  }
+    public function setTableDefinition()
+    {
+        $this->setTableName('enumupdatebug');
+        $this->hasColumn('id', 'integer', 3, ['autoincrement' => true, 'unsigned' => true, 'primary' => true, 'notnull' => true]);
+        $this->hasColumn('bla_id', 'integer', 2, ['unsigned' => true]);
+        $this->hasColumn('separator', 'enum', 1, ['values' => [0 => 'comma',   1 => 'pipe']]);
+    }
 
-  public function setUp()
-  {
-  }
+    public function setUp()
+    {
+    }
 }

@@ -23,27 +23,21 @@
  * Listener for the Timestampable behavior which automatically sets the created
  * and updated columns when a record is inserted and updated.
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
 {
     /**
-     * Array of timestampable options
+     * Array of timestampable options.
      *
      * @var string
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
-     * __construct
-     *
-     * @param array $options
+     * __construct.
      */
     public function __construct(array $options)
     {
@@ -51,86 +45,79 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     }
 
     /**
-     * Set the created and updated Timestampable columns when a record is inserted
-     *
-     * @param Doctrine_Event $event
+     * Set the created and updated Timestampable columns when a record is inserted.
      */
     public function preInsert(Doctrine_Event $event)
     {
-        if ( ! $this->_options['created']['disabled']) {
+        if (!$this->_options['created']['disabled']) {
             $createdName = $event->getInvoker()->getTable()->getFieldName($this->_options['created']['name']);
             $modified = $event->getInvoker()->getModified();
-            if ( ! isset($modified[$createdName])) {
-                $event->getInvoker()->$createdName = $this->getTimestamp('created', $event->getInvoker()->getTable()->getConnection());
+            if (!isset($modified[$createdName])) {
+                $event->getInvoker()->{$createdName} = $this->getTimestamp('created', $event->getInvoker()->getTable()->getConnection());
             }
         }
 
-        if ( ! $this->_options['updated']['disabled'] && $this->_options['updated']['onInsert']) {
+        if (!$this->_options['updated']['disabled'] && $this->_options['updated']['onInsert']) {
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
             $modified = $event->getInvoker()->getModified();
-            if ( ! isset($modified[$updatedName])) {
-                $event->getInvoker()->$updatedName = $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection());
+            if (!isset($modified[$updatedName])) {
+                $event->getInvoker()->{$updatedName} = $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection());
             }
         }
     }
 
     /**
-     * Set updated Timestampable column when a record is updated
-     *
-     * @param Doctrine_Event $event
+     * Set updated Timestampable column when a record is updated.
      */
     public function preUpdate(Doctrine_Event $event)
     {
-        if ( ! $this->_options['updated']['disabled']) {
+        if (!$this->_options['updated']['disabled']) {
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
             $modified = $event->getInvoker()->getModified();
-            if ( ! isset($modified[$updatedName])) {
-                $event->getInvoker()->$updatedName = $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection());
+            if (!isset($modified[$updatedName])) {
+                $event->getInvoker()->{$updatedName} = $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection());
             }
         }
     }
 
     /**
-     * Set the updated field for dql update queries
-     *
-     * @param Doctrine_Event $event
+     * Set the updated field for dql update queries.
      */
     public function preDqlUpdate(Doctrine_Event $event)
     {
-        if ( ! $this->_options['updated']['disabled']) {
+        if (!$this->_options['updated']['disabled']) {
             $params = $event->getParams();
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
-            $field = $params['alias'] . '.' . $updatedName;
+            $field = $params['alias'].'.'.$updatedName;
             $query = $event->getQuery();
 
-            if ( ! $query->contains($field)) {
+            if (!$query->contains($field)) {
                 $query->set($field, '?', $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection()));
             }
         }
     }
 
     /**
-     * Gets the timestamp in the correct format based on the way the behavior is configured
+     * Gets the timestamp in the correct format based on the way the behavior is configured.
      *
-     * @param string                   $type
-     * @param null|Doctrine_Connection $conn
-     *
+     * @param  string                         $type
+     * @param  Doctrine_Connection|null       $conn
      * @return Doctrine_Expression|int|string
      */
     public function getTimestamp($type, $conn = null)
     {
         $options = $this->_options[$type];
 
-        if ($options['expression'] !== false && is_string($options['expression'])) {
+        if (false !== $options['expression'] && is_string($options['expression'])) {
             return new Doctrine_Expression($options['expression'], $conn);
-        } else {
-            if ($options['type'] == 'date') {
-                return date($options['format'], time());
-            } else if ($options['type'] == 'timestamp') {
-                return date($options['format'], time());
-            } else {
-                return time();
-            }
         }
+        if ('date' == $options['type']) {
+            return date($options['format'], time());
+        }
+        if ('timestamp' == $options['type']) {
+            return date($options['format'], time());
+        }
+
+        return time();
     }
 }

@@ -1,13 +1,14 @@
 <?php
+
 class MysqlChangeColumn extends Doctrine_Migration_Base
 {
     public function up()
     {
-        $this->renameColumn('migration_test','field2','field3');
+        $this->renameColumn('migration_test', 'field2', 'field3');
     }
-    
+
     public function down()
     {
-    	$this->renameColumn('migration_test','field3','field2');
-    }  
+        $this->renameColumn('migration_test', 'field3', 'field2');
+    }
 }

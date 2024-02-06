@@ -1,7 +1,8 @@
 <?php
-class Email extends Doctrine_Record 
+
+class Email extends Doctrine_Record
 {
-    public function setTableDefinition() 
+    public function setTableDefinition()
     {
         $this->hasColumn('address', 'string', 150, 'email|unique');
     }

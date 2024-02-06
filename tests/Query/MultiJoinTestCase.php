@@ -20,20 +20,22 @@
  */
 
 /**
- * Doctrine_Query_MultiJoin_TestCase
+ * Doctrine_Query_MultiJoin_TestCase.
  *
  * When the order is not explicit then you must not expect that relationships
  * are ordered by the primary key. This test case illustrate this behavior.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -41,13 +43,12 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
         $this->tables[] = 'Author';
         parent::prepareTables();
     }
-    public function testInitializeData() 
-    {
 
+    public function testInitializeData()
+    {
         $query = new Doctrine_Query($this->connection);
 
         $user = $this->connection->getTable('User')->find(4);
-
 
         $album = $this->connection->create('Album');
         $album->Song[0];
@@ -61,7 +62,6 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual(count($user->Album[0]->Song), 3);
 
-
         $user->Album[1]->Song[0]->title = 'Not Built To Last';
         $user->Album[1]->Song[1]->title = 'The Wonders At Your Feet';
         $user->Album[1]->Song[2]->title = 'Feast Of Burden';
@@ -74,21 +74,21 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual(count($user->Album[0]->Song), 3);
         $this->assertEqual(count($user->Album[1]->Song), 4);
-        
-        
+
         $user = $this->connection->getTable('User')->find(5);
-        
+
         $user->Album[0]->name = 'Clayman';
         $user->Album[1]->name = 'Colony';
         $user->Album[1]->Song[0]->title = 'Colony';
         $user->Album[1]->Song[1]->title = 'Ordinary Story';
-        
+
         $user->save();
-        
+
         $this->assertEqual(count($user->Album[0]->Song), 0);
         $this->assertEqual(count($user->Album[1]->Song), 2);
     }
-    public function testMultipleOneToManyFetching() 
+
+    public function testMultipleOneToManyFetching()
     {
         $this->connection->clear();
 
@@ -140,7 +140,7 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[1]->Phonenumber[2]->phonenumber, '789 789');
     }
 
-    public function testInitializeMoreData() 
+    public function testInitializeMoreData()
     {
         $user = $this->connection->getTable('User')->find(4);
         $user->Book[0]->name = 'The Prince';
@@ -149,7 +149,6 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
         $user->Book[1]->name = 'The Art of War';
         $user->Book[1]->Author[0]->name = 'Someone';
         $user->Book[1]->Author[1]->name = 'Niccolo Machiavelli';
-
 
         $user->save();
 
@@ -164,12 +163,13 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
 
         $this->connection->clear();
     }
-    public function testMultipleOneToManyFetching2() 
+
+    public function testMultipleOneToManyFetching2()
     {
         $query = new Doctrine_Query();
 
-        $users = $query->query("FROM User.Album.Song, User.Book.Author WHERE User.id IN (4,5)");
-        
+        $users = $query->query('FROM User.Album.Song, User.Book.Author WHERE User.id IN (4,5)');
+
         $this->assertEqual($users->count(), 2);
 
         $this->assertEqual($users[0]->id, 4);
@@ -229,11 +229,11 @@ class Doctrine_Query_MultiJoin_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[1]->Book[1]->Author[1]->name, 'Voltaire');
     }
 
-    public function testMultipleOneToManyFetchingWithOrderBy() 
+    public function testMultipleOneToManyFetchingWithOrderBy()
     {
         $query = new Doctrine_Query();
 
-        $users = $query->query("FROM User.Album.Song WHERE User.id IN (4,5) ORDER BY User.Album.Song.title DESC");
+        $users = $query->query('FROM User.Album.Song WHERE User.id IN (4,5) ORDER BY User.Album.Song.title DESC');
 
         $this->assertEqual($users[0]->id, 4);
         $this->assertEqual($users[0]->Album[0]->id, 2);

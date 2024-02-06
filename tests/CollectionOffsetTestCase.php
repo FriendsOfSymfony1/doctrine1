@@ -1,8 +1,15 @@
 <?php
-class Doctrine_Collection_Offset_TestCase extends Doctrine_UnitTestCase {
-    public function testExpand() {
 
-        $users = $this->connection->query("FROM User-o");
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class Doctrine_Collection_Offset_TestCase extends Doctrine_UnitTestCase
+{
+    public function testExpand()
+    {
+        $users = $this->connection->query('FROM User-o');
         $this->assertTrue($users instanceof Doctrine_Collection_Offset);
 
         $this->assertEqual(count($users), 5);
@@ -13,7 +20,7 @@ class Doctrine_Collection_Offset_TestCase extends Doctrine_UnitTestCase {
 
         $this->connection->setAttribute(Doctrine_Core::ATTR_COLL_LIMIT, 3);
 
-        $users = $this->connection->query("FROM User-o");
+        $users = $this->connection->query('FROM User-o');
         $this->assertEqual(count($users), 3);
         $this->assertEqual($users[0]->getState(), Doctrine_Record::STATE_CLEAN);
         $this->assertEqual($users[1]->getState(), Doctrine_Record::STATE_CLEAN);
@@ -31,16 +38,14 @@ class Doctrine_Collection_Offset_TestCase extends Doctrine_UnitTestCase {
         $this->assertEqual($users[6]->getState(), Doctrine_Record::STATE_CLEAN);
         $this->assertEqual($users[7]->getState(), Doctrine_Record::STATE_CLEAN);
 
-
         $users[5];
         $this->assertEqual(count($users), 8);
         $this->assertEqual($users[3]->getState(), Doctrine_Record::STATE_CLEAN);
         $this->assertEqual($users[4]->getState(), Doctrine_Record::STATE_CLEAN);
         $this->assertEqual($users[5]->getState(), Doctrine_Record::STATE_CLEAN);
 
-
         $this->connection->setAttribute(Doctrine_Core::ATTR_COLL_LIMIT, 1);
-        $users = $this->connection->query("FROM User-b, User.Phonenumber-o WHERE User.".$this->objTable->getIdentifier()." = 5");
+        $users = $this->connection->query('FROM User-b, User.Phonenumber-o WHERE User.'.$this->objTable->getIdentifier().' = 5');
 
         $this->assertEqual(count($users), 1);
 
@@ -49,15 +54,15 @@ class Doctrine_Collection_Offset_TestCase extends Doctrine_UnitTestCase {
         $coll[1];
 
         $this->assertEqual(count($coll), 3);
-        $this->assertEqual($coll[1]->phonenumber, "456 456");
-
+        $this->assertEqual($coll[1]->phonenumber, '456 456');
     }
 
-    public function testGetIterator() {
+    public function testGetIterator()
+    {
         $this->connection->setAttribute(Doctrine_Core::ATTR_COLL_LIMIT, 4);
-        $coll = $this->connection->query("FROM User-o");
+        $coll = $this->connection->query('FROM User-o');
 
-        foreach($coll as $user) {
+        foreach ($coll as $user) {
         }
         $this->assertEqual($coll->count(), 8);
         $this->assertEqual($coll[3]->getState(), Doctrine_Record::STATE_CLEAN);
@@ -65,9 +70,9 @@ class Doctrine_Collection_Offset_TestCase extends Doctrine_UnitTestCase {
 
         $this->connection->setAttribute(Doctrine_Core::ATTR_COLL_LIMIT, 3);
 
-        $coll = $this->connection->query("FROM User-o");
+        $coll = $this->connection->query('FROM User-o');
 
-        foreach($coll as $user) {
+        foreach ($coll as $user) {
         }
         $this->assertEqual($coll->count(), 8);
         $this->assertEqual($coll[3]->getState(), Doctrine_Record::STATE_CLEAN);

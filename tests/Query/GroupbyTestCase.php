@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -20,24 +20,26 @@
  */
 
 /**
- * Doctrine_Query_Groupby_TestCase
+ * Doctrine_Query_Groupby_TestCase.
  *
- * @package     Doctrine
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @version     $Revision$
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Query_Groupby_TestCase extends Doctrine_UnitTestCase
 {
-    public function testAggregateFunctionsInHavingReturnValidSql() 
+    public function testAggregateFunctionsInHavingReturnValidSql()
     {
         $q = new Doctrine_Query();
-        
+
         $q->parseDqlQuery('SELECT u.name, COUNT(p.id) count FROM User u LEFT JOIN u.Phonenumber p GROUP BY count');
-        
+
         $this->assertEqual($q->getQuery(), 'SELECT e.id AS e__id, e.name AS e__name, COUNT(p.id) AS p__0 FROM entity e LEFT JOIN phonenumber p ON e.id = p.entity_id WHERE (e.type = 0) GROUP BY p__0');
     }
 }

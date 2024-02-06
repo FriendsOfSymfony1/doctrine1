@@ -20,27 +20,29 @@
  */
 
 /**
- * Doctrine_AuditLog_TestCase
+ * Doctrine_AuditLog_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_AuditLog_TestCase extends Doctrine_UnitTestCase
 {
-
     public function prepareData()
-    { }
+    {
+    }
 
     public function prepareTables()
     {
         $this->profiler = new Doctrine_Connection_Profiler();
         $this->conn->addListener($this->profiler);
-        $this->tables = array('VersioningTest', 'VersioningTestVersion', 'VersioningTest2');
+        $this->tables = ['VersioningTest', 'VersioningTestVersion', 'VersioningTest2'];
 
         parent::prepareTables();
     }
@@ -100,7 +102,6 @@ class Doctrine_AuditLog_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($entity->getAuditLog()->getTable()->getTableName(), 'tbl_prefix_comments_version');
         $this->assertEqual($entity->getAuditLog()->getTable()->getComponentName(), 'VersioningTestClass');
     }
-
 
     public function testNoAuditLogThrowsExceptions()
     {

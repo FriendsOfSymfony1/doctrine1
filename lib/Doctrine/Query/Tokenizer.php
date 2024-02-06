@@ -20,24 +20,19 @@
  */
 
 /**
- * Doctrine_Query_Tokenizer
+ * Doctrine_Query_Tokenizer.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author      Stefan Klug <stefan.klug@googlemail.com>
  */
 class Doctrine_Query_Tokenizer
 {
-
     /**
      * Splits the given dql query into an array where keys represent different
-     * query part names and values are arrays splitted using sqlExplode method
+     * query part names and values are arrays splitted using sqlExplode method.
      *
      * example:
      *
@@ -50,16 +45,14 @@ class Doctrine_Query_Tokenizer
      *         'where'  => array('u.name', 'LIKE', '?')
      *     );
      *
-     * @param string $query             DQL query
-     *
-     * @throws Doctrine_Query_Exception If some generic parsing error occurs
-     *
+     * @param  string                   $query DQL query
      * @return array                    An array containing the query string parts
+     * @throws Doctrine_Query_Exception If some generic parsing error occurs
      */
     public function tokenizeQuery($query)
     {
         $tokens = $this->sqlExplode($query, ' ');
-        $parts = array();
+        $parts = [];
 
         foreach ($tokens as $index => $token) {
             $token = trim($token);
@@ -75,35 +68,33 @@ class Doctrine_Query_Tokenizer
                 case 'offset':
                 case 'having':
                     $p = $token;
-                    //$parts[$token] = array();
+                    // $parts[$token] = array();
                     $parts[$token] = '';
-                break;
+                    break;
 
                 case 'order':
                 case 'group':
                     $i = ($index + 1);
-                    if (isset($tokens[$i]) && strtolower($tokens[$i]) === 'by') {
+                    if (isset($tokens[$i]) && 'by' === strtolower($tokens[$i])) {
                         $p = $token;
                         $parts[$token] = '';
-                        //$parts[$token] = array();
+                    // $parts[$token] = array();
                     } else {
-                        $parts[$p] .= "$token ";
-                        //$parts[$p][] = $token;
+                        $parts[$p] .= "{$token} ";
+                        // $parts[$p][] = $token;
                     }
-                break;
+                    break;
 
                 case 'by':
                     break;
 
                 default:
-                    if ( ! isset($p)) {
-                        throw new Doctrine_Query_Tokenizer_Exception(
-                            "Couldn't tokenize query. Encountered invalid token: '$token'."
-                        );
+                    if (!isset($p)) {
+                        throw new Doctrine_Query_Tokenizer_Exception("Couldn't tokenize query. Encountered invalid token: '{$token}'.");
                     }
 
-                    $parts[$p] .= "$token ";
-                    //$parts[$p][] = $token;
+                    $parts[$p] .= "{$token} ";
+                    // $parts[$p][] = $token;
             }
         }
 
@@ -111,21 +102,20 @@ class Doctrine_Query_Tokenizer
     }
 
     /**
-     * Trims brackets from string
+     * Trims brackets from string.
      *
-     * @param string $str String to remove the brackets
-     * @param string $e1  First bracket, usually '('
-     * @param string $e2  Second bracket, usually ')'
-     *
+     * @param  string $str String to remove the brackets
+     * @param  string $e1  First bracket, usually '('
+     * @param  string $e2  Second bracket, usually ')'
      * @return string
      */
     public function bracketTrim($str, $e1 = '(', $e2 = ')')
     {
         if (substr($str, 0, 1) === $e1 && substr($str, -1) === $e2) {
             return substr($str, 1, -1);
-        } else {
-            return $str;
         }
+
+        return $str;
     }
 
     /**
@@ -142,24 +132,23 @@ class Doctrine_Query_Tokenizer
      * // array("(age < 20 AND age > 18)", "email LIKE 'John@example.com'")
      * </code>
      *
-     * @param string $str String to be bracket exploded
-     * @param string $d   Delimeter which explodes the string
-     * @param string $e1  First bracket, usually '('
-     * @param string $e2  Second bracket, usually ')'
-     *
+     * @param  string $str String to be bracket exploded
+     * @param  string $d   Delimeter which explodes the string
+     * @param  string $e1  First bracket, usually '('
+     * @param  string $e2  Second bracket, usually ')'
      * @return array
      */
     public function bracketExplode($str, $d = ' ', $e1 = '(', $e2 = ')')
     {
         if (is_string($d)) {
-            $d = array($d);
+            $d = [$d];
         }
 
         // Bracket explode has to be case insensitive
-        $regexp = $this->getSplitRegExpFromArray($d) . 'i';
+        $regexp = $this->getSplitRegExpFromArray($d).'i';
         $terms = $this->clauseExplodeRegExp($str, $regexp, $e1, $e2);
 
-        $res = array();
+        $res = [];
 
         // Trim is here for historical reasons
         foreach ($terms as $value) {
@@ -170,7 +159,7 @@ class Doctrine_Query_Tokenizer
     }
 
     /**
-     * Explode quotes from string
+     * Explode quotes from string.
      *
      * Note: quoteExplode always trims the returned pieces
      *
@@ -183,22 +172,21 @@ class Doctrine_Query_Tokenizer
      * would return an array:
      *     array("email", "LIKE", "'John@example.com'")
      *
-     * @param string $str String to be quote exploded
-     * @param string $d   Delimeter which explodes the string
-     *
+     * @param  string $str String to be quote exploded
+     * @param  string $d   Delimeter which explodes the string
      * @return array
      */
     public function quoteExplode($str, $d = ' ')
     {
         if (is_string($d)) {
-            $d = array($d);
+            $d = [$d];
         }
 
         // According to the testcases quoteExplode is case insensitive
-        $regexp = $this->getSplitRegExpFromArray($d) . 'i';
+        $regexp = $this->getSplitRegExpFromArray($d).'i';
         $terms = $this->clauseExplodeCountBrackets($str, $regexp);
 
-        $res = array();
+        $res = [];
 
         foreach ($terms as $val) {
             $res[] = trim($val[0]);
@@ -209,7 +197,7 @@ class Doctrine_Query_Tokenizer
 
     /**
      * Explodes a string into array using custom brackets and
-     * quote delimeters
+     * quote delimeters.
      *
      * Note: sqlExplode trims all returned parts
      *
@@ -229,21 +217,20 @@ class Doctrine_Query_Tokenizer
      *         'John Doe'
      *     );
      *
-     * @param string $str String to be SQL exploded
-     * @param string $d   Delimeter which explodes the string
-     * @param string $e1  First bracket, usually '('
-     * @param string $e2  Second bracket, usually ')'
-     *
+     * @param  string $str String to be SQL exploded
+     * @param  string $d   Delimeter which explodes the string
+     * @param  string $e1  First bracket, usually '('
+     * @param  string $e2  Second bracket, usually ')'
      * @return array
      */
     public function sqlExplode($str, $d = ' ', $e1 = '(', $e2 = ')')
     {
         if (is_string($d)) {
-            $d = array($d);
+            $d = [$d];
         }
 
         $terms = $this->clauseExplode($str, $d, $e1, $e2);
-        $res = array();
+        $res = [];
 
         foreach ($terms as $value) {
             $res[] = trim($value[0]);
@@ -255,7 +242,7 @@ class Doctrine_Query_Tokenizer
     /**
      * Explodes a string into array using custom brackets and quote delimeters
      * Each array element is a array of length 2 where the first entry contains
-     * the term, and the second entry contains the corresponding delimiter
+     * the term, and the second entry contains the corresponding delimiter.
      *
      * example:
      *
@@ -275,11 +262,10 @@ class Doctrine_Query_Tokenizer
      *         array(' Doe', '')
      *     );
      *
-     * @param string $str String to be clause exploded
-     * @param string $d   Delimeter which explodes the string
-     * @param string $e1  First bracket, usually '('
-     * @param string $e2  Second bracket, usually ')'
-     *
+     * @param  string $str String to be clause exploded
+     * @param  string $d   Delimeter which explodes the string
+     * @param  string $e1  First bracket, usually '('
+     * @param  string $e2  Second bracket, usually ')'
      * @return array
      */
     public function clauseExplode($str, array $d, $e1 = '(', $e2 = ')')
@@ -291,9 +277,7 @@ class Doctrine_Query_Tokenizer
 
     /**
      * Builds regular expression for split from array. Return regular
-     * expression to be applied
-     *
-     * @param $d
+     * expression to be applied.
      *
      * @return string
      */
@@ -302,7 +286,7 @@ class Doctrine_Query_Tokenizer
         foreach ($d as $key => $string) {
             $escapedString = preg_quote($string);
             if (preg_match('#^\w+$#', $string)) {
-                $escapedString = "\W$escapedString\W";
+                $escapedString = "\\W{$escapedString}\\W";
             }
             $d[$key] = $escapedString;
         }
@@ -311,16 +295,11 @@ class Doctrine_Query_Tokenizer
             $d[] = '\s';
         }
 
-        return '#(' . implode('|', $d) . ')#';
+        return '#('.implode('|', $d).')#';
     }
 
     /**
-     * Same as clauseExplode, but you give a regexp, which splits the string
-     *
-     * @param $str
-     * @param $regexp
-     * @param $e1
-     * @param $e2
+     * Same as clauseExplode, but you give a regexp, which splits the string.
      *
      * @return array
      */
@@ -330,7 +309,7 @@ class Doctrine_Query_Tokenizer
         $terms = $this->mergeBracketTerms($terms);
 
         // This is only here to comply with the old function signature
-        foreach ($terms as & $val) {
+        foreach ($terms as &$val) {
             unset($val[2]);
         }
 
@@ -338,30 +317,25 @@ class Doctrine_Query_Tokenizer
     }
 
     /**
-     * this function is like clauseExplode, but it doesn't merge bracket terms
-     *
-     * @param $str
-     * @param $d
-     * @param $e1
-     * @param $e2
+     * this function is like clauseExplode, but it doesn't merge bracket terms.
      *
      * @return unknown_type
      */
     private function clauseExplodeCountBrackets($str, $regexp, $e1 = '(', $e2 = ')')
     {
         $quoteTerms = $this->quotedStringExplode($str);
-        $terms = array();
+        $terms = [];
         $i = 0;
 
         foreach ($quoteTerms as $key => $val) {
             if ($key & 1) { // a quoted string
-               // If the last term had no ending delimiter, we append the string to the element,
-               // otherwise, we create a new element without delimiter
-               if ($terms[$i - 1][1] == '') {
-                   $terms[$i - 1][0] .= $val;
-               } else {
-                   $terms[$i++] = array($val, '', 0);
-               }
+                // If the last term had no ending delimiter, we append the string to the element,
+                // otherwise, we create a new element without delimiter
+                if ('' == $terms[$i - 1][1]) {
+                    $terms[$i - 1][0] .= $val;
+                } else {
+                    $terms[$i++] = [$val, '', 0];
+                }
             } else { // Not a quoted string
                 // Do the clause explode
                 $subterms = $this->clauseExplodeNonQuoted($val, $regexp);
@@ -374,7 +348,7 @@ class Doctrine_Query_Tokenizer
                 }
 
                 // If the previous term had no delimiter, merge them
-                if ($i > 0 && $terms[$i - 1][1] == '') {
+                if ($i > 0 && '' == $terms[$i - 1][1]) {
                     $first = array_shift($subterms);
                     $idx = $i - 1;
 
@@ -384,7 +358,7 @@ class Doctrine_Query_Tokenizer
                 }
 
                 $terms = array_merge($terms, $subterms);
-                $i += sizeof($subterms);
+                $i += count($subterms);
             }
         }
 
@@ -399,7 +373,7 @@ class Doctrine_Query_Tokenizer
      * [0] = the term itself
      * [1] = the delimiter splitting this term from the next
      * [2] = the sum of opening and closing brackets in this term
-     *          (eg. -2 means 2 closing brackets (or 1 opening and 3 closing))
+     *          (eg. -2 means 2 closing brackets (or 1 opening and 3 closing)).
      *
      * example:
      *
@@ -415,23 +389,18 @@ class Doctrine_Query_Tokenizer
      *        array("d))'", '', -2)
      *     );
      *
-     * @param $str
-     * @param $d
-     * @param $e1
-     * @param $e2
-     *
      * @return array
      */
     private function clauseExplodeNonQuoted($str, $regexp)
     {
         $str = preg_split($regexp, $str, -1, PREG_SPLIT_DELIM_CAPTURE);
-        $term = array();
+        $term = [];
         $i = 0;
 
         foreach ($str as $key => $val) {
             // Every odd entry is a delimiter, so add it to the previous term entry
-            if ( ! ($key & 1)) {
-                $term[$i] = array($val, '');
+            if (!($key & 1)) {
+                $term[$i] = [$val, ''];
             } else {
                 $term[$i++][1] = $val;
             }
@@ -446,7 +415,7 @@ class Doctrine_Query_Tokenizer
      * unbalanced bracket count.
      * Note that only the third parameter in each term is used to get the
      * bracket overhang. This is needed to be able to handle quoted strings
-     * wich contain brackets
+     * wich contain brackets.
      *
      * example:
      *
@@ -465,36 +434,34 @@ class Doctrine_Query_Tokenizer
      *         array('5'    , '' , 0)
      *     );
      *
-     * @param $terms array
-     *
+     * @param        $terms array
      * @return array
      */
     private function mergeBracketTerms(array $terms)
     {
-        $res = array();
+        $res = [];
         $i = 0;
 
         foreach ($terms as $val) {
-            if ( ! isset($res[$i])) {
-                $res[$i] = array($val[0], $val[1], $val[2]);
+            if (!isset($res[$i])) {
+                $res[$i] = [$val[0], $val[1], $val[2]];
             } else {
-                $res[$i][0] .= $res[$i][1] . $val[0];
+                $res[$i][0] .= $res[$i][1].$val[0];
                 $res[$i][1] = $val[1];
                 $res[$i][2] += $val[2];
             }
 
             // Bracket overhang
-            if ($res[$i][2] == 0) {
-                $i++;
+            if (0 == $res[$i][2]) {
+                ++$i;
             }
         }
 
         return $res;
     }
 
-
     /**
-     * Explodes the given string by <quoted words>
+     * Explodes the given string by <quoted words>.
      *
      * example:
      *
@@ -506,47 +473,46 @@ class Doctrine_Query_Tokenizer
      *
      * Note the trailing empty string. In the result, all even elements are quoted strings.
      *
-     * @param $str the string to split
-     *
+     * @param        $str the string to split
      * @return array
      */
     public function quotedStringExplode($str)
     {
         // Split by all possible incarnations of a quote
-        $split = array("\\'","''","'", "\\\"", "\"\"", "\"");
+        $split = ["\\'", "''", "'", '\\"', '""', '"'];
         foreach ($split as &$v) {
             $v = preg_quote($v);
         }
-        $split = '#(' . implode('|', $split) . ')#';
+        $split = '#('.implode('|', $split).')#';
         $str = preg_split($split, $str, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        $parts = array();
+        $parts = [];
         $mode = false; // Mode is either ' or " if the loop is inside a string quoted with ' or "
         $i = 0;
 
         foreach ($str as $key => $val) {
             // This is some kind of quote
             if ($key & 1) {
-                if ( ! $mode) {
-                    if ($val == "'" || $val == "\"") {
+                if (!$mode) {
+                    if ("'" == $val || '"' == $val) {
                         $mode = $val;
-                        $i++;
+                        ++$i;
                     }
-                } else if ($mode == $val) {
-                    if ( ! isset($parts[$i])) {
+                } elseif ($mode == $val) {
+                    if (!isset($parts[$i])) {
                         $parts[$i] = $val;
                     } else {
                         $parts[$i] .= $val;
                     }
 
                     $mode = false;
-                    $i++;
+                    ++$i;
 
                     continue;
                 }
             }
 
-            if ( ! isset($parts[$i])) {
+            if (!isset($parts[$i])) {
                 $parts[$i] = $val;
             } else {
                 $parts[$i] .= $val;

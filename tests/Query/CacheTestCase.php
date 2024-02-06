@@ -20,19 +20,20 @@
  */
 
 /**
- * Doctrine_Query_Cache_TestCase
+ * Doctrine_Query_Cache_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
 {
-
     public function testQueryCacheAddsQueryIntoCache()
     {
         $cache = $this->_getCacheDriver();
@@ -42,7 +43,8 @@ class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
             ->from('User u')
             ->leftJoin('u.Phonenumber p')
             ->where('u.name = ?', 'walhala')
-            ->useQueryCache($cache);
+            ->useQueryCache($cache)
+        ;
 
         $coll = $q->execute();
 
@@ -64,7 +66,8 @@ class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
         $q = Doctrine_Query::create()
             ->select('u.id, u.name, p.id')
             ->from('User u')
-            ->leftJoin('u.Phonenumber p');
+            ->leftJoin('u.Phonenumber p')
+        ;
 
         $coll = $q->execute();
 
@@ -119,29 +122,30 @@ class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
         $cache = $this->_getCacheDriver();
         $q->useResultCache($cache);
         $q->select('u.name')->from('User u')->leftJoin('u.Phonenumber p')
-          ->where('u.id = ?');
+            ->where('u.id = ?')
+        ;
 
-        $coll = $q->execute(array(5));
+        $coll = $q->execute([5]);
 
         $this->assertTrue($coll instanceof Doctrine_Collection);
         $this->assertEqual(5, $coll[0]->id);
         $this->assertTrue($coll[0] instanceof Doctrine_Record);
         $this->assertTrue($coll[0]->Phonenumber[0] instanceof Doctrine_Record);
-        $this->assertTrue($cache->contains($q->calculateResultCacheHash(array(5))));
+        $this->assertTrue($cache->contains($q->calculateResultCacheHash([5])));
         $this->assertEqual(count($coll), 1);
         $coll->free(true);
 
-        $coll = $q->execute(array(5));
+        $coll = $q->execute([5]);
 
         $this->assertTrue($coll instanceof Doctrine_Collection);
         $this->assertEqual(5, $coll[0]->id);
         $this->assertTrue($coll[0] instanceof Doctrine_Record);
         // references to related objects are not serialized/unserialized, so the following
         // would trigger an additional query (lazy-load).
-        //echo $this->conn->count() . "<br/>";
-        //$this->assertTrue($coll[0]->Phonenumber[0] instanceof Doctrine_Record);
-        //echo $this->conn->count() . "<br/>"; // count is increased => lazy load
-        $this->assertTrue($cache->contains($q->calculateResultCacheHash(array(5))));
+        // echo $this->conn->count() . "<br/>";
+        // $this->assertTrue($coll[0]->Phonenumber[0] instanceof Doctrine_Record);
+        // echo $this->conn->count() . "<br/>"; // count is increased => lazy load
+        $this->assertTrue($cache->contains($q->calculateResultCacheHash([5])));
         $this->assertEqual(count($coll), 1);
     }
 
@@ -154,16 +158,17 @@ class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
 
         $q->useResultCache(true);
         $q->select('u.name')->from('User u')->leftJoin('u.Phonenumber p')
-          ->where('u.id = ?');
+            ->where('u.id = ?')
+        ;
 
-        $coll = $q->execute(array(5));
+        $coll = $q->execute([5]);
 
-        $this->assertTrue($cache->contains($q->calculateResultCacheHash(array(5))));
+        $this->assertTrue($cache->contains($q->calculateResultCacheHash([5])));
         $this->assertEqual(count($coll), 1);
 
-        $coll = $q->execute(array(5));
+        $coll = $q->execute([5]);
 
-        $this->assertTrue($cache->contains($q->calculateResultCacheHash(array(5))));
+        $this->assertTrue($cache->contains($q->calculateResultCacheHash([5])));
         $this->assertEqual(count($coll), 1);
 
         $this->conn->setAttribute(Doctrine_Core::ATTR_CACHE, null);
@@ -238,7 +243,8 @@ class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
         $cache = $this->_getCacheDriver();
         $q = new Doctrine_Query();
         $q->select('u.name')->from('User u')->leftJoin('u.Phonenumber p')->where('u.name = ?', 'walhala')
-                ->useQueryCache(false);
+            ->useQueryCache(false)
+        ;
 
         $coll = $q->execute();
 
@@ -250,7 +256,7 @@ class Doctrine_Query_Cache_TestCase extends Doctrine_UnitTestCase
         $this->assertFalse($cache->contains($q->calculateQueryCacheHash()));
         $this->assertEqual(count($coll), 0);
     }
-    
+
     protected function _getCacheDriver()
     {
         return new Doctrine_Cache_Array();

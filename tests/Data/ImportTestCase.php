@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Data_Import_TestCase
+ * Doctrine_Data_Import_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -43,10 +45,10 @@ class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase
         $this->tables[] = 'I18nNumberLang';
         parent::prepareTables();
     }
-    
+
     public function testInlineMany()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 User: 
   User_1: 
@@ -64,7 +66,8 @@ END;
 
             $query = new Doctrine_Query();
             $query->from('User u, u.Phonenumber')
-                  ->where('u.name = ?', 'jwage');
+                ->where('u.name = ?', 'jwage')
+            ;
 
             $user = $query->execute()->getFirst();
 
@@ -82,7 +85,7 @@ END;
 
     public function testInlineOne()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 Album:
   Album_1:
@@ -99,7 +102,8 @@ END;
 
             $query = new Doctrine_Query();
             $query->from('User u, u.Album a, a.User u2')
-                  ->where('u.name = ?', 'zYne-');
+                ->where('u.name = ?', 'zYne-')
+            ;
 
             $user = $query->execute()->getFirst();
 
@@ -116,7 +120,7 @@ END;
 
     public function testNormalMany()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 User: 
   User_1: 
@@ -137,7 +141,8 @@ END;
 
             $query = Doctrine_Query::create();
             $query->from('User u, u.Phonenumber')
-                  ->where('u.name = ?', 'jwage2');
+                ->where('u.name = ?', 'jwage2')
+            ;
 
             $user = $query->execute()->getFirst();
 
@@ -155,7 +160,7 @@ END;
 
     public function testI18nImport()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 I18nTestImport:
   I18nTestImport_1:
@@ -188,12 +193,12 @@ END;
             $this->fail($e->getMessage());
         }
 
-        unlink('test.yml'); 
+        unlink('test.yml');
     }
 
     public function testImportNestedSetData()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 ImportNestedSet:
   ImportNestedSet_1:
@@ -216,7 +221,7 @@ END;
             $query = new Doctrine_Query();
             $query->from('ImportNestedSet');
 
-            $i = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+            $i = $query->execute([], Doctrine_Core::HYDRATE_ARRAY);
 
             $this->assertEqual($i[0]['name'], 'Root');
             $this->assertEqual($i[0]['lft'], 1);
@@ -242,12 +247,12 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml'); 
+        unlink('test.yml');
     }
-    
+
     public function testImportNestedSetMultipleTreeData()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 ImportNestedSetMultipleTree:
   ImportNestedSetMultipleTree_Item1:
@@ -288,9 +293,10 @@ END;
 
             $query = Doctrine_Query::create()
                 ->from('ImportNestedSetMultipleTree insmt')
-                ->orderBy('insmt.root_id ASC, insmt.lft ASC');
+                ->orderBy('insmt.root_id ASC, insmt.lft ASC')
+            ;
 
-            $i = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+            $i = $query->execute([], Doctrine_Core::HYDRATE_ARRAY);
 
             $this->assertEqual($i[0]['name'], 'Item 1');
             $this->assertEqual($i[0]['lft'], 1);
@@ -315,7 +321,7 @@ END;
             $this->assertEqual($i[4]['rgt'], 3);
             $this->assertEqual($i[4]['level'], 1);
             $this->assertEqual($i[4]['root_id'], $i[3]['root_id']);
-            
+
             $this->assertEqual($i[5]['name'], 'Item 2.2');
             $this->assertEqual($i[5]['lft'], 4);
             $this->assertEqual($i[5]['rgt'], 11);
@@ -327,13 +333,13 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml'); 
+        unlink('test.yml');
     }
 
     public function testMany2ManyManualDataFixtures()
     {
         self::prepareTables();
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 User:
   User_1:
@@ -367,11 +373,11 @@ END;
 
         unlink('test.yml');
     }
-    
+
     public function testInvalidElementThrowsException()
     {
         self::prepareTables();
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 User:
   User_1:
@@ -394,14 +400,14 @@ END;
         } catch (Exception $e) {
             $this->pass();
         }
-        
+
         unlink('test.yml');
     }
 
     public function testNormalNonRecursiveFixturesLoading()
     {
         self::prepareTables();
-        $yml1 = <<<END
+        $yml1 = <<<'END'
 ---
 User:
   User_1:
@@ -409,7 +415,7 @@ User:
     pass: changeme
 END;
 
-        $yml2 = <<<END
+        $yml2 = <<<'END'
 ---
 User:
   User_2:
@@ -420,7 +426,7 @@ END;
         mkdir('test_data_fixtures');
         file_put_contents('test_data_fixtures/test1.yml', $yml1);
         file_put_contents('test_data_fixtures/test2.yml', $yml2);
-        $import = new Doctrine_Data_Import(getcwd() . '/test_data_fixtures');
+        $import = new Doctrine_Data_Import(getcwd().'/test_data_fixtures');
         $import->setFormat('yml');
 
         $array = $import->doParsing();
@@ -437,7 +443,7 @@ END;
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_RECURSIVE_MERGE_FIXTURES, true);
         self::prepareTables();
-        $yml1 = <<<END
+        $yml1 = <<<'END'
 ---
 User:
   User_1:
@@ -445,7 +451,7 @@ User:
     pass: changeme
 END;
 
-        $yml2 = <<<END
+        $yml2 = <<<'END'
 ---
 User:
   User_2:
@@ -456,7 +462,7 @@ END;
         mkdir('test_data_fixtures');
         file_put_contents('test_data_fixtures/test1.yml', $yml1);
         file_put_contents('test_data_fixtures/test2.yml', $yml2);
-        $import = new Doctrine_Data_Import(getcwd() . '/test_data_fixtures');
+        $import = new Doctrine_Data_Import(getcwd().'/test_data_fixtures');
         $import->setFormat('yml');
 
         $array = $import->doParsing();
@@ -473,7 +479,7 @@ END;
     public function testIncorrectYamlRelationThrowsException()
     {
         self::prepareTables();
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 User:
   User_1:
@@ -511,7 +517,7 @@ END;
 
     public function testI18nImportWithInteger()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 I18nNumberLang:
   I18nNumberLang_1:
@@ -546,9 +552,8 @@ END;
             $this->fail($e->getMessage());
         }
 
-        unlink('test.yml'); 
+        unlink('test.yml');
     }
-
 }
 
 class ImportNestedSet extends Doctrine_Record
@@ -574,10 +579,11 @@ class ImportNestedSetMultipleTree extends Doctrine_Record
     public function setUp()
     {
         $this->actAs(
-            'NestedSet', array(
+            'NestedSet',
+            [
                 'hasManyRoots' => true,
-                'rootColumnName' => 'root_id'
-            )
+                'rootColumnName' => 'root_id',
+            ]
         );
     }
 }
@@ -593,7 +599,7 @@ class I18nNumberLang extends Doctrine_Record
 
     public function setUp()
     {
-        $this->actAs('I18n', array('fields' => array('title', 'body'), 'type' => 'integer', 'length' => 4));
+        $this->actAs('I18n', ['fields' => ['title', 'body'], 'type' => 'integer', 'length' => 4]);
     }
 }
 
@@ -607,6 +613,6 @@ class I18nTestImport extends Doctrine_Record
 
     public function setUp()
     {
-        $this->actAs('I18n', array('fields' => array('name', 'title')));
+        $this->actAs('I18n', ['fields' => ['name', 'title']]);
     }
 }

@@ -23,24 +23,17 @@
  * Doctrine_Collection_Offset
  * Collection of Doctrine_Record objects.
  *
- * @package     Doctrine
- * @subpackage  Collection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Collection_Offset extends Doctrine_Collection
 {
     /**
-     * @var integer $limit
+     * @var int
      */
     private $limit;
 
-    /**
-     * @param Doctrine_Table $table
-     */
     public function __construct(Doctrine_Table $table)
     {
         parent::__construct($table);
@@ -48,7 +41,7 @@ class Doctrine_Collection_Offset extends Doctrine_Collection
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLimit()
     {

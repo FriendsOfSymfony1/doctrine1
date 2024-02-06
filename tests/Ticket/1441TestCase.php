@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1441_TestCase
+ * Doctrine_Ticket_1441_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1441_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1441_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -51,13 +53,14 @@ class Doctrine_Ticket_1441_TestCase extends Doctrine_UnitTestCase
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
         $q = Doctrine_Query::create()
             ->update('Ticket_1441_User u')
-            ->set('u.password', '?',  'test')
-            ->where('u.username = ?', 'jwage');
+            ->set('u.password', '?', 'test')
+            ->where('u.username = ?', 'jwage')
+        ;
 
         $q->execute();
 
         $this->assertEqual($q->getDql(), 'UPDATE Ticket_1441_User u SET u.password = ? u.updated_at = ? WHERE u.username = ?');
-        $this->assertEqual($q->getFlattenedParams(), array('test', date('Y-m-d H:i:s', time()), 'jwage'));
+        $this->assertEqual($q->getFlattenedParams(), ['test', date('Y-m-d H:i:s', time()), 'jwage']);
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
     }
 }

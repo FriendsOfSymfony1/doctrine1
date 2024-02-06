@@ -20,37 +20,41 @@
  */
 
 /**
- * Doctrine_Ticket_1540_TestCase
+ * Doctrine_Ticket_1540_TestCase.
  *
- * @package     Doctrine
  * @author      Andrea Baron <andrea@bhweb.it>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0.2
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1540_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1540_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
         $this->tables[] = 'Ticket_1540_TableName';
         parent::prepareTables();
     }
-	
-	public function testShouldNotConvertToAmpersandsInSelect()
+
+    public function testShouldNotConvertToAmpersandsInSelect()
     {
         $q = Doctrine_Query::create()
-			->select('if(1 AND 2, 1, 2)')
-            ->from('Ticket_1540_TableName t');
+            ->select('if(1 AND 2, 1, 2)')
+            ->from('Ticket_1540_TableName t')
+        ;
         $this->assertEqual($q->getSqlQuery(), 'SELECT if(1 AND 2, 1, 2) AS t__0 FROM ticket_1540__table_name t');
     }
-	
+
     public function testShouldNotConvertToAmpersandsInWhere()
     {
         $q = Doctrine_Query::create()
             ->from('Ticket_1540_TableName t')
-			->where('if(1 AND 2, 1, 2)', 1);
+            ->where('if(1 AND 2, 1, 2)', 1)
+        ;
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id FROM ticket_1540__table_name t WHERE (if(1 AND 2, 1, 2))');
     }
 }
@@ -59,11 +63,10 @@ class Ticket_1540_TableName extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', 4, array('primary' => true, 'autoincrement' => true));
+        $this->hasColumn('id', 'integer', 4, ['primary' => true, 'autoincrement' => true]);
     }
 
     public function setUp()
     {
-        
     }
 }

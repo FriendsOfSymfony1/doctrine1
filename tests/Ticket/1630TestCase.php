@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1630_TestCase
+ * Doctrine_Ticket_1630_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1630_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1630_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -55,16 +57,17 @@ class Doctrine_Ticket_1630_TestCase extends Doctrine_UnitTestCase
     public function testTest()
     {
         $cacheConn = Doctrine_Manager::getInstance()->openConnection('sqlite::memory:', 'cache', false);
-		$cacheDriver = new Doctrine_Cache_Db(array('tableName' => 'cache', 'connection' => $cacheConn));
-		$cacheDriver->createTable();
+        $cacheDriver = new Doctrine_Cache_Db(['tableName' => 'cache', 'connection' => $cacheConn]);
+        $cacheDriver->createTable();
 
         $currentCacheDriver = $this->conn->getAttribute(Doctrine_Core::ATTR_QUERY_CACHE);
-		$this->conn->setAttribute(Doctrine_Core::ATTR_QUERY_CACHE, $cacheDriver);
+        $this->conn->setAttribute(Doctrine_Core::ATTR_QUERY_CACHE, $cacheDriver);
 
         try {
             $q = Doctrine_Query::create()
                 ->from('Ticket_1630_BlogPost p')
-                ->leftJoin('p.Translation t INDEXBY t.lang');
+                ->leftJoin('p.Translation t INDEXBY t.lang')
+            ;
             $results = $q->execute();
             $results = $q->execute();
 
@@ -87,7 +90,7 @@ class Ticket_1630_BlogPost extends Doctrine_Record
 
     public function setUp()
     {
-        $i18n = new Doctrine_Template_I18n(array('fields' => array('title')));
+        $i18n = new Doctrine_Template_I18n(['fields' => ['title']]);
         $this->actAs($i18n);
     }
 }

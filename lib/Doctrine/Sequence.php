@@ -23,23 +23,18 @@
  * Doctrine_Sequence
  * The base class for sequence handling drivers.
  *
- * @package     Doctrine
- * @subpackage  Sequence
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Sequence extends Doctrine_Connection_Module
 {
     /**
-     * Returns the next free id of a sequence
+     * Returns the next free id of a sequence.
      *
-     * @param string $seqName   name of the sequence
+     * @param string $seqName name of the sequence
      * @param bool              when true missing sequences are automatic created
-     *
-     * @return integer          next id in the given sequence
+     * @return int                         next id in the given sequence
      * @throws Doctrine_Sequence_Exception
      */
     public function nextId($seqName, $ondemand = true)
@@ -49,10 +44,12 @@ class Doctrine_Sequence extends Doctrine_Connection_Module
 
     /**
      * Returns the autoincrement ID if supported or $id or fetches the current
-     * ID in a sequence called: $table.(empty($field) ? '' : '_'.$field)
+     * ID in a sequence called: $table.(empty($field) ? '' : '_'.$field).
      *
      * @param   string  name of the table into which a new row was inserted
      * @param   string  name of the field into which a new row was inserted
+     * @param mixed|null $table
+     * @param mixed|null $field
      */
     public function lastInsertId($table = null, $field = null)
     {
@@ -60,16 +57,16 @@ class Doctrine_Sequence extends Doctrine_Connection_Module
     }
 
     /**
-     * Returns the current id of a sequence
+     * Returns the current id of a sequence.
      *
-     * @param string $seqName   name of the sequence
-     *
-     * @return integer          current id in the given sequence
+     * @param  string $seqName name of the sequence
+     * @return int    current id in the given sequence
      */
     public function currId($seqName)
     {
         $this->warnings[] = 'database does not support getting current
             sequence value, the sequence value was incremented';
+
         return $this->nextId($seqName);
     }
 }

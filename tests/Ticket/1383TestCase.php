@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1383_TestCase
+ * Doctrine_Ticket_1383_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1383_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1383_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,7 +47,7 @@ class Doctrine_Ticket_1383_TestCase extends Doctrine_UnitTestCase
         $orig = Doctrine_Manager::getInstance()->getAttribute(Doctrine_Core::ATTR_VALIDATE);
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_ALL);
         try {
-            $brand = new Ticket_1383_Brand;
+            $brand = new Ticket_1383_Brand();
             $brand->name = 'The Great Brand';
             $brand->Ticket_1383_Brand_Image[0]->name = 'imagename';
             $brand->Ticket_1383_Brand_Image[0]->owner_id = 1;
@@ -61,15 +63,16 @@ class Doctrine_Ticket_1383_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_1383_Image extends Doctrine_Record
 {
-    public function setTableDefinition() {
-        $this->hasColumn('id', 'integer', null, array('primary' => true, 'autoincrement' => true));
-        $this->hasColumn('owner_id', 'integer', null, array('notnull' => true));
-        $this->hasColumn('owner_type', 'integer', 5, array('notnull' => true));
-        $this->hasColumn('name', 'string', 128, array('notnull' => true, 'unique' => true));
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id', 'integer', null, ['primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('owner_id', 'integer', null, ['notnull' => true]);
+        $this->hasColumn('owner_type', 'integer', 5, ['notnull' => true]);
+        $this->hasColumn('name', 'string', 128, ['notnull' => true, 'unique' => true]);
 
-        $this->setSubclasses(array(
-            'Ticket_1383_Brand_Image'           => array('owner_type' => 0)
-        ));
+        $this->setSubclasses([
+            'Ticket_1383_Brand_Image' => ['owner_type' => 0],
+        ]);
     }
 }
 
@@ -79,18 +82,20 @@ class Ticket_1383_Brand_Image extends Ticket_1383_Image
 
 class Ticket_1383_Brand extends Doctrine_Record
 {
-    public function setTableDefinition() {
-        $this->hasColumn('id', 'integer', null, array('primary' => true, 'autoincrement' => true));
-        $this->hasColumn('name', 'string', 255, array('notnull' => true));
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id', 'integer', null, ['primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('name', 'string', 255, ['notnull' => true]);
     }
-    
-    public function setUp() {
+
+    public function setUp()
+    {
         $this->hasMany(
             'Ticket_1383_Brand_Image',
-            array(
+            [
                 'local' => 'id',
-                'foreign' => 'owner_id'
-            )
+                'foreign' => 'owner_id',
+            ]
         );
     }
 }

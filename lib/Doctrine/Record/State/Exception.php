@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Exception
+ * Doctrine_Exception.
  *
- * @package     Doctrine
- * @subpackage  Record
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Record_State_Exception extends Doctrine_Record_Exception
-{ }
+{
+}

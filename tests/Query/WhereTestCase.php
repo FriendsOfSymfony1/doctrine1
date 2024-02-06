@@ -21,24 +21,27 @@
 
 /**
  * Doctrine_Query_Where_TestCase
- * This test case is used for testing DQL WHERE part functionality
+ * This test case is used for testing DQL WHERE part functionality.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { }
-
-    public function prepareTables() 
+    public function prepareData()
     {
-        $this->tables = array('Entity', 'EnumTest', 'GroupUser', 'Account', 'Book');
+    }
+
+    public function prepareTables()
+    {
+        $this->tables = ['Entity', 'EnumTest', 'GroupUser', 'Account', 'Book'];
         parent::prepareTables();
     }
 
@@ -92,7 +95,7 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($accounts[0]->amount, 1000);
     }
 
-    public function testDirectMultipleParameterSetting() 
+    public function testDirectMultipleParameterSetting()
     {
         $user = new User();
         $user->name = 'someone.2';
@@ -100,7 +103,7 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
 
         $q = new Doctrine_Query();
 
-        $q->from('User')->addWhere('User.id IN (?, ?)', array(1, 2));
+        $q->from('User')->addWhere('User.id IN (?, ?)', [1, 2]);
 
         $users = $q->execute();
 
@@ -108,14 +111,13 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[0]->name, 'someone');
         $this->assertEqual($users[1]->name, 'someone.2');
     }
-    
+
     public function testExceptionIsThrownWhenParameterIsNull()
     {
-       try
-       {
+        try {
             Doctrine_Query::create()->delete('User')->whereIn('User.id', null)->execute();
-            $this->fail("Should throw exception");
-        } catch(Doctrine_Query_Exception $e) {
+            $this->fail('Should throw exception');
+        } catch (Doctrine_Query_Exception $e) {
             $this->pass();
         }
     }
@@ -124,7 +126,8 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
     {
         $q = Doctrine_Query::create()
             ->from('User')
-            ->where('User.id IN (?, ?)', array(1, 2));
+            ->where('User.id IN (?, ?)', [1, 2])
+        ;
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT e.id AS e__id, e.name AS e__name, e.loginname AS e__loginname, e.password AS e__password, e.type AS e__type, e.created AS e__created, e.updated AS e__updated, e.email_id AS e__email_id FROM entity e WHERE (e.id IN (?, ?) AND (e.type = 0))');
 
@@ -135,7 +138,7 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[1]->name, 'someone.2');
 
         // the parameters and where part should be reseted
-        $q->where('User.id IN (?, ?)', array(1, 2));
+        $q->where('User.id IN (?, ?)', [1, 2]);
 
         $users = $q->execute();
 
@@ -143,32 +146,32 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[0]->name, 'someone');
         $this->assertEqual($users[1]->name, 'someone.2');
     }
-    
+
     public function testNotInExpression()
     {
         $q = new Doctrine_Query();
 
-        $q->from('User u')->addWhere('u.id NOT IN (?)', array(1));
+        $q->from('User u')->addWhere('u.id NOT IN (?)', [1]);
         $users = $q->execute();
 
         $this->assertEqual($users->count(), 1);
         $this->assertEqual($users[0]->name, 'someone.2');
     }
 
-    public function testExistsExpression() 
+    public function testExistsExpression()
     {
         $q = new Doctrine_Query();
-        
+
         $user = new User();
         $user->name = 'someone with a group';
         $user->Group[0]->name = 'some group';
         $user->save();
-        
+
         // find all users which have groups
         try {
             $q->from('User u')->where('EXISTS (SELECT g.id FROM Groupuser g WHERE g.user_id = u.id)');
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
         $users = $q->execute();
@@ -177,7 +180,7 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[0]->name, 'someone with a group');
     }
 
-    public function testNotExistsExpression() 
+    public function testNotExistsExpression()
     {
         $q = new Doctrine_Query();
 
@@ -185,7 +188,7 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         try {
             $q->from('User u')->where('NOT EXISTS (SELECT Groupuser.id FROM Groupuser WHERE Groupuser.user_id = u.id)');
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
         $users = $q->execute();
@@ -194,25 +197,24 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[1]->name, 'someone.2');
     }
 
-    public function testComponentAliases() 
+    public function testComponentAliases()
     {
         $q = new Doctrine_Query();
 
-        $q->from('User u')->addWhere('u.id IN (?, ?)', array(1,2));
+        $q->from('User u')->addWhere('u.id IN (?, ?)', [1, 2]);
 
         $users = $q->execute();
 
         $this->assertEqual($users->count(), 2);
         $this->assertEqual($users[0]->name, 'someone');
-        $this->assertEqual($users[1]->name, 'someone.2');             
-
+        $this->assertEqual($users[1]->name, 'someone.2');
     }
 
-    public function testComponentAliases2() 
+    public function testComponentAliases2()
     {
         $q = new Doctrine_Query();
 
-        $q->from('User u')->addWhere('u.name = ?', array('someone'));
+        $q->from('User u')->addWhere('u.name = ?', ['someone']);
 
         $users = $q->execute();
 
@@ -223,40 +225,40 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
     public function testOperatorWithNoTrailingSpaces()
     {
         $q = new Doctrine_Query();
-        
+
         $q->select('User.id')->from('User')->where("User.name='someone'");
 
         $users = $q->execute();
         $this->assertEqual($users->count(), 1);
-        
+
         $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id FROM entity e WHERE (e.name = 'someone' AND (e.type = 0))");
     }
 
-    public function testOperatorWithNoTrailingSpaces2() 
+    public function testOperatorWithNoTrailingSpaces2()
     {
         $q = new Doctrine_Query();
-        
+
         $q->select('User.id')->from('User')->where("User.name='foo.bar'");
 
         $users = $q->execute();
         $this->assertEqual($users->count(), 0);
-        
+
         $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id FROM entity e WHERE (e.name = 'foo.bar' AND (e.type = 0))");
     }
 
-    public function testOperatorWithSingleTrailingSpace() 
+    public function testOperatorWithSingleTrailingSpace()
     {
         $q = new Doctrine_Query();
-        
+
         $q->select('User.id')->from('User')->where("User.name= 'foo.bar'");
 
         $users = $q->execute();
         $this->assertEqual($users->count(), 0);
-        
+
         $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id FROM entity e WHERE (e.name = 'foo.bar' AND (e.type = 0))");
     }
 
-    public function testOperatorWithSingleTrailingSpace2() 
+    public function testOperatorWithSingleTrailingSpace2()
     {
         $q = new Doctrine_Query();
 
@@ -264,7 +266,7 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
 
         $users = $q->execute();
         $this->assertEqual($users->count(), 0);
-        
+
         $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id FROM entity e WHERE (e.name = 'foo.bar' AND (e.type = 0))");
     }
 
@@ -289,16 +291,16 @@ class Doctrine_Query_Where_TestCase extends Doctrine_UnitTestCase
     public function testLiteralValueAsInOperatorOperandIsSupported()
     {
         $q = new Doctrine_Query();
-        
+
         $q->select('u.id')->from('User u')->where('1 IN (1, 2)');
-        
+
         $this->assertEqual($q->getSqlQuery(), 'SELECT e.id AS e__id FROM entity e WHERE (1 IN (1, 2) AND (e.type = 0))');
     }
 
     public function testCorrelatedSubqueryWithInOperatorIsSupported()
     {
         $q = new Doctrine_Query();
-        
+
         $q->select('u.id')->from('User u')->where('u.name IN (SELECT u2.name FROM User u2 WHERE u2.id = u.id)');
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT e.id AS e__id FROM entity e WHERE (e.name IN (SELECT e2.name AS e2__name FROM entity e2 WHERE (e2.id = e.id AND (e2.type = 0))) AND (e.type = 0))');

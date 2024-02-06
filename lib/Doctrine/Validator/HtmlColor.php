@@ -20,32 +20,28 @@
  */
 
 /**
- * Doctrine_Validator_HtmlColor
+ * Doctrine_Validator_HtmlColor.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_HtmlColor extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is a valid html color code
+     * checks if given value is a valid html color code.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
         if (is_null($value)) {
             return true;
         }
-        if ( ! preg_match("/^#{0,1}[0-9a-fA-F]{6}$/", $value)) {
+        if (!preg_match('/^#{0,1}[0-9a-fA-F]{6}$/', $value)) {
             return false;
         }
+
         return true;
     }
 }

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC7_TestCase
+ * Doctrine_Ticket_DC7_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC7_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC7_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -40,7 +42,7 @@ class Doctrine_Ticket_DC7_TestCase extends Doctrine_UnitTestCase
 
     public function prepareData()
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $user = new Ticket_DC7_User();
             $user->username = $i;
             $user->password = $i;
@@ -52,14 +54,15 @@ class Doctrine_Ticket_DC7_TestCase extends Doctrine_UnitTestCase
     {
         $q = Doctrine_Core::getTable('Ticket_DC7_User')
             ->createQuery('u')
-            ->setHydrationMode(Doctrine_Core::HYDRATE_ON_DEMAND);
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ON_DEMAND)
+        ;
 
         $results = $q->execute();
         $this->assertEqual(get_class($results), 'Doctrine_Collection_OnDemand');
 
         $count = 0;
         foreach ($results as $result) {
-            $count++;
+            ++$count;
         }
         $this->assertEqual($count, 10);
     }

@@ -21,30 +21,26 @@
 
 /**
  * Doctrine_Column
- * This class represents a database column
+ * This class represents a database column.
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @package     Doctrine
- * @subpackage  Column
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision: 7663 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Countable
 {
     /**
-     * @var array $_definition  @see getDefinition()
+     * @var array @see getDefinition()
      */
-    protected $_definition = array(
-                                'type'    => null,
-                                'length'  => 0,
-                                );
+    protected $_definition = [
+        'type' => null,
+        'length' => 0,
+    ];
 
     /**
-     * @var array $definition  @see getDefinition()
+     * @var array @see getDefinition()
      */
-    public function __construct(array $definition = array())
+    public function __construct(array $definition = [])
     {
         $this->_definition = $definition;
     }
@@ -52,10 +48,11 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     /**
      * Returns the definition of the column.
      *
-     * Keys can be: 
+     * Keys can be:
      *     string type,
      *     integer length,
      *     array values (only for enum fields, maps integer indexes to mixed values),
+     *
      * @return array
      */
     public function getDefinition()
@@ -64,35 +61,33 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     }
 
     /**
-     * contains
+     * contains.
      *
-     * @return boolean
+     * @return bool
      */
-    public function contains($name) 
+    public function contains($name)
     {
         return isset($this->_definition[$name]);
     }
 
     /**
-     * get
+     * get.
      *
      * @param string $name
-     * @return mixed
      */
     public function get($name)
     {
-        if ( ! isset($this->_definition[$name])) {
+        if (!isset($this->_definition[$name])) {
             return null;
         }
-        
+
         return $this->_definition[$name];
     }
 
     /**
-     * set
+     * set.
      *
      * @param string $name
-     * @return void
      */
     public function set($name, $value)
     {
@@ -100,23 +95,22 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     }
 
     /**
-     * @param string $field
      * @return array
      */
     public function getEnumValues()
     {
         if (isset($this->_definition['values'])) {
             return $this->_definition['values'];
-        } else {
-            return array();
         }
+
+        return [];
     }
 
     /**
      * Retrieves an enum value.
      *
-     * @param integer $index
-     * @return string       integer ($index) if not present
+     * @param  int    $index
+     * @return string integer ($index) if not present
      */
     public function enumValue($index)
     {
@@ -124,15 +118,13 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
             return false;
         }
 
-        return isset($this->_definition['values'][$index]) ? $this->_definition['values'][$index] : false;
+        return $this->_definition['values'][$index] ?? false;
     }
 
     /**
-     * enumIndex
+     * enumIndex.
      *
      * @param string $field
-     * @param mixed $value
-     * @return mixed
      */
     public function enumIndex($field, $value)
     {
@@ -142,23 +134,23 @@ class Doctrine_Column extends Doctrine_Access implements IteratorAggregate, Coun
     }
 
     /**
-     * count
+     * count.
      *
-     * @return integer
+     * @return int
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->_definition);
     }
 
     /**
-     * getIterator
+     * getIterator.
      *
      * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator() 
+    #[ReturnTypeWillChange]
+    public function getIterator()
     {
         return new ArrayIterator($this->_definition);
     }

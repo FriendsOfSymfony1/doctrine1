@@ -20,26 +20,22 @@
  */
 
 /**
- * Doctrine_Search_Indexer_Dir
+ * Doctrine_Search_Indexer_Dir.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_Indexer_Dir
 {
     public function add($dir)
     {
-        if ( ! file_exists($dir)) {
-           throw new Doctrine_Search_Indexer_Exception('Unknown directory ' . $dir);
+        if (!file_exists($dir)) {
+            throw new Doctrine_Search_Indexer_Exception('Unknown directory '.$dir);
         }
 
         $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::LEAVES_ONLY);
-        
+
         foreach ($it as $file) {
             $this->indexFile($file);
         }

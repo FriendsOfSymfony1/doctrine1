@@ -20,38 +20,43 @@
  */
 
 /**
- * Doctrine_Search_File_TestCase
+ * Doctrine_Search_File_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Search_File_TestCase extends Doctrine_UnitTestCase
 {
     protected $_search;
 
     public function prepareData()
-    { }
+    {
+    }
+
     public function prepareTables()
-    { }
+    {
+    }
 
     public function testSearchFileAutoCreatesFileTable()
     {
         $this->_search = new Doctrine_Search_File();
 
-        $this->conn->export->exportClasses(array('FileIndex'));
+        $this->conn->export->exportClasses(['FileIndex']);
     }
 
     public function testIndexDirectoryIndexesAllFiles()
     {
-        $this->_search->indexDirectory(dirname(__FILE__) . DIRECTORY_SEPARATOR . '_files');
+        $this->_search->indexDirectory(dirname(__FILE__).DIRECTORY_SEPARATOR.'_files');
 
         $resultSet = $this->_search->search('dbms');
-        
+
         $this->assertEqual(count($resultSet), 1);
     }
 }

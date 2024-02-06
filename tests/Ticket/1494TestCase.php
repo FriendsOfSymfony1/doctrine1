@@ -20,23 +20,26 @@
  */
 
 /**
- * Doctrine_Ticket_1494_TestCase
+ * Doctrine_Ticket_1494_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1494_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1494_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $q = Doctrine_Query::create()
             ->select('u.*, CONCAT(u.id, u.name) as custom')
-            ->from('User u INDEXBY custom');
+            ->from('User u INDEXBY custom')
+        ;
         $this->assertEqual($q->getSqlQuery(), 'SELECT e.id AS e__id, e.name AS e__name, e.loginname AS e__loginname, e.password AS e__password, e.type AS e__type, e.created AS e__created, e.updated AS e__updated, e.email_id AS e__email_id, CONCAT(e.id, e.name) AS e__0 FROM entity e WHERE (e.type = 0)');
         $results = $q->fetchArray();
         $this->assertEqual($results['4zYne']['name'], 'zYne');

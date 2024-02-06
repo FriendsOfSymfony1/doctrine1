@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Record_State_TestCase
+ * Doctrine_Record_State_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_NestedSet_TimestampableMultiRoot_TestCase extends Doctrine_UnitTestCase
 {
@@ -39,11 +41,12 @@ class Doctrine_NestedSet_TimestampableMultiRoot_TestCase extends Doctrine_UnitTe
     }
 
     public function prepareData()
-    {}
-    
-    
-    public function testSavingNewRecordWithRootIdWorks() {
-        Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true );
+    {
+    }
+
+    public function testSavingNewRecordWithRootIdWorks()
+    {
+        Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
         $node = new NestedSet_Timestampable_MultiRootNode();
         $node->name = 'root';
         $node->root_id = 42;
@@ -53,30 +56,29 @@ class Doctrine_NestedSet_TimestampableMultiRoot_TestCase extends Doctrine_UnitTe
         $node2 = new NestedSet_Timestampable_MultiRootNode();
         $node2->name = 'node2';
         $node2->root_id = 42;
-        //try {
-            $treeMngr = $this->conn->getTable('NestedSet_Timestampable_MultiRootNode')->getTree();
-            $treeMngr->createRoot($node);
-            $this->assertEqual(1, $node['lft']);
-            $this->assertEqual(2, $node['rgt']);
-            $this->assertNotEqual(null, $node['created_at']);
-            $this->assertNotEqual(null, $node['updated_at']);
-            $child1->name = "child1";
-            $child1->getNode()->insertAsLastChildOf($node);
-        
-            $node->refresh(); // ! updates lft/rgt
-            // test insertion
-            $this->assertEqual(2, $child1->lft);
-            $this->assertEqual(3, $child1->rgt);
-            $this->assertEqual(1, $child1->level);
-            // test node has been shifted
-            $this->assertEqual(1, $node->lft);
-            $this->assertEqual(4, $node->rgt);
-            $this->assertEqual(0, $node->level);
-            
-            $node->getNode()->delete();
-        //} catch (Exception $e) {
-        //    $this->fail();
-        //}
-    }
+        // try {
+        $treeMngr = $this->conn->getTable('NestedSet_Timestampable_MultiRootNode')->getTree();
+        $treeMngr->createRoot($node);
+        $this->assertEqual(1, $node['lft']);
+        $this->assertEqual(2, $node['rgt']);
+        $this->assertNotEqual(null, $node['created_at']);
+        $this->assertNotEqual(null, $node['updated_at']);
+        $child1->name = 'child1';
+        $child1->getNode()->insertAsLastChildOf($node);
 
+        $node->refresh(); // ! updates lft/rgt
+        // test insertion
+        $this->assertEqual(2, $child1->lft);
+        $this->assertEqual(3, $child1->rgt);
+        $this->assertEqual(1, $child1->level);
+        // test node has been shifted
+        $this->assertEqual(1, $node->lft);
+        $this->assertEqual(4, $node->rgt);
+        $this->assertEqual(0, $node->level);
+
+        $node->getNode()->delete();
+        // } catch (Exception $e) {
+        //    $this->fail();
+        // }
+    }
 }

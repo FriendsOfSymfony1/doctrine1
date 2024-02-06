@@ -20,44 +20,38 @@
  */
 
 /**
- * Doctrine_Validator_Regexp
+ * Doctrine_Validator_Regexp.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Regexp extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value satisfies a regular expression
+     * checks if given value satisfies a regular expression.
      *
-     * @param mixed $value
-     * @param mixed $args
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
         if (is_null($value)) {
             return true;
         }
-        if ( ! isset($this->args)) {
-           return true;
+        if (!isset($this->args)) {
+            return true;
         }
         if (is_array($this->args)) {
             foreach ($this->args as $regexp) {
-                if ( ! preg_match($regexp, $value)) {
+                if (!preg_match($regexp, $value)) {
                     return false;
                 }
             }
+
             return true;
-        } else {
-            if (preg_match($this->args, $value)) {
-                return true;
-            }
+        }
+        if (preg_match($this->args, $value)) {
+            return true;
         }
 
         return false;

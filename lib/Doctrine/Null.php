@@ -20,24 +20,20 @@
  */
 
 /**
- * Doctrine_Null
+ * Doctrine_Null.
  *
  * Simple empty class representing a null value
  * used for extra fast null value testing with isset() rather than array_key_exists()
  *
- * @package     Doctrine
- * @subpackage  Null
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 final class Doctrine_Null
-{ 
+{
     public function exists()
     {
-        return false;    
+        return false;
     }
 
     public function __toString()

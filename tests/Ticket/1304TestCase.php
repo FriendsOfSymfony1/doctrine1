@@ -20,71 +20,74 @@
  */
 
 /**
- * Doctrine_Ticket_1304_TestCase
+ * Doctrine_Ticket_1304_TestCase.
  *
- * @package     Doctrine
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1304_TestCase extends Doctrine_UnitTestCase {
-  public function prepareTables() {
-    $this->tables[] = 'Doctrine_Ticket_1304_Slug';
-    parent::prepareTables();
-  }
-  
-  public function testTicket()
-  {
-	// run 1
-     try {
-        $r = new Doctrine_Ticket_1304_Slug();
-        $r->Translation['en']->title	= 'Title';
-        $r->Translation['en']->content	= 'Content';
-        $r->save();
-      } catch (Exception $e) {
-          $this->fail($e->getMessage());
-      }
-      $this->assertEqual('title', $r->Translation['en']->slug);
+class Doctrine_Ticket_1304_TestCase extends Doctrine_UnitTestCase
+{
+    public function prepareTables()
+    {
+        $this->tables[] = 'Doctrine_Ticket_1304_Slug';
+        parent::prepareTables();
+    }
 
-	// run 2
-     try {
-        $r = new Doctrine_Ticket_1304_Slug();
-        $r->Translation['en']->title	= 'Title';
-        $r->Translation['en']->content	= 'Content';
-        $r->save();
-      } catch (Exception $e) {
-          $this->fail($e->getMessage());
-      }
-      $this->assertEqual('title-1', $r->Translation['en']->slug);
+    public function testTicket()
+    {
+        // run 1
+        try {
+            $r = new Doctrine_Ticket_1304_Slug();
+            $r->Translation['en']->title = 'Title';
+            $r->Translation['en']->content = 'Content';
+            $r->save();
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+        $this->assertEqual('title', $r->Translation['en']->slug);
 
-	// run 3
-     try {
-        $r = new Doctrine_Ticket_1304_Slug();
-        $r->Translation['en']->title	= 'Title';
-        $r->Translation['en']->content	= 'Content';
-        $r->save();
-      } catch (Exception $e) {
-          $this->fail($e->getMessage());
-      }
-      $this->assertEqual('title-2', $r->Translation['en']->slug);
-  }
+        // run 2
+        try {
+            $r = new Doctrine_Ticket_1304_Slug();
+            $r->Translation['en']->title = 'Title';
+            $r->Translation['en']->content = 'Content';
+            $r->save();
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+        $this->assertEqual('title-1', $r->Translation['en']->slug);
+
+        // run 3
+        try {
+            $r = new Doctrine_Ticket_1304_Slug();
+            $r->Translation['en']->title = 'Title';
+            $r->Translation['en']->content = 'Content';
+            $r->save();
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+        $this->assertEqual('title-2', $r->Translation['en']->slug);
+    }
 }
 
 class Doctrine_Ticket_1304_Slug extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->hasColumn('title', 'string', 255, array('type' => 'string', 'length' => '255'));
-    $this->hasColumn('content', 'string', null, array('type' => 'string'));
-  }
+    public function setTableDefinition()
+    {
+        $this->hasColumn('title', 'string', 255, ['type' => 'string', 'length' => '255']);
+        $this->hasColumn('content', 'string', null, ['type' => 'string']);
+    }
 
-  public function setUp()
-  {
-    $i18n0 = new Doctrine_Template_I18n(array('fields' => array(0 => 'title', 1 => 'content')));
-    $sluggable1 = new Doctrine_Template_Sluggable(array('fields' => array(0 => 'title'), 'indexName' => 'i18n_sluggable_test'));
-    $i18n0->addChild($sluggable1);
-    $this->actAs($i18n0);
-  }
+    public function setUp()
+    {
+        $i18n0 = new Doctrine_Template_I18n(['fields' => [0 => 'title', 1 => 'content']]);
+        $sluggable1 = new Doctrine_Template_Sluggable(['fields' => [0 => 'title'], 'indexName' => 'i18n_sluggable_test']);
+        $i18n0->addChild($sluggable1);
+        $this->actAs($i18n0);
+    }
 }

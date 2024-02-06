@@ -20,28 +20,35 @@
  */
 
 /**
- * Doctrine_Ticket_1160_TestCase
+ * Doctrine_Ticket_1160_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1160_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1160_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $this->dbh = new Doctrine_Adapter_Mock('mysql');
         $this->conn = $this->manager->openConnection($this->dbh);
 
-        $sql = $this->conn->export->exportClassesSql(array('Ticket_1160_Test'));
+        $sql = $this->conn->export->exportClassesSql(['Ticket_1160_Test']);
         $this->assertEqual($sql[0], 'CREATE TABLE ticket_1160__test (id BIGINT AUTO_INCREMENT, name VARCHAR(255), PRIMARY KEY(id)) COLLATE latin1_german2_ci ENGINE = MYISAM');
     }
 }
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class Ticket_1160_Test extends Doctrine_Record
 {
     public function setTableDefinition()

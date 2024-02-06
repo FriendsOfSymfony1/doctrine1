@@ -20,28 +20,35 @@
  */
 
 /**
- * This adapter interface should be implemented by all custom adapters
+ * This adapter interface should be implemented by all custom adapters.
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @package     Doctrine
- * @subpackage  Adapter
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 interface Doctrine_Adapter_Interface
 {
     public function prepare($prepareString);
+
     public function query($queryString);
+
     public function quote($input);
+
     public function exec($statement);
+
     public function lastInsertId();
+
     public function beginTransaction();
+
     public function commit();
+
     public function rollBack();
+
     public function errorCode();
+
     public function errorInfo();
+
     public function setAttribute($attribute, $value);
+
     public function getAttribute($attribute);
 }

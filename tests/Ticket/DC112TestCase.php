@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_DDC47_TestCase
+ * Doctrine_Ticket_DDC47_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
 {
@@ -38,7 +40,8 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
 
         $q1 = Doctrine_Query::create()
             ->from('User u')
-            ->useResultCache($cacheDriver, 3600, 'test1');
+            ->useResultCache($cacheDriver, 3600, 'test1')
+        ;
 
         $coll = $q1->execute();
 
@@ -52,7 +55,8 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
 
         $q2 = Doctrine_Query::create()
             ->from('User u')
-            ->useResultCache($cacheDriver, 3600, 'test2');
+            ->useResultCache($cacheDriver, 3600, 'test2')
+        ;
 
         $coll = $q2->execute();
         $this->assertTrue($cacheDriver->contains('test1'));
@@ -69,7 +73,8 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
         $q = Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver)
-            ->setResultCacheHash('testing');
+            ->setResultCacheHash('testing')
+        ;
 
         $coll = $q->execute();
         $this->assertTrue($cacheDriver->contains('testing'));
@@ -81,19 +86,21 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
 
     public function testDeleteByRegex()
     {
-        $cacheDriver = new Doctrine_Cache_Array(array(
-            'prefix' => 'test_'
-        ));
+        $cacheDriver = new Doctrine_Cache_Array([
+            'prefix' => 'test_',
+        ]);
 
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'doctrine_query_one')
-            ->execute();
+            ->execute()
+        ;
 
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'doctrine_query_two')
-            ->execute();
+            ->execute()
+        ;
 
         $count = $cacheDriver->deleteByRegex('/test_doctrine_query_.*/');
         $this->assertEqual($count, 2);
@@ -103,19 +110,21 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
 
     public function testDeleteByPrefix()
     {
-        $cacheDriver = new Doctrine_Cache_Array(array(
-            'prefix' => 'test_'
-        ));
+        $cacheDriver = new Doctrine_Cache_Array([
+            'prefix' => 'test_',
+        ]);
 
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'doctrine_query_one')
-            ->execute();
+            ->execute()
+        ;
 
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'doctrine_query_two')
-            ->execute();
+            ->execute()
+        ;
 
         $count = $cacheDriver->deleteByPrefix('test_');
         $this->assertEqual($count, 2);
@@ -130,12 +139,14 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'one_query')
-            ->execute();
+            ->execute()
+        ;
 
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'two_query')
-            ->execute();
+            ->execute()
+        ;
 
         $count = $cacheDriver->deleteBySuffix('_query');
         $this->assertEqual($count, 2);
@@ -150,12 +161,14 @@ class Doctrine_Ticket_DC112_TestCase extends Doctrine_UnitTestCase
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'user_query_one')
-            ->execute();
+            ->execute()
+        ;
 
         Doctrine_Query::create()
             ->from('User u')
             ->useResultCache($cacheDriver, 3600, 'user_query_two')
-            ->execute();
+            ->execute()
+        ;
 
         $count = $cacheDriver->delete('user_query_*');
         $this->assertEqual($count, 2);

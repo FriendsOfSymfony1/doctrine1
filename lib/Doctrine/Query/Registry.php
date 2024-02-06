@@ -20,19 +20,15 @@
  */
 
 /**
- * Doctrine_Query_Registry
+ * Doctrine_Query_Registry.
  *
- * @package     Doctrine
- * @subpackage  Query
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Query_Registry
 {
-    protected $_queries = array();
+    protected $_queries = [];
 
     public function add($key, $query)
     {
@@ -40,43 +36,43 @@ class Doctrine_Query_Registry
             $query = clone $query;
         }
 
-    	if (strpos($key, '/') === false) {
+        if (false === strpos($key, '/')) {
             $this->_queries[$key] = $query;
         } else {
             // namespace found
-            
+
             $e = explode('/', $key);
 
             $this->_queries[$e[0]][$e[1]] = $query;
         }
     }
-    
+
     public function get($key, $namespace = null)
     {
         if (isset($namespace)) {
-            if ( ! isset($this->_queries[$namespace][$key])) {
-                throw new Doctrine_Query_Registry_Exception('A query with the name ' . $namespace . '/' . $key . ' does not exist.');
+            if (!isset($this->_queries[$namespace][$key])) {
+                throw new Doctrine_Query_Registry_Exception('A query with the name '.$namespace.'/'.$key.' does not exist.');
             }
             $query = $this->_queries[$namespace][$key];
         } else {
-            if ( ! isset($this->_queries[$key])) {
-                throw new Doctrine_Query_Registry_Exception('A query with the name ' . $key . ' does not exist.');
+            if (!isset($this->_queries[$key])) {
+                throw new Doctrine_Query_Registry_Exception('A query with the name '.$key.' does not exist.');
             }
             $query = $this->_queries[$key];
         }
-        
-        if ( ! ($query instanceof Doctrine_Query)) {
+
+        if (!($query instanceof Doctrine_Query)) {
             $query = Doctrine_Query::create()
-                ->parseDqlQuery($query);
+                ->parseDqlQuery($query)
+            ;
         }
-        
+
         return clone $query;
     }
-    
-    
+
     public function has($key, $namespace = null)
     {
-        return isset($namespace) 
+        return isset($namespace)
             ? isset($this->_queries[$namespace][$key])
             : isset($this->_queries[$key]);
     }

@@ -20,49 +20,57 @@
  */
 
 /**
- * Doctrine_Query_Check_TestCase
+ * Doctrine_Query_Check_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_Check_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_Check_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
-    { }
+    {
+    }
+
     public function prepareTables()
-    { }
+    {
+    }
+
     public function testCheckParserSupportsStandardFunctions()
     {
         $q = new Doctrine_Query_Check('User');
-        
+
         $q->parse('LENGTH(name) > 6');
-        
+
         $this->assertEqual($q->getSql(), 'LENGTH(name) > 6');
     }
+
     public function testCheckParserThrowsExceptionForUnknownOperator()
     {
         $q = new Doctrine_Query_Check('User');
-        
+
         try {
             $q->parse('LENGTH(name) ? 6');
             $this->fail();
-        } catch(Doctrine_Query_Exception $e) {
+        } catch (Doctrine_Query_Exception $e) {
             $this->pass();
         }
     }
+
     public function testCheckParserThrowsExceptionForUnknownFunction()
     {
         $q = new Doctrine_Query_Check('User');
-        
+
         try {
             $q->parse('SomeUnknownFunction(name) = 6');
             $this->fail();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->pass();
         }
     }

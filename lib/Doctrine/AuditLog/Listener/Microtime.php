@@ -20,30 +20,23 @@
  */
 
 /**
- * Doctrine_AuditLog_Listener
+ * Doctrine_AuditLog_Listener.
  *
- * @package     Doctrine
- * @subpackage  AuditLog
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Lukas Smith <smith@pooteeweet.org>
  */
 class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
 {
     /**
-     * The numher of digits to use from the float microtime value
+     * The numher of digits to use from the float microtime value.
      *
      * @var int
      */
     protected $accuracy = 10;
 
     /**
-     * Instantiate AuditLog listener and set the Doctrine_AuditLog instance to the class
-     *
-     * @param   Doctrine_AuditLog $auditLog
-     * @return  void
+     * Instantiate AuditLog listener and set the Doctrine_AuditLog instance to the class.
      */
     public function __construct(Doctrine_AuditLog $auditLog)
     {
@@ -55,10 +48,9 @@ class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
     }
 
     /**
-     * Get the initial version number for the audit log
+     * Get the initial version number for the audit log.
      *
-     * @param Doctrine_Record $record
-     * @return integer $initialVersion
+     * @return int $initialVersion
      */
     protected function _getInitialVersion(Doctrine_Record $record)
     {
@@ -66,10 +58,9 @@ class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
     }
 
     /**
-     * Get the next version number for the audit log
+     * Get the next version number for the audit log.
      *
-     * @param Doctrine_Record $record
-     * @return integer $nextVersion
+     * @return int $nextVersion
      */
     protected function _getNextVersion(Doctrine_Record $record)
     {
@@ -77,15 +68,15 @@ class Doctrine_AuditLog_Listener_Microtime extends Doctrine_AuditLog_Listener
     }
 
     /**
-     * Compute a version out of microtime(true)
+     * Compute a version out of microtime(true).
      *
      * @return string $version
      */
     protected function _microtime()
     {
         $version = microtime(true) - 1073741824; // 31 bits
-        $version = str_replace('.', '', (string)$version);
+        $version = str_replace('.', '', (string) $version);
+
         return substr($version, 0, $this->accuracy);
     }
-
 }

@@ -20,141 +20,143 @@
  */
 
 /**
- * Doctrine_Connection_Oracle_TestCase
+ * Doctrine_Connection_Oracle_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Connection_Oracle_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Connection_Oracle_TestCase extends Doctrine_UnitTestCase
 {
     public function testNoSuchTableErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 942, ''));
-        
+        $this->exc->processErrorInfo([0, 942, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHTABLE);
     }
 
     public function testSyntaxErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 900, ''));
-        
+        $this->exc->processErrorInfo([0, 900, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_SYNTAX);
     }
 
     public function testSyntaxErrorIsSupported2()
     {
-        $this->exc->processErrorInfo(array(0, 921, ''));
-        
+        $this->exc->processErrorInfo([0, 921, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_SYNTAX);
     }
 
     public function testSyntaxErrorIsSupported3()
     {
-        $this->exc->processErrorInfo(array(0, 923, ''));
-        
+        $this->exc->processErrorInfo([0, 923, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_SYNTAX);
     }
 
     public function testNoSuchFieldErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 904, ''));
-        
+        $this->exc->processErrorInfo([0, 904, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHFIELD);
     }
 
     public function testConstraintErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 1, ''));
-        
+        $this->exc->processErrorInfo([0, 1, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testConstraintErrorIsSupported2()
     {
-        $this->exc->processErrorInfo(array(0, 2291, ''));
-        
+        $this->exc->processErrorInfo([0, 2291, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testConstraintErrorIsSupported3()
     {
-        $this->exc->processErrorInfo(array(0, 2449, ''));
-        
+        $this->exc->processErrorInfo([0, 2449, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testConstraintErrorIsSupported4()
     {
-        $this->exc->processErrorInfo(array(0, 2292, ''));
+        $this->exc->processErrorInfo([0, 2292, '']);
 
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testNoSuchTableErrorIsSupported4()
     {
-        $this->exc->processErrorInfo(array(0, 2289, ''));
-        
+        $this->exc->processErrorInfo([0, 2289, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHTABLE);
     }
 
     public function testInvalidNumberErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 1722, ''));
-        
+        $this->exc->processErrorInfo([0, 1722, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_INVALID_NUMBER);
     }
 
     public function testDivZeroErrorIsSupported1()
     {
-        $this->exc->processErrorInfo(array(0, 1476, ''));
-        
+        $this->exc->processErrorInfo([0, 1476, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_DIVZERO);
     }
 
     public function testNotFoundErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 1418, ''));
-        
+        $this->exc->processErrorInfo([0, 1418, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOT_FOUND);
     }
 
     public function testNotNullConstraintErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 1400, ''));
-        
+        $this->exc->processErrorInfo([0, 1400, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT_NOT_NULL);
     }
 
     public function testNotNullConstraintErrorIsSupported2()
     {
-        $this->exc->processErrorInfo(array(0, 1407, ''));
-        
+        $this->exc->processErrorInfo([0, 1407, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT_NOT_NULL);
     }
 
     public function testInvalidErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 1401, ''));
-        
+        $this->exc->processErrorInfo([0, 1401, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_INVALID);
     }
 
     public function testAlreadyExistsErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 955, ''));
-        
+        $this->exc->processErrorInfo([0, 955, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_ALREADY_EXISTS);
     }
-    
+
     public function testValueCountOnRowErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0, 913, ''));
-        
+        $this->exc->processErrorInfo([0, 913, '']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_VALUE_COUNT_ON_ROW);
     }
 }

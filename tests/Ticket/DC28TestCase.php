@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC28_TestCase
+ * Doctrine_Ticket_DC28_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC28_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC28_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,33 +47,33 @@ class Doctrine_Ticket_DC28_TestCase extends Doctrine_UnitTestCase
                 ->select('a.id, t.lang')
                 ->from('Ticket_DC28_Tree a')
                 ->innerJoin('a.Translation t WITH t.name != ?', 'test')
-                ;
+            ;
             $q->execute();
-            //echo $q->getSqlQuery().PHP_EOL;
-            
+            // echo $q->getSqlQuery().PHP_EOL;
+
             $this->assertEqual(
-                $q->getSqlQuery(), 
+                $q->getSqlQuery(),
                 'SELECT t.id AS t__id, t2.id AS t2__id, t2.lang AS t2__lang '.
                 'FROM ticket__d_c28__tree t '.
                 'INNER JOIN ticket__d_c28__tree_translation t2 '.
                 'ON t.id = t2.id AND (t2.name != ?)'
             );
-            
-            //echo $q->getSqlQuery().PHP_EOL;
+
+            // echo $q->getSqlQuery().PHP_EOL;
             $tree_table = Doctrine_Core::getTable('Ticket_DC28_Tree');
             $tree = $tree_table->getTree();
             $tree->setBaseQuery($q);
-            //echo $q->getSqlQuery().PHP_EOL;
-            
+            // echo $q->getSqlQuery().PHP_EOL;
+
             $this->assertEqual(
-                $q->getSqlQuery(), 
+                $q->getSqlQuery(),
                 'SELECT t.id AS t__id, t.lft AS t__lft, t.rgt AS t__rgt, t.level AS t__level, t2.id AS t2__id, t2.lang AS t2__lang '.
                 'FROM ticket__d_c28__tree t '.
                 'INNER JOIN ticket__d_c28__tree_translation t2 '.
                 'ON t.id = t2.id AND (t2.name != ?)'
             );
-            
-            //$this->pass();
+
+            // $this->pass();
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
@@ -87,7 +89,7 @@ class Ticket_DC28_Tree extends Doctrine_Record
 
     public function setUp()
     {
-        $i18n = new Doctrine_Template_I18n(array('fields' => array(0 => 'name')));
+        $i18n = new Doctrine_Template_I18n(['fields' => [0 => 'name']]);
         $this->actAs($i18n);
         $this->actAs('NestedSet');
     }

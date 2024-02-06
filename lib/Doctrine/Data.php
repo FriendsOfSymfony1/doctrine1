@@ -20,32 +20,28 @@
  */
 
 /**
- * Doctrine_Data
+ * Doctrine_Data.
  *
  * Base Doctrine_Data class for dumping and loading data to and from fixtures files.
  * Support formats are based on what formats are available in Doctrine_Parser such as yaml, xml, json, etc.
  *
- * @package     Doctrine
- * @subpackage  Data
  * @author      Jonathan H. Wage <jwage@mac.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2552 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Data
 {
     /**
-     * formats
+     * formats.
      *
      * array of formats data can be in
      *
      * @var string
      */
-    protected $_formats = array('csv', 'yml', 'xml');
+    protected $_formats = ['csv', 'yml', 'xml'];
 
     /**
-     * format
+     * format.
      *
      * the default and current format we are working with
      *
@@ -54,25 +50,25 @@ class Doctrine_Data
     protected $_format = 'yml';
 
     /**
-     * directory
+     * directory.
      *
      * array of directory/yml paths or single directory/yml file
      *
      * @var string
      */
-    protected $_directory = null;
+    protected $_directory;
 
     /**
-     * models
+     * models.
      *
      * specified array of models to use
      *
      * @var string
      */
-    protected $_models = array();
+    protected $_models = [];
 
     /**
-     * _exportIndividualFiles
+     * _exportIndividualFiles.
      *
      * whether or not to export data to individual files instead of 1
      *
@@ -83,12 +79,11 @@ class Doctrine_Data
     protected $_charset = 'UTF-8';
 
     /**
-     * setFormat
+     * setFormat.
      *
      * Set the current format we are working with
      *
      * @param string $format
-     * @return void
      */
     public function setFormat($format)
     {
@@ -96,11 +91,9 @@ class Doctrine_Data
     }
 
     /**
-     * getFormat
+     * getFormat.
      *
      * Get the current format we are working with
-     *
-     * @return void
      */
     public function getFormat()
     {
@@ -108,11 +101,9 @@ class Doctrine_Data
     }
 
     /**
-     * getFormats
+     * getFormats.
      *
      * Get array of available formats
-     *
-     * @return void
      */
     public function getFormats()
     {
@@ -120,11 +111,9 @@ class Doctrine_Data
     }
 
     /**
-     * setDirectory
+     * setDirectory.
      *
      * Set the array/string of directories or yml file paths
-     *
-     * @return void
      */
     public function setDirectory($directory)
     {
@@ -132,11 +121,9 @@ class Doctrine_Data
     }
 
     /**
-     * getDirectory
+     * getDirectory.
      *
      * Get directory for dumping/loading data from and to
-     *
-     * @return void
      */
     public function getDirectory()
     {
@@ -144,12 +131,11 @@ class Doctrine_Data
     }
 
     /**
-     * setModels
+     * setModels.
      *
      * Set the array of specified models to work with
      *
      * @param string $models
-     * @return void
      */
     public function setModels($models)
     {
@@ -157,11 +143,9 @@ class Doctrine_Data
     }
 
     /**
-     * getModels
+     * getModels.
      *
      * Get the array of specified models to work with
-     *
-     * @return void
      */
     public function getModels()
     {
@@ -169,15 +153,16 @@ class Doctrine_Data
     }
 
     /**
-     * _exportIndividualFiles
+     * _exportIndividualFiles.
      *
      * Set/Get whether or not to export individual files
      *
-     * @return bool $_exportIndividualFiles
+     * @param  mixed|null $bool
+     * @return bool       $_exportIndividualFiles
      */
     public function exportIndividualFiles($bool = null)
     {
-        if ($bool !== null) {
+        if (null !== $bool) {
             $this->_exportIndividualFiles = $bool;
         }
 
@@ -195,7 +180,7 @@ class Doctrine_Data
     }
 
     /**
-     * exportData
+     * exportData.
      *
      * Interface for exporting data to fixtures files from Doctrine models
      *
@@ -203,9 +188,8 @@ class Doctrine_Data
      * @param string $format
      * @param string $models
      * @param string $_exportIndividualFiles
-     * @return void
      */
-    public function exportData($directory, $format = 'yml', $models = array(), $_exportIndividualFiles = false)
+    public function exportData($directory, $format = 'yml', $models = [], $_exportIndividualFiles = false)
     {
         $export = new Doctrine_Data_Export($directory);
         $export->setFormat($format);
@@ -216,16 +200,15 @@ class Doctrine_Data
     }
 
     /**
-     * importData
+     * importData.
      *
      * Interface for importing data from fixture files to Doctrine models
      *
      * @param string $directory
      * @param string $format
      * @param string $models
-     * @return void
      */
-    public function importData($directory, $format = 'yml', $models = array(), $append = false, $charset = 'UTF-8')
+    public function importData($directory, $format = 'yml', $models = [], $append = false, $charset = 'UTF-8')
     {
         $import = new Doctrine_Data_Import($directory);
         $import->setFormat($format);
@@ -236,13 +219,11 @@ class Doctrine_Data
     }
 
     /**
-     * isRelation
+     * isRelation.
      *
      * Check if a fieldName on a Doctrine_Record is a relation, if it is we return that relationData
      *
-     * @param string $Doctrine_Record
      * @param string $fieldName
-     * @return void
      */
     public function isRelation(Doctrine_Record $record, $fieldName)
     {
@@ -254,19 +235,17 @@ class Doctrine_Data
             if ($relationData['local'] === $fieldName) {
                 return $relationData;
             }
-
         }
 
         return false;
     }
 
     /**
-     * purge
+     * purge.
      *
      * Purge all data for loaded models or for the passed array of Doctrine_Records
      *
      * @param string $models
-     * @return void
      */
     public function purge($models = null)
     {
@@ -276,9 +255,9 @@ class Doctrine_Data
             $models = Doctrine_Core::getLoadedModels();
         }
 
-        $connections = array();
+        $connections = [];
         foreach ($models as $model) {
-          $connections[Doctrine_Core::getTable($model)->getConnection()->getName()][] = $model;
+            $connections[Doctrine_Core::getTable($model)->getConnection()->getName()][] = $model;
         }
 
         foreach ($connections as $connection => $models) {

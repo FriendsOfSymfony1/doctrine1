@@ -20,16 +20,17 @@
  */
 
 /**
- * Doctrine_Cache_Array_TestCase
+ * Doctrine_Cache_Array_TestCase.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Cache
  * @author      David Abdemoulaie <dave@hobodave.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.2
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Cache_Array_TestCase extends Doctrine_Cache_Abstract_TestCase
 {
@@ -37,12 +38,12 @@ class Doctrine_Cache_Array_TestCase extends Doctrine_Cache_Abstract_TestCase
     {
         // do nothing
     }
-    
+
     protected function _isEnabled()
     {
         return true;
     }
-    
+
     protected function _getCacheDriver()
     {
         return new Doctrine_Cache_Array();

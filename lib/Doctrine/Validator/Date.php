@@ -20,23 +20,18 @@
  */
 
 /**
- * Doctrine_Validator_Date
+ * Doctrine_Validator_Date.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Date extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is a valid date
+     * checks if given value is a valid date.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
@@ -45,11 +40,12 @@ class Doctrine_Validator_Date extends Doctrine_Validator_Driver
         }
         $e = explode('-', $value);
 
-        if (count($e) !== 3) {
+        if (3 !== count($e)) {
             return false;
         }
         $e2 = explode(' ', $e[2]);
         $e[2] = $e2[0];
+
         return checkdate($e[1], $e[2], $e[0]);
     }
 }

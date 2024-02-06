@@ -20,20 +20,22 @@
  */
 
 /**
- * Doctrine_Ticket_1745_TestCase
+ * Doctrine_Ticket_1745_TestCase.
  *
- * @package     Doctrine
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1745_TestCase extends Doctrine_UnitTestCase {
+class Doctrine_Ticket_1745_TestCase extends Doctrine_UnitTestCase
+{
+    public function prepareTables()
+    {
+        $this->tables = ['locality'];
 
-    public function prepareTables() {
-        $this->tables = array('locality');
-        
         parent::prepareTables();
     }
 
@@ -43,37 +45,40 @@ class Doctrine_Ticket_1745_TestCase extends Doctrine_UnitTestCase {
         $locality->postal_code = '1920';
         $locality->city = 'Martigny';
         $locality->save();
-        
+
         $locality = new Locality();
         $locality->postal_code = '1965';
         $locality->city = 'Savièse';
         $locality->save();
-        
+
         $locality = new Locality();
         $locality->postal_code = '2300';
         $locality->city = 'Neuchâtel';
         $locality->save();
     }
-    
+
     public function testSearchable()
     {
-      $query = Doctrine_Query::create()
-          ->from('Locality l');
-      $query = Doctrine_Core::getTable('Locality')->search('martigny', $query);
-      $results = $query->fetchArray();
-      $this->assertEqual($results[0]['city'], 'Martigny');
-      
-      $query = Doctrine_Query::create()
-          ->from('Locality l');
-      $query = Doctrine_Core::getTable('Locality')->search('saviese', $query);
-      $results = $query->fetchArray();
-      $this->assertEqual($results[0]['city'], 'Savièse');
-      
-      $query = Doctrine_Query::create()
-          ->from('Locality l');
-      $query = Doctrine_Core::getTable('Locality')->search('neuchatel', $query);
-      $results = $query->fetchArray();
-      $this->assertEqual($results[0]['city'], 'Neuchâtel');
+        $query = Doctrine_Query::create()
+            ->from('Locality l')
+        ;
+        $query = Doctrine_Core::getTable('Locality')->search('martigny', $query);
+        $results = $query->fetchArray();
+        $this->assertEqual($results[0]['city'], 'Martigny');
+
+        $query = Doctrine_Query::create()
+            ->from('Locality l')
+        ;
+        $query = Doctrine_Core::getTable('Locality')->search('saviese', $query);
+        $results = $query->fetchArray();
+        $this->assertEqual($results[0]['city'], 'Savièse');
+
+        $query = Doctrine_Query::create()
+            ->from('Locality l')
+        ;
+        $query = Doctrine_Core::getTable('Locality')->search('neuchatel', $query);
+        $results = $query->fetchArray();
+        $this->assertEqual($results[0]['city'], 'Neuchâtel');
     }
 }
 
@@ -81,15 +86,15 @@ class Locality extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-      $this->setTableName('locality');
-      $this->hasColumn('id', 'integer', 4, array('type' => 'integer', 'primary' => true, 'autoincrement' => true, 'length' => '4'));
-      $this->hasColumn('postal_code', 'string', 6, array('type' => 'string', 'notnull' => true, 'length' => '6'));
-      $this->hasColumn('city', 'string', 120, array('type' => 'string', 'notnull' => true, 'length' => '120'));
+        $this->setTableName('locality');
+        $this->hasColumn('id', 'integer', 4, ['type' => 'integer', 'primary' => true, 'autoincrement' => true, 'length' => '4']);
+        $this->hasColumn('postal_code', 'string', 6, ['type' => 'string', 'notnull' => true, 'length' => '6']);
+        $this->hasColumn('city', 'string', 120, ['type' => 'string', 'notnull' => true, 'length' => '120']);
     }
 
     public function setUp()
     {
-      $searchable0 = new Doctrine_Template_Searchable(array('fields' => array(0 => 'city')));
-      $this->actAs($searchable0);
+        $searchable0 = new Doctrine_Template_Searchable(['fields' => [0 => 'city']]);
+        $this->actAs($searchable0);
     }
 }

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1351_TestCase
+ * Doctrine_Ticket_1351_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1351_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1351_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -40,7 +42,7 @@ class Doctrine_Ticket_1351_TestCase extends Doctrine_UnitTestCase
 
     public function testTest()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 Ticket_1351_Article:
   Ticket_1351_Article_1:
     Translation:
@@ -55,8 +57,9 @@ END;
         Doctrine_Core::loadData('test.yml', true);
         unlink('test.yml');
         $results = Doctrine_Query::create()
-                    ->from('Ticket_1351_Article a, a.Translation t')
-                    ->fetchArray();
+            ->from('Ticket_1351_Article a, a.Translation t')
+            ->fetchArray()
+        ;
         $this->assertEqual($results[0]['Translation']['en']['title'], 'Test title english');
     }
 }
@@ -71,8 +74,8 @@ class Ticket_1351_Article extends Doctrine_Record
 
     public function setUp()
     {
-        $i18n0 = new Doctrine_Template_I18n(array('fields' => array(0 => 'title', 1 => 'body')));
-        $searchable1 = new Doctrine_Template_Searchable(array('fields' => array(0 => 'title')));
+        $i18n0 = new Doctrine_Template_I18n(['fields' => [0 => 'title', 1 => 'body']]);
+        $searchable1 = new Doctrine_Template_Searchable(['fields' => [0 => 'title']]);
         $i18n0->addChild($searchable1);
         $this->actAs($i18n0);
     }

@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Validator_FutureTestCase
+ * Doctrine_Validator_FutureTestCase.
  *
- * @package     Doctrine
  * @author      Roman Borschel <roman@code-factory.org>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Validator_Past_TestCase extends Doctrine_UnitTestCase
 {
@@ -40,45 +42,43 @@ class Doctrine_Validator_Past_TestCase extends Doctrine_UnitTestCase
 
     public function prepareData()
     {
-        
     }
-    
+
     public function testInvalidPastDates()
     {
         $this->manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_ALL);
-        
+
         // one year ahead
         $user1 = new ValidatorTest_DateModel();
         $user1->birthday = date('Y-m-d', time() + 365 * 24 * 60 * 60);
         $this->assertFalse($user1->trySave());
-        
+
         // one month ahead
         $user1 = new ValidatorTest_DateModel();
         $user1->birthday = date('Y-m-d', time() + 30 * 24 * 60 * 60);
         $this->assertFalse($user1->trySave());
-        
+
         // one day ahead
         $user1->birthday = date('Y-m-d', time() + 24 * 60 * 60);
         $this->assertFalse($user1->trySave());
-        
-        $this->manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_NONE);
-    }
-    
-    public function testValidPastDates()
-    {
-        $this->manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_ALL);
-        
-        $user1 = new ValidatorTest_DateModel();
-        $user1->birthday = date('Y-m-d', 42);
-        $this->assertTrue($user1->trySave());
-        
-        $user1->birthday = date('Y-m-d', mktime(0,0,0,6,3,1981));
-        $this->assertTrue($user1->trySave());
-        
-        $user1->birthday = date('Y-m-d', mktime(0,0,0,3,9,1983));
-        $this->assertTrue($user1->trySave());
-        
+
         $this->manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_NONE);
     }
 
+    public function testValidPastDates()
+    {
+        $this->manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_ALL);
+
+        $user1 = new ValidatorTest_DateModel();
+        $user1->birthday = date('Y-m-d', 42);
+        $this->assertTrue($user1->trySave());
+
+        $user1->birthday = date('Y-m-d', mktime(0, 0, 0, 6, 3, 1981));
+        $this->assertTrue($user1->trySave());
+
+        $user1->birthday = date('Y-m-d', mktime(0, 0, 0, 3, 9, 1983));
+        $this->assertTrue($user1->trySave());
+
+        $this->manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_NONE);
+    }
 }

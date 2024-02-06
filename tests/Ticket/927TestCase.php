@@ -20,44 +20,48 @@
  */
 
 /**
- * Doctrine_Ticket_927_TestCase
+ * Doctrine_Ticket_927_TestCase.
  *
- * @package     Doctrine
  * @author      David Stendardi <david.stendardi@adenclassifieds.com>
+ *
  * @category    Query
- * @link        www.doctrine-project.org
- * @since       0.10.4
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_927_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
     {
-        $oEmail = new Email;
+        $oEmail = new Email();
         $oEmail->address = 'david.stendardi@adenclassifieds.com';
         $oEmail->save();
     }
 
     public function prepareTables()
     {
-        $this->tables = array();
+        $this->tables = [];
         $this->tables[] = 'Email';
 
-        parent :: prepareTables();
+        parent::prepareTables();
     }
 
     public function testTicket()
     {
-      $q = new Doctrine_Query();
+        $q = new Doctrine_Query();
 
-      try {
-          // simple query with deep relations
-          $q->update('Email')
-              ->set('address', '?', 'new@doctrine.org')
-              ->where('address = ?', 'david.stendardi@adenclassifieds.com')
-              ->execute();
-      } catch (Exception $e) {
-        $this->fail('Query :: set do not support values containing dot. Exception: ' . $e->getMessage());
-      }
+        try {
+            // simple query with deep relations
+            $q->update('Email')
+                ->set('address', '?', 'new@doctrine.org')
+                ->where('address = ?', 'david.stendardi@adenclassifieds.com')
+                ->execute()
+            ;
+        } catch (Exception $e) {
+            $this->fail('Query :: set do not support values containing dot. Exception: '.$e->getMessage());
+        }
     }
 }

@@ -20,249 +20,239 @@
  */
 
 /**
- * Doctrine_Node_Interface
+ * Doctrine_Node_Interface.
  *
- * @package     Doctrine
- * @subpackage  Node
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Joe Simms <joe.simms@websites4.com>
  */
-interface Doctrine_Node_Interface {
-
+interface Doctrine_Node_Interface
+{
     /**
-     * test if node has previous sibling
+     * test if node has previous sibling.
      *
      * @return bool
      */
     public function hasPrevSibling();
 
     /**
-     * test if node has next sibling
+     * test if node has next sibling.
      *
      * @return bool
      */
     public function hasNextSibling();
 
     /**
-     * test if node has children
+     * test if node has children.
      *
      * @return bool
      */
     public function hasChildren();
 
     /**
-     * test if node has parent
+     * test if node has parent.
      *
      * @return bool
      */
     public function hasParent();
 
     /**
-     * gets record of prev sibling or empty record
+     * gets record of prev sibling or empty record.
      *
      * @return Doctrine_Record
      */
     public function getPrevSibling();
 
     /**
-     * gets record of next sibling or empty record
+     * gets record of next sibling or empty record.
      *
      * @return Doctrine_Record
      */
     public function getNextSibling();
 
     /**
-     * gets siblings for node
+     * gets siblings for node.
      *
-     * @return array                            array of sibling Doctrine_Record objects
+     * @return array array of sibling Doctrine_Record objects
      */
     public function getSiblings($includeNode = false);
 
     /**
-     * gets record of first child or empty record
+     * gets record of first child or empty record.
      *
      * @return Doctrine_Record
      */
     public function getFirstChild();
 
     /**
-     * gets record of last child or empty record
+     * gets record of last child or empty record.
      *
      * @return Doctrine_Record
      */
     public function getLastChild();
 
     /**
-     * gets children for node (direct descendants only)
+     * gets children for node (direct descendants only).
      *
-     * @return array                            array of sibling Doctrine_Record objects
+     * @return array array of sibling Doctrine_Record objects
      */
     public function getChildren();
 
     /**
-     * gets descendants for node (direct descendants only)
+     * gets descendants for node (direct descendants only).
      *
-     * @return Iterator                         iterator to traverse descendants from node
+     * @return Iterator iterator to traverse descendants from node
      */
     public function getDescendants();
 
     /**
-     * gets record of parent or empty record
+     * gets record of parent or empty record.
      *
      * @return Doctrine_Record
      */
     public function getParent();
 
     /**
-     * gets ancestors for node
+     * gets ancestors for node.
      *
      * @return Doctrine_Collection
      */
     public function getAncestors();
 
     /**
-     * gets path to node from root, uses record::toString() method to get node names
+     * gets path to node from root, uses record::toString() method to get node names.
      *
-     * @param string $seperator                 path seperator
-     * @param bool $includeNode                 whether or not to include node at end of path
-     * @return string                           string representation of path
+     * @param  string $seperator   path seperator
+     * @param  bool   $includeNode whether or not to include node at end of path
+     * @return string string representation of path
      */
     public function getPath($seperator = ' > ', $includeNode = false);
 
     /**
-     * gets level (depth) of node in the tree
+     * gets level (depth) of node in the tree.
      *
      * @return int
      */
     public function getLevel();
 
     /**
-     * gets number of children (direct descendants)
+     * gets number of children (direct descendants).
      *
      * @return int
      */
     public function getNumberChildren();
 
     /**
-     * gets number of descendants (children and their children)
+     * gets number of descendants (children and their children).
      *
      * @return int
      */
     public function getNumberDescendants();
 
     /**
-     * inserts node as parent of dest record
+     * inserts node as parent of dest record.
      *
      * @return bool
      */
     public function insertAsParentOf(Doctrine_Record $dest);
 
     /**
-     * inserts node as previous sibling of dest record
+     * inserts node as previous sibling of dest record.
      *
      * @return bool
      */
     public function insertAsPrevSiblingOf(Doctrine_Record $dest);
 
     /**
-     * inserts node as next sibling of dest record
+     * inserts node as next sibling of dest record.
      *
      * @return bool
      */
     public function insertAsNextSiblingOf(Doctrine_Record $dest);
 
     /**
-     * inserts node as first child of dest record
+     * inserts node as first child of dest record.
      *
      * @return bool
      */
     public function insertAsFirstChildOf(Doctrine_Record $dest);
 
     /**
-     * inserts node as first child of dest record
+     * inserts node as first child of dest record.
      *
      * @return bool
      */
     public function insertAsLastChildOf(Doctrine_Record $dest);
 
     /**
-     * moves node as prev sibling of dest record
-     *
-     */  
+     * moves node as prev sibling of dest record.
+     */
     public function moveAsPrevSiblingOf(Doctrine_Record $dest);
 
     /**
-     * moves node as next sibling of dest record
-     *
+     * moves node as next sibling of dest record.
      */
     public function moveAsNextSiblingOf(Doctrine_Record $dest);
 
     /**
-     * moves node as first child of dest record
-     *
+     * moves node as first child of dest record.
      */
     public function moveAsFirstChildOf(Doctrine_Record $dest);
 
     /**
-     * moves node as last child of dest record
-     *
+     * moves node as last child of dest record.
      */
     public function moveAsLastChildOf(Doctrine_Record $dest);
 
     /**
-     * adds node as last child of record
-     *
+     * adds node as last child of record.
      */
     public function addChild(Doctrine_Record $record);
 
     /**
-     * determines if node is leaf
+     * determines if node is leaf.
      *
      * @return bool
      */
     public function isLeaf();
 
     /**
-     * determines if node is root
+     * determines if node is root.
      *
      * @return bool
      */
     public function isRoot();
 
     /**
-     * determines if node is equal to subject node
+     * determines if node is equal to subject node.
      *
      * @return bool
      */
     public function isEqualTo(Doctrine_Record $subj);
 
     /**
-     * determines if node is child of subject node
+     * determines if node is child of subject node.
      *
      * @return bool
      */
     public function isDescendantOf(Doctrine_Record $subj);
 
     /**
-     * determines if node is child of or sibling to subject node
+     * determines if node is child of or sibling to subject node.
      *
      * @return bool
      */
     public function isDescendantOfOrEqualTo(Doctrine_Record $subj);
 
     /**
-     * determines if node is valid
+     * determines if node is valid.
      *
      * @return bool
      */
     public function isValidNode();
 
     /**
-     * deletes node and it's descendants
-     *
+     * deletes node and it's descendants.
      */
     public function delete();
 }

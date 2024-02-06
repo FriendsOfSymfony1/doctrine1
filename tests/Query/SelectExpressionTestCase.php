@@ -21,25 +21,30 @@
 
 /**
  * Doctrine_Query_SelectExpression_TestCase
- * This test case is used for testing DQL SELECT expressions functionality
+ * This test case is used for testing DQL SELECT expressions functionality.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_SelectExpression_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_SelectExpression_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { }
-    public function prepareTables() 
-    { 
-        $this->tables = array('User');
+    public function prepareData()
+    {
+    }
+
+    public function prepareTables()
+    {
+        $this->tables = ['User'];
         parent::prepareTables();
     }
+
     public function testAdditionExpression()
     {
         $query = new Doctrine_Query();
@@ -49,64 +54,64 @@ class Doctrine_Query_SelectExpression_TestCase extends Doctrine_UnitTestCase
         try {
             $users = $query->execute();
             $this->pass();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->fail();
         }
     }
-    
+
     public function testSubtractionExpression()
     {
         $query = new Doctrine_Query();
         $query->select('u.*, (u.id - u.id) subtraction');
         $query->from('User u');
-        
+
         try {
             $users = $query->execute();
             $this->pass();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->fail();
         }
     }
-    
+
     public function testDivisionExpression()
     {
         $query = new Doctrine_Query();
         $query->select('u.*, (u.id/u.id) division');
         $query->from('User u');
-        
+
         try {
             $users = $query->execute();
             $this->pass();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->fail();
-        } 
+        }
     }
-    
+
     public function testMultiplicationExpression()
     {
         $query = new Doctrine_Query();
         $query->select('u.*, (u.id * u.id) multiplication');
         $query->from('User u');
-        
+
         try {
             $users = $query->execute();
             $this->pass();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->fail();
-        } 
+        }
     }
-    
+
     public function testOrderByExpression()
     {
         $query = new Doctrine_Query();
         $query->select('u.*, (u.id * u.id) multiplication');
         $query->from('User u');
         $query->orderby('multiplication asc');
-        
+
         try {
             $users = $query->execute();
             $this->pass();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->fail();
         }
     }

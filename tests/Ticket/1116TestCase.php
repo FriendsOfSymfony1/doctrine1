@@ -21,70 +21,70 @@
  */
 
 /**
- * Doctrine_Ticket_1116_TestCase
+ * Doctrine_Ticket_1116_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1116_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1116_TestCase extends Doctrine_UnitTestCase
 {
-	public function setUp()
-	{
-		//switch to a real db to trigger the Exception
-		$this->dbh = new Doctrine_Adapter_Mock('mysql');
-		//$this->dbh = new PDO("mysql:host=localhost;dbname=testing", 'root', 'password');
+    public function setUp()
+    {
+        // switch to a real db to trigger the Exception
+        $this->dbh = new Doctrine_Adapter_Mock('mysql');
+        // $this->dbh = new PDO("mysql:host=localhost;dbname=testing", 'root', 'password');
 
-		$this->conn = Doctrine_Manager::getInstance()->openConnection($this->dbh);
-		$this->conn->export->exportClasses(array('Ticket_1116_User'));
-	}
+        $this->conn = Doctrine_Manager::getInstance()->openConnection($this->dbh);
+        $this->conn->export->exportClasses(['Ticket_1116_User']);
+    }
 
+    public function testTicket()
+    {
+        Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
+        $q = new Doctrine_Query();
+        $q->select('s.*')
+            ->from('Ticket_1116_User s')
+            ->where('s.username = ?', ['test'])
+        ;
 
-	public function testTicket()
-	{
-	    Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-		$q = new Doctrine_Query();
-		$q->select('s.*')
-		  ->from('Ticket_1116_User s')
-		  ->where('s.username = ?', array('test'));
+        // to see the error switch dbh to a real db, the next line will trigger the error
+        $test = $q->fetchOne();  // will only fail with "real" mysql
+        $this->assertFalse($test);
 
-		// to see the error switch dbh to a real db, the next line will trigger the error
-		$test = $q->fetchOne();  //will only fail with "real" mysql 
-		$this->assertFalse($test);
+        $sql = $q->getSqlQuery(); // just getSql()?!?! and it works ? the params are ok after this call
+        $params = $q->getFlattenedParams();
+        $this->assertEqual(count($params), 1); // now we have array('test',null) very strange .....
 
-		$sql    = $q->getSqlQuery(); // just getSql()?!?! and it works ? the params are ok after this call  
-		$params = $q->getFlattenedParams();
-		$this->assertEqual(count($params), 1); // now we have array('test',null) very strange ..... 
+        $this->assertEqual($sql, 'SELECT u.id AS u__id, u.username AS u__username, u.deleted_at AS u__deleted_at FROM user u WHERE (u.username = ? AND (u.deleted_at IS NULL))');
+        $this->assertEqual($params, ['test']);
 
-		$this->assertEqual($sql, "SELECT u.id AS u__id, u.username AS u__username, u.deleted_at AS u__deleted_at FROM user u WHERE (u.username = ? AND (u.deleted_at IS NULL))");
-		$this->assertEqual($params, array('test'));
-
-		//now also this works! (always works witch mock only fails with mysql)
-		$test = $q->fetchOne();
-		$this->assertFalse($test);
-		Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
-	}
+        // now also this works! (always works witch mock only fails with mysql)
+        $test = $q->fetchOne();
+        $this->assertFalse($test);
+        Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
+    }
 }
-
 
 class Ticket_1116_User extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->setTableName('user');
-		$this->hasColumn('id', 'integer', 4, array('primary' => true, 'autoincrement' => true));
-		$this->hasColumn('username', 'string', 255);
-	}
+    public function setTableDefinition()
+    {
+        $this->setTableName('user');
+        $this->hasColumn('id', 'integer', 4, ['primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('username', 'string', 255);
+    }
 
-
-	public function setUp()
-	{
-		parent::setUp();
-		$softdelete0 = new Doctrine_Template_SoftDelete();
-		$this->actAs($softdelete0);
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        $softdelete0 = new Doctrine_Template_SoftDelete();
+        $this->actAs($softdelete0);
+    }
 }

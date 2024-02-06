@@ -20,26 +20,30 @@
  */
 
 /**
- * Doctrine_Hydrate_Driver_TestCase
+ * Doctrine_Hydrate_Driver_TestCase.
  *
- * @package     Doctrine
  * @author      Jonathan H. Wage <jonwage@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.1
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Hydrate_Driver_TestCase extends Doctrine_UnitTestCase
 {
     public function testCustomHydrator()
     {
         Doctrine_Manager::getInstance()
-            ->registerHydrator('MyHydrator', 'MyHydrator');
+            ->registerHydrator('MyHydrator', 'MyHydrator')
+        ;
 
         $result = Doctrine_Core::getTable('User')
             ->createQuery('u')
-            ->execute(array(), 'MyHydrator');
+            ->execute([], 'MyHydrator')
+        ;
 
         $this->assertEqual($result, 'MY_HYDRATOR');
     }
@@ -48,20 +52,22 @@ class Doctrine_Hydrate_Driver_TestCase extends Doctrine_UnitTestCase
     {
         $hydrator = new MyHydrator();
         Doctrine_Manager::getInstance()
-            ->registerHydrator('MyHydrator', $hydrator);
+            ->registerHydrator('MyHydrator', $hydrator)
+        ;
 
         $result = Doctrine_Core::getTable('User')
             ->createQuery('u')
-            ->execute(array(), 'MyHydrator');
+            ->execute([], 'MyHydrator')
+        ;
 
         $this->assertEqual($result, 'MY_HYDRATOR');
     }
 
     public function testCustomHydratorConstructor()
     {
-        $queryComponents = array('queryComponents');
-        $tableAliases = array('tableAliases');
-        $hydrationMode = array('hydrationMode');
+        $queryComponents = ['queryComponents'];
+        $tableAliases = ['tableAliases'];
+        $hydrationMode = ['hydrationMode'];
 
         $hydrator = new MyHydrator($queryComponents, $tableAliases, $hydrationMode);
 
@@ -72,14 +78,16 @@ class Doctrine_Hydrate_Driver_TestCase extends Doctrine_UnitTestCase
 
     public function testCustomHydratorUsingClassInstanceExceptingException()
     {
-        $hydrator = new StdClass();
+        $hydrator = new stdClass();
         Doctrine_Manager::getInstance()
-            ->registerHydrator('MyHydrator', $hydrator);
+            ->registerHydrator('MyHydrator', $hydrator)
+        ;
 
         try {
-             Doctrine_Core::getTable('User')
+            Doctrine_Core::getTable('User')
                 ->createQuery('u')
-                ->execute(array(), 'MyHydrator');
+                ->execute([], 'MyHydrator')
+            ;
 
             $this->fail('Expected exception not thrown: Doctrine_Hydrator_Exception');
         } catch (Doctrine_Hydrator_Exception $e) {

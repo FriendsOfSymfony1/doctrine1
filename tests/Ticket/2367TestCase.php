@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_2367_TestCase
+ * Doctrine_Ticket_2367_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2367_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2367_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -41,13 +43,13 @@ class Doctrine_Ticket_2367_TestCase extends Doctrine_UnitTestCase
     public function testTest()
     {
         $article = new Ticket_2367_Article();
-        $article->fromArray(array(
-          'Translation' => array(
-              'en' => array(
-                'content' => 'article content',
-              ),
-              'fr' => array(
-                'content' => 'contenu de l\'article'))));
+        $article->fromArray([
+            'Translation' => [
+                'en' => [
+                    'content' => 'article content',
+                ],
+                'fr' => [
+                    'content' => 'contenu de l\'article']]]);
         $article->save();
         $article->delete();
         $check = (bool) Doctrine_Core::getTable('Ticket_2367_ArticleTranslation')->count();
@@ -59,19 +61,19 @@ class Ticket_2367_Article extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', 2, array('type' => 'integer', 'primary' => true,
-          'autoincrement' => true, 'unsigned' => true, 'length' => '2'));
-        $this->hasColumn('content', 'string', 100, array('type' => 'string', 'length' => '100'));
+        $this->hasColumn('id', 'integer', 2, ['type' => 'integer', 'primary' => true,
+            'autoincrement' => true, 'unsigned' => true, 'length' => '2']);
+        $this->hasColumn('content', 'string', 100, ['type' => 'string', 'length' => '100']);
 
         $this->option('type', 'MyISAM');
     }
 
     public function setUp()
     {
-      $i18n0 = new Doctrine_Template_I18n(array(
-        'appLevelDelete' => true,
-        'fields' => array(
-          0 => 'content')));
-      $this->actAs($i18n0);
+        $i18n0 = new Doctrine_Template_I18n([
+            'appLevelDelete' => true,
+            'fields' => [
+                0 => 'content']]);
+        $this->actAs($i18n0);
     }
 }

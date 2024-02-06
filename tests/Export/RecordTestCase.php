@@ -20,34 +20,41 @@
  */
 clearstatcache();
 /**
- * Doctrine_Export_Record_TestCase
+ * Doctrine_Export_Record_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Export_Record_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() 
-    { }
-    public function prepareData() 
-    { }
-    public function setUp() {
+    public function prepareTables()
+    {
+    }
+
+    public function prepareData()
+    {
+    }
+
+    public function setUp()
+    {
         $this->driverName = 'mysql';
-        if ( ! $this->init) {
+        if (!$this->init) {
             $this->init();
         }
 
-        $this->init    = true;
+        $this->init = true;
     }
 
     public function testExportSupportsForeignKeys()
     {
-        $sql = $this->conn->export->exportClassesSql(array('ForeignKeyTest'));
+        $sql = $this->conn->export->exportClassesSql(['ForeignKeyTest']);
 
         $this->assertEqual($sql[0], 'CREATE TABLE foreign_key_test (id BIGINT AUTO_INCREMENT, name TEXT, code INT, content TEXT, parent_id BIGINT, INDEX parent_id_idx (parent_id), PRIMARY KEY(id)) ENGINE = INNODB');
         if (isset($sql[1])) {
@@ -59,21 +66,21 @@ class Doctrine_Export_Record_TestCase extends Doctrine_UnitTestCase
 
     public function testExportSupportsIndexes()
     {
-        $sql = $this->conn->export->exportClassesSql(array('MysqlIndexTestRecord'));
+        $sql = $this->conn->export->exportClassesSql(['MysqlIndexTestRecord']);
 
         $this->assertEqual($sql[0], 'CREATE TABLE mysql_index_test_record (id BIGINT AUTO_INCREMENT, name TEXT, code INT, content TEXT, FULLTEXT INDEX content_idx (content), UNIQUE INDEX namecode_idx (name, code), PRIMARY KEY(id)) ENGINE = MYISAM');
     }
 
     public function testRecordDefinitionsSupportTableOptions()
     {
-        $sql = $this->conn->export->exportClassesSql(array('MysqlTestRecord'));
+        $sql = $this->conn->export->exportClassesSql(['MysqlTestRecord']);
 
         $this->assertEqual($sql[0], 'CREATE TABLE mysql_test_record (name TEXT, code BIGINT, PRIMARY KEY(name, code)) ENGINE = INNODB');
     }
 
     public function testExportSupportsForeignKeysWithoutAttributes()
     {
-        $sql = $this->conn->export->exportClassesSql(array('ForeignKeyTest'));
+        $sql = $this->conn->export->exportClassesSql(['ForeignKeyTest']);
 
         $this->assertEqual($sql[0], 'CREATE TABLE foreign_key_test (id BIGINT AUTO_INCREMENT, name TEXT, code INT, content TEXT, parent_id BIGINT, INDEX parent_id_idx (parent_id), PRIMARY KEY(id)) ENGINE = INNODB');
         if (isset($sql[1])) {
@@ -85,24 +92,22 @@ class Doctrine_Export_Record_TestCase extends Doctrine_UnitTestCase
 
     public function testExportSupportsForeignKeysForManyToManyRelations()
     {
-        $sql = $this->conn->export->exportClassesSql(array('MysqlUser'));
+        $sql = $this->conn->export->exportClassesSql(['MysqlUser']);
 
         $this->assertEqual($sql[0], 'CREATE TABLE mysql_user (id BIGINT AUTO_INCREMENT, name TEXT, PRIMARY KEY(id)) ENGINE = INNODB');
 
-        $sql = $this->conn->export->exportClassesSql(array('MysqlGroup'));
+        $sql = $this->conn->export->exportClassesSql(['MysqlGroup']);
 
         $this->assertEqual($sql[0], 'CREATE TABLE mysql_group (id BIGINT AUTO_INCREMENT, name TEXT, PRIMARY KEY(id)) ENGINE = INNODB');
     }
 
     public function testExportModelFromDirectory()
     {
-        
-        Doctrine_Core::createTablesFromModels(dirname(__FILE__) . DIRECTORY_SEPARATOR .'..' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'export');
+        Doctrine_Core::createTablesFromModels(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'export');
         $this->assertEqual($this->adapter->pop(), 'COMMIT');
         $this->assertEqual($this->adapter->pop(), 'ALTER TABLE cms__category_languages ADD CONSTRAINT cms__category_languages_category_id_cms__category_id FOREIGN KEY (category_id) REFERENCES cms__category(id) ON DELETE CASCADE');
         $this->assertEqual($this->adapter->pop(), 'CREATE TABLE cms__category_languages (id BIGINT AUTO_INCREMENT, name TEXT, category_id BIGINT, language_id BIGINT, INDEX index_category_idx (category_id), INDEX index_language_idx (language_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB');
-        $this->assertEqual($this->adapter->pop(), 'CREATE TABLE cms__category (id BIGINT AUTO_INCREMENT, created DATETIME, parent BIGINT, position MEDIUMINT, active BIGINT, INDEX index_parent_idx (parent), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB');   
+        $this->assertEqual($this->adapter->pop(), 'CREATE TABLE cms__category (id BIGINT AUTO_INCREMENT, created DATETIME, parent BIGINT, position MEDIUMINT, active BIGINT, INDEX index_parent_idx (parent), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = INNODB');
         $this->assertEqual($this->adapter->pop(), 'BEGIN TRANSACTION');
     }
-
 }

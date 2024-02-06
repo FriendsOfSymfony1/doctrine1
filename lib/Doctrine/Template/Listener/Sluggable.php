@@ -20,30 +20,23 @@
  */
 
 /**
- * Easily create a slug for each record based on a specified set of fields
+ * Easily create a slug for each record based on a specified set of fields.
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
 {
     /**
-     * Array of sluggable options
+     * Array of sluggable options.
      *
      * @var string
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
-     * __construct
-     *
-     * @param string $array
-     * @return void
+     * __construct.
      */
     public function __construct(array $options)
     {
@@ -51,27 +44,21 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     }
 
     /**
-     * Set the slug value automatically when a record is inserted
-     *
-     * @param Doctrine_Event $event
-     * @return void
+     * Set the slug value automatically when a record is inserted.
      */
     public function preInsert(Doctrine_Event $event)
     {
         $record = $event->getInvoker();
         $name = $record->getTable()->getFieldName($this->_options['name']);
 
-        if ( ! $record->$name) {
-            $record->$name = $this->buildSlugFromFields($record);
+        if (!$record->{$name}) {
+            $record->{$name} = $this->buildSlugFromFields($record);
         }
     }
 
     /**
      * Set the slug value automatically when a record is updated if the options are configured
-     * to allow it
-     *
-     * @param Doctrine_Event $event
-     * @return void
+     * to allow it.
      */
     public function preUpdate(Doctrine_Event $event)
     {
@@ -79,32 +66,34 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             $record = $event->getInvoker();
             $name = $record->getTable()->getFieldName($this->_options['name']);
 
-            if ( ! $record->$name || (
-                false !== $this->_options['canUpdate'] &&
-                ! array_key_exists($name, $record->getModified())
+            if (!$record->{$name} || (
+                false !== $this->_options['canUpdate']
+                && !array_key_exists($name, $record->getModified())
             )) {
-                $record->$name = $this->buildSlugFromFields($record);
-            } else if ( ! empty($record->$name) &&
-                false !== $this->_options['canUpdate'] &&
-                array_key_exists($name, $record->getModified()
-            )) {
-                $record->$name = $this->buildSlugFromSlugField($record);
+                $record->{$name} = $this->buildSlugFromFields($record);
+            } elseif (!empty($record->{$name})
+                && false !== $this->_options['canUpdate']
+                && array_key_exists(
+                    $name,
+                    $record->getModified()
+                )) {
+                $record->{$name} = $this->buildSlugFromSlugField($record);
             }
         }
     }
 
     /**
-     * Generate the slug for a given Doctrine_Record based on the configured options
+     * Generate the slug for a given Doctrine_Record based on the configured options.
      *
-     * @param Doctrine_Record $record
-     * @return string $slug
+     * @param  Doctrine_Record $record
+     * @return string          $slug
      */
     protected function buildSlugFromFields($record)
     {
         if (empty($this->_options['fields'])) {
             if (is_callable($this->_options['provider'])) {
-            	$value = call_user_func($this->_options['provider'], $record);
-            } else if (method_exists($record, 'getUniqueSlug')) {
+                $value = call_user_func($this->_options['provider'], $record);
+            } elseif (method_exists($record, 'getUniqueSlug')) {
                 $value = $record->getUniqueSlug($record);
             } else {
                 $value = (string) $record;
@@ -112,84 +101,84 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         } else {
             $value = '';
             foreach ($this->_options['fields'] as $field) {
-                $value .= $record->$field . ' ';
+                $value .= $record->{$field}.' ';
             }
             $value = substr($value, 0, -1);
         }
 
-    	if ($this->_options['unique'] === true) {
-    		return $this->getUniqueSlug($record, $value);
-    	}
+        if (true === $this->_options['unique']) {
+            return $this->getUniqueSlug($record, $value);
+        }
 
-        return call_user_func_array($this->_options['builder'], array($value, $record));
+        return call_user_func_array($this->_options['builder'], [$value, $record]);
     }
 
     /**
-     * Generate the slug for a given Doctrine_Record slug field
+     * Generate the slug for a given Doctrine_Record slug field.
      *
-     * @param Doctrine_Record $record
-     * @return string $slug
+     * @param  Doctrine_Record $record
+     * @return string          $slug
      */
     protected function buildSlugFromSlugField($record)
     {
         $name = $record->getTable()->getFieldName($this->_options['name']);
-        $value = $record->$name;
+        $value = $record->{$name};
 
-        if ($this->_options['unique'] === true) {
+        if (true === $this->_options['unique']) {
             return $this->getUniqueSlug($record, $value);
         }
 
-        return call_user_func_array($this->_options['builder'], array($value, $record));
+        return call_user_func_array($this->_options['builder'], [$value, $record]);
     }
 
     /**
      * Creates a unique slug for a given Doctrine_Record. This function enforces the uniqueness by
-     * incrementing the values with a postfix if the slug is not unique
+     * incrementing the values with a postfix if the slug is not unique.
      *
-     * @param Doctrine_Record $record
-     * @param string $slugFromFields
-     * @return string $slug
+     * @param  Doctrine_Record $record
+     * @param  string          $slugFromFields
+     * @return string          $slug
      */
     public function getUniqueSlug($record, $slugFromFields)
     {
         /* fix for use with Column Aggregation Inheritance */
         if ($record->getTable()->getOption('inheritanceMap')) {
-          $parentTable = $record->getTable()->getOption('parents');
-          $i = 0;
-          // Be sure that you do not instanciate an abstract class;
-          $reflectionClass = new ReflectionClass($parentTable[$i]);
-          while ($reflectionClass->isAbstract()) {
-            $i++;
+            $parentTable = $record->getTable()->getOption('parents');
+            $i = 0;
+            // Be sure that you do not instanciate an abstract class;
             $reflectionClass = new ReflectionClass($parentTable[$i]);
-          }
-          $table = Doctrine_Core::getTable($parentTable[$i]);
+            while ($reflectionClass->isAbstract()) {
+                ++$i;
+                $reflectionClass = new ReflectionClass($parentTable[$i]);
+            }
+            $table = Doctrine_Core::getTable($parentTable[$i]);
         } else {
-          $table = $record->getTable();
+            $table = $record->getTable();
         }
 
         $name = $table->getFieldName($this->_options['name']);
-        $proposal =  call_user_func_array($this->_options['builder'], array($slugFromFields, $record));
+        $proposal = call_user_func_array($this->_options['builder'], [$slugFromFields, $record]);
         $slug = $proposal;
 
-        $whereString = 'r.' . $name . ' LIKE ?';
-        $whereParams = array($proposal.'%');
+        $whereString = 'r.'.$name.' LIKE ?';
+        $whereParams = [$proposal.'%'];
 
         if ($record->exists()) {
             $identifier = $record->identifier();
-            $whereString .= ' AND r.' . implode(' != ? AND r.', $table->getIdentifierColumnNames()) . ' != ?';
+            $whereString .= ' AND r.'.implode(' != ? AND r.', $table->getIdentifierColumnNames()).' != ?';
             $whereParams = array_merge($whereParams, array_values($identifier));
         }
 
         foreach ($this->_options['uniqueBy'] as $uniqueBy) {
-            if (is_null($record->$uniqueBy)) {
+            if (is_null($record->{$uniqueBy})) {
                 $whereString .= ' AND r.'.$uniqueBy.' IS NULL';
             } else {
                 $whereString .= ' AND r.'.$uniqueBy.' = ?';
-                $value = $record->$uniqueBy;
+                $value = $record->{$uniqueBy};
                 if ($value instanceof Doctrine_Record) {
                     $value = current((array) $value->identifier());
                 }
-                $whereParams[] =  $value;
+                $whereParams[] = $value;
             }
         }
 
@@ -198,24 +187,25 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         $table->bindQueryPart('indexBy', null);
 
         $query = $table->createQuery('r')
-            ->select('r.' . $name)
-            ->where($whereString , $whereParams)
-            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
+            ->select('r.'.$name)
+            ->where($whereString, $whereParams)
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY)
+        ;
 
         // We need to introspect SoftDelete to check if we are not disabling unique records too
         if ($table->hasTemplate('Doctrine_Template_SoftDelete')) {
-	        $softDelete = $table->getTemplate('Doctrine_Template_SoftDelete');
+            $softDelete = $table->getTemplate('Doctrine_Template_SoftDelete');
 
-	        // we have to consider both situations here
-            if ($softDelete->getOption('type') == 'boolean') {
+            // we have to consider both situations here
+            if ('boolean' == $softDelete->getOption('type')) {
                 $conn = $query->getConnection();
 
                 $query->addWhere(
-                    '(r.' . $softDelete->getOption('name') . ' = ' . $conn->convertBooleans(true) .
-                    ' OR r.' . $softDelete->getOption('name') . ' = ' . $conn->convertBooleans(false) . ')'
+                    '(r.'.$softDelete->getOption('name').' = '.$conn->convertBooleans(true).
+                    ' OR r.'.$softDelete->getOption('name').' = '.$conn->convertBooleans(false).')'
                 );
             } else {
-                $query->addWhere('(r.' . $softDelete->getOption('name') . ' IS NOT NULL OR r.' . $softDelete->getOption('name') . ' IS NULL)');
+                $query->addWhere('(r.'.$softDelete->getOption('name').' IS NOT NULL OR r.'.$softDelete->getOption('name').' IS NULL)');
             }
         }
 
@@ -225,15 +215,15 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         // Change indexby back
         $table->bindQueryPart('indexBy', $originalIndexBy);
 
-        $similarSlugs = array();
+        $similarSlugs = [];
         foreach ($similarSlugResult as $key => $value) {
             $similarSlugs[$key] = strtolower($value[$name]);
         }
 
         $i = 1;
         while (in_array(strtolower($slug), $similarSlugs)) {
-            $slug = call_user_func_array($this->_options['builder'], array($proposal.'-'.$i, $record));
-            $i++;
+            $slug = call_user_func_array($this->_options['builder'], [$proposal.'-'.$i, $record]);
+            ++$i;
         }
 
         // If slug is longer then the column length then we need to trim it
@@ -244,6 +234,6 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             $slug = $this->getUniqueSlug($record, $slug);
         }
 
-        return  $slug;
+        return $slug;
     }
 }

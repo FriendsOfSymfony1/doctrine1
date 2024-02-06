@@ -20,25 +20,28 @@
  */
 
 /**
- * Doctrine_Query_AggregateValue_TestCase
+ * Doctrine_Query_AggregateValue_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { 
+    public function prepareData()
+    {
     }
-    public function testInitData() 
+
+    public function testInitData()
     {
         $users = new Doctrine_Collection('User');
-        
+
         $users[0]->name = 'John';
         $users[0]->Phonenumber[0]->phonenumber = '123 123';
         $users[0]->Phonenumber[1]->phonenumber = '222 222';
@@ -61,7 +64,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         try {
             $record->get('count');
             $this->fail();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->pass();
         }
 
@@ -69,7 +72,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
 
         try {
             $i = $record->get('count');
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
         $this->assertEqual($i, 3);
@@ -82,7 +85,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         $q = new Doctrine_Query();
 
         $q->select('COUNT(u.id) count')->from('User u');
-        $this->assertEqual($q->getSqlQuery(), "SELECT COUNT(e.id) AS e__0 FROM entity e WHERE (e.type = 0)");
+        $this->assertEqual($q->getSqlQuery(), 'SELECT COUNT(e.id) AS e__0 FROM entity e WHERE (e.type = 0)');
 
         $users = $q->execute();
 
@@ -100,10 +103,10 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         $users = $q->execute();
 
         $this->assertEqual($users->count(), 2);
-        
+
         $this->assertEqual($users[0]->state(), Doctrine_Record::STATE_PROXY);
         $this->assertEqual($users[1]->state(), Doctrine_Record::STATE_PROXY);
-        
+
         $this->assertEqual($users[0]->count, 2);
         $this->assertEqual($users[1]->count, 2);
     }
@@ -117,21 +120,21 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         $users = $q->execute();
 
         $this->assertEqual($users->count(), 2);
-        
+
         $this->assertEqual($users[0]->state(), Doctrine_Record::STATE_PROXY);
         $this->assertEqual($users[1]->state(), Doctrine_Record::STATE_PROXY);
-        
+
         $this->assertEqual($users[0]->count, 2);
         $this->assertEqual($users[1]->count, 2);
     }
 
-    public function testAggregateValueMappingSupportsLeftJoins() 
+    public function testAggregateValueMappingSupportsLeftJoins()
     {
         $q = new Doctrine_Query();
 
         $q->select('u.name, COUNT(p.id) count')->from('User u')->leftJoin('u.Phonenumber p')->groupby('u.id');
 
-        $users = $q->execute();   
+        $users = $q->execute();
 
         $this->assertEqual(count($users), 4);
 
@@ -163,7 +166,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[0]->max, 3);
         $this->assertEqual($users[0]->count, 3);
     }
-    
+
     public function testAggregateValueMappingSupportsMultipleValues2()
     {
         $q = new Doctrine_Query();
@@ -175,7 +178,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[0]['max'], 3);
         $this->assertEqual($users[0]['count'], 3);
     }
-    
+
     public function testAggregateValueMappingSupportsInnerJoins()
     {
         $q = new Doctrine_Query();
@@ -190,6 +193,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($users[1]->count, 2);
         $this->assertEqual($users[2]->count, 1);
     }
+
     public function testAggregateFunctionParser()
     {
         $q = new Doctrine_Query();
@@ -197,6 +201,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT SUM(q.price) AS q__0 FROM query_test__item q');
     }
+
     public function testAggregateFunctionParser2()
     {
         $q = new Doctrine_Query();
@@ -204,6 +209,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT SUM(q.price * q.quantity) AS q__0 FROM query_test__item q');
     }
+
     public function testAggregateFunctionParser3()
     {
         $q = new Doctrine_Query();
@@ -211,6 +217,7 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT MOD(q.price, q.quantity) AS q__0 FROM query_test__item q');
     }
+
     public function testAggregateFunctionParser4()
     {
         $q = new Doctrine_Query();
@@ -218,12 +225,14 @@ class Doctrine_Query_AggregateValue_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT CONCAT(q.price, q.quantity) AS q__0 FROM query_test__item q');
     }
+
     public function testAggregateFunctionParsingSupportsMultipleComponentReferences()
     {
         $q = new Doctrine_Query();
         $q->select('SUM(i.price * i.quantity)')
-          ->from('QueryTest_Item i');
+            ->from('QueryTest_Item i')
+        ;
 
-        $this->assertEqual($q->getSqlQuery(), "SELECT SUM(q.price * q.quantity) AS q__0 FROM query_test__item q");
+        $this->assertEqual($q->getSqlQuery(), 'SELECT SUM(q.price * q.quantity) AS q__0 FROM query_test__item q');
     }
 }

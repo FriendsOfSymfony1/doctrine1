@@ -1,7 +1,7 @@
 <?php
-require_once('PluginSymfonyRecordTable.php');
+
+require_once 'PluginSymfonyRecordTable.php';
 
 class SymfonyRecordTable extends PluginSymfonyRecordTable
 {
-
 }

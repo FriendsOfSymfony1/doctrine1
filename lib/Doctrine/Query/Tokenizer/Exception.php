@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Query_Exception
+ * Doctrine_Query_Exception.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2702 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Tokenizer_Exception extends Doctrine_Exception
-{ }
+{
+}

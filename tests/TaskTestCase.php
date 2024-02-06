@@ -20,24 +20,30 @@
  */
 
 /**
- * Doctrine_Task_TestCase
- * 
+ * Doctrine_Task_TestCase.
+ *
  * N.B. Invalid task classes are loaded just-in-time to avoid clashes with the CLI tests.  Other test-specific
  * subclasses are declared at the bottom of this file.
  *
- * @package     Doctrine
  * @author      Dan Bettles <danbettles@yahoo.co.uk>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Task_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
 {
-    public function setUp() {}
+    public function setUp()
+    {
+    }
 
-    public function tearDown() {}
+    public function tearDown()
+    {
+    }
 
     public function testDerivetasknameReturnsTheNameOfATaskFromItsClassName()
     {
@@ -48,22 +54,22 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
 
         /*
          * PHP 5.3-specific tests
-         * 
+         *
          * One would hope that authors of custom tasks would name their tasks manually, but since we can't guarantee
          * anything, we'll have to _try_ to create a sensible name
          */
         $this->assertEqual('fully-qualified-custom-task', Doctrine_Task::deriveTaskName('fully\qualified\CustomTask'));
-        //$this->assertEqual('fully-qualified-custom-task', Doctrine_Task::deriveTaskName('fully\qualified\Doctrine_Task_CustomTask'));
+        // $this->assertEqual('fully-qualified-custom-task', Doctrine_Task::deriveTaskName('fully\qualified\Doctrine_Task_CustomTask'));
     }
 
     public function testNameByDefaultIsDerivedFromTheNameOfTheClass()
     {
         $oTask = new Doctrine_Task_TestCase_TestTask001();
-        $this->assertEqual('test-case--test-task001', $oTask->taskName);  /*@todo Temporary, maybe*/
+        $this->assertEqual('test-case--test-task001', $oTask->taskName);  /* @todo Temporary, maybe */
         $this->assertEqual('test-case--test-task001', $oTask->getTaskName());
     }
 
-    public function testNameByDefaultIsDerivedFromTheNameOfTheClass_withEmptyTaskNamePropertySetsByChildClass()
+    public function testNameByDefaultIsDerivedFromTheNameOfTheClassWithEmptyTaskNamePropertySetsByChildClass()
     {
         $task = new Doctrine_Task_TestCase_EmptyTaskNameTestTask();
 
@@ -84,14 +90,15 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
     }
 
     /**
-     * Loads a PHP fixture from the directory for this test case
-     * 
+     * Loads a PHP fixture from the directory for this test case.
+     *
      * @ignore
+     *
      * @param string $basename
      */
     protected function loadPhpFixture($basename)
     {
-        require_once(dirname(__FILE__) . '/TaskTestCase/' . $basename);
+        require_once dirname(__FILE__).'/TaskTestCase/'.$basename;
     }
 
     public function testSettasknameThrowsAnExceptionIfTheTaskNameIsInvalid()
@@ -101,8 +108,9 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
         try {
             new Doctrine_Task_TestCase_TestTask006();
         } catch (InvalidArgumentException $e) {
-            if ($e->getMessage() == 'The task name "invalid_task_name", in Doctrine_Task_TestCase_TestTask006, is invalid') {
+            if ('The task name "invalid_task_name", in Doctrine_Task_TestCase_TestTask006, is invalid' == $e->getMessage()) {
                 $this->pass();
+
                 return;
             }
         }
@@ -110,7 +118,7 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
         $this->fail();
     }
 
-    //This gives us a way to set an alternate task name that's in keeping with how we currently set-up tasks
+    // This gives us a way to set an alternate task name that's in keeping with how we currently set-up tasks
     public function testDoesNotAutomaticallySetTheNameOfTheTaskIfItWasSetManually()
     {
         $oTask = new Doctrine_Task_TestCase_TestTask003();
@@ -122,10 +130,10 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
         $this->loadPhpFixture('TestTask004.php');
         $this->loadPhpFixture('TestTask005.php');
 
-        $aClassWithInvalidTaskName = array(
+        $aClassWithInvalidTaskName = [
             'Doctrine_Task_TestCase_TestTask004' => '-invalid-task-name',
             'Doctrine_Task_TestCase_TestTask005' => 'another invalid task name',
-        );
+        ];
 
         $numPasses = 0;
 
@@ -134,15 +142,14 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
                 new $classWithInvalidTaskName();
             } catch (InvalidArgumentException $e) {
                 if ($e->getMessage() == "The task name \"{$invalidTaskName}\", in {$classWithInvalidTaskName}, is invalid") {
-                    $numPasses++;
+                    ++$numPasses;
                 }
             }
         }
 
         if ($numPasses == count($aClassWithInvalidTaskName)) {
             $this->pass();
-        }
-        else {
+        } else {
             $this->fail();
         }
     }
@@ -150,7 +157,9 @@ class Doctrine_Task_TestCase extends Doctrine_UnitTestCase
 
 class Doctrine_Task_TestCase_TestTask001 extends Doctrine_Task
 {
-    public function execute() {}
+    public function execute()
+    {
+    }
 }
 
 class Doctrine_Task_TestCase_TestTask002 extends Doctrine_Task
@@ -160,26 +169,34 @@ class Doctrine_Task_TestCase_TestTask002 extends Doctrine_Task
         $this->setTaskName('better-task-name');
     }
 
-    public function execute() {}
+    public function execute()
+    {
+    }
 }
 
 class Doctrine_Task_TestCase_TestTask003 extends Doctrine_Task
 {
     public $taskName = 'better-task-name';
 
-    public function execute() {}
+    public function execute()
+    {
+    }
 }
 
 class Doctrine_Task_TestCase_EmptyTaskNameTestTask extends Doctrine_Task
 {
     public $taskName = '';
 
-    public function execute() {}
+    public function execute()
+    {
+    }
 }
 
 class Doctrine_Task_TestCase_OverwrittenGetTaskNameMethodTestTask extends Doctrine_Task
 {
-    public function execute() {}
+    public function execute()
+    {
+    }
 
     public function getTaskName()
     {

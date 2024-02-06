@@ -20,59 +20,63 @@
  */
 
 /**
- * Doctrine_Relation_TestCase
+ * Doctrine_Relation_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Relation_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Relation_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { }
-    public function prepareTables() 
+    public function prepareData()
     {
-        $this->tables = array('RelationTest', 'RelationTestChild', 'Group', 'Groupuser', 'User', 'Email', 'Account', 'Phonenumber');
-        
+    }
+
+    public function prepareTables()
+    {
+        $this->tables = ['RelationTest', 'RelationTestChild', 'Group', 'Groupuser', 'User', 'Email', 'Account', 'Phonenumber'];
+
         parent::prepareTables();
     }
 
-    public function testInitData() 
+    public function testInitData()
     {
         $user = new User();
-        
+
         $user->name = 'zYne';
         $user->Group[0]->name = 'Some Group';
         $user->Group[1]->name = 'Other Group';
         $user->Group[2]->name = 'Third Group';
-        
+
         $user->Phonenumber[0]->phonenumber = '123 123';
         $user->Phonenumber[1]->phonenumber = '234 234';
         $user->Phonenumber[2]->phonenumber = '456 456';
-        
+
         $user->Email->address = 'someone@some.where';
 
         $user->save();
     }
-    
+
     public function testUnlinkSupportsManyToManyRelations()
     {
-        $users = Doctrine_Query::create()->from('User u')->where('u.name = ?', array('zYne'))->execute();
-        
+        $users = Doctrine_Query::create()->from('User u')->where('u.name = ?', ['zYne'])->execute();
+
         $user = $users[0];
-        
+
         $this->assertEqual($user->Group->count(), 3);
-        
-        $user->unlink('Group', array(2, 3, 4), true);
-        
+
+        $user->unlink('Group', [2, 3, 4], true);
+
         $this->assertEqual($user->Group->count(), 0);
-        
+
         $this->conn->clear();
-        
+
         $groups = Doctrine_Query::create()->from('Group g')->execute();
 
         $this->assertEqual($groups->count(), 3);
@@ -86,36 +90,35 @@ class Doctrine_Relation_TestCase extends Doctrine_UnitTestCase
     {
         $this->conn->clear();
 
-        $users = Doctrine_Query::create()->from('User u')->where('u.name = ?', array('zYne'))->execute();
-        
+        $users = Doctrine_Query::create()->from('User u')->where('u.name = ?', ['zYne'])->execute();
+
         $user = $users[0];
-        
+
         $this->assertEqual($user->Phonenumber->count(), 3);
-        
-        $user->unlink('Phonenumber', array(1, 2, 3), true);
-        
+
+        $user->unlink('Phonenumber', [1, 2, 3], true);
+
         $this->assertEqual($user->Phonenumber->count(), 0);
-        
+
         $this->conn->clear();
-        
+
         $phonenumber = Doctrine_Query::create()->from('Phonenumber p')->execute();
 
         $this->assertEqual($phonenumber->count(), 3);
         $this->assertEqual($phonenumber[0]->entity_id, null);
         $this->assertEqual($phonenumber[1]->entity_id, null);
-        $this->assertEqual($phonenumber[2]->entity_id, null);  
+        $this->assertEqual($phonenumber[2]->entity_id, null);
     }
 
-    public function testOneToManyTreeRelationWithConcreteInheritance() {
-
+    public function testOneToManyTreeRelationWithConcreteInheritance()
+    {
         $component = new RelationTestChild();
 
         try {
             $rel = $component->getTable()->getRelation('Children');
 
             $this->pass();
-        } catch(Doctrine_Exception $e) {
-
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
         $this->assertTrue($rel instanceof Doctrine_Relation_ForeignKey);
@@ -124,43 +127,52 @@ class Doctrine_Relation_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($component->Children[0] instanceof RelationTestChild);
     }
 
-    public function testOneToOneTreeRelationWithConcreteInheritance() {
+    public function testOneToOneTreeRelationWithConcreteInheritance()
+    {
         $component = new RelationTestChild();
-        
+
         try {
             $rel = $component->getTable()->getRelation('Parent');
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
         $this->assertTrue($rel instanceof Doctrine_Relation_LocalKey);
     }
-    public function testManyToManyRelation() {
+
+    public function testManyToManyRelation()
+    {
         $user = new User();
-         
+
         // test that join table relations can be initialized even before the association have been initialized
         try {
             $user->Groupuser;
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
-        //$this->assertTrue($user->getTable()->getRelation('Groupuser') instanceof Doctrine_Relation_ForeignKey);
+        // $this->assertTrue($user->getTable()->getRelation('Groupuser') instanceof Doctrine_Relation_ForeignKey);
         $this->assertTrue($user->getTable()->getRelation('Group') instanceof Doctrine_Relation_Association);
     }
-    public function testOneToOneLocalKeyRelation() {
+
+    public function testOneToOneLocalKeyRelation()
+    {
         $user = new User();
-        
+
         $this->assertTrue($user->getTable()->getRelation('Email') instanceof Doctrine_Relation_LocalKey);
     }
-    public function testOneToOneForeignKeyRelation() {
+
+    public function testOneToOneForeignKeyRelation()
+    {
         $user = new User();
-        
+
         $this->assertTrue($user->getTable()->getRelation('Account') instanceof Doctrine_Relation_ForeignKey);
     }
-    public function testOneToManyForeignKeyRelation() {
+
+    public function testOneToManyForeignKeyRelation()
+    {
         $user = new User();
-        
+
         $this->assertTrue($user->getTable()->getRelation('Phonenumber') instanceof Doctrine_Relation_ForeignKey);
     }
 }

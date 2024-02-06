@@ -20,32 +20,26 @@
  */
 
 /**
- * Doctrine_Record_Iterator
+ * Doctrine_Record_Iterator.
  *
- * @package     Doctrine
- * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Record_Iterator extends ArrayIterator
 {
     /**
-     * @var Doctrine_Record $record
+     * @var Doctrine_Record
      */
     private $record;
 
     /**
-     * @var Doctrine_Null $null
+     * @var Doctrine_Null
      */
     private static $null;
 
     /**
-     * constructor
-     *
-     * @param Doctrine_Record $record
+     * constructor.
      */
     public function __construct(Doctrine_Record $record)
     {
@@ -54,9 +48,7 @@ class Doctrine_Record_Iterator extends ArrayIterator
     }
 
     /**
-     * initNullObject
-     *
-     * @param Doctrine_Null $null
+     * initNullObject.
      */
     public static function initNullObject(Doctrine_Null $null)
     {
@@ -64,19 +56,17 @@ class Doctrine_Record_Iterator extends ArrayIterator
     }
 
     /**
-     * current
-     *
-     * @return mixed
+     * current.
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         $value = parent::current();
 
         if ($value === self::$null) {
             return null;
-        } else {
-            return $value;
         }
+
+        return $value;
     }
 }

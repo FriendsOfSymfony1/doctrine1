@@ -20,72 +20,63 @@
  */
 
 /**
- * Doctrine_Parser_Yml
+ * Doctrine_Parser_Yml.
  *
- * @package     Doctrine
- * @subpackage  Parser
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>, Thomas Courbon <harthie@yahoo.fr>
  */
 class Doctrine_Parser_Yml extends Doctrine_Parser
 {
     /**
-     * dumpData
+     * dumpData.
      *
      * Dump an array of data to a specified path or return
      *
+     * @param  string                    $array   Array of data to dump to yaml
+     * @param  string                    $path    Path to dump the yaml to
+     * @param  mixed|null                $charset
+     * @return string                    $yaml
      * @throws Doctrine_Parser_Exception dumping error
-     * @param  string $array Array of data to dump to yaml
-     * @param  string $path  Path to dump the yaml to
-     * @return string $yaml
-     * @return void
      */
     public function dumpData($array, $path = null, $charset = null)
     {
-
         try {
-          $data = sfYaml::dump($array, 6);
+            $data = sfYaml::dump($array, 6);
 
-          return $this->doDump($data, $path);
+            return $this->doDump($data, $path);
+        } catch (InvalidArgumentException $e) {
+            // rethrow the exceptions
+            $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
 
-        } catch(InvalidArgumentException $e) {
-          // rethrow the exceptions
-          $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
-
-          throw $rethrowed_exception;
+            throw $rethrowed_exception;
         }
     }
 
     /**
-     * loadData
+     * loadData.
      *
      * Load and parse data from a yml file
      *
+     * @param  string                    $path Path to load yaml data from
+     * @return array                     $array Array of parsed yaml data
      * @throws Doctrine_Parser_Exception parsing error
-     * @param  string  $path  Path to load yaml data from
-     * @return array   $array Array of parsed yaml data
      */
     public function loadData($path, $charset = 'UTF-8')
     {
         try {
-          /*
-           * I still use the doLoad method even if sfYaml can load yml from a file
-           * since this way Doctrine can handle file on it own.
-           */
-          $contents = $this->doLoad($path);
+            /*
+             * I still use the doLoad method even if sfYaml can load yml from a file
+             * since this way Doctrine can handle file on it own.
+             */
+            $contents = $this->doLoad($path);
 
-          $array = sfYaml::load($contents, $charset);
+            return sfYaml::load($contents, $charset);
+        } catch (InvalidArgumentException $e) {
+            // rethrow the exceptions
+            $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
 
-          return $array;
-
-        } catch(InvalidArgumentException $e) {
-          // rethrow the exceptions
-          $rethrowed_exception = new Doctrine_Parser_Exception($e->getMessage(), $e->getCode());
-
-          throw $rethrowed_exception;
+            throw $rethrowed_exception;
         }
     }
 }

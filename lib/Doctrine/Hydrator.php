@@ -22,26 +22,19 @@
 /**
  * Its purpose is to populate object graphs.
  *
+ * @see        www.doctrine-project.org
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 3192 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Hydrator
 {
-    protected static
-        $_totalHydrationTime = 0;
+    protected static $_totalHydrationTime = 0;
 
-    protected
-        $_hydrators,
-        $_rootAlias = null,
-        $_hydrationMode = Doctrine_Core::HYDRATE_RECORD,
-        $_queryComponents = array();
+    protected $_hydrators;
+    protected $_rootAlias;
+    protected $_hydrationMode = Doctrine_Core::HYDRATE_RECORD;
+    protected $_queryComponents = [];
 
     public function __construct()
     {
@@ -49,11 +42,11 @@ class Doctrine_Hydrator
     }
 
     /**
-     * Set the hydration mode
+     * Set the hydration mode.
      *
-     * @param mixed $hydrationMode  One of the Doctrine_Core::HYDRATE_* constants or
-     *                              a string representing the name of the hydration mode or
-     *                              or an instance of the hydration class
+     * @param mixed $hydrationMode One of the Doctrine_Core::HYDRATE_* constants or
+     *                             a string representing the name of the hydration mode or
+     *                             or an instance of the hydration class
      */
     public function setHydrationMode($hydrationMode)
     {
@@ -61,7 +54,7 @@ class Doctrine_Hydrator
     }
 
     /**
-     * Get the hydration mode
+     * Get the hydration mode.
      *
      * @return mixed $hydrationMode One of the Doctrine_Core::HYDRATE_* constants
      */
@@ -71,9 +64,7 @@ class Doctrine_Hydrator
     }
 
     /**
-     * Set the array of query components
-     *
-     * @param array $queryComponents
+     * Set the array of query components.
      */
     public function setQueryComponents(array $queryComponents)
     {
@@ -81,7 +72,7 @@ class Doctrine_Hydrator
     }
 
     /**
-     * Get the array of query components
+     * Get the array of query components.
      *
      * @return array $queryComponents
      */
@@ -91,18 +82,18 @@ class Doctrine_Hydrator
     }
 
     /**
-     * Get the name of the driver class for the passed hydration mode
+     * Get the name of the driver class for the passed hydration mode.
      *
-     * @param string $mode
+     * @param  string $mode
      * @return string $className
      */
     public function getHydratorDriverClassName($mode = null)
     {
-        if ($mode === null) {
+        if (null === $mode) {
             $mode = $this->_hydrationMode;
         }
 
-        if ( ! isset($this->_hydrators[$mode])) {
+        if (!isset($this->_hydrators[$mode])) {
             throw new Doctrine_Hydrator_Exception('Invalid hydration mode specified: '.$this->_hydrationMode);
         }
 
@@ -110,17 +101,17 @@ class Doctrine_Hydrator
     }
 
     /**
-     * Get an instance of the hydration driver for the passed hydration mode
+     * Get an instance of the hydration driver for the passed hydration mode.
      *
-     * @param string $mode
-     * @param array $tableAliases
+     * @param  string                     $mode
+     * @param  array                      $tableAliases
      * @return Doctrine_Hydrator_Abstract
      */
     public function getHydratorDriver($mode, $tableAliases)
     {
         $driverClass = $this->getHydratorDriverClassName($mode);
         if (is_object($driverClass)) {
-            if (!$driverClass instanceOf Doctrine_Hydrator_Abstract) {
+            if (!$driverClass instanceof Doctrine_Hydrator_Abstract) {
                 throw new Doctrine_Hydrator_Exception('Invalid hydration class specified: '.get_class($driverClass));
             }
             $driver = $driverClass;
@@ -138,15 +129,14 @@ class Doctrine_Hydrator
      * Hydrate the query statement in to its final data structure by one of the
      * hydration drivers.
      *
-     * @param object $stmt
-     * @param array $tableAliases
-     * @return mixed $result
+     * @param  object $stmt
+     * @param  array  $tableAliases
+     * @return mixed  $result
      */
     public function hydrateResultSet($stmt, $tableAliases)
     {
         $driver = $this->getHydratorDriver($this->_hydrationMode, $tableAliases);
-        $result = $driver->hydrateResultSet($stmt);
 
-        return $result;
+        return $driver->hydrateResultSet($stmt);
     }
 }

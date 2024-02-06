@@ -39,5 +39,12 @@
         "branch-alias": {
             "dev-master": "1.4-dev"
         }
+    },
+    "scripts": {
+        "cs-fix-diff": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.49"
     }
 }

@@ -20,29 +20,25 @@
  */
 
 /**
- * Doctrine_Validator_Nospace
+ * Doctrine_Validator_Nospace.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Nospace extends Doctrine_Validator_Driver
 {
     /**
-     * checks that value doesn't contain any space chars
+     * checks that value doesn't contain any space chars.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
         if (is_null($value)) {
             return true;
         }
-        return ($value === null || ! preg_match('/\s/', $value));
+
+        return null === $value || !preg_match('/\s/', $value);
     }
 }

@@ -1,14 +1,20 @@
 <?php
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class SelfRefTest extends Doctrine_Record
 {
-    public function setTableDefinition() 
+    public function setTableDefinition()
     {
         $this->hasColumn('name', 'string', 50);
         $this->hasColumn('created_by', 'integer');
     }
+
     public function setUp()
     {
-        $this->hasOne('SelfRefTest as createdBy', array('local' => 'created_by'));
+        $this->hasOne('SelfRefTest as createdBy', ['local' => 'created_by']);
     }
 }
-

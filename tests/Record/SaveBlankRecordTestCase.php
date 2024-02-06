@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Record_State_TestCase
+ * Doctrine_Record_State_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Record_SaveBlankRecord_TestCase extends Doctrine_UnitTestCase
 {
@@ -39,25 +41,26 @@ class Doctrine_Record_SaveBlankRecord_TestCase extends Doctrine_UnitTestCase
 
         parent::prepareTables();
     }
-    
+
     public function prepareData()
-    { }
+    {
+    }
 
     public function testSaveBlankRecord()
     {
         $user = new MyUser();
         $user->state('TDIRTY');
         $user->save();
-        
+
         $this->assertTrue(isset($user['id']) && $user['id']);
     }
-    
+
     public function testSaveBlankRecord2()
     {
         $group = new MyUserGroup();
         $group->state('TDIRTY');
         $group->save();
-        
+
         $this->assertTrue(isset($group['id']) && $group['id']);
     }
 }

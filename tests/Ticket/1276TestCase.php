@@ -20,23 +20,26 @@
  */
 
 /**
- * Doctrine_Ticket_1276_TestCase
+ * Doctrine_Ticket_1276_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1276_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1276_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_AUTO_FREE_QUERY_OBJECTS, true);
         $q = Doctrine_Query::create()
-            ->from('User u');
+            ->from('User u')
+        ;
         $users = $q->fetchArray();
         $this->assertTrue(is_array($users));
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_AUTO_FREE_QUERY_OBJECTS, false);

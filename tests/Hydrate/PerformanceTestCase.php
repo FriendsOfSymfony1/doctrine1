@@ -20,25 +20,25 @@
  */
 
 /**
- * Doctrine_Hydrate_Scalar_TestCase
+ * Doctrine_Hydrate_Scalar_TestCase.
  *
- * @package     Doctrine
  * @author      Roman Borschel <roman@code-factory.org>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.1
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Hydrate_Performance_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
     {
-        for ($i = 0; $i < 10000; $i++)
-        {
+        for ($i = 0; $i < 10000; ++$i) {
             $test = new HydratePerformance();
-            for ($j = 1; $j <= 6; $j++)
-            {
+            for ($j = 1; $j <= 6; ++$j) {
                 $test->set('column'.$j, 'Test value');
             }
             $test->save();
@@ -56,14 +56,15 @@ class Doctrine_Hydrate_Performance_TestCase extends Doctrine_UnitTestCase
         $s = microtime(true);
 
         $q = Doctrine_Core::getTable('HydratePerformance')
-            ->createQuery('u');
+            ->createQuery('u')
+        ;
 
         $records = $q->execute();
 
         $e = microtime(true);
         $time = $e - $s;
 
-        echo PHP_EOL.'Hydration for ' . count($records) . ' records took ' . $time . PHP_EOL;
+        echo PHP_EOL.'Hydration for '.count($records).' records took '.$time.PHP_EOL;
     }
 }
 

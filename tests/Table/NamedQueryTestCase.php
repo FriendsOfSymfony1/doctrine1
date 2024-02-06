@@ -20,26 +20,27 @@
  */
 
 /**
- * Doctrine_Query_Registry
+ * Doctrine_Query_Registry.
  *
- * @package     Doctrine
- * @subpackage  Query
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Table_NamedQuery_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array('MyFoo');
-        
+        $this->tables = ['MyFoo'];
+
         parent::prepareTables();
     }
 
-    public function prepareData() {
+    public function prepareData()
+    {
         $f1 = new MyFoo();
         $f1->name = 'jwage';
         $f1->value0 = 0;
@@ -55,8 +56,7 @@ class Doctrine_Table_NamedQuery_TestCase extends Doctrine_UnitTestCase
         $f3->value0 = 2;
         $f3->save();
     }
-    
-    
+
     public function testNamedQuerySupport()
     {
         $table = Doctrine_Core::getTable('MyFoo');
@@ -65,20 +65,19 @@ class Doctrine_Table_NamedQuery_TestCase extends Doctrine_UnitTestCase
             $table->createNamedQuery('get.by.id')->getSqlQuery(),
             'SELECT m.id AS m__id, m.name AS m__name, m.value0 AS m__value0 FROM my_foo m WHERE (m.id = ?)'
         );
-        
+
         $this->assertEqual(
             $table->createNamedQuery('get.by.similar.names')->getSqlQuery(),
             'SELECT m.id AS m__id, m.value0 AS m__value0 FROM my_foo m WHERE (LOWER(m.name) LIKE LOWER(?))'
         );
-        
-        $this->assertEqual($table->createNamedQuery('get.by.similar.names')->count(array('%jon%wage%')), 2);
-        
-        $items = $table->find('get.by.similar.names', array('%jon%wage%'));
-        
+
+        $this->assertEqual($table->createNamedQuery('get.by.similar.names')->count(['%jon%wage%']), 2);
+
+        $items = $table->find('get.by.similar.names', ['%jon%wage%']);
+
         $this->assertEqual(count($items), 2);
     }
 }
-
 
 class MyFoo extends Doctrine_Record
 {
@@ -89,14 +88,14 @@ class MyFoo extends Doctrine_Record
     }
 }
 
-
 class MyFooTable extends Doctrine_Table
 {
     public function construct()
     {
         $this->addNamedQuery('get.by.id', 'SELECT f.* FROM MyFoo f WHERE f.id = ?');
         $this->addNamedQuery(
-            'get.by.similar.names', Doctrine_Query::create()
+            'get.by.similar.names',
+            Doctrine_Query::create()
                 ->select('f.id, f.value0')
                 ->from('MyFoo f')
                 ->where('LOWER(f.name) LIKE LOWER(?)')

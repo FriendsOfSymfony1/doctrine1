@@ -20,26 +20,31 @@
  */
 
 /**
- * Doctrine_Relation_OneToOne_TestCase
+ * Doctrine_Relation_OneToOne_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Relation_OneToMany_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
-    { }
+    {
+    }
+
     public function prepareTables()
     {
-        $this->tables = array('Entity', 'Phonenumber', 'Email', 'Policy', 'PolicyAsset', 'Role', 'Auth');
-        
+        $this->tables = ['Entity', 'Phonenumber', 'Email', 'Policy', 'PolicyAsset', 'Role', 'Auth'];
+
         parent::prepareTables();
     }
+
     public function testRelationParsing()
     {
         $table = $this->conn->getTable('Entity');
@@ -70,49 +75,52 @@ class Doctrine_Relation_OneToMany_TestCase extends Doctrine_UnitTestCase
 
         $this->assertTrue($rel instanceof Doctrine_Relation_ForeignKey);
     }
-    public function testRelationSaving() 
+
+    public function testRelationSaving()
     {
         $p = new Policy();
         $p->policy_number = '123';
-        
+
         $a = new PolicyAsset();
         $a->value = '123.13';
 
         $p->PolicyAssets[] = $a;
         $p->save();
-        
+
         $this->assertEqual($a->policy_number, '123');
     }
+
     public function testRelationSaving2()
     {
         $e = new Entity();
         $e->name = 'test';
         $e->save();
-         
+
         $nr = new Phonenumber();
         $nr->phonenumber = '1234556';
         $nr->save();
         $nr->Entity = $e;
     }
-    public function testRelationSaving3() 
+
+    public function testRelationSaving3()
     {
         // create roles and user with role1 and role2
         $this->conn->beginTransaction();
         $role = new Role();
         $role->name = 'role1';
         $role->save();
-     
+
         $auth = new Auth();
         $auth->name = 'auth1';
         $auth->Role = $role;
         $auth->save();
-        
+
         $this->conn->commit();
-     
+
         $this->conn->clear();
 
         $auths = $this->conn->query('FROM Auth a LEFT JOIN a.Role r');
 
-        $this->assertEqual($auths[0]->Role->name, 'role1'); 
+        $this->assertEqual($auths[0]->Role->name, 'role1');
     }
 }

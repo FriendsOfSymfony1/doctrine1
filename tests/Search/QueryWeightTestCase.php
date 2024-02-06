@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Search_QueryWeight_TestCase
+ * Doctrine_Search_QueryWeight_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Search_QueryWeight_TestCase extends Doctrine_UnitTestCase
 {
@@ -37,22 +39,22 @@ class Doctrine_Search_QueryWeight_TestCase extends Doctrine_UnitTestCase
         $q = new Doctrine_Search_Query('SearchTestIndex');
         $q->search("doctrine^2 OR 'dbal database'");
 
-        $sql = 'SELECT foreign_id, SUM(relevancy) AS relevancy_sum ' 
-             . 'FROM (SELECT COUNT(keyword) * 2 AS relevancy, foreign_id '
-             . 'FROM search_index '
-             . 'WHERE keyword = ? '
-             . 'GROUP BY foreign_id '
-             . 'UNION '
-             . 'SELECT COUNT(keyword) AS relevancy, foreign_id '
-             . 'FROM search_index) AS query_alias '
-             . 'WHERE keyword = ? AND (position + 1) = (SELECT position FROM search_index WHERE keyword = ?) '
-             . 'GROUP BY foreign_id) '
-             . 'GROUP BY foreign_id '
-             . 'ORDER BY relevancy_sum';
+        $sql = 'SELECT foreign_id, SUM(relevancy) AS relevancy_sum '
+             .'FROM (SELECT COUNT(keyword) * 2 AS relevancy, foreign_id '
+             .'FROM search_index '
+             .'WHERE keyword = ? '
+             .'GROUP BY foreign_id '
+             .'UNION '
+             .'SELECT COUNT(keyword) AS relevancy, foreign_id '
+             .'FROM search_index) AS query_alias '
+             .'WHERE keyword = ? AND (position + 1) = (SELECT position FROM search_index WHERE keyword = ?) '
+             .'GROUP BY foreign_id) '
+             .'GROUP BY foreign_id '
+             .'ORDER BY relevancy_sum';
 
         $this->assertEqual($q->getSqlQuery(), $sql);
     }
-    
+
     public function testSearchSupportsMixingOfOperatorsParenthesisAndWeights()
     {
         $q = new Doctrine_Search_Query('SearchTestIndex');
@@ -123,7 +125,7 @@ class Doctrine_Search_QueryWeight_TestCase extends Doctrine_UnitTestCase
                             )
                 GROUP BY foreign_id
                 ORDER BY relevancy_sum";
-                
+
         $this->assertEqual($q->getSqlQuery(), $sql);
     }
 }

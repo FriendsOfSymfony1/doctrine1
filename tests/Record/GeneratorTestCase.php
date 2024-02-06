@@ -20,23 +20,25 @@
  */
 
 /**
- * Doctrine_Record_Generator_TestCase
+ * Doctrine_Record_Generator_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Record_Generator_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Record_Generator_TestCase extends Doctrine_UnitTestCase
 {
     public function testGeneratorComponentBinding()
     {
         Doctrine_Manager::connection('sqlite::memory:', 'test_tmp_conn', false);
         Doctrine_Manager::getInstance()->bindComponent('I18nGeneratorComponentBinding', 'test_tmp_conn');
-        Doctrine_Core::createTablesFromArray(array('I18nGeneratorComponentBinding'));
+        Doctrine_Core::createTablesFromArray(['I18nGeneratorComponentBinding']);
 
         try {
             $i = new I18nGeneratorComponentBinding();
@@ -44,9 +46,9 @@ class Doctrine_Record_Generator_TestCase extends Doctrine_UnitTestCase
             $i->Translation['EN']->title = 'en test';
             $i->Translation['FR']->title = 'fr test';
             $i->save();
-            
+
             $this->pass();
-            
+
             $this->assertTrue($i->id > 0);
             $this->assertEqual($i->Translation['EN']->title, 'en test');
             $this->assertEqual($i->Translation['FR']->title, 'fr test');
@@ -64,9 +66,9 @@ class I18nGeneratorComponentBinding extends Doctrine_Record
         $this->hasColumn('name', 'string');
         $this->hasColumn('title', 'string');
     }
-    
+
     public function setUp()
     {
-        $this->actAs('I18n', array('fields' => array('title')));
+        $this->actAs('I18n', ['fields' => ['title']]);
     }
 }

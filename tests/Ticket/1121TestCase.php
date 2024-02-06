@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1121_TestCase
+ * Doctrine_Ticket_1121_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1121_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1121_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -43,11 +45,12 @@ class Doctrine_Ticket_1121_TestCase extends Doctrine_UnitTestCase
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
         $q = Doctrine_Query::create()
-                ->from('Ticket_1121_User u')
-                // UserProfile has SoftDelete behavior but because it is aliased as Profile, it tries to 
+            ->from('Ticket_1121_User u')
+                // UserProfile has SoftDelete behavior but because it is aliased as Profile, it tries to
                 // call the dql callbacks for the query on a class named Profile instead of UserProfile
                 // Code responsible for this is in Doctrine_Query_Abstract::_preQuery()
-                ->leftJoin('u.Profile p');
+            ->leftJoin('u.Profile p')
+        ;
 
         // The condition and params for UserProfile SoftDelete and are not added properly
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.username AS t__username, t.password AS t__password, t.profile_id AS t__profile_id, t.deleted_at AS t__deleted_at, t2.id AS t2__id, t2.name AS t2__name, t2.about AS t2__about, t2.deleted_at AS t2__deleted_at FROM ticket_1121__user t LEFT JOIN ticket_1121__profile t2 ON t.profile_id = t2.id AND (t2.deleted_at IS NULL) WHERE (t.deleted_at IS NULL)');
@@ -68,8 +71,8 @@ class Ticket_1121_User extends Doctrine_Record
     public function setUp()
     {
         $this->actAs('SoftDelete');
-        $this->hasOne('Ticket_1121_Profile as Profile', array('local'   => 'profile_id',
-                                                              'foreign' => 'id'));
+        $this->hasOne('Ticket_1121_Profile as Profile', ['local' => 'profile_id',
+            'foreign' => 'id']);
     }
 }
 
@@ -84,7 +87,7 @@ class Ticket_1121_Profile extends Doctrine_Record
     public function setUp()
     {
         $this->actAs('SoftDelete');
-        $this->hasOne('Ticket_1121_User as User', array('local'   => 'id',
-                                                        'foreign' => 'profile_id'));
+        $this->hasOne('Ticket_1121_User as User', ['local' => 'id',
+            'foreign' => 'profile_id']);
     }
 }

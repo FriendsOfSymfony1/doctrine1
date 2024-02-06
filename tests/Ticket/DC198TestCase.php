@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_DC198_TestCase
+ * Doctrine_Ticket_DC198_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC198_TestCase extends Doctrine_UnitTestCase
 {
@@ -46,7 +48,7 @@ class Doctrine_Ticket_DC198_TestCase extends Doctrine_UnitTestCase
     {
         $this->tables[] = 'Ticket_DC198_User';
         $this->tables[] = 'Ticket_DC198_Email';
-        
+
         parent::prepareTables();
     }
 
@@ -66,27 +68,26 @@ class Doctrine_Ticket_DC198_TestCase extends Doctrine_UnitTestCase
         $e = Doctrine_Query::create()->from('Ticket_DC198_Email')->fetchOne();
         $this->assertFalse($e);
     }
-
 }
 
 class Ticket_DC198_Email extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('user_id', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('address', 'string', 150, array(
-             'type' => 'string',
-             'length' => '150',
-             ));
+        $this->hasColumn('user_id', 'integer', null, [
+            'type' => 'integer',
+        ]);
+        $this->hasColumn('address', 'string', 150, [
+            'type' => 'string',
+            'length' => '150',
+        ]);
     }
 
     public function setUp()
     {
-        $this->hasOne('Ticket_DC198_User', array(
-             'local' => 'user_id',
-             'foreign' => 'id'));
+        $this->hasOne('Ticket_DC198_User', [
+            'local' => 'user_id',
+            'foreign' => 'id']);
     }
 }
 
@@ -94,16 +95,16 @@ class Ticket_DC198_User extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', 150, array(
-             'type' => 'string',
-             'length' => '150',
-             ));
+        $this->hasColumn('name', 'string', 150, [
+            'type' => 'string',
+            'length' => '150',
+        ]);
     }
 
     public function setUp()
     {
-        $this->hasOne('Ticket_DC198_Email as email', array(
-             'local' => 'id',
-             'foreign' => 'user_id'));
+        $this->hasOne('Ticket_DC198_Email as email', [
+            'local' => 'id',
+            'foreign' => 'user_id']);
     }
 }

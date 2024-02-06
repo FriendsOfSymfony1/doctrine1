@@ -2,9 +2,8 @@
 
 class DoctrineTest_Reporter
 {
-    protected
-        $_formatter,
-        $_test;
+    protected $_formatter;
+    protected $_test;
 
     public function __construct()
     {
@@ -15,19 +14,19 @@ class DoctrineTest_Reporter
     {
         if (PHP_SAPI == 'cli') {
             return $this->_formatter->format($message, $type);
-        } else {
-            if ($type == 'INFO') {
-                $color = 'green';
-            } else if ($type == 'ERROR') {
-                $color = 'red';
-            } else {
-                $color = 'black';
-            }
-            return '<span style="font-weight: bold; color: ' . $color . ';">' . $message . '</span>';
         }
+        if ('INFO' == $type) {
+            $color = 'green';
+        } elseif ('ERROR' == $type) {
+            $color = 'red';
+        } else {
+            $color = 'black';
+        }
+
+        return '<span style="font-weight: bold; color: '.$color.';">'.$message.'</span>';
     }
-    
-    public function setTestCase($test) 
+
+    public function setTestCase($test)
     {
         $this->_test = $test;
     }
@@ -37,18 +36,18 @@ class DoctrineTest_Reporter
         $max = 80;
         $class = get_class($this->_test);
         $messages = $this->_test->getMessages();
-        $failed = ($this->_test->getFailCount() || count($messages)) ? true:false;
+        $failed = ($this->_test->getFailCount() || count($messages)) ? true : false;
 
-        if ($class != 'GroupTest') {
+        if ('GroupTest' != $class) {
             $strRepeatLength = $max - strlen($class);
-            echo $class.str_repeat('.', $strRepeatLength).$this->format($failed ? 'failed':'passed', $failed ? 'ERROR':'INFO')."\n";
+            echo $class.str_repeat('.', $strRepeatLength).$this->format($failed ? 'failed' : 'passed', $failed ? 'ERROR' : 'INFO')."\n";
         }
 
-        if (! empty($messages)) {
+        if (!empty($messages)) {
             echo "\n";
             echo "\n";
             foreach ($messages as $message) {
-                echo $this->format($message, 'ERROR') . "\n\n";
+                echo $this->format($message, 'ERROR')."\n\n";
             }
             echo "\n";
         }

@@ -1,26 +1,29 @@
 <?php
 
 /**
- * Doctrine_Ticket_587_TestCase
+ * Doctrine_Ticket_587_TestCase.
  *
- * @package     Doctrine
  * @author      Joaquin Bravo <jackbravo@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-
 class Doctrine_Ticket_583_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array('Entity');
+        $this->tables = ['Entity'];
         parent::prepareTables();
     }
 
-    public function prepareData() { }
+    public function prepareData()
+    {
+    }
 
     public function testBug()
     {

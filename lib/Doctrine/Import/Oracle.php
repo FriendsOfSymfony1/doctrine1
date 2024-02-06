@@ -20,37 +20,32 @@
  */
 
 /**
- * @package     Doctrine
- * @subpackage  Import
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Import_Oracle extends Doctrine_Import
 {
     /**
-     * lists all databases
+     * lists all databases.
      *
      * @return array
      */
     public function listDatabases()
     {
-        if ( ! $this->conn->getAttribute(Doctrine_Core::ATTR_EMULATE_DATABASE)) {
+        if (!$this->conn->getAttribute(Doctrine_Core::ATTR_EMULATE_DATABASE)) {
             throw new Doctrine_Import_Exception('database listing is only supported if the "emulate_database" option is enabled');
         }
 
-        $query   = 'SELECT username FROM sys.user_users';
+        $query = 'SELECT username FROM sys.user_users';
 
         $result2 = $this->conn->standaloneQuery($query);
-        $result  = $result2->fetchColumn();
 
-        return $result;
+        return $result2->fetchColumn();
     }
 
     /**
-     * lists all availible database functions
+     * lists all availible database functions.
      *
      * @return array
      */
@@ -62,36 +57,37 @@ class Doctrine_Import_Oracle extends Doctrine_Import
     }
 
     /**
-     * lists all database triggers
+     * lists all database triggers.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listTriggers($database = null)
     {
-        $query = "SELECT trigger_name FROM sys.user_triggers"; 
+        $query = 'SELECT trigger_name FROM sys.user_triggers';
+
         return $this->conn->fetchColumn($query);
     }
 
     /**
-     * lists all database sequences
+     * lists all database sequences.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listSequences($database = null)
     {
-        $query = "SELECT sequence_name FROM sys.user_sequences";
+        $query = 'SELECT sequence_name FROM sys.user_sequences';
 
         $tableNames = $this->conn->fetchColumn($query);
 
-        return array_map(array($this->conn->formatter, 'fixSequenceName'), $tableNames);
+        return array_map([$this->conn->formatter, 'fixSequenceName'], $tableNames);
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableConstraints($table)
@@ -99,22 +95,22 @@ class Doctrine_Import_Oracle extends Doctrine_Import
         $table = $this->conn->quote($table, 'text');
 
         $query = 'SELECT index_name name FROM user_constraints'
-               . ' WHERE table_name = ' . $table . ' OR table_name = ' . strtoupper($table);
+               .' WHERE table_name = '.$table.' OR table_name = '.strtoupper($table);
 
         $constraints = $this->conn->fetchColumn($query);
 
-        return array_map(array($this->conn->formatter, 'fixIndexName'), $constraints);
+        return array_map([$this->conn->formatter, 'fixIndexName'], $constraints);
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableColumns($table)
     {
-		$sql = <<<QEND
+        $sql = <<<'QEND'
 SELECT tc.column_name, data_type,
 CASE WHEN data_type = 'NUMBER' THEN data_precision ELSE data_length END AS data_length,
 nullable, data_default, data_scale, data_precision, pk.primary
@@ -126,111 +122,111 @@ LEFT JOIN (
 ) pk ON pk.column_name = tc.column_name and pk.table_name = tc.table_name
 WHERE tc.table_name = :tableName ORDER BY column_id
 QEND;
-        $result = $this->conn->fetchAssoc($sql, array(':tableName' => $table));
+        $result = $this->conn->fetchAssoc($sql, [':tableName' => $table]);
 
-        $descr = array();
+        $descr = [];
 
-        foreach($result as $val) {
+        foreach ($result as $val) {
             $val = array_change_key_case($val, CASE_LOWER);
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
 
-            $descr[$val['column_name']] = array(
-               'name'       => $val['column_name'],
-               'notnull'    => (bool) ($val['nullable'] === 'N'),
-               'ntype'      => $val['data_type'],
-               'type'       => $decl['type'][0],
-               'alltypes'   => $decl['type'],
-               'fixed'      => (bool) $decl['fixed'],
-               'unsigned'   => (bool) $decl['unsigned'],
-               'default'    => $val['data_default'],
-               'length'     => $val['data_length'],
-               'primary'    => (bool) $val['primary'],
-               'scale'      => isset($val['scale']) ? $val['scale']:null,
-            );
+            $descr[$val['column_name']] = [
+                'name' => $val['column_name'],
+                'notnull' => (bool) ('N' === $val['nullable']),
+                'ntype' => $val['data_type'],
+                'type' => $decl['type'][0],
+                'alltypes' => $decl['type'],
+                'fixed' => (bool) $decl['fixed'],
+                'unsigned' => (bool) $decl['unsigned'],
+                'default' => $val['data_default'],
+                'length' => $val['data_length'],
+                'primary' => (bool) $val['primary'],
+                'scale' => $val['scale'] ?? null,
+            ];
         }
 
         return $descr;
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableIndexes($table)
     {
         $table = $this->conn->quote($table, 'text');
         $query = 'SELECT index_name name FROM user_indexes'
-               . ' WHERE table_name = ' . $table . ' OR table_name = ' . strtoupper($table)
-               . ' AND generated = ' . $this->conn->quote('N', 'text');
+               .' WHERE table_name = '.$table.' OR table_name = '.strtoupper($table)
+               .' AND generated = '.$this->conn->quote('N', 'text');
 
         $indexes = $this->conn->fetchColumn($query);
 
-        return array_map(array($this->conn->formatter, 'fixIndexName'), $indexes);
+        return array_map([$this->conn->formatter, 'fixIndexName'], $indexes);
     }
-    
+
     /**
-     * list table relations
+     * list table relations.
      */
     public function listTableRelations($table)
     {
-        $relations = array();
+        $relations = [];
         $sql = 'SELECT '
-             . 'rcc.table_name AS referenced_table_name, '
-             . 'lcc.column_name AS local_column_name, '
-             . 'rcc.column_name AS referenced_column_name '
-             . 'FROM user_constraints ac '
-             . 'JOIN user_cons_columns rcc ON ac.r_constraint_name = rcc.constraint_name '
-             . 'JOIN user_cons_columns lcc ON ac.constraint_name = lcc.constraint_name '
-             . "WHERE ac.constraint_type = 'R' AND ac.table_name = :tableName";
+             .'rcc.table_name AS referenced_table_name, '
+             .'lcc.column_name AS local_column_name, '
+             .'rcc.column_name AS referenced_column_name '
+             .'FROM user_constraints ac '
+             .'JOIN user_cons_columns rcc ON ac.r_constraint_name = rcc.constraint_name '
+             .'JOIN user_cons_columns lcc ON ac.constraint_name = lcc.constraint_name '
+             ."WHERE ac.constraint_type = 'R' AND ac.table_name = :tableName";
 
-        $results = $this->conn->fetchAssoc($sql, array(':tableName' => $table));
+        $results = $this->conn->fetchAssoc($sql, [':tableName' => $table]);
         foreach ($results as $result) {
             $result = array_change_key_case($result, CASE_LOWER);
-            $relations[] = array('table'   => $result['referenced_table_name'],
-                                 'local'   => $result['local_column_name'],
-                                 'foreign' => $result['referenced_column_name']);
+            $relations[] = ['table' => $result['referenced_table_name'],
+                'local' => $result['local_column_name'],
+                'foreign' => $result['referenced_column_name']];
         }
+
         return $relations;
     }
 
     /**
-     * lists tables
+     * lists tables.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listTables($database = null)
     {
         $query = "SELECT * FROM user_objects WHERE object_type = 'TABLE' and object_name in (select table_name from user_tables)";
+
         return $this->conn->fetchColumn($query);
     }
 
     /**
-     * lists table triggers
+     * lists table triggers.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableTriggers($table)
     {
-
     }
 
     /**
-     * lists table views
+     * lists table views.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableViews($table)
     {
-
     }
 
     /**
-     * lists database users
+     * lists database users.
      *
      * @return array
      */
@@ -242,14 +238,15 @@ QEND;
     }
 
     /**
-     * lists database views
+     * lists database views.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listViews($database = null)
     {
         $query = 'SELECT view_name FROM sys.user_views';
+
         return $this->conn->fetchColumn($query);
     }
 }

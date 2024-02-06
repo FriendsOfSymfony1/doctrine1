@@ -20,47 +20,48 @@
  */
 
 /**
- * Doctrine_Ticket_1653_TestCase
+ * Doctrine_Ticket_1653_TestCase.
  *
- * @package     Doctrine
  * @author      floriank
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.1
- * @version     $Revision$ 
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1653_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1653_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array();
+        $this->tables = [];
         $this->tables[] = 'Ticket_1653_User';
         $this->tables[] = 'Ticket_1653_Email';
         parent::prepareTables();
     }
-    
+
     public function prepareData()
     {
-
     }
 
     public function testValidate()
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_ALL);
-        
+
         $user = new Ticket_1653_User();
         $mail = new Ticket_1653_Email();
-        
+
         $user->id = 1;
-        $user->name = "floriank";
+        $user->name = 'floriank';
         $user->emails[] = $mail;
-        
-        //explicit call of isValid() should return false since $mail->address is null
+
+        // explicit call of isValid() should return false since $mail->address is null
 
         $this->assertFalse($user->isValid(true));
 
-        //reset validation to default for further testcases
+        // reset validation to default for further testcases
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_NONE);
     }
 
@@ -87,18 +88,19 @@ class Ticket_1653_User extends Doctrine_Record
     {
         $this->hasColumn('name', 'string', 255);
     }
-    
+
     public function setUp()
     {
-        $this->hasMany('Ticket_1653_Email as emails', array('local' => 'id',
-                                                  'foreign' => 'user_id',
-                                                  'cascade' => array('delete')));
+        $this->hasMany('Ticket_1653_Email as emails', ['local' => 'id',
+            'foreign' => 'user_id',
+            'cascade' => ['delete']]);
     }
-    
+
     protected function validate()
     {
-        if ($this->name == "test") {
-            $this->getErrorStack()->add("badName", "No testnames allowed!");
+        if ('test' == $this->name) {
+            $this->getErrorStack()->add('badName', 'No testnames allowed!');
+
             return false;
         }
     }
@@ -109,13 +111,13 @@ class Ticket_1653_Email extends Doctrine_Record
     public function setTableDefinition()
     {
         $this->hasColumn('user_id', 'integer');
-        $this->hasColumn('address', 'string', 255, array('notnull' => true));
+        $this->hasColumn('address', 'string', 255, ['notnull' => true]);
     }
-    
+
     public function setUp()
     {
-        $this->hasOne('Ticket_1653_User as user', array('local' => 'user_id',
-                                                  'foreign' => 'id',
-                                                  'cascade' => array('delete')));
+        $this->hasOne('Ticket_1653_User as user', ['local' => 'user_id',
+            'foreign' => 'id',
+            'cascade' => ['delete']]);
     }
 }

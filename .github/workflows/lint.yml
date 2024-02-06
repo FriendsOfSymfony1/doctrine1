@@ -1,0 +1,30 @@
+name: "Code Linting"
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  php-cs-fixer:
+    name: 'PHP-CS-Fixer'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: php-cs-fixer:3.49
+
+      - uses: actions/cache@v3
+        with:
+          path: '.php-cs-fixer.cache'
+          key: ${{ github.repository }}-8.2-phpcsfixer-${{ github.ref_name }}
+          restore-keys: |
+            ${{ github.repository }}-8.2-phpcsfixer-master
+            ${{ github.repository }}-8.2-phpcsfixer-
+
+      - name: Run PHP-CS-Fixer
+        run: 'php-cs-fixer fix --dry-run --show-progress=none --diff'

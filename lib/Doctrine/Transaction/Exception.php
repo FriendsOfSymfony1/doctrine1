@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Transaction_Exception
+ * Doctrine_Transaction_Exception.
  *
- * @package     Doctrine
- * @subpackage  Transaction
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @since       1.0
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Transaction_Exception extends Doctrine_Exception
-{ }
+{
+}

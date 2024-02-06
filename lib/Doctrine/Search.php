@@ -20,52 +20,46 @@
  */
 
 /**
- * Doctrine_Search
+ * Doctrine_Search.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search extends Doctrine_Record_Generator
 {
-    const INDEX_FILES = 0;
+    public const INDEX_FILES = 0;
 
-    const INDEX_TABLES = 1;
+    public const INDEX_TABLES = 1;
 
-    protected $_options = array('generateFiles'    => false,
-                                'analyzer'         => 'Doctrine_Search_Analyzer_Standard',
-                                'analyzer_options' => array(),
-                                'type'             => self::INDEX_TABLES,
-                                'className'        => '%CLASS%Index',
-                                'generatePath'     => false,
-                                'table'            => null,
-                                'batchUpdates'     => false,
-                                'pluginTable'      => false,
-                                'fields'           => array(),
-                                'connection'       => null,
-                                'children'         => array(),
-                                'cascadeDelete'    => true,
-                                'appLevelDelete'   => false);
+    protected $_options = ['generateFiles' => false,
+        'analyzer' => 'Doctrine_Search_Analyzer_Standard',
+        'analyzer_options' => [],
+        'type' => self::INDEX_TABLES,
+        'className' => '%CLASS%Index',
+        'generatePath' => false,
+        'table' => null,
+        'batchUpdates' => false,
+        'pluginTable' => false,
+        'fields' => [],
+        'connection' => null,
+        'children' => [],
+        'cascadeDelete' => true,
+        'appLevelDelete' => false];
+
     /**
-     * __construct 
-     * 
-     * @param array $options 
-     * @return void
+     * __construct.
      */
     public function __construct(array $options)
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-        
-        if ( ! isset($this->_options['analyzer'])) {
+
+        if (!isset($this->_options['analyzer'])) {
             $this->_options['analyzer'] = 'Doctrine_Search_Analyzer_Standard';
         }
 
-        if ( ! isset($this->_options['analyzer_options'])) {
-            $this->_options['analyzer_options'] = array();
+        if (!isset($this->_options['analyzer_options'])) {
+            $this->_options['analyzer_options'] = [];
         }
 
         $this->_options['analyzer'] = new $this->_options['analyzer']($this->_options['analyzer_options']);
@@ -75,7 +69,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
     {
         $result = parent::buildTable();
 
-        if ( ! isset($this->_options['connection'])) {
+        if (!isset($this->_options['connection'])) {
             $manager = Doctrine_Manager::getInstance();
             $this->_options['connection'] = $manager->getConnectionForComponent($this->_options['table']->getComponentName());
             $manager->bindComponent($this->_options['className'], $this->_options['connection']->getName());
@@ -85,11 +79,11 @@ class Doctrine_Search extends Doctrine_Record_Generator
     }
 
     /**
-     * Searchable keyword search
-     * 
-     * @param string $string Keyword string to search for
-     * @param Doctrine_Query $query Query object to alter. Adds where condition to limit the results using the search index
-     * @return array    ids and relevancy
+     * Searchable keyword search.
+     *
+     * @param  string         $string Keyword string to search for
+     * @param  Doctrine_Query $query  Query object to alter. Adds where condition to limit the results using the search index
+     * @return array          ids and relevancy
      */
     public function search($string, $query = null)
     {
@@ -101,24 +95,23 @@ class Doctrine_Search extends Doctrine_Record_Generator
             $newQuery = $query->copy();
             $query->getSqlQuery();
             $key = (array) $this->getOption('table')->getIdentifier();
-            $newQuery->addWhere($query->getRootAlias() . '.'.current($key).' IN (SQL:' . $q->getSqlQuery() . ')', $q->getParams());
+            $newQuery->addWhere($query->getRootAlias().'.'.current($key).' IN (SQL:'.$q->getSqlQuery().')', $q->getParams());
 
             return $newQuery;
-        } else {
-            if ( ! isset($this->_options['connection'])) {
-                $this->_options['connection'] = $this->_table->getConnection();
-            }
-            $q->query($string);
-            return $this->_options['connection']->fetchAll($q->getSqlQuery(), $q->getParams());
         }
+        if (!isset($this->_options['connection'])) {
+            $this->_options['connection'] = $this->_table->getConnection();
+        }
+        $q->query($string);
+
+        return $this->_options['connection']->fetchAll($q->getSqlQuery(), $q->getParams());
     }
-    
+
     /**
-     * analyze a text in the encoding format
-     * 
-     * @param string $text 
+     * analyze a text in the encoding format.
+     *
+     * @param string $text
      * @param string $encoding
-     * @return void
      */
     public function analyze($text, $encoding = null)
     {
@@ -127,41 +120,41 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
     /**
      * updateIndex
-     * updates the index
+     * updates the index.
      *
-     * @param Doctrine_Record $record
-     * @return integer
+     * @param  mixed|null $encoding
+     * @return int
      */
     public function updateIndex(array $data, $encoding = null)
     {
         $this->initialize($this->_options['table']);
 
         $fields = $this->getOption('fields');
-        $class  = $this->getOption('className');
-        $name   = $this->getOption('table')->getComponentName();
-        $conn   = $this->getOption('table')->getConnection();
+        $class = $this->getOption('className');
+        $name = $this->getOption('table')->getComponentName();
+        $conn = $this->getOption('table')->getConnection();
         $identifier = $this->_options['table']->getIdentifier();
 
         $q = Doctrine_Core::getTable($class)
             ->createQuery()
-            ->delete();
+            ->delete()
+        ;
         foreach ((array) $identifier as $id) {
-            $q->addWhere($id . ' = ?', array($data[$id]));
+            $q->addWhere($id.' = ?', [$data[$id]]);
         }
         $q->execute();
 
-        if ($this->_options['batchUpdates'] === true) {
-            $index = new $class(); 
+        if (true === $this->_options['batchUpdates']) {
+            $index = new $class();
 
             foreach ((array) $this->_options['table']->getIdentifier() as $id) {
-                $index->$id = $data[$id];
+                $index->{$id} = $data[$id];
             }
 
             $index->save();
         } else {
             foreach ($fields as $field) {
-
-                $value = isset($data[$field]) ? $data[$field] : null;
+                $value = $data[$field] ?? null;
 
                 $terms = $this->analyze($value, $encoding);
 
@@ -172,7 +165,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
                     $index->position = $pos;
                     $index->field = $field;
                     foreach ((array) $this->_options['table']->getIdentifier() as $id) {
-                        $index->$id = $data[$id];
+                        $index->{$id} = $data[$id];
                     }
 
                     $index->save();
@@ -183,28 +176,28 @@ class Doctrine_Search extends Doctrine_Record_Generator
     }
 
     /**
-     * readTableData 
-     * 
-     * @param mixed $limit 
-     * @param mixed $offset 
+     * readTableData.
+     *
+     * @param  mixed|null          $limit
+     * @param  mixed|null          $offset
      * @return Doctrine_Collection The collection of results
      */
     public function readTableData($limit = null, $offset = null)
     {
         $this->initialize($this->_options['table']);
 
-        $conn      = $this->_options['table']->getConnection();
+        $conn = $this->_options['table']->getConnection();
         $tableName = $this->_options['table']->getTableName();
-        $id        = current($this->_options['table']->getIdentifierColumnNames());
-        $tableId   = current($this->_table->getIdentifierColumnNames());
+        $id = current($this->_options['table']->getIdentifierColumnNames());
+        $tableId = current($this->_table->getIdentifierColumnNames());
 
-        $query = 'SELECT * FROM ' . $conn->quoteIdentifier($tableName)
-               . ' WHERE ' . $conn->quoteIdentifier($id)
-               . ' IN (SELECT ' . $conn->quoteIdentifier($tableId)
-               . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName())
-               . ' WHERE keyword = \'\') OR ' . $conn->quoteIdentifier($id)
-               . ' NOT IN (SELECT ' . $conn->quoteIdentifier($tableId)
-               . ' FROM ' . $conn->quoteIdentifier($this->_table->getTableName()) . ')';
+        $query = 'SELECT * FROM '.$conn->quoteIdentifier($tableName)
+               .' WHERE '.$conn->quoteIdentifier($id)
+               .' IN (SELECT '.$conn->quoteIdentifier($tableId)
+               .' FROM '.$conn->quoteIdentifier($this->_table->getTableName())
+               .' WHERE keyword = \'\') OR '.$conn->quoteIdentifier($id)
+               .' NOT IN (SELECT '.$conn->quoteIdentifier($tableId)
+               .' FROM '.$conn->quoteIdentifier($this->_table->getTableName()).')';
 
         $query = $conn->modifyLimitQuery($query, $limit, $offset);
 
@@ -212,11 +205,11 @@ class Doctrine_Search extends Doctrine_Record_Generator
     }
 
     /**
-     * batchUpdateIndex 
-     * 
-     * @param mixed $limit 
-     * @param mixed $offset 
-     * @return void
+     * batchUpdateIndex.
+     *
+     * @param mixed|null $encoding
+     * @param mixed|null $limit
+     * @param mixed|null $offset
      */
     public function batchUpdateIndex($limit = null, $offset = null, $encoding = null)
     {
@@ -224,42 +217,41 @@ class Doctrine_Search extends Doctrine_Record_Generator
 
         $this->initialize($table);
 
-        $id        = $table->getIdentifierColumnNames();
-        $class     = $this->_options['className'];
-        $fields    = $this->_options['fields'];
-        $conn      = $this->_options['table']->getConnection();
-        
-        for ($i = 0; $i < count($fields); $i++) {
+        $id = $table->getIdentifierColumnNames();
+        $class = $this->_options['className'];
+        $fields = $this->_options['fields'];
+        $conn = $this->_options['table']->getConnection();
+
+        for ($i = 0; $i < count($fields); ++$i) {
             $fields[$i] = $table->getColumnName($fields[$i], $fields[$i]);
         }
 
         $rows = $this->readTableData($limit, $offset);
 
-        $ids = array();
+        $ids = [];
         foreach ($rows as $row) {
             foreach ($id as $idcol) {
                 $ids[] = $row[$idcol];
             }
         }
 
-        if (count($ids) > 0)
-        {
-            $sql = 'DELETE FROM ' . $conn->quoteIdentifier($this->_table->getTableName());
+        if (count($ids) > 0) {
+            $sql = 'DELETE FROM '.$conn->quoteIdentifier($this->_table->getTableName());
 
-            if (count($id) == 1) {
+            if (1 == count($id)) {
                 $placeholders = str_repeat('?, ', count($ids));
                 $placeholders = substr($placeholders, 0, strlen($placeholders) - 2);
-                $sql .= ' WHERE ' . $conn->quoteIdentifier($table->getIdentifier()) . ' IN (' . substr($placeholders, 0) . ')';
+                $sql .= ' WHERE '.$conn->quoteIdentifier($table->getIdentifier()).' IN ('.substr($placeholders, 0).')';
             } else {
                 // composite primary key
                 $placeholders = '';
                 foreach ($table->getIdentifier() as $id) {
-                    $placeholders .= $conn->quoteIdentifier($id) . ' = ? AND ';
+                    $placeholders .= $conn->quoteIdentifier($id).' = ? AND ';
                 }
-                $placeholders = '(' . substr($placeholders, 0, strlen($placeholders) - 5) . ') OR ';
+                $placeholders = '('.substr($placeholders, 0, strlen($placeholders) - 5).') OR ';
                 $placeholders = str_repeat($placeholders, count($rows));
                 $placeholders = substr($placeholders, 0, strlen($placeholders) - 4);
-                $sql .= ' WHERE ' . $placeholders;
+                $sql .= ' WHERE '.$placeholders;
             }
 
             $conn->exec($sql, $ids);
@@ -269,21 +261,21 @@ class Doctrine_Search extends Doctrine_Record_Generator
             $conn->beginTransaction();
             try {
                 foreach ($fields as $field) {
-                    $data  = $row[$field];
-        
+                    $data = $row[$field];
+
                     $terms = $this->analyze($data, $encoding);
-        
+
                     foreach ($terms as $pos => $term) {
                         $index = new $class();
-        
+
                         $index->keyword = $term;
                         $index->position = $pos;
                         $index->field = $field;
-                        
+
                         foreach ((array) $table->getIdentifier() as $identifier) {
-                            $index->$identifier = $row[$table->getColumnName($identifier, $identifier)];
+                            $index->{$identifier} = $row[$table->getColumnName($identifier, $identifier)];
                         }
-    
+
                         $index->save();
                         $index->free(true);
                     }
@@ -297,44 +289,42 @@ class Doctrine_Search extends Doctrine_Record_Generator
     }
 
     /**
-     * buildDefinition 
-     * 
-     * @return void
+     * buildDefinition.
      */
     public function setTableDefinition()
     {
-    	if ( ! isset($this->_options['table'])) {
-    	    throw new Doctrine_Record_Exception("Unknown option 'table'.");
-    	}
+        if (!isset($this->_options['table'])) {
+            throw new Doctrine_Record_Exception("Unknown option 'table'.");
+        }
 
         $componentName = $this->_options['table']->getComponentName();
 
         $className = $this->getOption('className');
 
-        $autoLoad = (bool) ($this->_options['generateFiles']);
+        $autoLoad = (bool) $this->_options['generateFiles'];
         if (class_exists($className, $autoLoad)) {
             return false;
         }
 
         // move any columns currently in the primary key to the end
         // So that 'keyword' is the first field in the table
-        $previousIdentifier = array();
+        $previousIdentifier = [];
         foreach ($this->_table->getIdentifier() as $name) {
             $previousIdentifier[$name] = $this->_table->getColumnDefinition($name);
             $this->_table->removeColumn($name);
         }
 
-        $columns = array('keyword'  => array('type'    => 'string',
-                                             'length'  => 200,
-                                             'primary' => true,
-                                             ),
-                         'field'    => array('type'    => 'string',
-                                             'length'  => 50,
-                                             'primary' => true),
-                         'position' => array('type'    => 'integer',
-                                             'length'  => 8,
-                                             'primary' => true,
-                                             ));
+        $columns = ['keyword' => ['type' => 'string',
+            'length' => 200,
+            'primary' => true,
+        ],
+            'field' => ['type' => 'string',
+                'length' => 50,
+                'primary' => true],
+            'position' => ['type' => 'integer',
+                'length' => 8,
+                'primary' => true,
+            ]];
 
         $this->hasColumns($columns);
         $this->hasColumns($previousIdentifier);

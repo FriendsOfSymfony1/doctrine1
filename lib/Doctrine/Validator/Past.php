@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Validator_Past
+ * Doctrine_Validator_Past.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Validator_Past extends Doctrine_Validator_Driver
@@ -35,8 +31,7 @@ class Doctrine_Validator_Past extends Doctrine_Validator_Driver
     /**
      * checks if the given value is a valid date in the past.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
@@ -45,14 +40,14 @@ class Doctrine_Validator_Past extends Doctrine_Validator_Driver
         }
         $e = explode('-', $value);
 
-        if (count($e) !== 3) {
+        if (3 !== count($e)) {
             return false;
         }
-        
+
         if (is_array($this->args) && isset($this->args['timezone'])) {
             switch (strtolower($this->args['timezone'])) {
                 case 'gmt':
-                    $now = gmdate("U") - date("Z");
+                    $now = gmdate('U') - date('Z');
                     break;
                 default:
                     $now = getdate();
@@ -61,19 +56,21 @@ class Doctrine_Validator_Past extends Doctrine_Validator_Driver
         } else {
             $now = getdate();
         }
-        
+
         if ($now['year'] < $e[0]) {
             return false;
-        } else if ($now['year'] == $e[0]) {
+        }
+        if ($now['year'] == $e[0]) {
             if ($now['mon'] < $e[1]) {
                 return false;
-            } else if ($now['mon'] == $e[1]) {
-                return $now['mday'] > $e[2];
-            } else {
-                return true;
             }
-        } else {
+            if ($now['mon'] == $e[1]) {
+                return $now['mday'] > $e[2];
+            }
+
             return true;
         }
+
+        return true;
     }
 }

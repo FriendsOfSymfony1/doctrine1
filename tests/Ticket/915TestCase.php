@@ -20,28 +20,33 @@
  */
 
 /**
- * Doctrine_Ticket_915_TestCase
+ * Doctrine_Ticket_915_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_915_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() { }
+    public function prepareData()
+    {
+    }
+
     public function prepareTables()
     {
         $this->tables[] = 'Account';
-        parent::prepareTables();    
+        parent::prepareTables();
     }
 
     public function testBug()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 Account:
   A1:
@@ -60,7 +65,7 @@ END;
 
         file_put_contents('test.yml', $yml);
         $import = new Doctrine_Data_Import('test.yml');
-        $import->setFormat("yml");
+        $import->setFormat('yml');
 
         // try to import garbled records (with incorrect field names,
         // e.g. "Amount" instead of "amount") and expect that doctrine

@@ -20,27 +20,30 @@
  */
 
 /**
- * Doctrine_Ticket_1674_TestCase
+ * Doctrine_Ticket_1674_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1674_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1674_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
-        $users  = Doctrine_Query::create()
+        $users = Doctrine_Query::create()
             ->from('User u')
             ->leftJoin('u.Phonenumber p')
             ->having('COUNT(p.id) > 0')
             ->groupBy('u.id')
             ->limit(1)
-            ->execute();
+            ->execute()
+        ;
 
         $xml = $users->exportTo('xml');
 

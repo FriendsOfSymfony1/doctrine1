@@ -1,13 +1,18 @@
 <?php
-class Photo extends Doctrine_Record {
-    public function setUp() {
-        $this->hasMany('Tag', array(
+
+class Photo extends Doctrine_Record
+{
+    public function setUp()
+    {
+        $this->hasMany('Tag', [
             'local' => 'photo_id',
             'foreign' => 'tag_id',
-            'refClass' => 'Phototag'
-        ));
+            'refClass' => 'Phototag',
+        ]);
     }
-    public function setTableDefinition() {
+
+    public function setTableDefinition()
+    {
         $this->hasColumn('name', 'string', 100);
     }
 }

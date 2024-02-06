@@ -20,68 +20,63 @@
  */
 
 /**
- * Doctrine_Connection_Mysql
+ * Doctrine_Connection_Mysql.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
 {
     /**
-     * @var string $driverName                  the name of this connection driver
+     * @var string the name of this connection driver
      */
     protected $driverName = 'Mysql';
 
     /**
-     * the constructor
+     * the constructor.
      *
-     * @param Doctrine_Manager $manager
-     * @param PDO|Doctrine_Adapter $adapter     database handler
+     * @param PDO|Doctrine_Adapter $adapter database handler
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
         $this->setAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
-        $this->supported = array(
-                          'sequences'            => 'emulated',
-                          'indexes'              => true,
-                          'affected_rows'        => true,
-                          'transactions'         => true,
-                          'savepoints'           => false,
-                          'summary_functions'    => true,
-                          'order_by_text'        => true,
-                          'current_id'           => 'emulated',
-                          'limit_queries'        => true,
-                          'LOBs'                 => true,
-                          'replace'              => true,
-                          'sub_selects'          => true,
-                          'auto_increment'       => true,
-                          'primary_key'          => true,
-                          'result_introspection' => true,
-                          'prepared_statements'  => 'emulated',
-                          'identifier_quoting'   => true,
-                          'pattern_escaping'     => true
-                          );
+        $this->supported = [
+            'sequences' => 'emulated',
+            'indexes' => true,
+            'affected_rows' => true,
+            'transactions' => true,
+            'savepoints' => false,
+            'summary_functions' => true,
+            'order_by_text' => true,
+            'current_id' => 'emulated',
+            'limit_queries' => true,
+            'LOBs' => true,
+            'replace' => true,
+            'sub_selects' => true,
+            'auto_increment' => true,
+            'primary_key' => true,
+            'result_introspection' => true,
+            'prepared_statements' => 'emulated',
+            'identifier_quoting' => true,
+            'pattern_escaping' => true,
+        ];
 
-        $this->properties['string_quoting'] = array('start' => "'",
-                                                    'end' => "'",
-                                                    'escape' => '\\',
-                                                    'escape_pattern' => '\\');
+        $this->properties['string_quoting'] = ['start' => "'",
+            'end' => "'",
+            'escape' => '\\',
+            'escape_pattern' => '\\'];
 
-        $this->properties['identifier_quoting'] = array('start' => '`',
-                                                        'end' => '`',
-                                                        'escape' => '`');
+        $this->properties['identifier_quoting'] = ['start' => '`',
+            'end' => '`',
+            'escape' => '`'];
 
-        $this->properties['sql_comments'] = array(
-                                            array('start' => '-- ', 'end' => "\n", 'escape' => false),
-                                            array('start' => '#', 'end' => "\n", 'escape' => false),
-                                            array('start' => '/*', 'end' => '*/', 'escape' => false),
-                                            );
+        $this->properties['sql_comments'] = [
+            ['start' => '-- ', 'end' => "\n", 'escape' => false],
+            ['start' => '#', 'end' => "\n", 'escape' => false],
+            ['start' => '/*', 'end' => '*/', 'escape' => false],
+        ];
 
         $this->properties['varchar_max_length'] = 255;
 
@@ -96,22 +91,22 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
     /**
      * Overrides connect Method, to add specific attributes
      * PDO emulate prepares is required to avoid bugs on mysql < 5.1
-     * when trying to prepare DROP DATABASE or CREATE DATABASE statements
+     * when trying to prepare DROP DATABASE or CREATE DATABASE statements.
      *
      * @see Doctrine_Connection :: connect();
-     * @return boolean connected
+     *
+     * @return bool connected
      */
-     public function connect()
-     {
-         $connected = parent::connect();
-         $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+    public function connect()
+    {
+        $connected = parent::connect();
+        $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-         return $connected;
-     }
-    
-    
+        return $connected;
+    }
+
     /**
-     * returns the name of the connected database
+     * returns the name of the connected database.
      *
      * @return string
      */
@@ -121,13 +116,13 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
     }
 
     /**
-     * Set the charset on the current connection
+     * Set the charset on the current connection.
      *
      * @param string    charset
      */
     public function setCharset($charset)
     {
-        $query = 'SET NAMES ' . $this->quote($charset);
+        $query = 'SET NAMES '.$this->quote($charset);
         $this->exec($query);
         parent::setCharset($charset);
     }
@@ -143,15 +138,13 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      * emulated through this method for other DBMS using standard types of
      * queries inside a transaction to assure the atomicity of the operation.
      *
-     * @access public
-     *
-     * @param string $table name of the table on which the REPLACE query will
-     *  be executed.
-     * @param array $fields associative array that describes the fields and the
-     *  values that will be inserted or updated in the specified table. The
-     *  indexes of the array are the names of all the fields of the table. The
-     *  values of the array are also associative arrays that describe the
-     *  values and other properties of the table fields.
+     * @param string $table  name of the table on which the REPLACE query will
+     *                       be executed
+     * @param array  $fields associative array that describes the fields and the
+     *                       values that will be inserted or updated in the specified table. The
+     *                       indexes of the array are the names of all the fields of the table. The
+     *                       values of the array are also associative arrays that describe the
+     *                       values and other properties of the table fields.
      *
      *  Here follows a list of field properties that need to be specified:
      *
@@ -193,8 +186,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      *          part of unique index they may not be null.
      *
      *    Default: 0
-     *
-     * @return integer      the number of affected rows
+     * @return int the number of affected rows
      */
     public function replace(Doctrine_Table $table, array $fields, array $keys)
     {
@@ -202,16 +194,16 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
             throw new Doctrine_Connection_Exception('Not specified which fields are keys');
         }
 
-        $columns = array();
-        $values = array();
-        $params = array();
+        $columns = [];
+        $values = [];
+        $params = [];
         foreach ($fields as $fieldName => $value) {
             $columns[] = $table->getColumnName($fieldName);
             $values[] = '?';
             $params[] = $value;
         }
 
-        $query = 'REPLACE INTO ' . $this->quoteIdentifier($table->getTableName()) . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
+        $query = 'REPLACE INTO '.$this->quoteIdentifier($table->getTableName()).' ('.implode(',', $columns).') VALUES ('.implode(',', $values).')';
 
         return $this->exec($query, $params);
     }

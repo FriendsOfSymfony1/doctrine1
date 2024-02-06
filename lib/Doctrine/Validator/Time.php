@@ -20,25 +20,20 @@
  */
 
 /**
- * Doctrine_Validator_Time
+ * Doctrine_Validator_Time.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 3884 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Mark Pearson <mark.pearson0@googlemail.com>
  */
 class Doctrine_Validator_Time extends Doctrine_Validator_Driver
 {
     /**
-     * validate
+     * validate.
      *
      * checks if given value is a valid time
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
@@ -46,7 +41,7 @@ class Doctrine_Validator_Time extends Doctrine_Validator_Driver
             return true;
         }
 
-		if ( ! preg_match('/^\s*(\d{2}):(\d{2})(:(\d{2}))?(\.(\d{1,6}))?([+-]\d{1,2}(:(\d{2}))?)?\s*$/', $value, $matches)) {
+        if (!preg_match('/^\s*(\d{2}):(\d{2})(:(\d{2}))?(\.(\d{1,6}))?([+-]\d{1,2}(:(\d{2}))?)?\s*$/', $value, $matches)) {
             return false;
         }
 
@@ -57,10 +52,10 @@ class Doctrine_Validator_Time extends Doctrine_Validator_Driver
         $tz_hh = (isset($matches[7])) ? intval($matches[7]) : 0;
         $tz_mm = (isset($matches[9])) ? intval($matches[9]) : 0;
 
-        return 	($hh >= 0 && $hh <= 23) &&
-				($mm >= 0 && $mm <= 59) &&
-				($ss >= 0 && $ss <= 59) &&
-				($tz_hh >= -13 && $tz_hh <= 14) &&
-				($tz_mm >= 0 && $tz_mm <= 59) ;
+        return ($hh >= 0 && $hh <= 23)
+                && ($mm >= 0 && $mm <= 59)
+                && ($ss >= 0 && $ss <= 59)
+                && ($tz_hh >= -13 && $tz_hh <= 14)
+                && ($tz_mm >= 0 && $tz_mm <= 59);
     }
 }

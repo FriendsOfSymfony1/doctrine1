@@ -20,78 +20,83 @@
  */
 
 /**
- * Doctrine_Export_Mysql_TestCase
+ * Doctrine_Export_Mysql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Export_Pgsql_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Export_Pgsql_TestCase extends Doctrine_UnitTestCase
 {
-    public function testCreateDatabaseExecutesSql() 
+    public function testCreateDatabaseExecutesSql()
     {
         $this->export->createDatabase('db');
         $this->assertEqual($this->adapter->pop(), 'CREATE DATABASE db');
     }
+
     public function testDropDatabaseExecutesSql()
     {
         $this->export->dropDatabase('db');
 
         $this->assertEqual($this->adapter->pop(), 'DROP DATABASE db');
     }
-    public function testCreateTableSupportsAutoincPks() 
+
+    public function testCreateTableSupportsAutoincPks()
     {
         $name = 'mytable';
-        
-        $fields  = array('id' => array('type' => 'integer', 'unsigned' => 1, 'autoincrement' => true));
-        $options = array('primary' => array('id'));
-        
+
+        $fields = ['id' => ['type' => 'integer', 'unsigned' => 1, 'autoincrement' => true]];
+        $options = ['primary' => ['id']];
+
         $this->export->createTable($name, $fields, $options);
 
         $this->assertEqual($this->adapter->pop(), 'CREATE TABLE mytable (id SERIAL, PRIMARY KEY(id))');
     }
-    public function testQuoteAutoincPks() 
+
+    public function testQuoteAutoincPks()
     {
         $this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
 
         $name = 'mytable';
 
-        $fields  = array('id' => array('type' => 'integer', 'unsigned' => 1, 'autoincrement' => true));
-        $options = array('primary' => array('id'));
+        $fields = ['id' => ['type' => 'integer', 'unsigned' => 1, 'autoincrement' => true]];
+        $options = ['primary' => ['id']];
 
         $this->export->createTable($name, $fields, $options);
 
         $this->assertEqual($this->adapter->pop(), 'CREATE TABLE "mytable" ("id" SERIAL, PRIMARY KEY("id"))');
 
         $name = 'mytable';
-        $fields  = array('name' => array('type' => 'char', 'length' => 10),
-                         'type' => array('type' => 'integer', 'length' => 3));
+        $fields = ['name' => ['type' => 'char', 'length' => 10],
+            'type' => ['type' => 'integer', 'length' => 3]];
 
-        $options = array('primary' => array('name', 'type'));
+        $options = ['primary' => ['name', 'type']];
         $this->export->createTable($name, $fields, $options);
 
         $this->assertEqual($this->adapter->pop(), 'CREATE TABLE "mytable" ("name" CHAR(10), "type" INT, PRIMARY KEY("name", "type"))');
 
         $this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, false);
     }
+
     public function testForeignKeyIdentifierQuoting()
     {
         $this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
 
         $name = 'mytable';
 
-        $fields = array('id' => array('type' => 'boolean', 'primary' => true),
-                        'foreignKey' => array('type' => 'integer')
-                        );
-        $options = array('foreignKeys' => array(array('local' => 'foreignKey',
-                                                      'foreign' => 'id',
-                                                      'foreignTable' => 'sometable'))
-                         );
-
+        $fields = ['id' => ['type' => 'boolean', 'primary' => true],
+            'foreignKey' => ['type' => 'integer'],
+        ];
+        $options = ['foreignKeys' => [['local' => 'foreignKey',
+            'foreign' => 'id',
+            'foreignTable' => 'sometable']],
+        ];
 
         $sql = $this->export->createTableSql($name, $fields, $options);
 
@@ -100,79 +105,82 @@ class Doctrine_Export_Pgsql_TestCase extends Doctrine_UnitTestCase
 
         $this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, false);
     }
-    public function testCreateTableSupportsDefaultAttribute() 
+
+    public function testCreateTableSupportsDefaultAttribute()
     {
         $name = 'mytable';
-        $fields  = array('name' => array('type' => 'char', 'length' => 10, 'default' => 'def'),
-                         'type' => array('type' => 'integer', 'length' => 3, 'default' => 12),
-                         'is_active' => array('type' => 'boolean', 'default'=>'0'),
-                         'is_admin'  => array('type' => 'boolean', 'default'=>'true'),
-                         );
-                         
-        $options = array('primary' => array('name', 'type'));
+        $fields = ['name' => ['type' => 'char', 'length' => 10, 'default' => 'def'],
+            'type' => ['type' => 'integer', 'length' => 3, 'default' => 12],
+            'is_active' => ['type' => 'boolean', 'default' => '0'],
+            'is_admin' => ['type' => 'boolean', 'default' => 'true'],
+        ];
+
+        $options = ['primary' => ['name', 'type']];
         $this->export->createTable($name, $fields, $options);
 
         $this->assertEqual($this->adapter->pop(), "CREATE TABLE mytable (name CHAR(10) DEFAULT 'def', type INT DEFAULT 12, is_active BOOLEAN DEFAULT 'false', is_admin BOOLEAN DEFAULT 'true', PRIMARY KEY(name, type))");
     }
+
     public function testCreateTableSupportsMultiplePks()
-     {
+    {
         $name = 'mytable';
-        $fields  = array('name' => array('type' => 'char', 'length' => 10),
-                         'type' => array('type' => 'integer', 'length' => 3));
-                         
-        $options = array('primary' => array('name', 'type'));
+        $fields = ['name' => ['type' => 'char', 'length' => 10],
+            'type' => ['type' => 'integer', 'length' => 3]];
+
+        $options = ['primary' => ['name', 'type']];
         $this->export->createTable($name, $fields, $options);
-        
+
         $this->assertEqual($this->adapter->pop(), 'CREATE TABLE mytable (name CHAR(10), type INT, PRIMARY KEY(name, type))');
     }
+
     public function testExportSql()
     {
-        $sql = $this->export->exportClassesSql(array("FooRecord", "FooReferenceRecord", "FooLocallyOwned", "FooForeignlyOwned", "FooForeignlyOwnedWithPK", "FooBarRecord", "BarRecord"));
-        //dirname(__FILE__) . DIRECTORY_SEPARATOR . '_files');
+        $sql = $this->export->exportClassesSql(['FooRecord', 'FooReferenceRecord', 'FooLocallyOwned', 'FooForeignlyOwned', 'FooForeignlyOwnedWithPK', 'FooBarRecord', 'BarRecord']);
+        // dirname(__FILE__) . DIRECTORY_SEPARATOR . '_files');
 
-        $this->assertEqual($sql, array ( 0 => 'CREATE TABLE foo_reference (foo1 BIGINT, foo2 BIGINT, PRIMARY KEY(foo1, foo2))', 
-                                         1 => 'CREATE TABLE foo_locally_owned (id BIGSERIAL, name VARCHAR(200), PRIMARY KEY(id))', 
-                                         2 => 'CREATE TABLE foo_foreignly_owned_with_pk (id BIGSERIAL, name VARCHAR(200), PRIMARY KEY(id))', 
-                                         3 => 'CREATE TABLE foo_foreignly_owned (id BIGSERIAL, name VARCHAR(200), fooid BIGINT, PRIMARY KEY(id))', 
-                                         4 => 'CREATE TABLE foo_bar_record (fooid BIGINT, barid BIGINT, PRIMARY KEY(fooid, barid))', 
-                                         5 => 'CREATE TABLE foo (id BIGSERIAL, name VARCHAR(200) NOT NULL, parent_id BIGINT, local_foo BIGINT, PRIMARY KEY(id))', 
-                                         6 => 'CREATE TABLE bar (id BIGSERIAL, name VARCHAR(200), PRIMARY KEY(id))', 
-                                         7 => 'ALTER TABLE foo_reference ADD CONSTRAINT foo_reference_foo1_foo_id FOREIGN KEY (foo1) REFERENCES foo(id) NOT DEFERRABLE INITIALLY IMMEDIATE', 
-                                         8 => 'ALTER TABLE foo_bar_record ADD CONSTRAINT foo_bar_record_fooid_foo_id FOREIGN KEY (fooid) REFERENCES foo(id) NOT DEFERRABLE INITIALLY IMMEDIATE', 
-                                         9 => 'ALTER TABLE foo ADD CONSTRAINT foo_parent_id_foo_id FOREIGN KEY (parent_id) REFERENCES foo(id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE', 
-                                         10 => 'ALTER TABLE foo ADD CONSTRAINT foo_local_foo_foo_locally_owned_id FOREIGN KEY (local_foo) REFERENCES foo_locally_owned(id) ON DELETE RESTRICT NOT DEFERRABLE INITIALLY IMMEDIATE', 
-                                         ));
+        $this->assertEqual($sql, [0 => 'CREATE TABLE foo_reference (foo1 BIGINT, foo2 BIGINT, PRIMARY KEY(foo1, foo2))',
+            1 => 'CREATE TABLE foo_locally_owned (id BIGSERIAL, name VARCHAR(200), PRIMARY KEY(id))',
+            2 => 'CREATE TABLE foo_foreignly_owned_with_pk (id BIGSERIAL, name VARCHAR(200), PRIMARY KEY(id))',
+            3 => 'CREATE TABLE foo_foreignly_owned (id BIGSERIAL, name VARCHAR(200), fooid BIGINT, PRIMARY KEY(id))',
+            4 => 'CREATE TABLE foo_bar_record (fooid BIGINT, barid BIGINT, PRIMARY KEY(fooid, barid))',
+            5 => 'CREATE TABLE foo (id BIGSERIAL, name VARCHAR(200) NOT NULL, parent_id BIGINT, local_foo BIGINT, PRIMARY KEY(id))',
+            6 => 'CREATE TABLE bar (id BIGSERIAL, name VARCHAR(200), PRIMARY KEY(id))',
+            7 => 'ALTER TABLE foo_reference ADD CONSTRAINT foo_reference_foo1_foo_id FOREIGN KEY (foo1) REFERENCES foo(id) NOT DEFERRABLE INITIALLY IMMEDIATE',
+            8 => 'ALTER TABLE foo_bar_record ADD CONSTRAINT foo_bar_record_fooid_foo_id FOREIGN KEY (fooid) REFERENCES foo(id) NOT DEFERRABLE INITIALLY IMMEDIATE',
+            9 => 'ALTER TABLE foo ADD CONSTRAINT foo_parent_id_foo_id FOREIGN KEY (parent_id) REFERENCES foo(id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE',
+            10 => 'ALTER TABLE foo ADD CONSTRAINT foo_local_foo_foo_locally_owned_id FOREIGN KEY (local_foo) REFERENCES foo_locally_owned(id) ON DELETE RESTRICT NOT DEFERRABLE INITIALLY IMMEDIATE',
+        ]);
     }
 
-	public function testAlterTableSql()
+    public function testAlterTableSql()
     {
-        $changes  = array(
-			'add' => array('newfield' => array('type' => 'int')),
-			'remove' => array('oldfield' => array())
-		);
+        $changes = [
+            'add' => ['newfield' => ['type' => 'int']],
+            'remove' => ['oldfield' => []],
+        ];
 
         $sql = $this->export->alterTableSql('mytable', $changes);
 
-		$this->assertEqual($sql, array(
-		    0 => 'ALTER TABLE mytable ADD newfield INT',
-			1 => 'ALTER TABLE mytable DROP oldfield'
-		));
+        $this->assertEqual($sql, [
+            0 => 'ALTER TABLE mytable ADD newfield INT',
+            1 => 'ALTER TABLE mytable DROP oldfield',
+        ]);
     }
 
-	public function testAlterTableSqlIdentifierQuoting()
+    public function testAlterTableSqlIdentifierQuoting()
     {
-		$this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
-		
-        $changes  = array(
-			'add' => array('newfield' => array('type' => 'int')),
-			'remove' => array('oldfield' => array())
-		);
+        $this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
+
+        $changes = [
+            'add' => ['newfield' => ['type' => 'int']],
+            'remove' => ['oldfield' => []],
+        ];
 
         $sql = $this->export->alterTableSql('mytable', $changes);
 
-		$this->assertEqual($sql, array(
-		    0 => 'ALTER TABLE "mytable" ADD "newfield" INT',
-			1 => 'ALTER TABLE "mytable" DROP "oldfield"'
-		));
+        $this->assertEqual($sql, [
+            0 => 'ALTER TABLE "mytable" ADD "newfield" INT',
+            1 => 'ALTER TABLE "mytable" DROP "oldfield"',
+        ]);
     }
 }

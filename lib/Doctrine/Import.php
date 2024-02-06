@@ -25,88 +25,84 @@
  * reading to a reader object and passes the result to a builder object which
  * builds a Doctrine data model.
  *
- * @package     Doctrine
- * @subpackage  Import
- * @link        www.doctrine-project.org
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  */
 class Doctrine_Import extends Doctrine_Connection_Module
 {
-    protected $sql = array();
+    protected $sql = [];
 
     /**
-     * lists all databases
+     * lists all databases.
      *
      * @return array
      */
     public function listDatabases()
     {
-        if ( ! isset($this->sql['listDatabases'])) {
-            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        if (!isset($this->sql['listDatabases'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
         }
 
         return $this->conn->fetchColumn($this->sql['listDatabases']);
     }
 
     /**
-     * lists all availible database functions
+     * lists all availible database functions.
      *
      * @return array
      */
     public function listFunctions()
     {
-        if ( ! isset($this->sql['listFunctions'])) {
-            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        if (!isset($this->sql['listFunctions'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
         }
 
         return $this->conn->fetchColumn($this->sql['listFunctions']);
     }
 
     /**
-     * lists all database triggers
+     * lists all database triggers.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listTriggers($database = null)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists all database sequences
+     * lists all database sequences.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listSequences($database = null)
     {
-        if ( ! isset($this->sql['listSequences'])) {
-            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        if (!isset($this->sql['listSequences'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
         }
 
         return $this->conn->fetchColumn($this->sql['listSequences']);
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableConstraints($table)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists table relations
+     * lists table relations.
      *
-     * Expects an array of this format to be returned with all the relationships in it where the key is 
+     * Expects an array of this format to be returned with all the relationships in it where the key is
      * the name of the foreign table, and the value is an array containing the local and foreign column
      * name
      *
@@ -119,103 +115,103 @@ class Doctrine_Import extends Doctrine_Connection_Module
      *     )
      * )
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableRelations($table)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableColumns($table)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableIndexes($table)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists tables
+     * lists tables.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listTables($database = null)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists table triggers
+     * lists table triggers.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableTriggers($table)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists table views
+     * lists table views.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableViews($table)
     {
-        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
     }
 
     /**
-     * lists database users
+     * lists database users.
      *
      * @return array
      */
     public function listUsers()
     {
-        if ( ! isset($this->sql['listUsers'])) {
-            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        if (!isset($this->sql['listUsers'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
         }
 
         return $this->conn->fetchColumn($this->sql['listUsers']);
     }
 
     /**
-     * lists database views
+     * lists database views.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listViews($database = null)
     {
-        if ( ! isset($this->sql['listViews'])) {
-            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        if (!isset($this->sql['listViews'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__.' not supported by this driver.');
         }
 
         return $this->conn->fetchColumn($this->sql['listViews']);
     }
 
     /**
-     * checks if a database exists
+     * checks if a database exists.
      *
-     * @param string $database
-     * @return boolean
+     * @param  string $database
+     * @return bool
      */
     public function databaseExists($database)
     {
@@ -223,10 +219,10 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a function exists
+     * checks if a function exists.
      *
-     * @param string $function
-     * @return boolean
+     * @param  string $function
+     * @return bool
      */
     public function functionExists($function)
     {
@@ -234,11 +230,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a trigger exists
+     * checks if a trigger exists.
      *
-     * @param string $trigger
-     * @param string|null $database
-     * @return boolean
+     * @param  string      $trigger
+     * @param  string|null $database
+     * @return bool
      */
     public function triggerExists($trigger, $database = null)
     {
@@ -246,11 +242,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a sequence exists
+     * checks if a sequence exists.
      *
-     * @param string $sequence
-     * @param string|null $database
-     * @return boolean
+     * @param  string      $sequence
+     * @param  string|null $database
+     * @return bool
      */
     public function sequenceExists($sequence, $database = null)
     {
@@ -258,11 +254,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a table constraint exists
+     * checks if a table constraint exists.
      *
-     * @param string $constraint
-     * @param string $table     database table name
-     * @return boolean
+     * @param  string $constraint
+     * @param  string $table      database table name
+     * @return bool
      */
     public function tableConstraintExists($constraint, $table)
     {
@@ -270,11 +266,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a table column exists
+     * checks if a table column exists.
      *
-     * @param string $column
-     * @param string $table     database table name
-     * @return boolean
+     * @param  string $column
+     * @param  string $table  database table name
+     * @return bool
      */
     public function tableColumnExists($column, $table)
     {
@@ -282,11 +278,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a table index exists
+     * checks if a table index exists.
      *
-     * @param string $index
-     * @param string $table     database table name
-     * @return boolean
+     * @param  string $index
+     * @param  string $table database table name
+     * @return bool
      */
     public function tableIndexExists($index, $table)
     {
@@ -294,11 +290,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a table exists
+     * checks if a table exists.
      *
-     * @param string $table
-     * @param string|null $database
-     * @return boolean
+     * @param  string      $table
+     * @param  string|null $database
+     * @return bool
      */
     public function tableExists($table, $database = null)
     {
@@ -306,11 +302,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a table trigger exists
+     * checks if a table trigger exists.
      *
-     * @param string $trigger
-     * @param string $table     database table name
-     * @return boolean
+     * @param  string $trigger
+     * @param  string $table   database table name
+     * @return bool
      */
     public function tableTriggerExists($trigger, $table)
     {
@@ -318,11 +314,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a table view exists
+     * checks if a table view exists.
      *
-     * @param string $view
-     * @param string $table     database table name
-     * @return boolean
+     * @param  string $view
+     * @param  string $table database table name
+     * @return bool
      */
     public function tableViewExists($view, $table)
     {
@@ -330,10 +326,10 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a user exists
+     * checks if a user exists.
      *
-     * @param string $user
-     * @return boolean
+     * @param  string $user
+     * @return bool
      */
     public function userExists($user)
     {
@@ -341,103 +337,104 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
-     * checks if a view exists
+     * checks if a view exists.
      *
-     * @param string $view
-     * @param string|null $database
-     * @return boolean
+     * @param  string      $view
+     * @param  string|null $database
+     * @return bool
      */
     public function viewExists($view, $database = null)
     {
-         return in_array($view, $this->listViews($database));
+        return in_array($view, $this->listViews($database));
     }
 
     /**
-     * importSchema
+     * importSchema.
      *
      * method for importing existing schema to Doctrine_Record classes
      *
-     * @param string $directory
-     * @param array $connections Array of connection names to generate models for
-     * @return array                the names of the imported classes
+     * @param  string $directory
+     * @param  array  $connections Array of connection names to generate models for
+     * @return array  the names of the imported classes
      */
-    public function importSchema($directory, array $connections = array(), array $options = array())
+    public function importSchema($directory, array $connections = [], array $options = [])
     {
-        $classes = array();
+        $classes = [];
 
         $manager = Doctrine_Manager::getInstance();
         foreach ($manager as $name => $connection) {
-          // Limit the databases to the ones specified by $connections.
-          // Check only happens if array is not empty
-          if ( ! empty($connections) && ! in_array($name, $connections)) {
-            continue;
-          }
+            // Limit the databases to the ones specified by $connections.
+            // Check only happens if array is not empty
+            if (!empty($connections) && !in_array($name, $connections)) {
+                continue;
+            }
 
-          $builder = new Doctrine_Import_Builder();
-          $builder->setTargetPath($directory);
-          $builder->setOptions($options);
+            $builder = new Doctrine_Import_Builder();
+            $builder->setTargetPath($directory);
+            $builder->setOptions($options);
 
-          $definitions = array();
+            $definitions = [];
 
-          foreach ($connection->import->listTables() as $table) {
-              $definition = array();
-              $definition['tableName'] = $table;
-              $definition['className'] = Doctrine_Inflector::classify(Doctrine_Inflector::tableize($table));
-              $definition['columns'] = $connection->import->listTableColumns($table);
-              $definition['connection'] = $connection->getName();
-              $definition['connectionClassName'] = $definition['className'];
+            foreach ($connection->import->listTables() as $table) {
+                $definition = [];
+                $definition['tableName'] = $table;
+                $definition['className'] = Doctrine_Inflector::classify(Doctrine_Inflector::tableize($table));
+                $definition['columns'] = $connection->import->listTableColumns($table);
+                $definition['connection'] = $connection->getName();
+                $definition['connectionClassName'] = $definition['className'];
 
-              try {
-                  $definition['relations'] = array();
-                  $relations = $connection->import->listTableRelations($table);
-                  $relClasses = array();
-                  foreach ($relations as $relation) {
-                      $table = $relation['table'];
-                      $class = Doctrine_Inflector::classify(Doctrine_Inflector::tableize($table));
-                      if (in_array($class, $relClasses)) {
-                          $alias = $class . '_' . (count($relClasses) + 1);
-                      } else {
-                          $alias = $class;
-                      }
-                      $relClasses[] = $class;
-                      $definition['relations'][$alias] = array(
-                          'alias'   => $alias,
-                          'class'   => $class,
-                          'local'   => $relation['local'],
-                          'foreign' => $relation['foreign']
-                      );
-                  }
-              } catch (Exception $e) {}
+                try {
+                    $definition['relations'] = [];
+                    $relations = $connection->import->listTableRelations($table);
+                    $relClasses = [];
+                    foreach ($relations as $relation) {
+                        $table = $relation['table'];
+                        $class = Doctrine_Inflector::classify(Doctrine_Inflector::tableize($table));
+                        if (in_array($class, $relClasses)) {
+                            $alias = $class.'_'.(count($relClasses) + 1);
+                        } else {
+                            $alias = $class;
+                        }
+                        $relClasses[] = $class;
+                        $definition['relations'][$alias] = [
+                            'alias' => $alias,
+                            'class' => $class,
+                            'local' => $relation['local'],
+                            'foreign' => $relation['foreign'],
+                        ];
+                    }
+                } catch (Exception $e) {
+                }
 
-              $definitions[strtolower($definition['className'])] = $definition;
-              $classes[] = $definition['className'];
-          }
+                $definitions[strtolower($definition['className'])] = $definition;
+                $classes[] = $definition['className'];
+            }
 
-          // Build opposite end of relationships
-          foreach ($definitions as $definition) {
-              $className = $definition['className'];
-              $relClasses = array();
-              foreach ($definition['relations'] as $alias => $relation) {
-                  if (in_array($relation['class'], $relClasses) || isset($definitions[$relation['class']]['relations'][$className])) {
-                      $alias = $className . '_' . (count($relClasses) + 1);
-                  } else {
-                      $alias = $className;
-                  }
-                  $relClasses[] = $relation['class'];
-                  $definitions[strtolower($relation['class'])]['relations'][$alias] = array(
-                    'type' => Doctrine_Relation::MANY,
-                    'alias' => $alias,
-                    'class' => $className,
-                    'local' => $relation['foreign'],
-                    'foreign' => $relation['local']
-                  );
-              }
-          }
+            // Build opposite end of relationships
+            foreach ($definitions as $definition) {
+                $className = $definition['className'];
+                $relClasses = [];
+                foreach ($definition['relations'] as $alias => $relation) {
+                    if (in_array($relation['class'], $relClasses) || isset($definitions[$relation['class']]['relations'][$className])) {
+                        $alias = $className.'_'.(count($relClasses) + 1);
+                    } else {
+                        $alias = $className;
+                    }
+                    $relClasses[] = $relation['class'];
+                    $definitions[strtolower($relation['class'])]['relations'][$alias] = [
+                        'type' => Doctrine_Relation::MANY,
+                        'alias' => $alias,
+                        'class' => $className,
+                        'local' => $relation['foreign'],
+                        'foreign' => $relation['local'],
+                    ];
+                }
+            }
 
-          // Build records
-          foreach ($definitions as $definition) {
-              $builder->buildRecord($definition);
-          }
+            // Build records
+            foreach ($definitions as $definition) {
+                $builder->buildRecord($definition);
+            }
         }
 
         return $classes;

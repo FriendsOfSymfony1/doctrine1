@@ -20,101 +20,97 @@
  */
 
 /**
- * @package     Doctrine
- * @subpackage  DataDict
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7635 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_DataDict_Mysql extends Doctrine_DataDict
 {
-    protected $keywords = array(
-                          'ADD', 'ALL', 'ALTER',
-                          'ANALYZE', 'AND', 'AS',
-                          'ASC', 'ASENSITIVE', 'BEFORE',
-                          'BETWEEN', 'BIGINT', 'BINARY',
-                          'BLOB', 'BOTH', 'BY', 'BIT',
-                          'CALL', 'CASCADE', 'CASE',
-                          'CHANGE', 'CHAR', 'CHARACTER',
-                          'CHECK', 'COLLATE', 'COLUMN',
-                          'CONDITION', 'CONNECTION', 'CONSTRAINT',
-                          'CONTINUE', 'CONVERT', 'CREATE',
-                          'CROSS', 'CURRENT_DATE', 'CURRENT_TIME',
-                          'CURRENT_TIMESTAMP', 'CURRENT_USER', 'CURSOR',
-                          'DATABASE', 'DATABASES', 'DAY_HOUR',
-                          'DAY_MICROSECOND', 'DAY_MINUTE', 'DAY_SECOND',
-                          'DEC', 'DECIMAL', 'DECLARE',
-                          'DEFAULT', 'DELAYED', 'DELETE',
-                          'DESC', 'DESCRIBE', 'DETERMINISTIC',
-                          'DISTINCT', 'DISTINCTROW', 'DIV',
-                          'DOUBLE', 'DROP', 'DUAL',
-                          'EACH', 'ELSE', 'ELSEIF',
-                          'ENCLOSED', 'ESCAPED', 'EXISTS',
-                          'EXIT', 'EXPLAIN', 'FALSE',
-                          'FETCH', 'FLOAT', 'FLOAT4',
-                          'FLOAT8', 'FOR', 'FORCE',
-                          'FOREIGN', 'FROM', 'FULLTEXT',
-                          'GRANT', 'GROUP', 'HAVING',
-                          'HIGH_PRIORITY', 'HOUR_MICROSECOND', 'HOUR_MINUTE',
-                          'HOUR_SECOND', 'IF', 'IGNORE',
-                          'IN', 'INDEX', 'INFILE',
-                          'INNER', 'INOUT', 'INSENSITIVE',
-                          'INSERT', 'INT', 'INT1',
-                          'INT2', 'INT3', 'INT4',
-                          'INT8', 'INTEGER', 'INTERVAL',
-                          'INTO', 'IS', 'ITERATE',
-                          'JOIN', 'KEY', 'KEYS',
-                          'KILL', 'LEADING', 'LEAVE',
-                          'LEFT', 'LIKE', 'LIMIT',
-                          'LINES', 'LOAD', 'LOCALTIME',
-                          'LOCALTIMESTAMP', 'LOCK', 'LONG',
-                          'LONGBLOB', 'LONGTEXT', 'LOOP',
-                          'LOW_PRIORITY', 'MATCH', 'MEDIUMBLOB',
-                          'MEDIUMINT', 'MEDIUMTEXT', 'MIDDLEINT',
-                          'MINUTE_MICROSECOND', 'MINUTE_SECOND', 'MOD',
-                          'MODIFIES', 'NATURAL', 'NOT',
-                          'NO_WRITE_TO_BINLOG', 'NULL', 'NUMERIC',
-                          'ON', 'OPTIMIZE', 'OPTION',
-                          'OPTIONALLY', 'OR', 'ORDER',
-                          'OUT', 'OUTER', 'OUTFILE',
-                          'PRECISION', 'PRIMARY', 'PROCEDURE',
-                          'PURGE', 'RAID0', 'READ',
-                          'READS', 'REAL', 'REFERENCES',
-                          'REGEXP', 'RELEASE', 'RENAME',
-                          'REPEAT', 'REPLACE', 'REQUIRE',
-                          'RESTRICT', 'RETURN', 'REVOKE',
-                          'RIGHT', 'RLIKE', 'SCHEMA',
-                          'SCHEMAS', 'SECOND_MICROSECOND', 'SELECT',
-                          'SENSITIVE', 'SEPARATOR', 'SET',
-                          'SHOW', 'SMALLINT', 'SONAME',
-                          'SPATIAL', 'SPECIFIC', 'SQL',
-                          'SQLEXCEPTION', 'SQLSTATE', 'SQLWARNING',
-                          'SQL_BIG_RESULT', 'SQL_CALC_FOUND_ROWS', 'SQL_SMALL_RESULT',
-                          'SSL', 'STARTING', 'STRAIGHT_JOIN',
-                          'TABLE', 'TERMINATED', 'THEN',
-                          'TINYBLOB', 'TINYINT', 'TINYTEXT',
-                          'TO', 'TRAILING', 'TRIGGER',
-                          'TRUE', 'UNDO', 'UNION',
-                          'UNIQUE', 'UNLOCK', 'UNSIGNED',
-                          'UPDATE', 'USAGE', 'USE',
-                          'USING', 'UTC_DATE', 'UTC_TIME',
-                          'UTC_TIMESTAMP', 'VALUES', 'VARBINARY',
-                          'VARCHAR', 'VARCHARACTER', 'VARYING',
-                          'WHEN', 'WHERE', 'WHILE',
-                          'WITH', 'WRITE', 'X509',
-                          'XOR', 'YEAR_MONTH', 'ZEROFILL'
-                          );
+    protected $keywords = [
+        'ADD', 'ALL', 'ALTER',
+        'ANALYZE', 'AND', 'AS',
+        'ASC', 'ASENSITIVE', 'BEFORE',
+        'BETWEEN', 'BIGINT', 'BINARY',
+        'BLOB', 'BOTH', 'BY', 'BIT',
+        'CALL', 'CASCADE', 'CASE',
+        'CHANGE', 'CHAR', 'CHARACTER',
+        'CHECK', 'COLLATE', 'COLUMN',
+        'CONDITION', 'CONNECTION', 'CONSTRAINT',
+        'CONTINUE', 'CONVERT', 'CREATE',
+        'CROSS', 'CURRENT_DATE', 'CURRENT_TIME',
+        'CURRENT_TIMESTAMP', 'CURRENT_USER', 'CURSOR',
+        'DATABASE', 'DATABASES', 'DAY_HOUR',
+        'DAY_MICROSECOND', 'DAY_MINUTE', 'DAY_SECOND',
+        'DEC', 'DECIMAL', 'DECLARE',
+        'DEFAULT', 'DELAYED', 'DELETE',
+        'DESC', 'DESCRIBE', 'DETERMINISTIC',
+        'DISTINCT', 'DISTINCTROW', 'DIV',
+        'DOUBLE', 'DROP', 'DUAL',
+        'EACH', 'ELSE', 'ELSEIF',
+        'ENCLOSED', 'ESCAPED', 'EXISTS',
+        'EXIT', 'EXPLAIN', 'FALSE',
+        'FETCH', 'FLOAT', 'FLOAT4',
+        'FLOAT8', 'FOR', 'FORCE',
+        'FOREIGN', 'FROM', 'FULLTEXT',
+        'GRANT', 'GROUP', 'HAVING',
+        'HIGH_PRIORITY', 'HOUR_MICROSECOND', 'HOUR_MINUTE',
+        'HOUR_SECOND', 'IF', 'IGNORE',
+        'IN', 'INDEX', 'INFILE',
+        'INNER', 'INOUT', 'INSENSITIVE',
+        'INSERT', 'INT', 'INT1',
+        'INT2', 'INT3', 'INT4',
+        'INT8', 'INTEGER', 'INTERVAL',
+        'INTO', 'IS', 'ITERATE',
+        'JOIN', 'KEY', 'KEYS',
+        'KILL', 'LEADING', 'LEAVE',
+        'LEFT', 'LIKE', 'LIMIT',
+        'LINES', 'LOAD', 'LOCALTIME',
+        'LOCALTIMESTAMP', 'LOCK', 'LONG',
+        'LONGBLOB', 'LONGTEXT', 'LOOP',
+        'LOW_PRIORITY', 'MATCH', 'MEDIUMBLOB',
+        'MEDIUMINT', 'MEDIUMTEXT', 'MIDDLEINT',
+        'MINUTE_MICROSECOND', 'MINUTE_SECOND', 'MOD',
+        'MODIFIES', 'NATURAL', 'NOT',
+        'NO_WRITE_TO_BINLOG', 'NULL', 'NUMERIC',
+        'ON', 'OPTIMIZE', 'OPTION',
+        'OPTIONALLY', 'OR', 'ORDER',
+        'OUT', 'OUTER', 'OUTFILE',
+        'PRECISION', 'PRIMARY', 'PROCEDURE',
+        'PURGE', 'RAID0', 'READ',
+        'READS', 'REAL', 'REFERENCES',
+        'REGEXP', 'RELEASE', 'RENAME',
+        'REPEAT', 'REPLACE', 'REQUIRE',
+        'RESTRICT', 'RETURN', 'REVOKE',
+        'RIGHT', 'RLIKE', 'SCHEMA',
+        'SCHEMAS', 'SECOND_MICROSECOND', 'SELECT',
+        'SENSITIVE', 'SEPARATOR', 'SET',
+        'SHOW', 'SMALLINT', 'SONAME',
+        'SPATIAL', 'SPECIFIC', 'SQL',
+        'SQLEXCEPTION', 'SQLSTATE', 'SQLWARNING',
+        'SQL_BIG_RESULT', 'SQL_CALC_FOUND_ROWS', 'SQL_SMALL_RESULT',
+        'SSL', 'STARTING', 'STRAIGHT_JOIN',
+        'TABLE', 'TERMINATED', 'THEN',
+        'TINYBLOB', 'TINYINT', 'TINYTEXT',
+        'TO', 'TRAILING', 'TRIGGER',
+        'TRUE', 'UNDO', 'UNION',
+        'UNIQUE', 'UNLOCK', 'UNSIGNED',
+        'UPDATE', 'USAGE', 'USE',
+        'USING', 'UTC_DATE', 'UTC_TIME',
+        'UTC_TIMESTAMP', 'VALUES', 'VARBINARY',
+        'VARCHAR', 'VARCHARACTER', 'VARYING',
+        'WHEN', 'WHERE', 'WHILE',
+        'WITH', 'WRITE', 'X509',
+        'XOR', 'YEAR_MONTH', 'ZEROFILL',
+    ];
 
     /**
      * Obtain DBMS specific SQL code portion needed to declare an text type
      * field to be used in statements like CREATE TABLE.
      *
-     * @param array $field  associative array with the name of the properties
-     *      of the field being declared as array indexes. Currently, the types
-     *      of supported field properties are as follows:
+     * @param array $field associative array with the name of the properties
+     *                     of the field being declared as array indexes. Currently, the types
+     *                     of supported field properties are as follows:
      *
      *      length
      *          Integer value that determines the maximum length of the text
@@ -127,45 +123,48 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
      *      notnull
      *          Boolean flag that indicates whether this field is constrained
      *          to not be set to null.
-     *
-     * @return string  DBMS specific SQL code portion that should be used to
-     *      declare the specified field.
+     * @return string DBMS specific SQL code portion that should be used to
+     *                declare the specified field
      */
     public function getNativeDeclaration($field)
     {
-        if ( ! isset($field['type'])) {
+        if (!isset($field['type'])) {
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
 
         switch ($field['type']) {
             case 'char':
-                $length = ( ! empty($field['length'])) ? $field['length'] : false;
+                $length = (!empty($field['length'])) ? $field['length'] : false;
 
                 return $length ? 'CHAR('.$length.')' : 'CHAR(255)';
             case 'enum':
                 if ($this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_ENUM)) {
-                    $values = array();
-                    foreach ($field['values'] as $value) {
-                      $values[] = $this->conn->quote($value, 'varchar');
-                    }
-                    return 'ENUM('.implode(', ', $values).')';
-                } else {
-                    $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
-                }
-            case 'set':
-                if ($this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_SET)) {
-                    $values = array();
+                    $values = [];
                     foreach ($field['values'] as $value) {
                         $values[] = $this->conn->quote($value, 'varchar');
                     }
-                    return 'SET('.implode(', ', $values).')';
-                } else {
-                    $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
+
+                    return 'ENUM('.implode(', ', $values).')';
                 }
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length'] : 255;
+
+                // no break
+            case 'set':
+                if ($this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_SET)) {
+                    $values = [];
+                    foreach ($field['values'] as $value) {
+                        $values[] = $this->conn->quote($value, 'varchar');
+                    }
+
+                    return 'SET('.implode(', ', $values).')';
+                }
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length'] : 255;
+
+                // no break
             case 'varchar':
             case 'string':
             case 'gzip':
-                if ( ! isset($field['length'])) {
+                if (!isset($field['length'])) {
                     if (array_key_exists('default', $field)) {
                         $field['length'] = $this->conn->varchar_max_length;
                     } else {
@@ -174,52 +173,63 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 }
 
                 $length = ($field['length'] <= $this->conn->varchar_max_length) ? $field['length'] : false;
-                $fixed  = (isset($field['fixed'])) ? $field['fixed'] : false;
+                $fixed = (isset($field['fixed'])) ? $field['fixed'] : false;
 
-                return $fixed ? ($length ? 'CHAR(' . $length . ')' : 'CHAR(255)')
-                    : ($length ? 'VARCHAR(' . $length . ')' : 'TEXT');
+                return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR(255)')
+                    : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
             case 'array':
             case 'object':
             case 'clob':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 255) {
                         return 'TINYTEXT';
-                    } elseif ($length <= 65532) {
+                    }
+                    if ($length <= 65532) {
                         return 'TEXT';
-                    } elseif ($length <= 16777215) {
+                    }
+                    if ($length <= 16777215) {
                         return 'MEDIUMTEXT';
                     }
                 }
+
                 return 'LONGTEXT';
             case 'blob':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 255) {
                         return 'TINYBLOB';
-                    } elseif ($length <= 65532) {
+                    }
+                    if ($length <= 65532) {
                         return 'BLOB';
-                    } elseif ($length <= 16777215) {
+                    }
+                    if ($length <= 16777215) {
                         return 'MEDIUMBLOB';
                     }
                 }
+
                 return 'LONGBLOB';
             case 'integer':
             case 'int':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 1) {
                         return 'TINYINT';
-                    } elseif ($length == 2) {
+                    }
+                    if (2 == $length) {
                         return 'SMALLINT';
-                    } elseif ($length == 3) {
+                    }
+                    if (3 == $length) {
                         return 'MEDIUMINT';
-                    } elseif ($length == 4) {
+                    }
+                    if (4 == $length) {
                         return 'INT';
-                    } elseif ($length > 4) {
+                    }
+                    if ($length > 4) {
                         return 'BIGINT';
                     }
                 }
+
                 return 'INT';
             case 'boolean':
                 return 'TINYINT(1)';
@@ -232,32 +242,36 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'float':
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
+
                 return 'FLOAT('.$length.', '.$scale.')';
             case 'double':
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
+
                 return 'DOUBLE('.$length.', '.$scale.')';
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
+
                 return 'DECIMAL('.$length.', '.$scale.')';
             case 'bit':
                 return 'BIT';
         }
-        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
+
+        return $field['type'].(isset($field['length']) ? '('.$field['length'].')' : null);
     }
 
     /**
-     * Maps a native array description of a field to a MDB2 datatype and length
+     * Maps a native array description of a field to a MDB2 datatype and length.
      *
-     * @param array  $field native field description
+     * @param  array $field native field description
      * @return array containing the various possible types, length, sign, fixed
      */
     public function getPortableDeclaration(array $field)
     {
         $dbType = strtolower($field['type']);
         $dbType = strtok($dbType, '(), ');
-        if ($dbType == 'national') {
+        if ('national' == $dbType) {
             $dbType = strtok('(), ');
         }
         if (isset($field['length'])) {
@@ -266,14 +280,14 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
         } else {
             $length = strtok('(), ');
             $decimal = strtok('(), ');
-            if ( ! $decimal ) {
+            if (!$decimal) {
                 $decimal = null;
             }
         }
-        $type = array();
+        $type = [];
         $unsigned = $fixed = null;
 
-        if ( ! isset($field['name'])) {
+        if (!isset($field['name'])) {
             $field['name'] = '';
         }
 
@@ -289,28 +303,28 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 }
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
                 $length = 1;
-            break;
+                break;
             case 'smallint':
                 $type[] = 'integer';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
                 $length = 2;
-            break;
+                break;
             case 'mediumint':
                 $type[] = 'integer';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
                 $length = 3;
-            break;
+                break;
             case 'int':
             case 'integer':
                 $type[] = 'integer';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
                 $length = 4;
-            break;
+                break;
             case 'bigint':
                 $type[] = 'integer';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
                 $length = 8;
-            break;
+                break;
             case 'tinytext':
             case 'mediumtext':
             case 'longtext':
@@ -318,24 +332,25 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'text':
             case 'varchar':
                 $fixed = false;
+                // no break
             case 'string':
             case 'char':
                 $type[] = 'string';
-                if ($length == '1') {
+                if ('1' == $length) {
                     $type[] = 'boolean';
                     if (preg_match('/^(is|has)/', $field['name'])) {
                         $type = array_reverse($type);
                     }
                 } elseif (strstr($dbType, 'text')) {
                     $type[] = 'clob';
-                    if ($decimal == 'binary') {
+                    if ('binary' == $decimal) {
                         $type[] = 'blob';
                     }
                 }
-                if ($fixed !== false) {
+                if (false !== $fixed) {
                     $fixed = true;
                 }
-            break;
+                break;
             case 'enum':
                 $type[] = 'enum';
                 preg_match_all('/\'((?:\'\'|[^\'])*)\'/', $field['type'], $matches);
@@ -346,7 +361,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                         $value = str_replace('\'\'', '\'', $value);
                         $length = max($length, strlen($value));
                     }
-                    if ($length == '1' && count($matches[1]) == 2) {
+                    if ('1' == $length && 2 == count($matches[1])) {
                         $type[] = 'boolean';
                         if (preg_match('/^(is|has)/', $field['name'])) {
                             $type = array_reverse($type);
@@ -361,35 +376,36 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $fixed = false;
                 $type[] = 'text';
                 $type[] = 'integer';
-            break;
+                break;
             case 'date':
                 $type[] = 'date';
                 $length = null;
-            break;
+                break;
             case 'datetime':
             case 'timestamp':
                 $type[] = 'timestamp';
                 $length = null;
-            break;
+                break;
             case 'time':
                 $type[] = 'time';
                 $length = null;
-            break;
+                break;
             case 'float':
             case 'double':
             case 'real':
                 $type[] = 'float';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
-            break;
+                break;
             case 'unknown':
             case 'decimal':
-                if ($decimal !== null) {
+                if (null !== $decimal) {
                     $scale = $decimal;
                 }
+                // no break
             case 'numeric':
                 $type[] = 'decimal';
                 $unsigned = preg_match('/ unsigned/i', $field['type']);
-            break;
+                break;
             case 'tinyblob':
             case 'mediumblob':
             case 'longblob':
@@ -398,15 +414,15 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'varbinary':
                 $type[] = 'blob';
                 $length = null;
-            break;
+                break;
             case 'year':
                 $type[] = 'integer';
                 $type[] = 'date';
                 $length = null;
-            break;
+                break;
             case 'bit':
                 $type[] = 'bit';
-            break;
+                break;
             case 'geometry':
             case 'geometrycollection':
             case 'point':
@@ -417,20 +433,21 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             case 'multipolygon':
                 $type[] = 'blob';
                 $length = null;
-            break;
+                break;
             default:
                 $type[] = $field['type'];
-                $length = isset($field['length']) ? $field['length']:null;
+                $length = $field['length'] ?? null;
         }
 
-        $length = ((int) $length == 0) ? null : (int) $length;
-        $def =  array('type' => $type, 'length' => $length, 'unsigned' => $unsigned, 'fixed' => $fixed);
-        if ($values !== null) {
+        $length = (0 == (int) $length) ? null : (int) $length;
+        $def = ['type' => $type, 'length' => $length, 'unsigned' => $unsigned, 'fixed' => $fixed];
+        if (null !== $values) {
             $def['values'] = $values;
         }
-        if ($scale !== null) {
+        if (null !== $scale) {
             $def['scale'] = $scale;
         }
+
         return $def;
     }
 
@@ -438,37 +455,37 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
      * Obtain DBMS specific SQL code portion needed to set the CHARACTER SET
      * of a field declaration to be used in statements like CREATE TABLE.
      *
-     * @param string $charset   name of the charset
-     * @return string  DBMS specific SQL code portion needed to set the CHARACTER SET
-     *                 of a field declaration.
+     * @param  string $charset name of the charset
+     * @return string DBMS specific SQL code portion needed to set the CHARACTER SET
+     *                of a field declaration
      */
     public function getCharsetFieldDeclaration($charset)
     {
-        return 'CHARACTER SET ' . $charset;
+        return 'CHARACTER SET '.$charset;
     }
 
     /**
      * Obtain DBMS specific SQL code portion needed to set the COLLATION
      * of a field declaration to be used in statements like CREATE TABLE.
      *
-     * @param string $collation   name of the collation
-     * @return string  DBMS specific SQL code portion needed to set the COLLATION
-     *                 of a field declaration.
+     * @param  string $collation name of the collation
+     * @return string DBMS specific SQL code portion needed to set the COLLATION
+     *                of a field declaration
      */
     public function getCollationFieldDeclaration($collation)
     {
-        return 'COLLATE ' . $collation;
+        return 'COLLATE '.$collation;
     }
 
     /**
      * Obtain DBMS specific SQL code portion needed to declare an integer type
      * field to be used in statements like CREATE TABLE.
      *
-     * @param string  $name   name the field to be declared.
-     * @param string  $field  associative array with the name of the properties
-     *                        of the field being declared as array indexes.
-     *                        Currently, the types of supported field
-     *                        properties are as follows:
+     * @param string $name  name the field to be declared
+     * @param string $field associative array with the name of the properties
+     *                      of the field being declared as array indexes.
+     *                      Currently, the types of supported field
+     *                      properties are as follows:
      *
      *                       unsigned
      *                        Boolean flag that indicates whether the field
@@ -482,33 +499,33 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
      *                       notnull
      *                        Boolean flag that indicates whether this field is
      *                        constrained to not be set to null.
-     * @return string  DBMS specific SQL code portion that should be used to
-     *                 declare the specified field.
+     * @return string DBMS specific SQL code portion that should be used to
+     *                declare the specified field
      */
     public function getIntegerDeclaration($name, $field)
     {
         $unique = (isset($field['unique']) && $field['unique']) ? ' UNIQUE' : '';
         $default = $autoinc = '';
-        if ( ! empty($field['autoincrement'])) {
+        if (!empty($field['autoincrement'])) {
             $autoinc = ' AUTO_INCREMENT';
         } elseif (array_key_exists('default', $field)) {
-            if ($field['default'] === '') {
+            if ('' === $field['default']) {
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
 
-            $default = ' DEFAULT ' . (is_null($field['default'])
+            $default = ' DEFAULT '.(is_null($field['default'])
                 ? 'NULL'
                 : $this->conn->quote($field['default']));
         }
 
-        $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';
+        $notnull = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
         $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
-        $comment  = (isset($field['comment']) && $field['comment']) 
-            ? " COMMENT " . $this->conn->quote($field['comment'], 'text') : '';
+        $comment = (isset($field['comment']) && $field['comment'])
+            ? ' COMMENT '.$this->conn->quote($field['comment'], 'text') : '';
 
         $name = $this->conn->quoteIdentifier($name, true);
 
-        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned 
-            . $default . $unique . $notnull . $autoinc . $comment;
+        return $name.' '.$this->getNativeDeclaration($field).$unsigned
+            .$default.$unique.$notnull.$autoinc.$comment;
     }
 }

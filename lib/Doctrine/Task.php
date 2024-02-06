@@ -20,34 +20,31 @@
  */
 
 /**
- * Doctrine_Task
- * 
+ * Doctrine_Task.
+ *
  * Abstract class used for writing Doctrine Tasks
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 abstract class Doctrine_Task
 {
-    public $dispatcher           =   null,
-           $taskName             =   null,  /*Treat as protected*/
-           $description          =   null,
-           $arguments            =   array(),
-           $requiredArguments    =   array(),
-           $optionalArguments    =   array();
+    public $dispatcher;
+    public $taskName;
+    /* Treat as protected */
+    public $description;
+    public $arguments = [];
+    public $requiredArguments = [];
+    public $optionalArguments = [];
 
     /**
-     * __construct
+     * __construct.
      *
      * Since this is an abstract classes that extend this must follow a patter of Doctrine_Task_{TASK_NAME}
      * This is what determines the task name for executing it.
      *
-     * @return void
+     * @param mixed|null $dispatcher
      */
     public function __construct($dispatcher = null)
     {
@@ -55,7 +52,7 @@ abstract class Doctrine_Task
 
         $taskName = (string) $this->getTaskName();
 
-        //Derive the task name only if it wasn't entered at design-time
+        // Derive the task name only if it wasn't entered at design-time
         if ('' === trim($taskName)) {
             $taskName = self::deriveTaskName(get_class($this));
         }
@@ -68,14 +65,14 @@ abstract class Doctrine_Task
     }
 
     /**
-     * Returns the name of the task the specified class _would_ implement
-     * 
+     * Returns the name of the task the specified class _would_ implement.
+     *
      * N.B. This method does not check if the specified class is actually a Doctrine Task
-     * 
+     *
      * This is public so we can easily test its reactions to fully-qualified class names, without having to add
      * PHP 5.3-specific test code
-     * 
-     * @param string $className
+     *
+     * @param  string      $className
      * @return string|bool
      */
     public static function deriveTaskName($className)
@@ -83,8 +80,8 @@ abstract class Doctrine_Task
         $nameParts = explode('\\', $className);
 
         foreach ($nameParts as &$namePart) {
-            $prefix = __CLASS__ . '_';
-            $baseName = strpos($namePart, $prefix) === 0 ? substr($namePart, strlen($prefix)) : $namePart;
+            $prefix = __CLASS__.'_';
+            $baseName = 0 === strpos($namePart, $prefix) ? substr($namePart, strlen($prefix)) : $namePart;
             $namePart = str_replace('_', '-', Doctrine_Inflector::tableize($baseName));
         }
 
@@ -92,52 +89,45 @@ abstract class Doctrine_Task
     }
 
     /**
-     * notify
+     * notify.
      *
-     * @param string $notification 
-     * @return void
+     * @param string $notification
      */
     public function notify($notification = null)
     {
         if (is_object($this->dispatcher) && method_exists($this->dispatcher, 'notify')) {
             $args = func_get_args();
-            
-            return call_user_func_array(array($this->dispatcher, 'notify'), $args);
-        } else if ( $notification !== null ) {
-            return $notification;
-        } else {
-            return false;
+
+            return call_user_func_array([$this->dispatcher, 'notify'], $args);
         }
+        if (null !== $notification) {
+            return $notification;
+        }
+
+        return false;
     }
 
     /**
-     * ask
-     *
-     * @return void
+     * ask.
      */
     public function ask()
     {
         $args = func_get_args();
-        
-        call_user_func_array(array($this, 'notify'), $args);
-        
-        $answer = strtolower(trim(fgets(STDIN)));
-        
-        return $answer;
+
+        call_user_func_array([$this, 'notify'], $args);
+
+        return strtolower(trim(fgets(STDIN)));
     }
 
     /**
-     * execute
+     * execute.
      *
      * Override with each task class
-     *
-     * @return void
-     * @abstract
      */
-    abstract function execute();
+    abstract public function execute();
 
     /**
-     * validate
+     * validate.
      *
      * Validates that all required fields are present
      *
@@ -146,22 +136,21 @@ abstract class Doctrine_Task
     public function validate()
     {
         $requiredArguments = $this->getRequiredArguments();
-        
+
         foreach ($requiredArguments as $arg) {
-            if ( ! isset($this->arguments[$arg])) {
+            if (!isset($this->arguments[$arg])) {
                 return false;
             }
         }
-        
+
         return true;
     }
 
     /**
-     * addArgument
+     * addArgument.
      *
-     * @param string $name 
-     * @param string $value 
-     * @return void
+     * @param string $name
+     * @param string $value
      */
     public function addArgument($name, $value)
     {
@@ -169,23 +158,22 @@ abstract class Doctrine_Task
     }
 
     /**
-     * getArgument
+     * getArgument.
      *
-     * @param string $name 
-     * @param string $default 
-     * @return mixed
+     * @param string $name
+     * @param string $default
      */
     public function getArgument($name, $default = null)
     {
-        if (isset($this->arguments[$name]) && $this->arguments[$name] !== null) {
+        if (isset($this->arguments[$name]) && null !== $this->arguments[$name]) {
             return $this->arguments[$name];
-        } else {
-            return $default;
         }
+
+        return $default;
     }
 
     /**
-     * getArguments
+     * getArguments.
      *
      * @return array $arguments
      */
@@ -195,10 +183,7 @@ abstract class Doctrine_Task
     }
 
     /**
-     * setArguments
-     *
-     * @param array $args 
-     * @return void
+     * setArguments.
      */
     public function setArguments(array $args)
     {
@@ -206,9 +191,9 @@ abstract class Doctrine_Task
     }
 
     /**
-     * Returns TRUE if the specified task name is valid, or FALSE otherwise
-     * 
-     * @param string $taskName
+     * Returns TRUE if the specified task name is valid, or FALSE otherwise.
+     *
+     * @param  string $taskName
      * @return bool
      */
     protected static function validateTaskName($taskName)
@@ -221,24 +206,22 @@ abstract class Doctrine_Task
     }
 
     /**
-     * Sets the name of the task, the name that's used to invoke it through a CLI
+     * Sets the name of the task, the name that's used to invoke it through a CLI.
      *
-     * @param string $taskName
+     * @param  string                   $taskName
      * @throws InvalidArgumentException If the task name is invalid
      */
     protected function setTaskName($taskName)
     {
-        if (! self::validateTaskName($taskName)) {
-            throw new InvalidArgumentException(
-                sprintf('The task name "%s", in %s, is invalid', $taskName, get_class($this))
-            );
+        if (!self::validateTaskName($taskName)) {
+            throw new InvalidArgumentException(sprintf('The task name "%s", in %s, is invalid', $taskName, get_class($this)));
         }
 
         $this->taskName = $taskName;
     }
 
     /**
-     * getTaskName
+     * getTaskName.
      *
      * @return string $taskName
      */
@@ -248,7 +231,7 @@ abstract class Doctrine_Task
     }
 
     /**
-     * getDescription
+     * getDescription.
      *
      * @return string $description
      */
@@ -258,7 +241,7 @@ abstract class Doctrine_Task
     }
 
     /**
-     * getRequiredArguments
+     * getRequiredArguments.
      *
      * @return array $requiredArguments
      */
@@ -268,7 +251,7 @@ abstract class Doctrine_Task
     }
 
     /**
-     * getOptionalArguments
+     * getOptionalArguments.
      *
      * @return array $optionalArguments
      */
@@ -278,7 +261,7 @@ abstract class Doctrine_Task
     }
 
     /**
-     * getRequiredArgumentsDescriptions
+     * getRequiredArgumentsDescriptions.
      *
      * @return array $requiredArgumentsDescriptions
      */
@@ -288,7 +271,7 @@ abstract class Doctrine_Task
     }
 
     /**
-     * getOptionalArgumentsDescriptions
+     * getOptionalArgumentsDescriptions.
      *
      * @return array $optionalArgumentsDescriptions
      */

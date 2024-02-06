@@ -20,21 +20,23 @@
  */
 
 /**
- * Doctrine_Migration_Base_TestCase
- * 
- * @package     Doctrine
+ * Doctrine_Migration_Base_TestCase.
+ *
  * @author      Dan Bettles <danbettles@yahoo.co.uk>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Migration_Base_TestCase extends UnitTestCase
 {
     public function tearDown()
     {
-        Doctrine_Migration_Base::setDefaultTableOptions(array());
+        Doctrine_Migration_Base::setDefaultTableOptions([]);
 
         parent::tearDown();
     }
@@ -47,16 +49,16 @@ class Doctrine_Migration_Base_TestCase extends UnitTestCase
 
     public function testByDefaultHasNoDefaultTableOptions()
     {
-        $this->assertEqual(array(), Doctrine_Migration_Base::getDefaultTableOptions());
+        $this->assertEqual([], Doctrine_Migration_Base::getDefaultTableOptions());
     }
 
     public function testGetdefaulttableoptionsReturnsTheOptionsSetWithSetdefaulttableoptions()
     {
-        $fixtures = array(
-            array(array('charset' => 'utf8')),
-            array(array()),
-            array('type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'),
-        );
+        $fixtures = [
+            [['charset' => 'utf8']],
+            [[]],
+            ['type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'],
+        ];
 
         foreach ($fixtures as $fixture) {
             Doctrine_Migration_Base::setDefaultTableOptions($fixture);
@@ -66,23 +68,23 @@ class Doctrine_Migration_Base_TestCase extends UnitTestCase
 
     public function testCreatetableMergesTheDefaultTableOptionsWithTheSpecifiedOptions()
     {
-        $fixtures = array(
-            array(
-                'default' => array('type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'),
-                'user' => array(),
-                'expected' => array('type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'),
-            ),
-            array(
-                'default' => array('type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'),
-                'user' => array('charset' => 'latin1', 'collate' => 'latin1_general_ci'),
-                'expected' => array('type' => 'INNODB', 'charset' => 'latin1', 'collate' => 'latin1_general_ci'),
-            ),
-        );
+        $fixtures = [
+            [
+                'default' => ['type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'],
+                'user' => [],
+                'expected' => ['type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'],
+            ],
+            [
+                'default' => ['type' => 'INNODB', 'charset' => 'utf8', 'collate' => 'utf8_unicode_ci'],
+                'user' => ['charset' => 'latin1', 'collate' => 'latin1_general_ci'],
+                'expected' => ['type' => 'INNODB', 'charset' => 'latin1', 'collate' => 'latin1_general_ci'],
+            ],
+        ];
 
         foreach ($fixtures as $fixture) {
             Doctrine_Migration_Base_TestCase_TestBase01::setDefaultTableOptions($fixture['default']);
             $migration = new Doctrine_Migration_Base_TestCase_TestBase01();
-            $migration->createTable('anything', array(), $fixture['user']);
+            $migration->createTable('anything', [], $fixture['user']);
             $this->assertEqual($fixture['expected'], $migration->mergedOptions);
         }
     }
@@ -90,9 +92,9 @@ class Doctrine_Migration_Base_TestCase extends UnitTestCase
 
 class Doctrine_Migration_Base_TestCase_TestBase01 extends Doctrine_Migration_Base
 {
-    public $mergedOptions = array();
+    public $mergedOptions = [];
 
-    public function table($upDown, $tableName, array $fields = array(), array $options = array())
+    public function table($upDown, $tableName, array $fields = [], array $options = [])
     {
         $this->mergedOptions = $options;
     }

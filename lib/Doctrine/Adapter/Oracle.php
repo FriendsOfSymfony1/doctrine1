@@ -20,34 +20,28 @@
  */
 
 /**
- * Custom Doctrine connection adapter for oracle
+ * Custom Doctrine connection adapter for oracle.
  *
- * @package     Doctrine
- * @subpackage  Adapter
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      vadik56
  * @author      Miloslav Kmet <adrive-nospam@hip-hop.sk>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
  */
-
 class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
 {
     /**
-     *    execution mode
+     *    execution mode.
      */
     protected $executeMode = OCI_COMMIT_ON_SUCCESS;
 
     /**
-     * Resource representing connection to database
+     * Resource representing connection to database.
      */
     protected $connection = false;
 
-
-    protected $attributes = array(Doctrine_Core::ATTR_DRIVER_NAME    => "oci8",
-                                  Doctrine_Core::ATTR_ERRMODE        => Doctrine_Core::ERRMODE_SILENT);
+    protected $attributes = [Doctrine_Core::ATTR_DRIVER_NAME => 'oci8',
+        Doctrine_Core::ATTR_ERRMODE => Doctrine_Core::ERRMODE_SILENT];
 
     /**
      * User-provided configuration.
@@ -61,16 +55,16 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
      *
      * @var array
      */
-    protected $config = array(
-        'dbname'     => null,
-        'username'   => null,
-        'password'   => null,
-        'charset'    => null,
-        'persistent' => false
-    );
+    protected $config = [
+        'dbname' => null,
+        'username' => null,
+        'password' => null,
+        'charset' => null,
+        'persistent' => false,
+    ];
 
     /**
-     * Doctrine Oracle adapter constructor
+     * Doctrine Oracle adapter constructor.
      *
      * <code>
      * $conn = new Doctrine_Adapter_Oracle(array('dbname'=>'db','username'=>'usr','password'=>'pass'));
@@ -82,17 +76,16 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
      * Doctrine_Manager::connection(array('oracle:dbname=SID;charset=NLS_CHARACTERSET;persistent=true','usr', 'pass'),"doctrine_connection_name")
      * </code>
      *
-     * @param string $name
-     * @return void
+     * @param mixed|null $username
+     * @param mixed|null $password
      */
-    public function __construct($config = array(), $username = null, $password = null)
+    public function __construct($config = [], $username = null, $password = null)
     {
-        if (is_string($config))
-        {
-            $config = str_replace("oracle:","",$config);
-            $parts = explode(";", $config);
-            foreach($parts as $part) {
-                $e = explode("=", $part);
+        if (is_string($config)) {
+            $config = str_replace('oracle:', '', $config);
+            $parts = explode(';', $config);
+            foreach ($parts as $part) {
+                $e = explode('=', $part);
                 $key = array_shift($e);
                 $this->config[$key] = implode('=', $e);
             }
@@ -104,54 +97,59 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
                 $this->config['password'] = $password;
             }
         } else {
-            if ( ! isset($config['password']) || ! isset($config['username'])) {
+            if (!isset($config['password']) || !isset($config['username'])) {
                 throw new Doctrine_Adapter_Exception('config array must have at least a username and a password');
             }
 
             $this->config['username'] = $config['username'];
             $this->config['password'] = $config['password'];
-            $this->config['dbname']   = $config['dbname'];
+            $this->config['dbname'] = $config['dbname'];
 
-            if (isset($config['charset'])) { 
-                $this->config['charset']  = $config['charset']; 
-            } 
- 
-            if (isset($config['persistent'])) { 
-                $this->config['persistent']  = $config['persistent']; 
+            if (isset($config['charset'])) {
+                $this->config['charset'] = $config['charset'];
+            }
+
+            if (isset($config['persistent'])) {
+                $this->config['persistent'] = $config['persistent'];
             }
         }
 
-
-        if ($this->config['persistent'] == 'true'){ 
-            $this->connection = @oci_pconnect($this->config['username'], $this->config['password'], 
-                $this->config['dbname'], $this->config['charset']); 
-        } else { 
-            $this->connection = @oci_new_connect($this->config['username'], $this->config['password'], 
-                $this->config['dbname'], $this->config['charset']); 
+        if ('true' == $this->config['persistent']) {
+            $this->connection = @oci_pconnect(
+                $this->config['username'],
+                $this->config['password'],
+                $this->config['dbname'],
+                $this->config['charset']
+            );
+        } else {
+            $this->connection = @oci_new_connect(
+                $this->config['username'],
+                $this->config['password'],
+                $this->config['dbname'],
+                $this->config['charset']
+            );
         }
 
-        if ($this->connection === false) {
+        if (false === $this->connection) {
             throw new Doctrine_Adapter_Exception(sprintf("Unable to Connect to :'%s' as '%s'", $this->config['dbname'], $this->config['username']));
         }
     }
 
     /**
-     * Prepare a query statement
+     * Prepare a query statement.
      *
-     * @param string $query Query to prepare
+     * @param  string                            $query Query to prepare
      * @return Doctrine_Adapter_Statement_Oracle $stmt prepared statement
      */
     public function prepare($query)
     {
-        $stmt = new Doctrine_Adapter_Statement_Oracle($this, $query, $this->executeMode);
-
-        return $stmt;
+        return new Doctrine_Adapter_Statement_Oracle($this, $query, $this->executeMode);
     }
 
     /**
-     * Execute query and return results as statement object
+     * Execute query and return results as statement object.
      *
-     * @param string $query
+     * @param  string                            $query
      * @return Doctrine_Adapter_Statement_Oracle $stmt
      */
     public function query($query)
@@ -163,56 +161,53 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     }
 
     /**
-     * Quote a value for the dbms
+     * Quote a value for the dbms.
      *
-     * @param string $input
+     * @param  string $input
      * @return string $quoted
      */
     public function quote($input)
     {
-        return "'" . str_replace("'","''",$input) . "'";
+        return "'".str_replace("'", "''", $input)."'";
     }
 
     /**
-     * Execute a raw sql statement
+     * Execute a raw sql statement.
      *
      * @param string $statement
-     * @return void
      */
     public function exec($statement)
     {
         $stmt = new Doctrine_Adapter_Statement_Oracle($this, $statement, $this->executeMode);
         $stmt->execute();
-        $count = $stmt->rowCount();
 
-        return $count;
+        return $stmt->rowCount();
     }
 
     /**
-     * Get the id of the last inserted record
+     * Get the id of the last inserted record.
      *
-     * @return integer $id
+     * @return int $id
      */
     public function lastInsertId()
     {
-        throw new Doctrine_Adapter_Exception("unsupported");
+        throw new Doctrine_Adapter_Exception('unsupported');
     }
 
     /**
-     * Begin a transaction
+     * Begin a transaction.
      *
-     * @return boolean
+     * @return bool
      */
     public function beginTransaction()
     {
-       $this->executeMode = OCI_DEFAULT;
-       return true;
+        $this->executeMode = OCI_DEFAULT;
+
+        return true;
     }
 
     /**
-     * Commit a transaction
-     *
-     * @return void
+     * Commit a transaction.
      */
     public function commit()
     {
@@ -220,9 +215,9 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     }
 
     /**
-     * Rollback a transaction
+     * Rollback a transaction.
      *
-     * @return boolean
+     * @return bool
      */
     public function rollBack()
     {
@@ -230,39 +225,42 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     }
 
     /**
-     * Set connection attribute
+     * Set connection attribute.
      *
-     * @param integer $attribute
-     * @param mixed $value                  the value of given attribute
-     * @return boolean                      Returns TRUE on success or FALSE on failure.
+     * @param  int   $attribute
+     * @param  mixed $value     the value of given attribute
+     * @return bool  returns TRUE on success or FALSE on failure
      */
     public function setAttribute($attribute, $value)
     {
         switch ($attribute) {
             case Doctrine_Core::ATTR_DRIVER_NAME:
-                //TODO throw an error since driver name can not be changed
+                // TODO throw an error since driver name can not be changed
             case Doctrine_Core::ATTR_ERRMODE:
-            break;
+                break;
             case Doctrine_Core::ATTR_CASE:
-                if ($value == Doctrine_Core::CASE_NATURAL) {
+                if (Doctrine_Core::CASE_NATURAL == $value) {
                     break;
-                } else {
-                    throw new Doctrine_Adapter_Exception("Unsupported Option for ATTR_CASE: $value");
                 }
+                throw new Doctrine_Adapter_Exception("Unsupported Option for ATTR_CASE: {$value}");
             default:
-                throw new Doctrine_Adapter_Exception("Unsupported Attribute: $attribute");
+                throw new Doctrine_Adapter_Exception("Unsupported Attribute: {$attribute}");
+
                 return false;
         }
         $this->attributes[$attribute] = $value;
+
         return true;
     }
 
     /**
-     * Retrieve a statement attribute
+     * Retrieve a statement attribute.
      *
-     * @param integer $attribute
+     * @param int $attribute
+     *
      * @see Doctrine_Core::ATTR_* constants
-     * @return mixed                        the attribute value
+     *
+     * @return mixed the attribute value
      */
     public function getAttribute($attribute)
     {
@@ -270,7 +268,7 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     }
 
     /**
-     * Returns established OCI connection handler
+     * Returns established OCI connection handler.
      *
      * @return resource OCI connection handler
      */
@@ -278,15 +276,15 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
     {
         return $this->connection;
     }
-    
+
     /**
-     * Returns current user name
-     * 
+     * Returns current user name.
+     *
      * @return string current user name
      */
     public function getUserName()
     {
-       return $this->config['username']; 
+        return $this->config['username'];
     }
 
     public function errorCode()
@@ -296,6 +294,7 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
         } else {
             $error = @oci_error();
         }
+
         return $error['code'];
     }
 
@@ -306,14 +305,15 @@ class Doctrine_Adapter_Oracle implements Doctrine_Adapter_Interface
         } else {
             $error = @oci_error();
         }
+
         return $error['message'];
     }
 
-    public function __destruct() 
-    {  
-        if (is_resource($this->connection)) {  
-            @oci_rollback($this->connection);  
-            @oci_close($this->connection);  
-        } 
+    public function __destruct()
+    {
+        if (is_resource($this->connection)) {
+            @oci_rollback($this->connection);
+            @oci_close($this->connection);
+        }
     }
 }

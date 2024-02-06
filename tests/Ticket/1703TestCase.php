@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Template_TestCase
+ * Doctrine_Template_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1703_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1703_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -47,41 +49,40 @@ class Doctrine_Ticket_1703_TestCase extends Doctrine_UnitTestCase
         $foo = serialize($revision);
         $this->assertEqual(1, $revision->content_id);
     }
-
 }
 
 class Ticket_1703_Content extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->hasColumn('id', 'integer', 4, array('type' => 'integer', 'autoincrement' => true, 'primary' => true, 'length' => '4'));
-    $this->hasColumn('content', 'string', null, array('type' => 'string'));
-  }
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id', 'integer', 4, ['type' => 'integer', 'autoincrement' => true, 'primary' => true, 'length' => '4']);
+        $this->hasColumn('content', 'string', null, ['type' => 'string']);
+    }
 
-  public function setUp()
-  {
-    $this->hasMany('Ticket_1703_Revision as revision', array('local' => 'id',
-                                                 'foreign' => 'content_id'));
-  }
+    public function setUp()
+    {
+        $this->hasMany('Ticket_1703_Revision as revision', ['local' => 'id',
+            'foreign' => 'content_id']);
+    }
 }
 
 class Ticket_1703_Revision extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->hasColumn('revision', 'integer', 4, array('type' => 'integer', 'notnull' => true, 'default' => 1, 'length' => '4', 'primary' => true));
-    $this->hasColumn('user_name', 'string', 255, array('type' => 'string', 'notnull' => true, 'length' => '255'));
-    $this->hasColumn('comment', 'string', 255, array('type' => 'string', 'length' => '255'));
-    $this->hasColumn('content_id', 'integer', 4, array('type' => 'integer', 'primary' => true, 'length' => '4'));
-  }
+    public function setTableDefinition()
+    {
+        $this->hasColumn('revision', 'integer', 4, ['type' => 'integer', 'notnull' => true, 'default' => 1, 'length' => '4', 'primary' => true]);
+        $this->hasColumn('user_name', 'string', 255, ['type' => 'string', 'notnull' => true, 'length' => '255']);
+        $this->hasColumn('comment', 'string', 255, ['type' => 'string', 'length' => '255']);
+        $this->hasColumn('content_id', 'integer', 4, ['type' => 'integer', 'primary' => true, 'length' => '4']);
+    }
 
-  public function setUp()
-  {
-    $this->hasOne('Ticket_1703_Content as contentStorage', array('local' => 'content_id',
-                                                             'foreign' => 'id',
-                                                             'onDelete' => 'CASCADE'));
+    public function setUp()
+    {
+        $this->hasOne('Ticket_1703_Content as contentStorage', ['local' => 'content_id',
+            'foreign' => 'id',
+            'onDelete' => 'CASCADE']);
 
-    $timestampable0 = new Doctrine_Template_Timestampable(array('update' => array('disabled' => true)));
-    $this->actAs($timestampable0);
-  }
+        $timestampable0 = new Doctrine_Template_Timestampable(['update' => ['disabled' => true]]);
+        $this->actAs($timestampable0);
+    }
 }

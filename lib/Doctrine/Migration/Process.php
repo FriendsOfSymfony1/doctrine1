@@ -20,20 +20,15 @@
  */
 
 /**
- * Doctrine_Migration_Process
+ * Doctrine_Migration_Process.
  *
- * @package     Doctrine
- * @subpackage  Migration
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Migration_Process
 {
-    protected
-        $_migration;
+    protected $_migration;
 
     public function __construct(Doctrine_Migration $migration)
     {
@@ -46,10 +41,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a created table change
+     * Process a created table change.
      *
      * @param string $table Table definition
-     * @return void
      */
     public function processCreatedTable(array $table)
     {
@@ -57,10 +51,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a dropped table change
+     * Process a dropped table change.
      *
      * @param array $table Table definition
-     * @return void
      */
     public function processDroppedTable(array $table)
     {
@@ -68,72 +61,66 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a renamed table change
+     * Process a renamed table change.
      *
      * @param array $table Renamed table definition
-     * @return void
      */
     public function processRenamedTable(array $table)
     {
-        $this->getConnection()->export->alterTable($table['oldTableName'], array('name' => $table['newTableName']));
+        $this->getConnection()->export->alterTable($table['oldTableName'], ['name' => $table['newTableName']]);
     }
 
     /**
-     * Process a created column change
+     * Process a created column change.
      *
      * @param array $column Column definition
-     * @return void
      */
     public function processCreatedColumn(array $column)
     {
-        $this->getConnection()->export->alterTable($column['tableName'], array('add' => array($column['columnName'] => $column)));
+        $this->getConnection()->export->alterTable($column['tableName'], ['add' => [$column['columnName'] => $column]]);
     }
 
     /**
-     * Process a dropped column change
+     * Process a dropped column change.
      *
      * @param array $column Column definition
-     * @return void
      */
     public function processDroppedColumn(array $column)
     {
-        $this->getConnection()->export->alterTable($column['tableName'], array('remove' => array($column['columnName'] => array())));
+        $this->getConnection()->export->alterTable($column['tableName'], ['remove' => [$column['columnName'] => []]]);
     }
 
     /**
-     * Process a renamed column change
+     * Process a renamed column change.
      *
      * @param array $column Column definition
-     * @return void
      */
     public function processRenamedColumn(array $column)
     {
         $columnList = $this->getConnection()->import->listTableColumns($column['tableName']);
         if (isset($columnList[$column['oldColumnName']])) {
-            $this->getConnection()->export->alterTable($column['tableName'], array('rename' => array($column['oldColumnName'] => array('name' => $column['newColumnName'], 'definition' => $columnList[$column['oldColumnName']]))));
+            $this->getConnection()->export->alterTable($column['tableName'], ['rename' => [$column['oldColumnName'] => ['name' => $column['newColumnName'], 'definition' => $columnList[$column['oldColumnName']]]]]);
         }
     }
 
     /**
-     * Process a changed column change
+     * Process a changed column change.
      *
      * @param array $column Changed column definition
-     * @return void
      */
     public function processChangedColumn(array $column)
     {
-        $options = array();
+        $options = [];
         $options = $column['options'];
         $options['type'] = $column['type'];
-    
-        $this->getConnection()->export->alterTable($column['tableName'], array('change' => array($column['columnName'] => array('definition' => $options))));
+
+        $this->getConnection()->export->alterTable($column['tableName'], ['change' => [$column['columnName'] => ['definition' => $options]]]);
     }
 
     /**
-     * Process a created index change
+     * Process a created index change.
      *
      * @param array $index Index definition
-     * @return void
      */
     public function processCreatedIndex(array $index)
     {
@@ -141,10 +128,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a dropped index change
+     * Process a dropped index change.
      *
      * @param array $index Index definition
-     * @return void
      */
     public function processDroppedIndex(array $index)
     {
@@ -152,10 +138,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a created constraint change
+     * Process a created constraint change.
      *
      * @param array $constraint Constraint definition
-     * @return void
      */
     public function processCreatedConstraint(array $constraint)
     {
@@ -163,10 +148,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a dropped constraint change
+     * Process a dropped constraint change.
      *
      * @param array $constraint Constraint definition
-     * @return void
      */
     public function processDroppedConstraint(array $constraint)
     {
@@ -174,10 +158,9 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a created foreign key change
+     * Process a created foreign key change.
      *
      * @param array $foreignKey Foreign key definition
-     * @return void
      */
     public function processCreatedForeignKey(array $foreignKey)
     {
@@ -185,10 +168,7 @@ class Doctrine_Migration_Process
     }
 
     /**
-     * Process a dropped foreign key change
-     *
-     * @param array $foreignKey
-     * @return void
+     * Process a dropped foreign key change.
      */
     public function processDroppedForeignKey(array $foreignKey)
     {

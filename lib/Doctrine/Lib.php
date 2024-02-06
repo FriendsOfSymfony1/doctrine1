@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Lib has not commonly used static functions, mostly for debugging purposes
+ * Doctrine_Lib has not commonly used static functions, mostly for debugging purposes.
  *
- * @package     Doctrine
- * @subpackage  Lib
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Lib
@@ -37,28 +33,29 @@ class Doctrine_Lib
      *
      * This method translates a Doctrine_Record state (integer constant)
      * in an english string.
+     *
      * @see Doctrine_Record::STATE_* constants
      *
-     * @param integer $state    the state of record
-     * @return string           description of given state
+     * @param  int    $state the state of record
+     * @return string description of given state
      */
     public static function getRecordStateAsString($state)
     {
         switch ($state) {
             case Doctrine_Record::STATE_PROXY:
-                return "proxy";
+                return 'proxy';
                 break;
             case Doctrine_Record::STATE_CLEAN:
-                return "persistent clean";
+                return 'persistent clean';
                 break;
             case Doctrine_Record::STATE_DIRTY:
-                return "persistent dirty";
+                return 'persistent dirty';
                 break;
             case Doctrine_Record::STATE_TDIRTY:
-                return "transient dirty";
+                return 'transient dirty';
                 break;
             case Doctrine_Record::STATE_TCLEAN:
-                return "transient clean";
+                return 'transient clean';
                 break;
         }
     }
@@ -69,21 +66,20 @@ class Doctrine_Lib
      * This method returns an html representation of a given
      * record, containing keys, state and data.
      *
-     * @param Doctrine_Record $record
      * @return string
      */
     public static function getRecordAsString(Doctrine_Record $record)
     {
         $r[] = '<pre>';
-        $r[] = 'Component  : ' . $record->getTable()->getComponentName();
-        $r[] = 'ID         : ' . Doctrine_Core::dump($record->identifier());
-        $r[] = 'References : ' . count($record->getReferences());
-        $r[] = 'State      : ' . Doctrine_Lib::getRecordStateAsString($record->state());
-        $r[] = 'OID        : ' . $record->getOID();
-        $r[] = 'data       : ' . Doctrine_Core::dump($record->getData(), false);
+        $r[] = 'Component  : '.$record->getTable()->getComponentName();
+        $r[] = 'ID         : '.Doctrine_Core::dump($record->identifier());
+        $r[] = 'References : '.count($record->getReferences());
+        $r[] = 'State      : '.Doctrine_Lib::getRecordStateAsString($record->state());
+        $r[] = 'OID        : '.$record->getOID();
+        $r[] = 'data       : '.Doctrine_Core::dump($record->getData(), false);
         $r[] = '</pre>';
 
-        return implode("\n",$r)."<br />";
+        return implode("\n", $r).'<br />';
     }
 
     /**
@@ -91,21 +87,23 @@ class Doctrine_Lib
      *
      * This method translates a Doctrine_Connection state (integer constant)
      * in a english description.
+     *
      * @see Doctrine_Transaction::STATE_* constants
-     * @param integer $state    state of the connection as a string
+     *
+     * @param  int    $state state of the connection as a string
      * @return string
      */
     public static function getConnectionStateAsString($state)
     {
         switch ($state) {
             case Doctrine_Transaction::STATE_SLEEP:
-                return "open";
+                return 'open';
                 break;
             case Doctrine_Transaction::STATE_BUSY:
-                return "busy";
+                return 'busy';
                 break;
             case Doctrine_Transaction::STATE_ACTIVE:
-                return "active";
+                return 'active';
                 break;
         }
     }
@@ -116,20 +114,19 @@ class Doctrine_Lib
      * This method returns an html dump of a connection, containing state, open
      * transactions and loaded tables.
      *
-     * @param Doctrine_Connection $connection
      * @return string
      */
     public static function getConnectionAsString(Doctrine_Connection $connection)
     {
         $r[] = '<pre>';
         $r[] = 'Doctrine_Connection object';
-        $r[] = 'State               : ' . Doctrine_Lib::getConnectionStateAsString($connection->transaction->getState());
-        $r[] = 'Open Transactions   : ' . $connection->transaction->getTransactionLevel();
-        $r[] = 'Table in memory     : ' . $connection->count();
-        $r[] = 'Driver name         : ' . $connection->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME);
-        $r[] = "</pre>";
+        $r[] = 'State               : '.Doctrine_Lib::getConnectionStateAsString($connection->transaction->getState());
+        $r[] = 'Open Transactions   : '.$connection->transaction->getTransactionLevel();
+        $r[] = 'Table in memory     : '.$connection->count();
+        $r[] = 'Driver name         : '.$connection->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME);
+        $r[] = '</pre>';
 
-        return implode("\n",$r)."<br>";
+        return implode("\n", $r).'<br>';
     }
 
     /**
@@ -137,17 +134,17 @@ class Doctrine_Lib
      *
      * This method returns an html dump of a table, containing component name
      * and table physical name.
-     * @param Doctrine_Table $table
+     *
      * @return string
      */
     public static function getTableAsString(Doctrine_Table $table)
     {
-        $r[] = "<pre>";
-        $r[] = "Component   : ".$table->getComponentName();
-        $r[] = "Table       : ".$table->getTableName();
-        $r[] = "</pre>";
+        $r[] = '<pre>';
+        $r[] = 'Component   : '.$table->getComponentName();
+        $r[] = 'Table       : '.$table->getTableName();
+        $r[] = '</pre>';
 
-        return implode("\n",$r)."<br>";
+        return implode("\n", $r).'<br>';
     }
 
     /**
@@ -157,29 +154,29 @@ class Doctrine_Lib
      * for visual formatting.
      *
      * @todo: What about creating a config varialbe for the color?
-     * @param string $sql   plain text query
-     * @return string       the formatted sql code
+     *
+     * @param  string $sql plain text query
+     * @return string the formatted sql code
      */
     public static function formatSql($sql)
     {
-        $e = explode("\n",$sql);
-        $color = "367FAC";
+        $e = explode("\n", $sql);
+        $color = '367FAC';
         $l = $sql;
-        $l = str_replace("SELECT ", "<font color='$color'><b>SELECT </b></font><br \>  ",$l);
-        $l = str_replace("FROM ", "<font color='$color'><b>FROM </b></font><br \>",$l);
-        $l = str_replace(" LEFT JOIN ", "<br \><font color='$color'><b> LEFT JOIN </b></font>",$l);
-        $l = str_replace(" INNER JOIN ", "<br \><font color='$color'><b> INNER JOIN </b></font>",$l);
-        $l = str_replace(" WHERE ", "<br \><font color='$color'><b> WHERE </b></font>",$l);
-        $l = str_replace(" GROUP BY ", "<br \><font color='$color'><b> GROUP BY </b></font>",$l);
-        $l = str_replace(" HAVING ", "<br \><font color='$color'><b> HAVING </b></font>",$l);
-        $l = str_replace(" AS ", "<font color='$color'><b> AS </b></font><br \>  ",$l);
-        $l = str_replace(" ON ", "<font color='$color'><b> ON </b></font>",$l);
-        $l = str_replace(" ORDER BY ", "<font color='$color'><b> ORDER BY </b></font><br \>",$l);
-        $l = str_replace(" LIMIT ", "<font color='$color'><b> LIMIT </b></font><br \>",$l);
-        $l = str_replace(" OFFSET ", "<font color='$color'><b> OFFSET </b></font><br \>",$l);
-        $l = str_replace("  ", "<dd>",$l);
+        $l = str_replace('SELECT ', "<font color='{$color}'><b>SELECT </b></font><br \\>  ", $l);
+        $l = str_replace('FROM ', "<font color='{$color}'><b>FROM </b></font><br \\>", $l);
+        $l = str_replace(' LEFT JOIN ', "<br \\><font color='{$color}'><b> LEFT JOIN </b></font>", $l);
+        $l = str_replace(' INNER JOIN ', "<br \\><font color='{$color}'><b> INNER JOIN </b></font>", $l);
+        $l = str_replace(' WHERE ', "<br \\><font color='{$color}'><b> WHERE </b></font>", $l);
+        $l = str_replace(' GROUP BY ', "<br \\><font color='{$color}'><b> GROUP BY </b></font>", $l);
+        $l = str_replace(' HAVING ', "<br \\><font color='{$color}'><b> HAVING </b></font>", $l);
+        $l = str_replace(' AS ', "<font color='{$color}'><b> AS </b></font><br \\>  ", $l);
+        $l = str_replace(' ON ', "<font color='{$color}'><b> ON </b></font>", $l);
+        $l = str_replace(' ORDER BY ', "<font color='{$color}'><b> ORDER BY </b></font><br \\>", $l);
+        $l = str_replace(' LIMIT ', "<font color='{$color}'><b> LIMIT </b></font><br \\>", $l);
+        $l = str_replace(' OFFSET ', "<font color='{$color}'><b> OFFSET </b></font><br \\>", $l);
 
-        return $l;
+        return str_replace('  ', '<dd>', $l);
     }
 
     /**
@@ -188,18 +185,17 @@ class Doctrine_Lib
      * This method returns an html dump of a collection of records, containing
      * all data.
      *
-     * @param Doctrine_Collection $collection
      * @return string
      */
     public static function getCollectionAsString(Doctrine_Collection $collection)
     {
-        $r[] = "<pre>";
+        $r[] = '<pre>';
         $r[] = get_class($collection);
-        $r[] = 'data : ' . Doctrine_Core::dump($collection->getData(), false);
-        //$r[] = 'snapshot : ' . Doctrine_Core::dump($collection->getSnapshot());
-        $r[] = "</pre>";
+        $r[] = 'data : '.Doctrine_Core::dump($collection->getData(), false);
+        // $r[] = 'snapshot : ' . Doctrine_Core::dump($collection->getSnapshot());
+        $r[] = '</pre>';
 
-        return implode("\n",$r);
+        return implode("\n", $r);
     }
 
     // Code from symfony sfToolkit class. See LICENSE
@@ -224,52 +220,50 @@ class Doctrine_Lib
      * Different from array_merge
      *  If string keys have arrays for values, these arrays will merge recursively.
      */
-     public static function arrayDeepMerge()
-     {
-         switch (func_num_args()) {
-             case 0:
+    public static function arrayDeepMerge()
+    {
+        switch (func_num_args()) {
+            case 0:
                 return false;
-             case 1:
+            case 1:
                 return func_get_arg(0);
-             case 2:
+            case 2:
                 $args = func_get_args();
-                $args[2] = array();
+                $args[2] = [];
 
-                if (is_array($args[0]) && is_array($args[1]))
-                {
-                    foreach (array_unique(array_merge(array_keys($args[0]),array_keys($args[1]))) as $key)
-                    {
+                if (is_array($args[0]) && is_array($args[1])) {
+                    foreach (array_unique(array_merge(array_keys($args[0]), array_keys($args[1]))) as $key) {
                         $isKey0 = array_key_exists($key, $args[0]);
                         $isKey1 = array_key_exists($key, $args[1]);
 
-                        if ($isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
-                        {
+                        if ($isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key])) {
                             $args[2][$key] = self::arrayDeepMerge($args[0][$key], $args[1][$key]);
-                        } else if ($isKey0 && $isKey1) {
+                        } elseif ($isKey0 && $isKey1) {
                             $args[2][$key] = $args[1][$key];
-                        } else if ( ! $isKey1) {
+                        } elseif (!$isKey1) {
                             $args[2][$key] = $args[0][$key];
-                        } else if ( ! $isKey0) {
+                        } elseif (!$isKey0) {
                             $args[2][$key] = $args[1][$key];
                         }
                     }
 
                     return $args[2];
-                } else {
-                    return $args[1];
                 }
+
+                return $args[1];
+
             default:
                 $args = func_get_args();
                 $args[1] = self::arrayDeepMerge($args[0], $args[1]);
                 array_shift($args);
 
-                return call_user_func_array(array('Doctrine_Lib', 'arrayDeepMerge'), $args);
-            break;
+                return call_user_func_array(['Doctrine_Lib', 'arrayDeepMerge'], $args);
+                break;
         }
     }
 
     /**
-     * arrayDiffSimple
+     * arrayDiffSimple.
      *
      * array arrayDiffSimple ( array array1 , array array2 )
      *
@@ -285,19 +279,20 @@ class Doctrine_Lib
      *
      * @param array $array1
      * @param array $array2
+     *
      * @static
-     * @access public
+     *
      * @return array
      */
     public static function arrayDiffSimple($array1, $array2)
     {
-        $diff = array();
+        $diff = [];
 
-        foreach($array1 as $key => $val) {
-            if(!isset($array2[$key])) {
+        foreach ($array1 as $key => $val) {
+            if (!isset($array2[$key])) {
                 $diff[$key] = $val;
             } else {
-                if(is_array($array2[$key]) && !is_array($val)) {
+                if (is_array($array2[$key]) && !is_array($val)) {
                     $diff[$key] = $val;
                 }
             }
@@ -312,19 +307,19 @@ class Doctrine_Lib
      * This method creates a given path issuing mkdir commands for all folders
      * that do not exist yet. Equivalent to 'mkdir -p'.
      *
-     * @param string $path
-     * @param integer $mode     an integer (octal) chmod parameter for the
-     *                          created directories
-     * @return boolean  true if succeeded
+     * @param  string $path
+     * @param  int    $mode an integer (octal) chmod parameter for the
+     *                      created directories
+     * @return bool   true if succeeded
      */
     public static function makeDirectories($path, $mode = 0777)
     {
-        if ( ! $path) {
-          return false;
+        if (!$path) {
+            return false;
         }
 
         if (is_dir($path) || is_file($path)) {
-          return true;
+            return true;
         }
 
         return mkdir(trim($path), $mode, true);
@@ -336,31 +331,28 @@ class Doctrine_Lib
      * This method recursively removes a directory and all its descendants.
      * Equivalent to 'rm -rf'.
      *
-     * @param string $folderPath
-     * @return boolean  success of the operation
+     * @param  string $folderPath
+     * @return bool   success of the operation
      */
     public static function removeDirectories($folderPath)
     {
-        if (is_dir($folderPath))
-        {
-            foreach (scandir($folderPath) as $value)
-            {
-                if ($value != '.' && $value != '..')
-                {
-                    $value = $folderPath . "/" . $value;
+        if (is_dir($folderPath)) {
+            foreach (scandir($folderPath) as $value) {
+                if ('.' != $value && '..' != $value) {
+                    $value = $folderPath.'/'.$value;
 
                     if (is_dir($value)) {
                         self::removeDirectories($value);
-                    } else if (is_file($value)) {
+                    } elseif (is_file($value)) {
                         unlink($value);
                     }
                 }
             }
 
             return rmdir($folderPath);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -369,9 +361,8 @@ class Doctrine_Lib
      * This method recursively copies all $source files and subdirs in $dest.
      * If $source is a file, only it will be copied in $dest.
      *
-     * @param string $source    a directory path
-     * @param string $dest      a directory path
-     * @return
+     * @param string $source a directory path
+     * @param string $dest   a directory path
      */
     public static function copyDirectory($source, $dest)
     {
@@ -381,7 +372,7 @@ class Doctrine_Lib
         }
 
         // Make destination directory
-        if ( ! is_dir($dest)) {
+        if (!is_dir($dest)) {
             mkdir($dest);
         }
 
@@ -389,13 +380,13 @@ class Doctrine_Lib
         $dir = dir($source);
         while (false !== $entry = $dir->read()) {
             // Skip pointers
-            if ($entry == '.' || $entry == '..') {
+            if ('.' == $entry || '..' == $entry) {
                 continue;
             }
 
             // Deep copy directories
-            if ($dest !== "$source/$entry") {
-                self::copyDirectory("$source/$entry", "$dest/$entry");
+            if ($dest !== "{$source}/{$entry}") {
+                self::copyDirectory("{$source}/{$entry}", "{$dest}/{$entry}");
             }
         }
 
@@ -412,8 +403,7 @@ class Doctrine_Lib
      * and for Doctrine coding standards. $className must use camel case naming
      * and underscores for directory separation.
      *
-     * @param string $classname
-     * @return boolean
+     * @return bool
      */
     public static function isValidClassName($className)
     {

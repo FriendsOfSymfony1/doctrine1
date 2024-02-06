@@ -1,4 +1,5 @@
 <?php
+
 abstract class BaseSymfonyRecord extends Doctrine_Record
 {
     public function setUp()
@@ -9,5 +10,4 @@ abstract class BaseSymfonyRecord extends Doctrine_Record
     {
         $this->hasColumn('name', 'string', 30);
     }
-
 }

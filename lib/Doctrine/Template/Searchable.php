@@ -20,34 +20,25 @@
  */
 
 /**
- * Doctrine_Template_Searchable
+ * Doctrine_Template_Searchable.
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Template_Searchable extends Doctrine_Template
 {
     /**
-     * __construct
-     *
-     * @param array $options 
-     * @return void
+     * __construct.
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
-	      parent::__construct($options);
-        $this->_plugin = new Doctrine_Search($this->_options); 
+        parent::__construct($options);
+        $this->_plugin = new Doctrine_Search($this->_options);
     }
 
     /**
-     * Setup the Searchable template behavior
-     *
-     * @return void
+     * Setup the Searchable template behavior.
      */
     public function setUp()
     {
@@ -58,11 +49,11 @@ class Doctrine_Template_Searchable extends Doctrine_Template
 
     /**
      * Make the batchUpdateIndex() function available to the template so Doctrine_Record child classes
-     * with the behavior enabled can all the function
+     * with the behavior enabled can all the function.
      *
-     * @param integer $limit 
-     * @param integer $offset 
-     * @return void
+     * @param int        $limit
+     * @param int        $offset
+     * @param mixed|null $encoding
      */
     public function batchUpdateIndex($limit = null, $offset = null, $encoding = null)
     {
@@ -70,11 +61,11 @@ class Doctrine_Template_Searchable extends Doctrine_Template
     }
 
     /**
-     * Proxy method so the batch updating can be called from table classes
+     * Proxy method so the batch updating can be called from table classes.
      *
-     * @param integer $limit 
-     * @param integer $offset 
-     * @return void
+     * @param int        $limit
+     * @param int        $offset
+     * @param mixed|null $encoding
      */
     public function batchUpdateIndexTableProxy($limit = null, $offset = null, $encoding = null)
     {
@@ -82,11 +73,11 @@ class Doctrine_Template_Searchable extends Doctrine_Template
     }
 
     /**
-     * Searchable keyword search proxy for Doctrine_Table
-     * 
-     * @param string $string Keyword string to search for
-     * @param Doctrine_Query $query Query object to alter. Adds where condition to limit the results using the search index
-     * @return array    ids and relevancy
+     * Searchable keyword search proxy for Doctrine_Table.
+     *
+     * @param  string         $string Keyword string to search for
+     * @param  Doctrine_Query $query  Query object to alter. Adds where condition to limit the results using the search index
+     * @return array          ids and relevancy
      */
     public function searchTableProxy($string, $query = null)
     {

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC25_TestCase
+ * Doctrine_Ticket_DC25_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC25_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC25_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,7 +47,8 @@ class Doctrine_Ticket_DC25_TestCase extends Doctrine_UnitTestCase
         $q = Doctrine_Core::getTable('Ticket_DC25_Article')
             ->createQuery('a')
             ->leftJoin('a.Tags t1')
-            ->leftJoin('a.Tags t2');
+            ->leftJoin('a.Tags t2')
+        ;
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.name AS t__name, t2.id AS t2__id, t2.name AS t2__name, t4.id AS t4__id, t4.name AS t4__name FROM ticket__d_c25__article t LEFT JOIN ticket__d_c25__article_tag t3 ON (t.id = t3.article_id) LEFT JOIN ticket__d_c25__tag t2 ON t2.id = t3.tag_id LEFT JOIN ticket__d_c25__article_tag t5 ON (t.id = t5.article_id) LEFT JOIN ticket__d_c25__tag t4 ON t4.id = t5.tag_id');
     }
@@ -60,11 +63,11 @@ class Ticket_DC25_Article extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_DC25_Tag as Tags', array(
+        $this->hasMany('Ticket_DC25_Tag as Tags', [
             'local' => 'article_id',
             'foreign' => 'tag_id',
-            'refClass' => 'Ticket_DC25_ArticleTag'
-        ));
+            'refClass' => 'Ticket_DC25_ArticleTag',
+        ]);
     }
 }
 
@@ -77,11 +80,11 @@ class Ticket_DC25_Tag extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_DC25_Article as Article', array(
+        $this->hasMany('Ticket_DC25_Article as Article', [
             'local' => 'tag_id',
             'foreign' => 'article_id',
-            'refClass' => 'Ticket_DC25_ArticleTag'
-        ));
+            'refClass' => 'Ticket_DC25_ArticleTag',
+        ]);
     }
 }
 

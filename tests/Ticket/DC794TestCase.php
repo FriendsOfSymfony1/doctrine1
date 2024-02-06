@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC794_TestCase
+ * Doctrine_Ticket_DC794_TestCase.
  *
- * @package     Doctrine
  * @author      Enrico Stahn <mail@enricostahn.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC794_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC794_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -41,7 +43,7 @@ class Doctrine_Ticket_DC794_TestCase extends Doctrine_UnitTestCase
     public function testTest()
     {
         $table = Doctrine_Core::getTable('Ticket_DC794_Model');
-        
+
         $this->assertEqual($table->buildFindByWhere('IdOrigenOportunidadClienteOrId'), '(dctrn_find.idOrigenOportunidadCliente = ? OR dctrn_find.id = ?)');
         $this->assertEqual($table->buildFindByWhere('IdAndIdOrIdOrigenOportunidadCliente'), 'dctrn_find.id = ? AND (dctrn_find.id = ? OR dctrn_find.idOrigenOportunidadCliente = ?)');
         $this->assertEqual($table->buildFindByWhere('UsernameOrIdOrIdOrigenOportunidadCliente'), '(dctrn_find.Username = ? OR dctrn_find.id = ? OR dctrn_find.idOrigenOportunidadCliente = ?)');
@@ -52,12 +54,12 @@ class Ticket_DC794_Model extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', null, array(
+        $this->hasColumn('id', 'integer', null, [
             'type' => 'integer',
             'unsigned' => false,
             'primary' => true,
             'autoincrement' => true,
-        ));
+        ]);
         $this->hasColumn('idOrigenOportunidadCliente', 'string', 255);
         $this->hasColumn('Username', 'string', 255);
         $this->hasColumn('password', 'string', 255);

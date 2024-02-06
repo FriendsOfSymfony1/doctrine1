@@ -20,28 +20,30 @@
  */
 
 /**
- * Doctrine_ColumnAggregationInheritance_TestCase
+ * Doctrine_ColumnAggregationInheritance_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Bjarte Stien Karlsen <bjartka@pvv.ntnu.no> 
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @author      Bjarte Stien Karlsen <bjartka@pvv.ntnu.no>
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_ColumnAggregationInheritance_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_ColumnAggregationInheritance_TestCase extends Doctrine_UnitTestCase
 {
-    protected $otherEntity = null;
+    protected $otherEntity;
 
     public function prepareData()
     {
         parent::prepareData();
-        //we create a test entity that is not a user and not a group
+        // we create a test entity that is not a user and not a group
         $entity = new Entity();
-        $entity->name='Other Entity';
-        $entity->type = 2; 
+        $entity->name = 'Other Entity';
+        $entity->type = 2;
         $entity->save();
         $this->otherEntity = $entity;
     }
@@ -49,26 +51,26 @@ class Doctrine_ColumnAggregationInheritance_TestCase extends Doctrine_UnitTestCa
     public function testQueriedClassReturnedIfNoSubclassMatch()
     {
         $q = new Doctrine_Query();
-        $entityOther = $q->from('Entity')->where('id = ?')->execute(array($this->otherEntity->id))->getFirst();
-        $this->assertTrue($entityOther instanceOf Entity);
+        $entityOther = $q->from('Entity')->where('id = ?')->execute([$this->otherEntity->id])->getFirst();
+        $this->assertTrue($entityOther instanceof Entity);
     }
 
     public function testSubclassReturnedIfInheritanceMatches()
     {
         $q = new Doctrine_Query();
-        $group = $q->from('Entity')->where('id=?')->execute(array(1))->getFirst();
-        $this->assertTrue($group instanceOf Group);
+        $group = $q->from('Entity')->where('id=?')->execute([1])->getFirst();
+        $this->assertTrue($group instanceof Group);
 
         $q = new Doctrine_Query();
-        $user = $q->from('Entity')->where('id=?')->execute(array(5))->getFirst();
-        $this->assertTrue($user instanceOf User);
+        $user = $q->from('Entity')->where('id=?')->execute([5])->getFirst();
+        $this->assertTrue($user instanceof User);
     }
 
     public function testStringColumnInheritance()
     {
         $q = new Doctrine_Query();
         $q->select('g.name')->from('Group g');
-        $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id, e.name AS e__name FROM entity e WHERE (e.type = 1)");
+        $this->assertEqual($q->getSqlQuery(), 'SELECT e.id AS e__id, e.name AS e__name FROM entity e WHERE (e.type = 1)');
     }
 
     public function testSubclassFieldSetWhenCreatingNewSubclassedRecord()

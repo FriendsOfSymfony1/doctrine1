@@ -20,92 +20,94 @@
  */
 
 /**
- * Doctrine_Connection_Sqlite_TestCase
+ * Doctrine_Connection_Sqlite_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Connection_Sqlite_TestCase extends Doctrine_UnitTestCase
 {
     public function testNoSuchTableErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'no such table: test1'));
-        
+        $this->exc->processErrorInfo([0, 0, 'no such table: test1']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHTABLE);
     }
 
     public function testNoSuchIndexErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'no such index: test1'));
-        
+        $this->exc->processErrorInfo([0, 0, 'no such index: test1']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOT_FOUND);
     }
 
     public function testUniquePrimaryKeyErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'PRIMARY KEY must be unique'));
-        
+        $this->exc->processErrorInfo([0, 0, 'PRIMARY KEY must be unique']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testIsNotUniqueErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'is not unique'));
-        
+        $this->exc->processErrorInfo([0, 0, 'is not unique']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testColumnsNotUniqueErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'columns name, id are not unique'));
-        
+        $this->exc->processErrorInfo([0, 0, 'columns name, id are not unique']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testUniquenessConstraintErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'uniqueness constraint failed'));
-        
+        $this->exc->processErrorInfo([0, 0, 'uniqueness constraint failed']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testNotNullConstraintErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'may not be NULL'));
-        
+        $this->exc->processErrorInfo([0, 0, 'may not be NULL']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT_NOT_NULL);
     }
 
     public function testNoSuchFieldErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, 'no such column: column1'));
-        
+        $this->exc->processErrorInfo([0, 0, 'no such column: column1']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHFIELD);
     }
 
     public function testColumnNotPresentInTablesErrorIsSupported2()
     {
-        $this->exc->processErrorInfo(array(0,0, 'column not present in both tables'));
-        
+        $this->exc->processErrorInfo([0, 0, 'column not present in both tables']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHFIELD);
     }
 
     public function testNearSyntaxErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, "near \"SELECT FROM\": syntax error"));
-        
+        $this->exc->processErrorInfo([0, 0, 'near "SELECT FROM": syntax error']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_SYNTAX);
     }
 
     public function testValueCountOnRowErrorIsSupported()
     {
-        $this->exc->processErrorInfo(array(0,0, '3 values for 2 columns'));
-        
+        $this->exc->processErrorInfo([0, 0, '3 values for 2 columns']);
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_VALUE_COUNT_ON_ROW);
     }
 }

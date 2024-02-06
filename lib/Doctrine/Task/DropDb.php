@@ -20,28 +20,24 @@
  */
 
 /**
- * Doctrine_Task_DropDb
+ * Doctrine_Task_DropDb.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_DropDb extends Doctrine_Task
 {
-    public $description          =   'Drop database for all existing connections',
-           $requiredArguments    =   array(),
-           $optionalArguments    =   array('force'  =>  'Whether or not to force the drop database task');
+    public $description = 'Drop database for all existing connections';
+    public $requiredArguments = [];
+    public $optionalArguments = ['force' => 'Whether or not to force the drop database task'];
 
     public function execute()
     {
-        if ( ! $this->getArgument('force')) {
+        if (!$this->getArgument('force')) {
             $answer = $this->ask('Are you sure you wish to drop your databases? (y/n)');
 
-            if ($answer != 'y') {
+            if ('y' != $answer) {
                 $this->notify('Successfully cancelled');
 
                 return;
@@ -52,7 +48,7 @@ class Doctrine_Task_DropDb extends Doctrine_Task
         foreach ($manager as $name => $connection) {
             try {
                 $connection->dropDatabase();
-                $this->notify("Successfully dropped database for connection named '" . $name . "'");
+                $this->notify("Successfully dropped database for connection named '".$name."'");
             } catch (Exception $e) {
                 $this->notify($e->getMessage());
             }

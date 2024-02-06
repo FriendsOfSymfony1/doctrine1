@@ -20,20 +20,16 @@
  */
 
 /**
- * Doctrine_Validator_Driver
+ * Doctrine_Validator_Driver.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Driver
 {
     /**
-     * @var array $_args     an array of plugin specific args
+     * @var array an array of plugin specific args
      */
     public $args;
     public $invoker;
@@ -41,7 +37,7 @@ class Doctrine_Validator_Driver
 
     /**
      * __get
-     * an alias for getOption
+     * an alias for getOption.
      *
      * @param string $arg
      */
@@ -50,11 +46,12 @@ class Doctrine_Validator_Driver
         if (isset($this->args[$arg])) {
             return $this->args[$arg];
         }
+
         return null;
     }
 
     /**
-     * __isset
+     * __isset.
      *
      * @param string $arg
      */
@@ -64,52 +61,52 @@ class Doctrine_Validator_Driver
     }
 
     /**
-     * sets given value to an argument
+     * sets given value to an argument.
      *
-     * @param $arg          the name of the option to be changed
-     * @param $value        the value of the option
-     * @return Doctrine_Validator_Driver    this object
+     * @param                            $arg   the name of the option to be changed
+     * @param                            $value the value of the option
+     * @return Doctrine_Validator_Driver this object
      */
     public function __set($arg, $value)
     {
         $this->args[$arg] = $value;
-        
+
         return $this;
     }
 
     /**
-     * returns the value of an argument
+     * returns the value of an argument.
      *
-     * @param $arg          the name of the option to retrieve
-     * @return mixed        the value of the option
+     * @param        $arg the name of the option to retrieve
+     * @return mixed the value of the option
      */
     public function getArg($arg)
     {
-        if ( ! isset($this->args[$arg])) {
-            throw new Doctrine_Validator_Exception('Unknown option ' . $arg);
+        if (!isset($this->args[$arg])) {
+            throw new Doctrine_Validator_Exception('Unknown option '.$arg);
         }
-        
+
         return $this->args[$arg];
     }
 
     /**
-     * sets given value to an argument
+     * sets given value to an argument.
      *
-     * @param $arg          the name of the option to be changed
-     * @param $value        the value of the option
-     * @return Doctrine_Validator_Driver    this object
+     * @param                            $arg   the name of the option to be changed
+     * @param                            $value the value of the option
+     * @return Doctrine_Validator_Driver this object
      */
     public function setArg($arg, $value)
     {
         $this->args[$arg] = $value;
-        
+
         return $this;
     }
 
     /**
-     * returns all args and their associated values
+     * returns all args and their associated values.
      *
-     * @return array    all args as an associative array
+     * @return array all args as an associative array
      */
     public function getArgs()
     {
@@ -119,10 +116,10 @@ class Doctrine_Validator_Driver
     public function __toString()
     {
         $className = get_class($this);
-        if (strpos($className, 'Doctrine_Validator_') === 0) { 
+        if (0 === strpos($className, 'Doctrine_Validator_')) {
             return strtolower(substr($className, 19));
-        } else {
-            return $className;
         }
+
+        return $className;
     }
 }

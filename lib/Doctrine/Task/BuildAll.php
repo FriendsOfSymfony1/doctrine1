@@ -20,46 +20,44 @@
  */
 
 /**
- * Doctrine_Task_BuildAll
+ * Doctrine_Task_BuildAll.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_BuildAll extends Doctrine_Task
 {
-    public $description          =   'Calls generate-models-from-yaml, create-db, and create-tables',
-           $requiredArguments    =   array(),
-           $optionalArguments    =   array();
-    
-    protected $models,
-              $createDb,
-              $tables;
-    
+    public $description = 'Calls generate-models-from-yaml, create-db, and create-tables';
+    public $requiredArguments = [];
+    public $optionalArguments = [];
+
+    protected $models;
+
+    protected $createDb;
+
+    protected $tables;
+
     public function __construct($dispatcher = null)
     {
         parent::__construct($dispatcher);
-        
+
         $this->models = new Doctrine_Task_GenerateModelsYaml($this->dispatcher);
         $this->createDb = new Doctrine_Task_CreateDb($this->dispatcher);
         $this->tables = new Doctrine_Task_CreateTables($this->dispatcher);
-        
+
         $this->requiredArguments = array_merge($this->requiredArguments, $this->models->requiredArguments, $this->createDb->requiredArguments, $this->tables->requiredArguments);
         $this->optionalArguments = array_merge($this->optionalArguments, $this->models->optionalArguments, $this->createDb->optionalArguments, $this->tables->optionalArguments);
     }
-    
+
     public function execute()
     {
         $this->models->setArguments($this->getArguments());
         $this->models->execute();
-        
+
         $this->createDb->setArguments($this->getArguments());
         $this->createDb->execute();
-        
+
         $this->tables->setArguments($this->getArguments());
         $this->tables->execute();
     }

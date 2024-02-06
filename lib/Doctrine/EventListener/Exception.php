@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_EventListener_Exception
+ * Doctrine_EventListener_Exception.
  *
- * @package     Doctrine
- * @subpackage  EventListener
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1344 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_EventListener_Exception extends Doctrine_Exception
-{ }
+{
+}

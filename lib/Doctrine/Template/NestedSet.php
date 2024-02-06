@@ -20,22 +20,16 @@
  */
 
 /**
- * Doctrine template which implements the custom NestedSet implementation
+ * Doctrine template which implements the custom NestedSet implementation.
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Template_NestedSet extends Doctrine_Template
 {
     /**
-     * Set up NestedSet template
-     *
-     * @return void
+     * Set up NestedSet template.
      */
     public function setUp()
     {
@@ -44,9 +38,7 @@ class Doctrine_Template_NestedSet extends Doctrine_Template
     }
 
     /**
-     * Call set table definition for the NestedSet behavior
-     *
-     * @return void
+     * Call set table definition for the NestedSet behavior.
      */
     public function setTableDefinition()
     {

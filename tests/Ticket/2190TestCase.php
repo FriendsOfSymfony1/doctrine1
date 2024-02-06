@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_2190_TestCase
+ * Doctrine_Ticket_2190_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2190_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2190_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -57,7 +59,7 @@ class Doctrine_Ticket_2190_TestCase extends Doctrine_UnitTestCase
         $article->body = str_repeat('a', 257);
         $article->save();
 
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 5; ++$i) {
             $article = new Ticket_2190_Article();
             $article->name = 'test';
             $article->body = str_repeat('a', 300);
@@ -79,6 +81,6 @@ class Ticket_2190_Article extends Doctrine_Record
 
     public function setUp()
     {
-        $this->actAs('Sluggable', array('indexName' => 'ticket_2190_slug_idx', 'fields' => array('body')));
+        $this->actAs('Sluggable', ['indexName' => 'ticket_2190_slug_idx', 'fields' => ['body']]);
     }
 }

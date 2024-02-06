@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1729_TestCase
+ * Doctrine_Ticket_1729_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1729_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1729_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -55,7 +57,8 @@ class Doctrine_Ticket_1729_TestCase extends Doctrine_UnitTestCase
 
         $q = Doctrine_Query::create()
             ->select('u.id')
-            ->from('Ticket_1729_User u');
+            ->from('Ticket_1729_User u')
+        ;
         $this->assertEqual($q->count(), 1);
         $results = $q->execute();
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id FROM ticket_1729__user t WHERE (t.deleted_at IS NULL)');

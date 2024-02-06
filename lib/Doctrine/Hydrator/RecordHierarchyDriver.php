@@ -20,14 +20,10 @@
  */
 
 /**
- * Builds result sets in to the hierarchy graph using php arrays
+ * Builds result sets in to the hierarchy graph using php arrays.
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.2
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
  */
 class Doctrine_Hydrator_RecordHierarchyDriver extends Doctrine_Hydrator_RecordDriver

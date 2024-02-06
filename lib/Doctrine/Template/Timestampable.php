@@ -20,61 +20,55 @@
  */
 
 /**
- * Doctrine_Template_Timestampable
+ * Doctrine_Template_Timestampable.
  *
  * Easily add created and updated at timestamps to your doctrine records that are automatically set
  * when records are saved
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Template_Timestampable extends Doctrine_Template
 {
     /**
-     * Array of Timestampable options
+     * Array of Timestampable options.
      *
      * @var string
      */
-    protected $_options = array('created' =>  array('name'          =>  'created_at',
-                                                    'alias'         =>  null,
-                                                    'type'          =>  'timestamp',
-                                                    'format'        =>  'Y-m-d H:i:s',
-                                                    'disabled'      =>  false,
-                                                    'expression'    =>  false,
-                                                    'options'       =>  array('notnull' => true)),
-                                'updated' =>  array('name'          =>  'updated_at',
-                                                    'alias'         =>  null,
-                                                    'type'          =>  'timestamp',
-                                                    'format'        =>  'Y-m-d H:i:s',
-                                                    'disabled'      =>  false,
-                                                    'expression'    =>  false,
-                                                    'onInsert'      =>  true,
-                                                    'options'       =>  array('notnull' => true)));
+    protected $_options = ['created' => ['name' => 'created_at',
+        'alias' => null,
+        'type' => 'timestamp',
+        'format' => 'Y-m-d H:i:s',
+        'disabled' => false,
+        'expression' => false,
+        'options' => ['notnull' => true]],
+        'updated' => ['name' => 'updated_at',
+            'alias' => null,
+            'type' => 'timestamp',
+            'format' => 'Y-m-d H:i:s',
+            'disabled' => false,
+            'expression' => false,
+            'onInsert' => true,
+            'options' => ['notnull' => true]]];
 
     /**
-     * Set table definition for Timestampable behavior
-     *
-     * @return void
+     * Set table definition for Timestampable behavior.
      */
     public function setTableDefinition()
     {
-        if ( ! $this->_options['created']['disabled']) {
+        if (!$this->_options['created']['disabled']) {
             $name = $this->_options['created']['name'];
             if ($this->_options['created']['alias']) {
-                $name .= ' as ' . $this->_options['created']['alias'];
+                $name .= ' as '.$this->_options['created']['alias'];
             }
             $this->hasColumn($name, $this->_options['created']['type'], null, $this->_options['created']['options']);
         }
 
-        if ( ! $this->_options['updated']['disabled']) {
+        if (!$this->_options['updated']['disabled']) {
             $name = $this->_options['updated']['name'];
             if ($this->_options['updated']['alias']) {
-                $name .= ' as ' . $this->_options['updated']['alias'];
+                $name .= ' as '.$this->_options['updated']['alias'];
             }
             $this->hasColumn($name, $this->_options['updated']['type'], null, $this->_options['updated']['options']);
         }

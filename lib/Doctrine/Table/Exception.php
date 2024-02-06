@@ -21,21 +21,18 @@
 
 /**
  * thrown when user tries to initialize a new instance of Doctrine_Table,
- * while there already exists an instance of that table
+ * while there already exists an instance of that table.
  *
- * @package     Doctrine
- * @subpackage  Table
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Table_Exception extends Doctrine_Exception
 {
     public function __construct($message = "Couldn't initialize table. One instance of this
                             table already exists. Always use Doctrine_Session::getTable(\$name)
-                            to get on instance of a Doctrine_Table.") {
+                            to get on instance of a Doctrine_Table.")
+    {
         parent::__construct($message);
     }
 }

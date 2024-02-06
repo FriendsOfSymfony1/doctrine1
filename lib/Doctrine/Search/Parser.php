@@ -20,22 +20,18 @@
  */
 
 /**
- * Doctrine_Search_Parser_Standard
+ * Doctrine_Search_Parser_Standard.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_Parser
 {
     public function parse($file)
     {
         $contents = file_get_contents($file);
-        
-        return array('url' => $file, 'contents' => $contents);
+
+        return ['url' => $file, 'contents' => $contents];
     }
 }

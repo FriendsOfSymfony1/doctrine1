@@ -1,7 +1,13 @@
 <?php
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class MigrationTest extends Doctrine_Record
 {
-    public function setTableDefinition() 
+    public function setTableDefinition()
     {
         $this->hasColumn('field1', 'string');
     }

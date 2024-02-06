@@ -20,31 +20,32 @@
  */
 
 /**
- * Doctrine_TreeStructure_TestCase
+ * Doctrine_TreeStructure_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_TreeStructure_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() 
-    { 
+    public function prepareTables()
+    {
         // we don't need the standard tables here
-        $this->tables = array('TreeLeaf');
+        $this->tables = ['TreeLeaf'];
         parent::prepareTables();
     }
-    
+
     public function prepareData()
     {
-
     }
 
-    public function testSelfReferentialRelationship() 
+    public function testSelfReferentialRelationship()
     {
         $component = new TreeLeaf();
 
@@ -52,12 +53,13 @@ class Doctrine_TreeStructure_TestCase extends Doctrine_UnitTestCase
             $rel = $component->getTable()->getRelation('Parent');
             $rel = $component->getTable()->getRelation('Children');
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
     }
 
-    public function testLocalAndForeignKeysAreSetCorrectly() {
+    public function testLocalAndForeignKeysAreSetCorrectly()
+    {
         $component = new TreeLeaf();
 
         $rel = $component->getTable()->getRelation('Parent');
@@ -69,7 +71,7 @@ class Doctrine_TreeStructure_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($rel->getForeign(), 'parent_id');
     }
 
-    public function testTreeLeafRelationships() 
+    public function testTreeLeafRelationships()
     {
         /* structure:
          *
@@ -88,16 +90,16 @@ class Doctrine_TreeStructure_TestCase extends Doctrine_UnitTestCase
         $o1->save();
 
         $o2 = new TreeLeaf();
-        $o2->name   = 'o2';
+        $o2->name = 'o2';
         $o2->Parent = $o1;
         $o2->save();
 
         $o3 = new TreeLeaf();
-        $o3->name   = 'o3';
+        $o3->name = 'o3';
         $o3->Parent = $o1;
         $o3->save();
 
-        //$o1->refresh();
+        // $o1->refresh();
 
         $o4 = new TreeLeaf();
         $o4->name = 'o4';
@@ -107,22 +109,22 @@ class Doctrine_TreeStructure_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue(isset($o2->Parent));
         $this->assertTrue($o2->Parent === $o1);
         $this->assertFalse(isset($o4->Parent));
-      
-        $this->assertTrue(count($o1->Children) == 2);
-        $this->assertTrue(count($o1->get('Children')) == 2);
 
-        $this->assertTrue(count($o4->Children) == 0);
+        $this->assertTrue(2 == count($o1->Children));
+        $this->assertTrue(2 == count($o1->get('Children')));
+
+        $this->assertTrue(0 == count($o4->Children));
     }
+
     public function testTreeStructureFetchingWorksWithDql()
     {
         $q = new Doctrine_Query();
         $q->select('l.*, c.*')
-          ->from('TreeLeaf l, l.Children c')
-          ->where('l.parent_id IS NULL')
-          ->groupby('l.id, c.id');
+            ->from('TreeLeaf l, l.Children c')
+            ->where('l.parent_id IS NULL')
+            ->groupby('l.id, c.id')
+        ;
 
         $coll = $q->execute();
-
     }
 }
-

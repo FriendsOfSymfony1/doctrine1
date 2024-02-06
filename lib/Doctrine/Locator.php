@@ -1,6 +1,6 @@
 <?php
 /**
- *  $Id$
+ *  $Id$.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,43 +20,39 @@
  */
 
 /**
- * Doctrine_Locator
+ * Doctrine_Locator.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Locator
  * @category    Locator
- * @license     http://www.gnu.org/licenses/lgpl.txt LGPL
- * @link        http://www.doctrine-project.org
+ *
+ * @see        http://www.doctrine-project.org
+ *
  * @author      Janne Vanhala <jpvanhal@cc.hut.fi>
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Eevert Saukkokoski <dmnEe0@gmail.com>
- * @version     $Revision$
- * @since       1.0
  */
 class Doctrine_Locator implements Countable, IteratorAggregate
 {
     /**
-     * @var array $_resources       an array of bound resources
+     * @var array an array of bound resources
      */
-    protected $_resources = array();
+    protected $_resources = [];
 
     /**
-     * @var string $_classPrefix    the default class prefix
+     * @var string the default class prefix
      */
     protected $_classPrefix = 'Doctrine_';
 
     /**
-     * @var array $_instances       a pool of this object's instances
+     * @var array a pool of this object's instances
      */
-    protected static $_instances = array();
+    protected static $_instances = [];
 
     /**
      * Constructor. Provide an array of resources to set initial contents.
      *
      * @param array
-     * @return void
      */
-    public function __construct(array $defaults = null)
+    public function __construct(?array $defaults = null)
     {
         if (null !== $defaults) {
             foreach ($defaults as $name => $resource) {
@@ -70,7 +66,7 @@ class Doctrine_Locator implements Countable, IteratorAggregate
     }
 
     /**
-     * instance
+     * instance.
      *
      * @return Sensei_Locator
      */
@@ -79,11 +75,12 @@ class Doctrine_Locator implements Countable, IteratorAggregate
         if (empty(self::$_instances)) {
             $obj = new Doctrine_Locator();
         }
+
         return current(self::$_instances);
     }
 
     /**
-     * setClassPrefix
+     * setClassPrefix.
      *
      * @param string $prefix
      */
@@ -93,7 +90,7 @@ class Doctrine_Locator implements Countable, IteratorAggregate
     }
 
     /**
-     * getClassPrefix
+     * getClassPrefix.
      *
      * @return string
      */
@@ -104,9 +101,9 @@ class Doctrine_Locator implements Countable, IteratorAggregate
 
     /**
      * contains
-     * checks if a resource exists under the given name
+     * checks if a resource exists under the given name.
      *
-     * @return boolean      whether or not given resource name exists
+     * @return bool whether or not given resource name exists
      */
     public function contains($name)
     {
@@ -115,11 +112,11 @@ class Doctrine_Locator implements Countable, IteratorAggregate
 
     /**
      * bind
-     * binds a resource to a name
+     * binds a resource to a name.
      *
-     * @param string $name      the name of the resource to bind
-     * @param mixed $value      the value of the resource
-     * @return Sensei_Locator   this object
+     * @param  string         $name  the name of the resource to bind
+     * @param  mixed          $value the value of the resource
+     * @return Sensei_Locator this object
      */
     public function bind($name, $value)
     {
@@ -130,55 +127,54 @@ class Doctrine_Locator implements Countable, IteratorAggregate
 
     /**
      * locate
-     * locates a resource by given name and returns it
+     * locates a resource by given name and returns it.
      *
-     * @throws Doctrine_Locator_Exception     if the resource could not be found
-     * @param string $name      the name of the resource
-     * @return mixed            the located resource
+     * @param  string                     $name the name of the resource
+     * @return mixed                      the located resource
+     * @throws Doctrine_Locator_Exception if the resource could not be found
      */
     public function locate($name)
     {
         if (isset($this->_resources[$name])) {
             return $this->_resources[$name];
-        } else {
-            $className = $name;
+        }
+        $className = $name;
 
-            if ( ! class_exists($className)) {
-
-                $name = explode('.', $name);
-                foreach ($name as &$v) {
-                    $v = ucfirst(strtolower($v));
-                }
-                $name = implode('_', $name);
-
-                $className = $this->_classPrefix . $name;
-
-                if ( ! class_exists($className)) {
-                    throw new Doctrine_Locator_Exception("Couldn't locate resource " . $className);
-                }
+        if (!class_exists($className)) {
+            $name = explode('.', $name);
+            foreach ($name as &$v) {
+                $v = ucfirst(strtolower($v));
             }
+            $name = implode('_', $name);
 
-            $this->_resources[$name] = new $className();
+            $className = $this->_classPrefix.$name;
 
-            if ($this->_resources[$name] instanceof Doctrine_Locator_Injectable) {
-                $this->_resources[$name]->setLocator($this);
+            if (!class_exists($className)) {
+                throw new Doctrine_Locator_Exception("Couldn't locate resource ".$className);
             }
-
-            return $this->_resources[$name];
         }
 
-        throw new Doctrine_Locator_Exception("Couldn't locate resource " . $name);
+        $this->_resources[$name] = new $className();
+
+        if ($this->_resources[$name] instanceof Doctrine_Locator_Injectable) {
+            $this->_resources[$name]->setLocator($this);
+        }
+
+        return $this->_resources[$name];
+
+        throw new Doctrine_Locator_Exception("Couldn't locate resource ".$name);
     }
 
     /**
      * count
      * returns the number of bound resources associated with
-     * this object
+     * this object.
      *
      * @see Countable interface
-     * @return integer              the number of resources
+     *
+     * @return int the number of resources
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->_resources);
@@ -187,12 +183,12 @@ class Doctrine_Locator implements Countable, IteratorAggregate
     /**
      * getIterator
      * returns an ArrayIterator that iterates through all
-     * bound resources
+     * bound resources.
      *
-     * @return ArrayIterator    an iterator for iterating through
-     *                          all bound resources
+     * @return ArrayIterator an iterator for iterating through
+     *                       all bound resources
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->_resources);

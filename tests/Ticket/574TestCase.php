@@ -20,66 +20,62 @@
  */
 
 /**
- * Doctrine_Ticket_574_TestCase
+ * Doctrine_Ticket_574_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_574_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_574_TestCase extends Doctrine_UnitTestCase
 {
-  /**
-   * prepareData
-   */
+    /**
+     * prepareData.
+     */
     public function prepareData()
     {
-	    for($i=0; $i < 10; $i++)
-	    {
-	       $oAuthor = new Author;
-	       $oAuthor->book_id = $i;
-	       $oAuthor->name = "Author $i";
-	       $oAuthor->save();
-	    }
+        for ($i = 0; $i < 10; ++$i) {
+            $oAuthor = new Author();
+            $oAuthor->book_id = $i;
+            $oAuthor->name = "Author {$i}";
+            $oAuthor->save();
+        }
     }
-	
+
     /**
-     * prepareTables
+     * prepareTables.
      */
-    
     public function prepareTables()
     {
-      $this->tables = array();
-      $this->tables[] = 'Author';
-      $this->tables[] = 'Book';
-      
-      parent :: prepareTables();
+        $this->tables = [];
+        $this->tables[] = 'Author';
+        $this->tables[] = 'Book';
+
+        parent::prepareTables();
     }
-    
-    
+
     /**
-     * Test the existence expected indexes
+     * Test the existence expected indexes.
      */
-    
     public function testTicket()
     {
         $q = new Doctrine_Query();
 
         // simple query with 1 column selected
         $cAuthors = $q->select('book_id')->from('Author')->groupBy('book_id')->where('book_id = 2')->execute();
-        
+
         // simple query, with 1 join and all columns selected
         $cAuthors = $q->from('Author, Author.Book')->execute();
-        
-        foreach($cAuthors as $oAuthor)
-        {
-          if ( ! $oAuthor->name)
-          {
-            $this->fail('Querying the same table multiple times triggers hydration/caching(?) bug');
-          }
-        }   	     
+
+        foreach ($cAuthors as $oAuthor) {
+            if (!$oAuthor->name) {
+                $this->fail('Querying the same table multiple times triggers hydration/caching(?) bug');
+            }
+        }
     }
 }

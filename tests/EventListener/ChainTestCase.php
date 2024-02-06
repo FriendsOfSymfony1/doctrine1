@@ -20,31 +20,33 @@
  */
 
 /**
- * Doctrine_EventListener_Chain_TestCase
+ * Doctrine_EventListener_Chain_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_EventListener_Chain_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_EventListener_Chain_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { }
-    public function prepareTables() 
+    public function prepareData()
     {
-        $this->tables = array('EventListenerChainTest');
+    }
+
+    public function prepareTables()
+    {
+        $this->tables = ['EventListenerChainTest'];
         parent::prepareTables();
     }
-    public function testAccessorInvokerChain() 
+
+    public function testAccessorInvokerChain()
     {
-        $e = new EventListenerChainTest;
-        $e->name = "something";
-
+        $e = new EventListenerChainTest();
+        $e->name = 'something';
     }
-
 }
-

@@ -20,30 +20,32 @@
  */
 
 /**
- * Doctrine_Ticket_1015_TestCase
+ * Doctrine_Ticket_1015_TestCase.
  *
- * @package     Doctrine
  * @author      Russ Flynn <russ@eatmymonkeydust.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2398_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2398_TestCase extends Doctrine_UnitTestCase
 {
     // Since this file is the subject of the test, we need to add some utf-8 chars to mess up
     // the non-binary-safe count.
-    private $randomUtf8 = "øåæØÅÆØÅæøåøæØÅæøåØÆØåøÆØÅøæøåøæøåÅØÆØ";
-  
+    private $randomUtf8 = 'øåæØÅÆØÅæøåøæØÅæøåØÆØåøÆØÅøæøåøæøåÅØÆØ';
+
     public function testIsValidLength()
     {
         $binaryValue = fread(fopen(__FILE__, 'r'), filesize(__FILE__));
 
-        //Should pass with size the same size as maximum size
-        $this->assertTrue(Doctrine_Validator::validateLength($binaryValue, "blob", filesize(__FILE__)));
-        
-        //Should fail with maximum size 1 less than actual file size 
-        $this->assertFalse(Doctrine_Validator::validateLength($binaryValue, "blob", filesize(__FILE__) -1));
+        // Should pass with size the same size as maximum size
+        $this->assertTrue(Doctrine_Validator::validateLength($binaryValue, 'blob', filesize(__FILE__)));
+
+        // Should fail with maximum size 1 less than actual file size
+        $this->assertFalse(Doctrine_Validator::validateLength($binaryValue, 'blob', filesize(__FILE__) - 1));
     }
 }

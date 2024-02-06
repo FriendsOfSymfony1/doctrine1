@@ -20,26 +20,19 @@
  */
 
 /**
- * Doctrine_Validator_Exception
+ * Doctrine_Validator_Exception.
  *
- * @package     Doctrine
- * @subpackage  Validator
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Validator_Exception extends Doctrine_Exception implements Countable, IteratorAggregate
 {
     /**
-     * @var array $invalid
+     * @var array
      */
-    private $invalid = array();
+    private $invalid = [];
 
-    /**
-     * @param Doctrine_Validator $validator
-     */
     public function __construct(array $invalid)
     {
         $this->invalid = $invalid;
@@ -51,20 +44,20 @@ class Doctrine_Validator_Exception extends Doctrine_Exception implements Countab
         return $this->invalid;
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->invalid);
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->invalid);
     }
 
     /**
-     * Generate a message with all classes that have exceptions
+     * Generate a message with all classes that have exceptions.
      */
     private function generateMessage()
     {
@@ -72,14 +65,15 @@ class Doctrine_Validator_Exception extends Doctrine_Exception implements Countab
         foreach ($this->invalid as $record) {
             $message .= $record->getErrorStackAsString();
         }
+
         return $message;
     }
 
     /**
-     * This method will apply the value of the $function variable as a user_func 
-     * to tall errorstack objects in the exception
+     * This method will apply the value of the $function variable as a user_func
+     * to tall errorstack objects in the exception.
      *
-     * @param mixed Either string with function name or array with object, 
+     * @param mixed Either string with function name or array with object,
      * functionname. See call_user_func in php manual for more inforamtion
      */
     public function inspect($function)

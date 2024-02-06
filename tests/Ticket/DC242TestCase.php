@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC242_TestCase
+ * Doctrine_Ticket_DC242_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC242_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC242_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -56,16 +58,16 @@ class Doctrine_Ticket_DC242_TestCase extends Doctrine_UnitTestCase
         $role->save();
 
         $user = new Ticket_DC242_User();
-        $user->fromArray(array(
-        	'username' => 'test',
-        	'password' => 'test',
-        	'Roles' => array(1, 2, 3),
-        ));
+        $user->fromArray([
+            'username' => 'test',
+            'password' => 'test',
+            'Roles' => [1, 2, 3],
+        ]);
         $user->save();
 
-        $user->fromArray(array(
-        	'Roles' => array(1, 3),
-        ));
+        $user->fromArray([
+            'Roles' => [1, 3],
+        ]);
         $user->save();
         $user->refresh(true);
 
@@ -76,59 +78,59 @@ class Doctrine_Ticket_DC242_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_DC242_User extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('username', 'string', 64, array('notnull' => true));
-		$this->hasColumn('password', 'string', 128, array('notnull' => true));
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('username', 'string', 64, ['notnull' => true]);
+        $this->hasColumn('password', 'string', 128, ['notnull' => true]);
+    }
 
-	public function setUp()
-	{
-		$this->hasMany('Ticket_DC242_Role as Roles', array('local' => 'id_user', 'foreign' => 'id_role', 'refClass' => 'Ticket_DC242_UserRole'));
-	}
+    public function setUp()
+    {
+        $this->hasMany('Ticket_DC242_Role as Roles', ['local' => 'id_user', 'foreign' => 'id_role', 'refClass' => 'Ticket_DC242_UserRole']);
+    }
 }
 
 class Ticket_DC242_Role extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('name', 'string', 64);
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('name', 'string', 64);
+    }
 
-	public function setUp()
-	{
-		$this->hasMany('Ticket_DC242_User as Users', array('local' => 'id_role', 'foreign' => 'id_user', 'refClass' => 'Ticket_DC242_UserRole'));
-		$this->hasMany('Ticket_DC242_Role as Parents', array('local' => 'id_role_child', 'foreign' => 'id_role_parent', 'refClass' => 'Ticket_DC242_RoleReference'));
-		$this->hasMany('Ticket_DC242_Role as Children', array('local' => 'id_role_parent', 'foreign' => 'id_role_child', 'refClass' => 'Ticket_DC242_RoleReference'));
-	}
+    public function setUp()
+    {
+        $this->hasMany('Ticket_DC242_User as Users', ['local' => 'id_role', 'foreign' => 'id_user', 'refClass' => 'Ticket_DC242_UserRole']);
+        $this->hasMany('Ticket_DC242_Role as Parents', ['local' => 'id_role_child', 'foreign' => 'id_role_parent', 'refClass' => 'Ticket_DC242_RoleReference']);
+        $this->hasMany('Ticket_DC242_Role as Children', ['local' => 'id_role_parent', 'foreign' => 'id_role_child', 'refClass' => 'Ticket_DC242_RoleReference']);
+    }
 }
 
 class Ticket_DC242_UserRole extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('id_user', 'integer', null, array('primary' => true));
-		$this->hasColumn('id_role', 'integer', null, array('primary' => true));
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id_user', 'integer', null, ['primary' => true]);
+        $this->hasColumn('id_role', 'integer', null, ['primary' => true]);
+    }
 
-	public function setUp()
-	{
-		$this->hasOne('Ticket_DC242_User as User', array('local' => 'id_user', 'foreign' => 'id', 'onDelete' => 'CASCADE'));
-		$this->hasOne('Ticket_DC242_Role as Role', array('local' => 'id_role', 'foreign' => 'id', 'onDelete' => 'CASCADE'));
-	}
+    public function setUp()
+    {
+        $this->hasOne('Ticket_DC242_User as User', ['local' => 'id_user', 'foreign' => 'id', 'onDelete' => 'CASCADE']);
+        $this->hasOne('Ticket_DC242_Role as Role', ['local' => 'id_role', 'foreign' => 'id', 'onDelete' => 'CASCADE']);
+    }
 }
 
 class Ticket_DC242_RoleReference extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('id_role_parent', 'integer', null, array('primary' => true));
-		$this->hasColumn('id_role_child', 'integer', null, array('primary' => true));
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id_role_parent', 'integer', null, ['primary' => true]);
+        $this->hasColumn('id_role_child', 'integer', null, ['primary' => true]);
+    }
 
-	public function setUp()
-	{
-		$this->hasOne('Ticket_DC242_Role as Parent', array('local' => 'id_role_parent', 'foreign' => 'id', 'onDelete' => 'CASCADE'));
-		$this->hasOne('Ticket_DC242_Role as Child', array('local' => 'id_role_child', 'foreign' => 'id', 'onDelete' => 'CASCADE'));
-	}
+    public function setUp()
+    {
+        $this->hasOne('Ticket_DC242_Role as Parent', ['local' => 'id_role_parent', 'foreign' => 'id', 'onDelete' => 'CASCADE']);
+        $this->hasOne('Ticket_DC242_Role as Child', ['local' => 'id_role_child', 'foreign' => 'id', 'onDelete' => 'CASCADE']);
+    }
 }

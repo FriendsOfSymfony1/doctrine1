@@ -20,32 +20,38 @@
  */
 
 /**
- * Doctrine_EventListener_TestCase
+ * Doctrine_EventListener_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_EventListener_TestCase extends Doctrine_UnitTestCase {
+class Doctrine_EventListener_TestCase extends Doctrine_UnitTestCase
+{
     private $logger;
 
+    public function prepareData()
+    {
+    }
 
-    public function prepareData() 
-    { }
-    public function prepareTables() {
-        $this->tables = array('EventListenerTest');
+    public function prepareTables()
+    {
+        $this->tables = ['EventListenerTest'];
         parent::prepareTables();
     }
 
-    public function testSetListener() {
+    public function testSetListener()
+    {
         $this->logger = new Doctrine_EventListener_TestLogger();
-    
-        $e = new EventListenerTest;
-        
+
+        $e = new EventListenerTest();
+
         $e->getTable()->setListener($this->logger);
 
         $e->name = 'listener';
@@ -54,147 +60,155 @@ class Doctrine_EventListener_TestCase extends Doctrine_UnitTestCase {
         $this->assertEqual($e->getTable()->getListener(), $this->logger);
     }
 
-    /**
-    public function testOnLoad() {
-        $this->logger->clear();
-        $this->assertEqual($this->connection->getTable('EventListenerTest')->getListener(), $this->logger);
-        $this->connection->clear();
-
-        $e = $this->connection->getTable('EventListenerTest')->find(1);
-
-
-        $this->assertEqual($e->getTable()->getListener(), $this->logger);
-
-        $this->assertEqual($this->logger->pop(), 'onLoad');
-        $this->assertEqual($this->logger->pop(), 'onPreLoad');
-    }
-
-    public function testOnCreate() {
-        $e = new EventListenerTest;
-        
-
-        $e->setListener($this->logger);
-        $this->logger->clear();
-        $e = new EventListenerTest;
-
-        $this->assertEqual($this->logger->pop(), 'onCreate');
-        $this->assertEqual($this->logger->pop(), 'onPreCreate');
-        $this->assertEqual($this->logger->count(), 0);
-    }
-    public function testOnSleepAndOnWakeUp() {
-        $e = new EventListenerTest;
-
-        $this->logger->clear();
-
-        $s = serialize($e);
-
-        $this->assertEqual($this->logger->pop(), 'onSleep');
-        $this->assertEqual($this->logger->count(), 0);
-
-        $e = unserialize($s);
-
-        $this->assertEqual($this->logger->pop(), 'onWakeUp');
-        $this->assertEqual($this->logger->count(), 0);
-    }
-    public function testTransaction() {
-        $e = new EventListenerTest();
-        $e->name = "test 1";
-        
-        $this->logger->clear();
-
-        $e->save();
-
-        $this->assertEqual($this->logger->pop(), 'onSave');
-        $this->assertEqual($this->logger->pop(), 'onInsert');
-        $this->assertEqual($this->logger->pop(), 'onPreInsert');
-        $this->assertEqual($this->logger->pop(), 'onPreSave');
-        
-        $e->name = "test 2";
-
-        $e->save();
-
-        $this->assertEqual($this->logger->pop(), 'onSave');
-        $this->assertEqual($this->logger->pop(), 'onUpdate');
-        $this->assertEqual($this->logger->pop(), 'onPreUpdate');
-        $this->assertEqual($this->logger->pop(), 'onPreSave');
-        
-        $this->logger->clear();
-
-        $e->delete();
-
-        $this->assertEqual($this->logger->pop(), 'onDelete');
-        $this->assertEqual($this->logger->pop(), 'onPreDelete');
-    }
-    public function testTransactionWithConnectionListener() {
-        $e = new EventListenerTest();
-        $e->getTable()->getConnection()->setListener($this->logger);
-        
-        $e->name = "test 2";
-        
-        $this->logger->clear();
-        
-        $e->save();
-
-        $this->assertEqual($this->logger->pop(), 'onTransactionCommit');
-        $this->assertEqual($this->logger->pop(), 'onPreTransactionCommit');
-        $this->assertEqual($this->logger->pop(), 'onSave');
-        $this->assertEqual($this->logger->pop(), 'onInsert');
-        $this->assertEqual($this->logger->pop(), 'onPreInsert');
-        $this->assertEqual($this->logger->pop(), 'onPreSave');
-
-        $this->assertEqual($this->logger->pop(), 'onTransactionBegin');
-        $this->assertEqual($this->logger->pop(), 'onPreTransactionBegin');
-
-        $e->name = "test 1";
-
-        $e->save();
-
-        $this->assertEqual($this->logger->pop(), 'onTransactionCommit');
-        $this->assertEqual($this->logger->pop(), 'onPreTransactionCommit');
-        $this->assertEqual($this->logger->pop(), 'onSave');
-        $this->assertEqual($this->logger->pop(), 'onUpdate');
-        $this->assertEqual($this->logger->pop(), 'onPreUpdate');
-        $this->assertEqual($this->logger->pop(), 'onPreSave');
-
-        $this->assertEqual($this->logger->pop(), 'onTransactionBegin');
-        $this->assertEqual($this->logger->pop(), 'onPreTransactionBegin');
-
-        $this->logger->clear();
-
-        $e->delete();
-
-        $this->assertEqual($this->logger->pop(), 'onTransactionCommit');
-        $this->assertEqual($this->logger->pop(), 'onPreTransactionCommit');
-        $this->assertEqual($this->logger->pop(), 'onDelete');
-
-        $this->assertEqual($this->logger->pop(), 'onPreDelete');
-        $this->assertEqual($this->logger->pop(), 'onTransactionBegin');
-        $this->assertEqual($this->logger->pop(), 'onPreTransactionBegin');
-    
-        $this->connection->setListener(new Doctrine_EventListener());
-    }
-    */
+    /*
+     * public function testOnLoad() {
+     * $this->logger->clear();
+     * $this->assertEqual($this->connection->getTable('EventListenerTest')->getListener(), $this->logger);
+     * $this->connection->clear();
+     *
+     * $e = $this->connection->getTable('EventListenerTest')->find(1);
+     *
+     *
+     * $this->assertEqual($e->getTable()->getListener(), $this->logger);
+     *
+     * $this->assertEqual($this->logger->pop(), 'onLoad');
+     * $this->assertEqual($this->logger->pop(), 'onPreLoad');
+     * }
+     *
+     * public function testOnCreate() {
+     * $e = new EventListenerTest;
+     *
+     *
+     * $e->setListener($this->logger);
+     * $this->logger->clear();
+     * $e = new EventListenerTest;
+     *
+     * $this->assertEqual($this->logger->pop(), 'onCreate');
+     * $this->assertEqual($this->logger->pop(), 'onPreCreate');
+     * $this->assertEqual($this->logger->count(), 0);
+     * }
+     * public function testOnSleepAndOnWakeUp() {
+     * $e = new EventListenerTest;
+     *
+     * $this->logger->clear();
+     *
+     * $s = serialize($e);
+     *
+     * $this->assertEqual($this->logger->pop(), 'onSleep');
+     * $this->assertEqual($this->logger->count(), 0);
+     *
+     * $e = unserialize($s);
+     *
+     * $this->assertEqual($this->logger->pop(), 'onWakeUp');
+     * $this->assertEqual($this->logger->count(), 0);
+     * }
+     * public function testTransaction() {
+     * $e = new EventListenerTest();
+     * $e->name = "test 1";
+     *
+     * $this->logger->clear();
+     *
+     * $e->save();
+     *
+     * $this->assertEqual($this->logger->pop(), 'onSave');
+     * $this->assertEqual($this->logger->pop(), 'onInsert');
+     * $this->assertEqual($this->logger->pop(), 'onPreInsert');
+     * $this->assertEqual($this->logger->pop(), 'onPreSave');
+     *
+     * $e->name = "test 2";
+     *
+     * $e->save();
+     *
+     * $this->assertEqual($this->logger->pop(), 'onSave');
+     * $this->assertEqual($this->logger->pop(), 'onUpdate');
+     * $this->assertEqual($this->logger->pop(), 'onPreUpdate');
+     * $this->assertEqual($this->logger->pop(), 'onPreSave');
+     *
+     * $this->logger->clear();
+     *
+     * $e->delete();
+     *
+     * $this->assertEqual($this->logger->pop(), 'onDelete');
+     * $this->assertEqual($this->logger->pop(), 'onPreDelete');
+     * }
+     * public function testTransactionWithConnectionListener() {
+     * $e = new EventListenerTest();
+     * $e->getTable()->getConnection()->setListener($this->logger);
+     *
+     * $e->name = "test 2";
+     *
+     * $this->logger->clear();
+     *
+     * $e->save();
+     *
+     * $this->assertEqual($this->logger->pop(), 'onTransactionCommit');
+     * $this->assertEqual($this->logger->pop(), 'onPreTransactionCommit');
+     * $this->assertEqual($this->logger->pop(), 'onSave');
+     * $this->assertEqual($this->logger->pop(), 'onInsert');
+     * $this->assertEqual($this->logger->pop(), 'onPreInsert');
+     * $this->assertEqual($this->logger->pop(), 'onPreSave');
+     *
+     * $this->assertEqual($this->logger->pop(), 'onTransactionBegin');
+     * $this->assertEqual($this->logger->pop(), 'onPreTransactionBegin');
+     *
+     * $e->name = "test 1";
+     *
+     * $e->save();
+     *
+     * $this->assertEqual($this->logger->pop(), 'onTransactionCommit');
+     * $this->assertEqual($this->logger->pop(), 'onPreTransactionCommit');
+     * $this->assertEqual($this->logger->pop(), 'onSave');
+     * $this->assertEqual($this->logger->pop(), 'onUpdate');
+     * $this->assertEqual($this->logger->pop(), 'onPreUpdate');
+     * $this->assertEqual($this->logger->pop(), 'onPreSave');
+     *
+     * $this->assertEqual($this->logger->pop(), 'onTransactionBegin');
+     * $this->assertEqual($this->logger->pop(), 'onPreTransactionBegin');
+     *
+     * $this->logger->clear();
+     *
+     * $e->delete();
+     *
+     * $this->assertEqual($this->logger->pop(), 'onTransactionCommit');
+     * $this->assertEqual($this->logger->pop(), 'onPreTransactionCommit');
+     * $this->assertEqual($this->logger->pop(), 'onDelete');
+     *
+     * $this->assertEqual($this->logger->pop(), 'onPreDelete');
+     * $this->assertEqual($this->logger->pop(), 'onTransactionBegin');
+     * $this->assertEqual($this->logger->pop(), 'onPreTransactionBegin');
+     *
+     * $this->connection->setListener(new Doctrine_EventListener());
+     * }
+     */
 }
 
-class Doctrine_EventListener_TestLogger implements Doctrine_Overloadable, Countable {
-    private $messages = array();
+class Doctrine_EventListener_TestLogger implements Doctrine_Overloadable, Countable
+{
+    private $messages = [];
 
-    public function __call($m, $a) {
-
+    public function __call($m, $a)
+    {
         $this->messages[] = $m;
     }
-    public function pop() {
+
+    public function pop()
+    {
         return array_pop($this->messages);
     }
-    public function clear() {
-        $this->messages = array();
+
+    public function clear()
+    {
+        $this->messages = [];
     }
-    public function getAll() {
+
+    public function getAll()
+    {
         return $this->messages;
     }
-    #[\ReturnTypeWillChange]
-    public function count() {
+
+    #[ReturnTypeWillChange]
+    public function count()
+    {
         return count($this->messages);
     }
 }
-

@@ -20,33 +20,38 @@
  */
 
 /**
- * Doctrine_Record_Filter_TestCase
+ * Doctrine_Record_Filter_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Record_Filter_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Record_Filter_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
-    { }
+    {
+    }
+
     public function prepareTables()
     {
-        $this->tables = array('CompositeRecord', 'RelatedCompositeRecord');
-        
+        $this->tables = ['CompositeRecord', 'RelatedCompositeRecord'];
+
         parent::prepareTables();
     }
+
     public function testStandardFiltersThrowsExceptionWhenGettingUnknownProperties()
     {
         $u = new User();
-        
+
         try {
             $u->unknown;
-        
+
             $this->fail();
         } catch (Doctrine_Record_Exception $e) {
             $this->pass();
@@ -56,10 +61,10 @@ class Doctrine_Record_Filter_TestCase extends Doctrine_UnitTestCase
     public function testStandardFiltersThrowsExceptionWhenSettingUnknownProperties()
     {
         $u = new User();
-        
+
         try {
             $u->unknown = 'something';
-        
+
             $this->fail();
         } catch (Doctrine_Record_Exception $e) {
             $this->pass();
@@ -69,9 +74,9 @@ class Doctrine_Record_Filter_TestCase extends Doctrine_UnitTestCase
     public function testCompoundFilterSupportsAccessingRelatedComponentProperties()
     {
         $u = new CompositeRecord();
-        
+
         try {
-            $u->name    = 'someone';
+            $u->name = 'someone';
             $u->address = 'something';
 
             $u->save();
@@ -90,11 +95,12 @@ class CompositeRecord extends Doctrine_Record
     {
         $this->hasColumn('name', 'string');
     }
+
     public function setUp()
     {
-    	$this->hasOne('RelatedCompositeRecord as Related', array('foreign' => 'foreign_id'));
+        $this->hasOne('RelatedCompositeRecord as Related', ['foreign' => 'foreign_id']);
 
-    	$this->unshiftFilter(new Doctrine_Record_Filter_Compound(array('Related')));
+        $this->unshiftFilter(new Doctrine_Record_Filter_Compound(['Related']));
     }
 }
 class RelatedCompositeRecord extends Doctrine_Record

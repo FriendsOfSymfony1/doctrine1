@@ -20,71 +20,62 @@
  */
 
 /**
- * Doctrine_Connection_Pgsql
+ * Doctrine_Connection_Pgsql.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
 {
     /**
-     * @var string $driverName                  the name of this connection driver
+     * @var string the name of this connection driver
      */
     protected $driverName = 'Pgsql';
 
     /**
-     * the constructor
-     *
-     * @param Doctrine_Manager $manager
-     * @param PDO $pdo                          database handle
+     * the constructor.
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
         // initialize all driver options
-        $this->supported = array(
-                          'sequences'               => true,
-                          'indexes'                 => true,
-                          'affected_rows'           => true,
-                          'summary_functions'       => true,
-                          'order_by_text'           => true,
-                          'transactions'            => true,
-                          'savepoints'              => true,
-                          'current_id'              => true,
-                          'limit_queries'           => true,
-                          'LOBs'                    => true,
-                          'replace'                 => 'emulated',
-                          'sub_selects'             => true,
-                          'auto_increment'          => 'emulated',
-                          'primary_key'             => true,
-                          'result_introspection'    => true,
-                          'prepared_statements'     => true,
-                          'identifier_quoting'      => true,
-                          'pattern_escaping'        => true,
-                          );
+        $this->supported = [
+            'sequences' => true,
+            'indexes' => true,
+            'affected_rows' => true,
+            'summary_functions' => true,
+            'order_by_text' => true,
+            'transactions' => true,
+            'savepoints' => true,
+            'current_id' => true,
+            'limit_queries' => true,
+            'LOBs' => true,
+            'replace' => 'emulated',
+            'sub_selects' => true,
+            'auto_increment' => 'emulated',
+            'primary_key' => true,
+            'result_introspection' => true,
+            'prepared_statements' => true,
+            'identifier_quoting' => true,
+            'pattern_escaping' => true,
+        ];
 
-        $this->properties['string_quoting'] = array('start' => "'",
-                                                    'end' => "'",
-                                                    'escape' => "'",
-                                                    'escape_pattern' => '\\');
+        $this->properties['string_quoting'] = ['start' => "'",
+            'end' => "'",
+            'escape' => "'",
+            'escape_pattern' => '\\'];
 
-        $this->properties['identifier_quoting'] = array('start' => '"',
-                                                        'end' => '"',
-                                                        'escape' => '"');
+        $this->properties['identifier_quoting'] = ['start' => '"',
+            'end' => '"',
+            'escape' => '"'];
         parent::__construct($manager, $adapter);
     }
 
     /**
-     * Set the charset on the current connection
+     * Set the charset on the current connection.
      *
      * @param string    charset
-     *
-     * @return void
      */
     public function setCharset($charset)
     {
@@ -96,12 +87,11 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
     /**
      * convertBoolean
      * some drivers need the boolean values to be converted into integers
-     * when using DQL API
+     * when using DQL API.
      *
      * This method takes care of that conversion
      *
      * @param array $item
-     * @return void
      */
     public function convertBooleans($item)
     {
@@ -112,55 +102,56 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
                 }
             }
         } else {
-           if (is_bool($item) || is_numeric($item)) {
-               $item = ($item) ? 'true' : 'false';
-           }
+            if (is_bool($item) || is_numeric($item)) {
+                $item = ($item) ? 'true' : 'false';
+            }
         }
+
         return $item;
     }
 
     /**
-     * Changes a query string for various DBMS specific reasons
+     * Changes a query string for various DBMS specific reasons.
      *
-     * @param string $query         query to modify
-     * @param integer $limit        limit the number of rows
-     * @param integer $offset       start reading from given offset
-     * @param boolean $isManip      if the query is a DML query
-     * @return string               modified query
+     * @param  string $query   query to modify
+     * @param  int    $limit   limit the number of rows
+     * @param  int    $offset  start reading from given offset
+     * @param  bool   $isManip if the query is a DML query
+     * @return string modified query
      */
     public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
         if ($limit > 0) {
             $query = rtrim($query);
 
-            if (substr($query, -1) == ';') {
+            if (';' == substr($query, -1)) {
                 $query = substr($query, 0, -1);
             }
 
             if ($isManip) {
                 $manip = preg_replace('/^(DELETE FROM|UPDATE).*$/', '\\1', $query);
-                $from  = $match[2];
+                $from = $match[2];
                 $where = $match[3];
-                $query = $manip . ' ' . $from . ' WHERE ctid=(SELECT ctid FROM '
-                       . $from . ' ' . $where . ' LIMIT ' . (int)$limit . ')';
-
+                $query = $manip.' '.$from.' WHERE ctid=(SELECT ctid FROM '
+                       .$from.' '.$where.' LIMIT '.(int) $limit.')';
             } else {
-                if ( ! empty($limit)) {
-                  $query .= ' LIMIT ' . (int)$limit;
+                if (!empty($limit)) {
+                    $query .= ' LIMIT '.(int) $limit;
                 }
-                if ( ! empty($offset)) {
-                  $query .= ' OFFSET ' . (int)$offset;
+                if (!empty($offset)) {
+                    $query .= ' OFFSET '.(int) $offset;
                 }
             }
         }
+
         return $query;
     }
 
     /**
-     * return version information about the server
+     * return version information about the server.
      *
-     * @param string $native    determines if the raw version string should be returned
-     * @return array|string     an array or string with version information
+     * @param  string       $native determines if the raw version string should be returned
+     * @return array|string an array or string with version information
      */
     public function getServerVersion($native = false)
     {
@@ -168,58 +159,57 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
 
         $serverInfo = $this->fetchOne($query);
 
-        if ( ! $native) {
+        if (!$native) {
             $tmp = explode('.', $serverInfo, 3);
 
             if (empty($tmp[2]) && isset($tmp[1])
                 && preg_match('/(\d+)(.*)/', $tmp[1], $tmp2)
             ) {
-                $serverInfo = array(
+                $serverInfo = [
                     'major' => $tmp[0],
                     'minor' => $tmp2[1],
                     'patch' => null,
                     'extra' => $tmp2[2],
                     'native' => $serverInfo,
-                );
+                ];
             } else {
-                $serverInfo = array(
-                    'major' => isset($tmp[0]) ? $tmp[0] : null,
-                    'minor' => isset($tmp[1]) ? $tmp[1] : null,
-                    'patch' => isset($tmp[2]) ? $tmp[2] : null,
+                $serverInfo = [
+                    'major' => $tmp[0] ?? null,
+                    'minor' => $tmp[1] ?? null,
+                    'patch' => $tmp[2] ?? null,
                     'extra' => null,
                     'native' => $serverInfo,
-                );
+                ];
             }
         }
+
         return $serverInfo;
     }
 
     /**
      * Inserts a table row with specified data.
      *
-     * @param Doctrine_Table $table     The table to insert data into.
-     * @param array $values             An associative array containing column-value pairs.
-     *                                  Values can be strings or Doctrine_Expression instances.
-     * @return integer                  the number of affected rows. Boolean false if empty value array was given,
+     * @param  Doctrine_Table $table the table to insert data into
+     * @return int            the number of affected rows. Boolean false if empty value array was given,
      */
     public function insert(Doctrine_Table $table, array $fields)
     {
         $tableName = $table->getTableName();
 
         // column names are specified as array keys
-        $cols = array();
+        $cols = [];
         // the query VALUES will contain either expresions (eg 'NOW()') or ?
-        $a = array();
-        
+        $a = [];
+
         foreach ($fields as $fieldName => $value) {
-        	if ($table->isIdentifier($fieldName) 
-        	           && $table->isIdentifierAutoincrement()
-        	           && $value == null) {
-        		// Autoincrement fields should not be added to the insert statement
-        		// if their value is null
-        		unset($fields[$fieldName]);
-        		continue;
-        	}
+            if ($table->isIdentifier($fieldName)
+                       && $table->isIdentifierAutoincrement()
+                       && null == $value) {
+                // Autoincrement fields should not be added to the insert statement
+                // if their value is null
+                unset($fields[$fieldName]);
+                continue;
+            }
             $cols[] = $this->quoteIdentifier($table->getColumnName($fieldName));
             if ($value instanceof Doctrine_Expression) {
                 $a[] = $value->getSql();
@@ -228,19 +218,19 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
                 $a[] = '?';
             }
         }
-        
-        if (count($fields) == 0) {
-        	// Real fix #1786 and #2327 (default values when table is just 'id' as PK)        	
-            return $this->exec('INSERT INTO ' . $this->quoteIdentifier($tableName)
-                              . ' '
-                              . ' VALUES (DEFAULT)');        	
+
+        if (0 == count($fields)) {
+            // Real fix #1786 and #2327 (default values when table is just 'id' as PK)
+            return $this->exec('INSERT INTO '.$this->quoteIdentifier($tableName)
+                              .' '
+                              .' VALUES (DEFAULT)');
         }
 
         // build the statement
-        $query = 'INSERT INTO ' . $this->quoteIdentifier($tableName)
-                . ' (' . implode(', ', $cols) . ')'
-                . ' VALUES (' . implode(', ', $a) . ')';
+        $query = 'INSERT INTO '.$this->quoteIdentifier($tableName)
+                .' ('.implode(', ', $cols).')'
+                .' VALUES ('.implode(', ', $a).')';
 
         return $this->exec($query, array_values($fields));
-    }    
+    }
 }

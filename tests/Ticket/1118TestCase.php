@@ -20,23 +20,25 @@
  */
 
 /**
- * Doctrine_Ticket_1118_TestCase
+ * Doctrine_Ticket_1118_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1118_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1118_TestCase extends Doctrine_UnitTestCase
 {
     // Test that when a foreign key is detected that it sets the foreign key to the same type and length
     // of the related table primary key
     public function testTest()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 detect_relations: true
 Ticket_1118_User:
@@ -58,7 +60,7 @@ END;
 
             $import = new Doctrine_Import_Schema();
             $array = $import->buildSchema('test.yml', 'yml');
-            // Test that ticket__1118__profile_id is changed to to be integer(4) since the primary key of 
+            // Test that ticket__1118__profile_id is changed to to be integer(4) since the primary key of
             // the relationship is set to that
             $this->assertEqual($array['Ticket_1118_User']['columns']['ticket__1118__profile_id']['type'], 'integer');
             $this->assertEqual($array['Ticket_1118_User']['columns']['ticket__1118__profile_id']['length'], '4');

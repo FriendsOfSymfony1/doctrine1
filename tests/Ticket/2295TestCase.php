@@ -20,29 +20,31 @@
  */
 
 /**
- * Doctrine_Ticket_2295_TestCase
+ * Doctrine_Ticket_2295_TestCase.
  *
- * @package     Doctrine
  * @author      Miloslav Kmeť <miloslav.kmet@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_2295_TestCase extends Doctrine_UnitTestCase
 {
     public function testMappedValueFromArray()
     {
         $test = new Doctrine_Ticket_2295_Record();
-        $test->fromArray(array('test' => 'mapped value'));
+        $test->fromArray(['test' => 'mapped value']);
         $this->assertEqual($test->test, 'mapped value');
     }
 
     public function testMappedValueSynchronizeWithArray()
     {
         $test = new Doctrine_Ticket_2295_Record();
-        $test->synchronizeWithArray(array('test' => 'mapped value'));
+        $test->synchronizeWithArray(['test' => 'mapped value']);
         $this->assertEqual($test->test, 'mapped value');
     }
 }

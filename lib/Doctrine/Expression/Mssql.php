@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Expression_Mssql
+ * Doctrine_Expression_Mssql.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
@@ -37,10 +33,9 @@ class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
      * There are three special variables for current date and time:
      * - CURRENT_TIMESTAMP (date and time, TIMESTAMP type)
      * - CURRENT_DATE (date, DATE type)
-     * - CURRENT_TIME (time, TIME type)
+     * - CURRENT_TIME (time, TIME type).
      *
      * @return string to call a variable with the current timestamp
-     * @access public
      */
     public function now($type = 'timestamp')
     {
@@ -54,34 +49,34 @@ class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
     }
 
     /**
-     * return string to call a function to get a substring inside an SQL statement
+     * return string to call a function to get a substring inside an SQL statement.
      *
-     * @return string to call a function to get a substring
+     * @param  mixed|null $length
+     * @return string     to call a function to get a substring
      */
     public function substring($value, $position, $length = null)
     {
-        if ( ! is_null($length)) {
-            return 'SUBSTRING(' . $value . ', ' . $position . ', ' . $length . ')';
+        if (!is_null($length)) {
+            return 'SUBSTRING('.$value.', '.$position.', '.$length.')';
         }
-        return 'SUBSTRING(' . $value . ', ' . $position . ', LEN(' . $value . ') - ' . $position . ' + 1)';
+
+        return 'SUBSTRING('.$value.', '.$position.', LEN('.$value.') - '.$position.' + 1)';
     }
 
     /**
-     * Returns string to concatenate two or more string parameters
+     * Returns string to concatenate two or more string parameters.
      *
-     * @param string $arg1
-     * @param string $arg2
-     * @param string $values...
      * @return string to concatenate two strings
      */
     public function concat()
     {
         $args = func_get_args();
-        return '(' . implode(' + ', $args) . ')';
+
+        return '('.implode(' + ', $args).')';
     }
 
     /**
-     * Returns global unique identifier
+     * Returns global unique identifier.
      *
      * @return string to get global unique identifier
      */
@@ -91,15 +86,14 @@ class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
     }
 
     /**
-     * Returns the length of a text field
+     * Returns the length of a text field.
      *
-     * @param string $column
-     *
+     * @param  string $column
      * @return string
      */
     public function length($column)
     {
-        return 'LEN (' . $column . ')';
+        return 'LEN ('.$column.')';
     }
 
     /**
@@ -121,15 +115,12 @@ class Doctrine_Expression_Mssql extends Doctrine_Expression_Driver
      * minute mi, n
      * second ss, s
      * millisecond ms
-     *
-     * @param $datepart
-     * @param $date
      */
     public function date_part($datepart, $date)
     {
         // remove ' and " from datepart for dblib
-        $datepart = str_replace(array('\'', '"'), '', $datepart);
+        $datepart = str_replace(['\'', '"'], '', $datepart);
 
-        return 'DATEPART(' . $datepart . ', ' . $date . ')';
+        return 'DATEPART('.$datepart.', '.$date.')';
     }
 }

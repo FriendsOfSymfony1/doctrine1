@@ -20,23 +20,26 @@
  */
 
 /**
- * Doctrine_Ticket_832_TestCase
+ * Doctrine_Ticket_832_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_832_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_832_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
         $manager = Doctrine_Manager::getInstance();
         $manager->setImpl('Ticket_832_UserTemplate', 'Ticket_832_User')
-                ->setImpl('Ticket_832_EmailTemplate', 'Ticket_832_Email');
+            ->setImpl('Ticket_832_EmailTemplate', 'Ticket_832_Email')
+        ;
 
         $this->tables[] = 'Ticket_832_User';
         $this->tables[] = 'Ticket_832_Email';
@@ -64,9 +67,10 @@ class Ticket_832_UserTemplate extends Doctrine_Template
     {
         $this->hasColumn('name', 'string');
     }
+
     public function setUp()
     {
-        $this->hasMany('Ticket_832_EmailTemplate as Email', array('local' => 'id', 'foreign' => 'user_id'));
+        $this->hasMany('Ticket_832_EmailTemplate as Email', ['local' => 'id', 'foreign' => 'user_id']);
     }
 }
 
@@ -77,9 +81,10 @@ class Ticket_832_EmailTemplate extends Doctrine_Template
         $this->hasColumn('address', 'string');
         $this->hasColumn('user_id', 'integer');
     }
+
     public function setUp()
     {
-        $this->hasOne('Ticket_832_UserTemplate as User', array('local' => 'user_id', 'foreign' => 'id'));
+        $this->hasOne('Ticket_832_UserTemplate as User', ['local' => 'user_id', 'foreign' => 'id']);
     }
 }
 

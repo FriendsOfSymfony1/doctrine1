@@ -20,37 +20,41 @@
  */
 
 /**
- * Doctrine_ForeignKey_TestCase
+ * Doctrine_ForeignKey_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_ForeignKey_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
-    { }
+    {
+    }
+
     public function prepareTables()
-    { }
-    
+    {
+    }
 
     public function testExportingForeignKeysSupportsAssociationTables()
     {
         $this->dbh = new Doctrine_Adapter_Mock('mysql');
         $this->conn = $this->manager->openConnection($this->dbh);
-        
-        $sql = $this->conn->export->exportClassesSql(array('ClientModel', 'ClientToAddressModel', 'AddressModel'));
-        
-        $this->assertEqual($sql, array (
-                                        0 => 'CREATE TABLE clients_to_addresses (client_id BIGINT, address_id BIGINT, INDEX client_id_idx (client_id), INDEX address_id_idx (address_id), PRIMARY KEY(client_id, address_id)) ENGINE = INNODB',
-                                        1 => 'CREATE TABLE clients (id INT UNSIGNED NOT NULL AUTO_INCREMENT, short_name VARCHAR(32) NOT NULL UNIQUE, PRIMARY KEY(id)) ENGINE = INNODB',
-                                        2 => 'CREATE TABLE addresses (id BIGINT AUTO_INCREMENT, address1 VARCHAR(255) NOT NULL, address2 VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, state VARCHAR(10) NOT NULL, zip VARCHAR(15) NOT NULL, PRIMARY KEY(id)) ENGINE = INNODB',
-                                        3 => 'ALTER TABLE clients_to_addresses ADD CONSTRAINT FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE',
-                                        4 => 'ALTER TABLE clients_to_addresses ADD CONSTRAINT FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE',
-                                      ));
+
+        $sql = $this->conn->export->exportClassesSql(['ClientModel', 'ClientToAddressModel', 'AddressModel']);
+
+        $this->assertEqual($sql, [
+            0 => 'CREATE TABLE clients_to_addresses (client_id BIGINT, address_id BIGINT, INDEX client_id_idx (client_id), INDEX address_id_idx (address_id), PRIMARY KEY(client_id, address_id)) ENGINE = INNODB',
+            1 => 'CREATE TABLE clients (id INT UNSIGNED NOT NULL AUTO_INCREMENT, short_name VARCHAR(32) NOT NULL UNIQUE, PRIMARY KEY(id)) ENGINE = INNODB',
+            2 => 'CREATE TABLE addresses (id BIGINT AUTO_INCREMENT, address1 VARCHAR(255) NOT NULL, address2 VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, state VARCHAR(10) NOT NULL, zip VARCHAR(15) NOT NULL, PRIMARY KEY(id)) ENGINE = INNODB',
+            3 => 'ALTER TABLE clients_to_addresses ADD CONSTRAINT FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE',
+            4 => 'ALTER TABLE clients_to_addresses ADD CONSTRAINT FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE',
+        ]);
     }
 }

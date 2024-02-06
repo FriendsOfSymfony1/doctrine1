@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Expression_Pgsql
+ * Doctrine_Expression_Pgsql.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7685 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
@@ -54,7 +50,7 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     {
         $column = $this->getIdentifier($column);
 
-        return 'MD5(' . $column . ')';
+        return 'MD5('.$column.')';
     }
 
     /**
@@ -62,73 +58,77 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
      *
      * Note: Not SQL92, but common functionality.
      *
-     * @param string $value the target $value the string or the string column.
-     * @param int $from extract from this characeter.
-     * @param int $len extract this amount of characters.
-     * @return string sql that extracts part of a string.
+     * @param  string $value the target $value the string or the string column
+     * @param  int    $from  extract from this characeter
+     * @param  int    $len   extract this amount of characters
+     * @return string sql that extracts part of a string
      */
     public function substring($value, $from, $len = null)
     {
         $value = $this->getIdentifier($value);
 
-        if ($len === null) {
+        if (null === $len) {
             $len = $this->getIdentifier($len);
-            return 'SUBSTR(' . $value . ', ' . $from . ')';
-        } else {
-            return 'SUBSTR(' . $value . ', ' . $from . ', ' . $len . ')';
+
+            return 'SUBSTR('.$value.', '.$from.')';
         }
+
+        return 'SUBSTR('.$value.', '.$from.', '.$len.')';
     }
 
     /**
-     * Returns a series of strings concatinated
+     * Returns a series of strings concatinated.
      *
      * concat() accepts an arbitrary number of parameters. Each parameter
      * must contain an expression or an array with expressions.
      *
-     * @param string|array(string) strings that will be concatinated.
+     * @param string|array(string) strings that will be concatinated
+     * @param  mixed|null $timestamp2
      * @return string
      */
-
 
     /**
      * PostgreSQLs AGE(<timestamp1> [, <timestamp2>]) function.
      *
-     * @param string $timestamp1 timestamp to subtract from NOW()
-     * @param string $timestamp2 optional; if given: subtract arguments
+     * @param  string $timestamp1 timestamp to subtract from NOW()
+     * @param  string $timestamp2 optional; if given: subtract arguments
      * @return string
      */
-    public function age($timestamp1, $timestamp2 = null) {
-        if ( $timestamp2 == null ) {
-            return 'AGE(' . $timestamp1 . ')';
+    public function age($timestamp1, $timestamp2 = null)
+    {
+        if (null == $timestamp2) {
+            return 'AGE('.$timestamp1.')';
         }
-        return 'AGE(' . $timestamp1 . ', ' . $timestamp2 . ')';
+
+        return 'AGE('.$timestamp1.', '.$timestamp2.')';
     }
 
     /**
      * PostgreSQLs DATE_PART( <text>, <time> ) function.
      *
-     * @param string $text what to extract
-     * @param string $time timestamp or interval to extract from
+     * @param  string $text what to extract
+     * @param  string $time timestamp or interval to extract from
      * @return string
      */
     public function date_part($text, $time)
     {
-        return 'DATE_PART(' . $text . ', ' . $time . ')';
+        return 'DATE_PART('.$text.', '.$time.')';
     }
 
     /**
      * PostgreSQLs TO_CHAR( <time>, <text> ) function.
      *
-     * @param string $time timestamp or interval
-     * @param string $text how to the format the output
+     * @param  string $time timestamp or interval
+     * @param  string $text how to the format the output
      * @return string
      */
-    public function to_char($time, $text) {
-        return 'TO_CHAR(' . $time . ', ' . $text . ')';
+    public function to_char($time, $text)
+    {
+        return 'TO_CHAR('.$time.', '.$text.')';
     }
 
     /**
-     * PostgreSQLs CONCAT() function
+     * PostgreSQLs CONCAT() function.
      *
      * @param  an array of values
      * @return string
@@ -137,7 +137,7 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     {
         $args = func_get_args();
 
-        return join(' || ' , $args);
+        return implode(' || ', $args);
     }
 
     /**
@@ -151,9 +151,9 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     }
 
     /**
-     * regexp
+     * regexp.
      *
-     * @return string           the regular expression operator
+     * @return string the regular expression operator
      */
     public function regexp()
     {
@@ -161,10 +161,9 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     }
 
     /**
-     * return string to call a function to get random value inside an SQL statement
+     * return string to call a function to get random value inside an SQL statement.
      *
      * @return return string to generate float between 0 and 1
-     * @access public
      */
     public function random()
     {
@@ -172,89 +171,86 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     }
 
     /**
-     * build a pattern matching string
+     * build a pattern matching string.
      *
      * EXPERIMENTAL
      *
      * WARNING: this function is experimental and may change signature at
      * any time until labelled as non-experimental
      *
-     * @access public
-     *
-     * @param array $pattern even keys are strings, odd are patterns (% and _)
-     * @param string $operator optional pattern operator (LIKE, ILIKE and maybe others in the future)
-     * @param string $field optional field name that is being matched against
-     *                  (might be required when emulating ILIKE)
-     *
+     * @param  array  $pattern  even keys are strings, odd are patterns (% and _)
+     * @param  string $operator optional pattern operator (LIKE, ILIKE and maybe others in the future)
+     * @param  string $field    optional field name that is being matched against
+     *                          (might be required when emulating ILIKE)
      * @return string SQL pattern
      */
     public function matchPattern($pattern, $operator = null, $field = null)
     {
         $match = '';
-        if ( ! is_null($operator)) {
+        if (!is_null($operator)) {
             $field = is_null($field) ? '' : $field.' ';
             $operator = strtoupper($operator);
             switch ($operator) {
                 // case insensitive
-            case 'ILIKE':
-                $match = $field.'ILIKE ';
-                break;
-                // case sensitive
-            case 'LIKE':
-                $match = $field.'LIKE ';
-                break;
-            default:
-                throw new Doctrine_Expression_Pgsql_Exception('not a supported operator type:'. $operator);
+                case 'ILIKE':
+                    $match = $field.'ILIKE ';
+                    break;
+                    // case sensitive
+                case 'LIKE':
+                    $match = $field.'LIKE ';
+                    break;
+                default:
+                    throw new Doctrine_Expression_Pgsql_Exception('not a supported operator type:'.$operator);
             }
         }
-        $match.= "'";
+        $match .= "'";
         foreach ($pattern as $key => $value) {
             if ($key % 2) {
-                $match.= $value;
+                $match .= $value;
             } else {
-                $match.= $this->conn->escapePattern($this->conn->escape($value));
+                $match .= $this->conn->escapePattern($this->conn->escape($value));
             }
         }
-        $match.= "'";
-        $match.= $this->patternEscapeString();
+        $match .= "'";
+        $match .= $this->patternEscapeString();
+
         return $match;
     }
 
     /**
-     * return syntax for pgsql TRANSLATE() dbms function
+     * return syntax for pgsql TRANSLATE() dbms function.
      *
      * @return string $sql
      */
     public function translate($string, $from, $to)
     {
-    	$translate = 'TRANSLATE(' . $string . ', ' . $from . ', ' . $to . ')';
-    	return $translate;
+        return 'TRANSLATE('.$string.', '.$from.', '.$to.')';
     }
 
     /**
-     * transform locate to position
+     * transform locate to position.
      *
-     * @param string $substr string to find
-     * @param string $str to find where
+     * @param  string $substr string to find
+     * @param  string $str    to find where
      * @return string
      */
     public function locate($substr, $str)
     {
         return $this->position($substr, $str);
     }
-    
+
     /**
-     * position
+     * position.
      *
-     * @param string $substr string to find
-     * @param string $str to find where
+     * @param  string $substr string to find
+     * @param  string $str    to find where
      * @return string
      */
     public function position($substr, $str)
     {
         $substr = $this->getIdentifier($substr);
         $str = $this->getIdentifier($str);
-        
+
         return sprintf('POSITION(%s IN %s)', $substr, $str);
     }
 }

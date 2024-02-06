@@ -20,43 +20,35 @@
  */
 
 /**
- * Doctrine_Search_Query
+ * Doctrine_Search_Query.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_Query
 {
-
     /**
-     * @var Doctrine_Table $_table          the index table
+     * @var Doctrine_Table the index table
      */
-    protected $_table = array();
-    
+    protected $_table = [];
+
     protected $_sql = '';
-    
-    protected $_params = array();
-    
-    protected $_words = array();
-    
+
+    protected $_params = [];
+
+    protected $_words = [];
+
     protected $_tokenizer;
 
     protected $_condition;
 
-    /**
-     * @param Doctrine_Table $_table        the index table
-     */
     public function __construct($table)
     {
         if (is_string($table)) {
-           $table = Doctrine_Core::getTable($table);
+            $table = Doctrine_Core::getTable($table);
         } else {
-            if ( ! $table instanceof Doctrine_Table) {
+            if (!$table instanceof Doctrine_Table) {
                 throw new Doctrine_Search_Exception('Invalid argument type. Expected instance of Doctrine_Table.');
             }
         }
@@ -64,64 +56,63 @@ class Doctrine_Search_Query
         $this->_tokenizer = new Doctrine_Query_Tokenizer();
         $this->_table = $table;
 
-        $foreignId = current(array_diff($this->_table->getColumnNames(), array('keyword', 'field', 'position')));
+        $foreignId = current(array_diff($this->_table->getColumnNames(), ['keyword', 'field', 'position']));
 
-        $this->_condition = $foreignId . ' %s (SELECT ' . $foreignId . ' FROM ' . $this->_table->getTableName() . ' WHERE ';
+        $this->_condition = $foreignId.' %s (SELECT '.$foreignId.' FROM '.$this->_table->getTableName().' WHERE ';
     }
-
 
     public function query($text, $includeRelevance = true)
     {
         $text = trim($text);
 
-        $foreignId = current(array_diff($this->_table->getColumnNames(), array('keyword', 'field', 'position')));
+        $foreignId = current(array_diff($this->_table->getColumnNames(), ['keyword', 'field', 'position']));
 
         $weighted = false;
-        if (strpos($text, '^') === false) {
+        if (false === strpos($text, '^')) {
             if ($includeRelevance) {
-                $select = 'SELECT COUNT(keyword) AS relevance, ' . $foreignId;
+                $select = 'SELECT COUNT(keyword) AS relevance, '.$foreignId;
             } else {
-                $select = 'SELECT ' . $foreignId;
+                $select = 'SELECT '.$foreignId;
             }
         } else {
             if ($includeRelevance) {
-                $select = 'SELECT SUM(sub_relevance) AS relevance, ' . $foreignId;
+                $select = 'SELECT SUM(sub_relevance) AS relevance, '.$foreignId;
             } else {
-                $select = 'SELECT ' . $foreignId;
+                $select = 'SELECT '.$foreignId;
             }
         }
-        
-        $from = 'FROM ' . $this->_table->getTableName();
+
+        $from = 'FROM '.$this->_table->getTableName();
         $where = 'WHERE ';
         $where .= $this->parseClause($text);
 
-        $groupby = 'GROUP BY ' . $foreignId;
+        $groupby = 'GROUP BY '.$foreignId;
         if ($includeRelevance) {
             $orderBy = 'ORDER BY relevance DESC';
         } else {
             $orderBy = null;
         }
-        $this->_sql = $select . ' ' . $from . ' ' . $where . ' ' . $groupby;
-        if (isset($orderBy) && $orderBy !== null) {
-            $this->_sql .= ' ' . $orderBy;
+        $this->_sql = $select.' '.$from.' '.$where.' '.$groupby;
+        if (isset($orderBy) && null !== $orderBy) {
+            $this->_sql .= ' '.$orderBy;
         }
     }
 
     public function parseClause($originalClause, $recursive = false)
     {
         $clause = $this->_tokenizer->bracketTrim($originalClause);
-        
+
         $brackets = false;
 
         if ($clause !== $originalClause) {
             $brackets = true;
         }
 
-        $foreignId = current(array_diff($this->_table->getColumnNames(), array('keyword', 'field', 'position')));
-        
+        $foreignId = current(array_diff($this->_table->getColumnNames(), ['keyword', 'field', 'position']));
+
         $terms = $this->_tokenizer->sqlExplode($clause, ' OR ', '(', ')');
 
-        $ret = array();
+        $ret = [];
 
         if (count($terms) > 1) {
             $leavesOnly = true;
@@ -138,33 +129,33 @@ class Doctrine_Search_Query
             $return = implode(' OR ', $ret);
 
             if ($leavesOnly && $recursive) {
-                $return = sprintf($this->_condition, 'IN') . $return . ')';
+                $return = sprintf($this->_condition, 'IN').$return.')';
                 $brackets = false;
             }
         } else {
             $terms = $this->_tokenizer->sqlExplode($clause, ' ', '(', ')');
-            
-            if (count($terms) === 1 && ! $recursive) {
+
+            if (1 === count($terms) && !$recursive) {
                 $return = $this->parseTerm($clause);
             } else {
                 foreach ($terms as $k => $term) {
                     $term = trim($term);
-    
-                    if ($term === 'AND') {
+
+                    if ('AND' === $term) {
                         continue;
                     }
-    
-                    if (substr($term, 0, 1) === '-') {
+
+                    if ('-' === substr($term, 0, 1)) {
                         $operator = 'NOT IN';
                         $term = substr($term, 1);
                     } else {
                         $operator = 'IN';
                     }
-    
+
                     if ($this->isExpression($term)) {
                         $ret[$k] = $this->parseClause($term, true);
                     } else {
-                        $ret[$k] = sprintf($this->_condition, $operator) . $this->parseTerm($term) . ')';
+                        $ret[$k] = sprintf($this->_condition, $operator).$this->parseTerm($term).')';
                     }
                 }
                 $return = implode(' AND ', $ret);
@@ -172,28 +163,27 @@ class Doctrine_Search_Query
         }
 
         if ($brackets) {
-            return '(' . $return . ')';
-        } else {
-            return $return;
+            return '('.$return.')';
         }
+
+        return $return;
     }
 
     public function isExpression($term)
     {
-        if (strpos($term, '(') !== false) {
+        if (false !== strpos($term, '(')) {
             return true;
-        } else {
-            $terms = $this->_tokenizer->quoteExplode($term);
-            
-            return (count($terms) > 1);
         }
+        $terms = $this->_tokenizer->quoteExplode($term);
+
+        return count($terms) > 1;
     }
 
     public function parseTerm($term)
     {
         $negation = false;
 
-        if (strpos($term, "'") === false) {
+        if (false === strpos($term, "'")) {
             $where = $this->parseWord($term);
         } else {
             $term = trim($term, "' ");
@@ -202,12 +192,13 @@ class Doctrine_Search_Query
             $where = $this->parseWord($terms[0]);
 
             foreach ($terms as $k => $word) {
-                if ($k === 0) {
+                if (0 === $k) {
                     continue;
                 }
-                $where .= ' AND (position + ' . $k . ') IN (SELECT position FROM ' . $this->_table->getTableName() . ' WHERE ' . $this->parseWord($word) . ')';
+                $where .= ' AND (position + '.$k.') IN (SELECT position FROM '.$this->_table->getTableName().' WHERE '.$this->parseWord($word).')';
             }
         }
+
         return $where;
     }
 
@@ -215,14 +206,13 @@ class Doctrine_Search_Query
     {
         $this->_words[] = str_replace('*', '', $word);
 
-        if (strpos($word, '?') !== false ||
-            strpos($word, '*') !== false) {
-
+        if (false !== strpos($word, '?')
+            || false !== strpos($word, '*')) {
             $word = str_replace('*', '%', $word);
 
             $where = 'keyword LIKE ?';
 
-            $params = array($word);
+            $params = [$word];
         } else {
             $where = 'keyword = ?';
         }

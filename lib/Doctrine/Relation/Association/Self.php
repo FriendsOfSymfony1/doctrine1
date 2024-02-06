@@ -20,22 +20,18 @@
  */
 
 /**
- * Doctrine_Relation_Association_Self
+ * Doctrine_Relation_Association_Self.
  *
- * @package     Doctrine
- * @subpackage  Relation
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Relation_Association_Self extends Doctrine_Relation_Association
 {
     /**
-     * getRelationDql
+     * getRelationDql.
      *
-     * @param integer $count
+     * @param  int    $count
      * @return string
      */
     public function getRelationDql($count, $context = 'record')
@@ -44,73 +40,76 @@ class Doctrine_Relation_Association_Self extends Doctrine_Relation_Association
             case 'record':
                 $identifierColumnNames = $this->definition['table']->getIdentifierColumnNames();
                 $identifier = array_pop($identifierColumnNames);
-                $sub    = 'SELECT '.$this->definition['foreign'] 
-                        . ' FROM '.$this->definition['refTable']->getTableName()
-                        . ' WHERE '.$this->definition['local']
-                        . ' = ?';
+                $sub = 'SELECT '.$this->definition['foreign']
+                        .' FROM '.$this->definition['refTable']->getTableName()
+                        .' WHERE '.$this->definition['local']
+                        .' = ?';
 
-                $sub2   = 'SELECT '.$this->definition['local']
-                        . ' FROM '.$this->definition['refTable']->getTableName()
-                        . ' WHERE '.$this->definition['foreign']
-                        . ' = ?';
+                $sub2 = 'SELECT '.$this->definition['local']
+                        .' FROM '.$this->definition['refTable']->getTableName()
+                        .' WHERE '.$this->definition['foreign']
+                        .' = ?';
 
-                $dql  = 'FROM ' . $this->definition['table']->getComponentName()
-                      . '.' . $this->definition['refTable']->getComponentName()
-                      . ' WHERE ' . $this->definition['table']->getComponentName()
-                      . '.' . $identifier 
-                      . ' IN (' . $sub . ')'
-                      . ' || ' . $this->definition['table']->getComponentName() 
-                      . '.' . $identifier
-                      . ' IN (' . $sub2 . ')';
+                $dql = 'FROM '.$this->definition['table']->getComponentName()
+                      .'.'.$this->definition['refTable']->getComponentName()
+                      .' WHERE '.$this->definition['table']->getComponentName()
+                      .'.'.$identifier
+                      .' IN ('.$sub.')'
+                      .' || '.$this->definition['table']->getComponentName()
+                      .'.'.$identifier
+                      .' IN ('.$sub2.')';
 
-                $dql .= $this->getOrderBy($this->definition['table']->getComponentName(), false); 
+                $dql .= $this->getOrderBy($this->definition['table']->getComponentName(), false);
                 break;
             case 'collection':
-                $sub  = substr(str_repeat('?, ', $count),0,-2);
-                $dql  = 'FROM '.$this->definition['refTable']->getComponentName()
-                      . '.' . $this->definition['table']->getComponentName()
-                      . ' WHERE '.$this->definition['refTable']->getComponentName()
-                      . '.' . $this->definition['local'] . ' IN (' . $sub . ')';
+                $sub = substr(str_repeat('?, ', $count), 0, -2);
+                $dql = 'FROM '.$this->definition['refTable']->getComponentName()
+                      .'.'.$this->definition['table']->getComponentName()
+                      .' WHERE '.$this->definition['refTable']->getComponentName()
+                      .'.'.$this->definition['local'].' IN ('.$sub.')';
 
                 $dql .= $this->getOrderBy($this->definition['refTable']->getComponentName(), false);
-        };
+        }
 
         return $dql;
     }
 
     public function fetchRelatedFor(Doctrine_Record $record)
     {
-        $id      = $record->getIncremented();
+        $id = $record->getIncremented();
 
         $q = new Doctrine_RawSql();
 
         $assocTable = $this->getAssociationFactory()->getTableName();
-        $tableName  = $record->getTable()->getTableName();
+        $tableName = $record->getTable()->getTableName();
         $identifierColumnNames = $record->getTable()->getIdentifierColumnNames();
         $identifier = array_pop($identifierColumnNames);
 
-        $sub     = 'SELECT '.$this->getForeign().
+        $sub = 'SELECT '.$this->getForeign().
                    ' FROM '.$assocTable.
                    ' WHERE '.$this->getLocal().
                    ' = ?';
 
-        $sub2   = 'SELECT '.$this->getLocal().
+        $sub2 = 'SELECT '.$this->getLocal().
                   ' FROM '.$assocTable.
                   ' WHERE '.$this->getForeign().
                   ' = ?';
 
         $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
-          ->from($tableName . ' INNER JOIN '.$assocTable.' ON '.
-                 $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getLocal() . ' OR ' .
-                 $tableName . '.' . $identifier . ' = ' . $assocTable . '.' . $this->getForeign()
-                 )
-          ->where($tableName.'.'.$identifier.' IN ('.$sub.') OR '.
-                  $tableName.'.'.$identifier.' IN ('.$sub2.')'
-                );
-        $q->addComponent($tableName,  $record->getTable()->getComponentName());
-        $q->addComponent($assocTable, $record->getTable()->getComponentName(). '.' . $this->getAssociationFactory()->getComponentName());
+            ->from(
+                $tableName.' INNER JOIN '.$assocTable.' ON '.
+                   $tableName.'.'.$identifier.' = '.$assocTable.'.'.$this->getLocal().' OR '.
+                   $tableName.'.'.$identifier.' = '.$assocTable.'.'.$this->getForeign()
+            )
+            ->where(
+                $tableName.'.'.$identifier.' IN ('.$sub.') OR '.
+                    $tableName.'.'.$identifier.' IN ('.$sub2.')'
+            )
+        ;
+        $q->addComponent($tableName, $record->getTable()->getComponentName());
+        $q->addComponent($assocTable, $record->getTable()->getComponentName().'.'.$this->getAssociationFactory()->getComponentName());
         $q->orderBy($this->getOrderByStatement($tableName, true));
 
-        return $q->execute(array($id, $id));
+        return $q->execute([$id, $id]);
     }
 }

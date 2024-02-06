@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1562_TestCase
+ * Doctrine_Ticket_1562_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1562_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1562_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -56,7 +58,7 @@ class Doctrine_Ticket_1562_TestCase extends Doctrine_UnitTestCase
         try {
             $table->getTestAccessor2();
         } catch (Exception $e) {
-            if ($e->getMessage() == 'Test') {
+            if ('Test' == $e->getMessage()) {
                 $this->pass();
             } else {
                 $this->fail('Exception thrown should have had a message of test');
@@ -81,7 +83,6 @@ class Ticket_1562_User extends Doctrine_Record
 
 class Ticket_1562_UserTable extends Doctrine_Table
 {
-    
 }
 
 class Ticket_1562_Template extends Doctrine_Template

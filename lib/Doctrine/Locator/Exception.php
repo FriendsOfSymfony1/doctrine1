@@ -20,17 +20,15 @@
  */
 
 /**
- * Doctrine_Locator_Exception
+ * Doctrine_Locator_Exception.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Locator
  * @category    Locator
- * @license     http://www.gnu.org/licenses/lgpl.txt LGPL
- * @link        http://www.doctrine-project.org
+ *
+ * @see        http://www.doctrine-project.org
+ *
  * @author      Janne Vanhala <jpvanhal@cc.hut.fi>
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @version     $Revision$
- * @since       1.0
  */
 class Doctrine_Locator_Exception extends Doctrine_Exception
-{ }
+{
+}

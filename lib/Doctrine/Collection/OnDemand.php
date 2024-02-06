@@ -21,14 +21,10 @@
 
 /**
  * Doctrine_Collection_OnDemand
- * iterates through Doctrine_Records hydrating one at a time
+ * iterates through Doctrine_Records hydrating one at a time.
  *
- * @package     Doctrine
- * @subpackage  Collection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.1
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Geoff Davis <geoff.davis@gmedia.com.au>
  */
 class Doctrine_Collection_OnDemand implements Iterator
@@ -55,16 +51,16 @@ class Doctrine_Collection_OnDemand implements Iterator
         $record = $this->_hydrator->hydrateResultSet($this->_stmt);
         if ($record instanceof Doctrine_Collection) {
             $this->_current = $record->getFirst();
-        } else if (is_array($record) && count($record) == 0) {
+        } elseif (is_array($record) && 0 == count($record)) {
             $this->_current = null;
-        } else if (is_array($record) && isset($record[0])) {
+        } elseif (is_array($record) && isset($record[0])) {
             $this->_current = $record[0];
         } else {
             $this->_current = $record;
         }
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         $this->index = 0;
@@ -74,32 +70,33 @@ class Doctrine_Collection_OnDemand implements Iterator
         $this->_hydrateCurrent();
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->index;
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->_current;
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function next()
     {
         $this->_current = null;
-        $this->index++;
+        ++$this->index;
         $this->_hydrateCurrent();
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function valid()
     {
-        if ( ! is_null($this->_current) && $this->_current !== false) {
+        if (!is_null($this->_current) && false !== $this->_current) {
             return true;
         }
+
         return false;
     }
 }

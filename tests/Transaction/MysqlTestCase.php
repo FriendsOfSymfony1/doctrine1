@@ -20,53 +20,60 @@
  */
 
 /**
- * Doctrine_Transaction_Mysql_TestCase
+ * Doctrine_Transaction_Mysql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Transaction_Mysql_TestCase extends Doctrine_UnitTestCase
 {
-    public function testCreateSavePointExecutesSql() 
+    public function testCreateSavePointExecutesSql()
     {
         $this->transaction->beginTransaction('mypoint');
 
         $this->assertEqual($this->adapter->pop(), 'SAVEPOINT mypoint');
     }
-    public function testReleaseSavePointExecutesSql() 
+
+    public function testReleaseSavePointExecutesSql()
     {
         $this->transaction->commit('mypoint');
 
         $this->assertEqual($this->adapter->pop(), 'RELEASE SAVEPOINT mypoint');
     }
-    public function testRollbackSavePointExecutesSql() 
+
+    public function testRollbackSavePointExecutesSql()
     {
         $this->transaction->beginTransaction('mypoint');
         $this->transaction->rollback('mypoint');
 
         $this->assertEqual($this->adapter->pop(), 'ROLLBACK TO SAVEPOINT mypoint');
     }
-    public function testGetIsolationExecutesSql() 
+
+    public function testGetIsolationExecutesSql()
     {
         $this->transaction->getIsolation();
 
         $this->assertEqual($this->adapter->pop(), 'SELECT @@tx_isolation');
     }
-    public function testSetIsolationThrowsExceptionOnUnknownIsolationMode() 
+
+    public function testSetIsolationThrowsExceptionOnUnknownIsolationMode()
     {
         try {
             $this->transaction->setIsolation('unknown');
             $this->fail();
-        } catch(Doctrine_Transaction_Exception $e) {
+        } catch (Doctrine_Transaction_Exception $e) {
             $this->pass();
         }
     }
-    public function testSetIsolationExecutesSql() 
+
+    public function testSetIsolationExecutesSql()
     {
         $this->transaction->setIsolation('READ UNCOMMITTED');
 

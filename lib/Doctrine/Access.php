@@ -20,23 +20,19 @@
  */
 
 /**
- * Provides array access and property overload interface for Doctrine subclasses
+ * Provides array access and property overload interface for Doctrine subclasses.
  *
- * @package     Doctrine
- * @subpackage  Access
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements ArrayAccess
 {
     /**
-     * Set an entire aray to the data
+     * Set an entire aray to the data.
      *
-     * @param   array $array An array of key => value pairs
-     * @return  Doctrine_Access
+     * @param  array           $array An array of key => value pairs
+     * @return Doctrine_Access
      */
     public function setArray(array $array)
     {
@@ -48,12 +44,9 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * Set key and value to data
+     * Set key and value to data.
      *
      * @see     set, offsetSet
-     * @param   $name
-     * @param   $value
-     * @return  void
      */
     public function __set($name, $value)
     {
@@ -61,11 +54,9 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * Get key from data
+     * Get key from data.
      *
      * @see     get, offsetGet
-     * @param   mixed $name
-     * @return  mixed
      */
     public function __get($name)
     {
@@ -73,10 +64,10 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * Check if key exists in data
+     * Check if key exists in data.
      *
-     * @param   string $name
-     * @return  boolean whether or not this object contains $name
+     * @param  string $name
+     * @return bool   whether or not this object contains $name
      */
     public function __isset($name)
     {
@@ -84,12 +75,11 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * Remove key from data
+     * Remove key from data.
      *
-     * @param   string $name
-     * @return  void
+     * @param string $name
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function __unset($name)
     {
         return $this->remove($name);
@@ -98,16 +88,13 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     /**
      * @return bool
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->contains($offset);
     }
 
-    /**
-     * @return  mixed
-     */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         // array notation with no index was causing 'undefined variable: $offset' notices in php7,
@@ -116,84 +103,76 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
         if (!isset($offset)) {
             return $this->get(null);
         }
+
         return $this->get($offset);
     }
 
-    /**
-     * @return  void
-     */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
-        if ( ! isset($offset)) {
+        if (!isset($offset)) {
             $this->add($value);
         } else {
             $this->set($offset, $value);
         }
     }
 
-    /**
-     * @return void
-     */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->remove($offset);
     }
 
     /**
-     * Remove the element with the specified offset
+     * Remove the element with the specified offset.
      *
-     * @param mixed $offset The offset to remove
-     * @return bool True if removed otherwise false
+     * @param  mixed $offset The offset to remove
+     * @return bool  True if removed otherwise false
      */
     public function remove($offset)
     {
-        throw new Doctrine_Exception('Remove is not supported for ' . get_class($this));
+        throw new Doctrine_Exception('Remove is not supported for '.get_class($this));
     }
 
     /**
-     * Return the element with the specified offset
+     * Return the element with the specified offset.
      *
-     * @param mixed $offset     The offset to return
-     * @return mixed
+     * @param mixed $offset The offset to return
      */
     public function get($offset)
     {
-        throw new Doctrine_Exception('Get is not supported for ' . get_class($this));
+        throw new Doctrine_Exception('Get is not supported for '.get_class($this));
     }
 
     /**
-     * Set the offset to the value
+     * Set the offset to the value.
      *
      * @param mixed $offset The offset to set
-     * @param mixed $value The value to set the offset to
-     *
+     * @param mixed $value  The value to set the offset to
      */
     public function set($offset, $value)
     {
-        throw new Doctrine_Exception('Set is not supported for ' . get_class($this));
+        throw new Doctrine_Exception('Set is not supported for '.get_class($this));
     }
 
     /**
-     * Check if the specified offset exists
+     * Check if the specified offset exists.
      *
-     * @param mixed $offset The offset to check
-     * @return boolean True if exists otherwise false
+     * @param  mixed $offset The offset to check
+     * @return bool  True if exists otherwise false
      */
     public function contains($offset)
     {
-        throw new Doctrine_Exception('Contains is not supported for ' . get_class($this));
+        throw new Doctrine_Exception('Contains is not supported for '.get_class($this));
     }
 
     /**
-     * Add the value
+     * Add the value.
      *
      * @param mixed $value The value to add
-     * @return void
      */
     public function add($value)
     {
-        throw new Doctrine_Exception('Add is not supported for ' . get_class($this));
+        throw new Doctrine_Exception('Add is not supported for '.get_class($this));
     }
 }

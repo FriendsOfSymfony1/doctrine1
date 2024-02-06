@@ -20,38 +20,40 @@
  */
 
 /**
- * Doctrine_I18n_TestCase
+ * Doctrine_I18n_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_I18n_TestCase extends Doctrine_UnitTestCase
 {
-
     public function prepareData()
-    { }
+    {
+    }
 
     public function prepareTables()
     {
-        $this->tables = array();
+        $this->tables = [];
 
         parent::prepareTables();
     }
 
     public function testTranslationTableGetsExported()
     {
-    	$this->conn->setAttribute(Doctrine_Core::ATTR_EXPORT, Doctrine_Core::EXPORT_ALL);
-    	
-    	$this->assertTrue(Doctrine_Core::EXPORT_ALL & Doctrine_Core::EXPORT_TABLES);
+        $this->conn->setAttribute(Doctrine_Core::ATTR_EXPORT, Doctrine_Core::EXPORT_ALL);
+
+        $this->assertTrue(Doctrine_Core::EXPORT_ALL & Doctrine_Core::EXPORT_TABLES);
         $this->assertTrue(Doctrine_Core::EXPORT_ALL & Doctrine_Core::EXPORT_CONSTRAINTS);
         $this->assertTrue(Doctrine_Core::EXPORT_ALL & Doctrine_Core::EXPORT_PLUGINS);
 
-        $sql = $this->conn->export->exportClassesSql(array('I18nTest'));
+        $sql = $this->conn->export->exportClassesSql(['I18nTest']);
 
         foreach ($sql as $query) {
             $this->conn->exec($query);
@@ -61,7 +63,7 @@ class Doctrine_I18n_TestCase extends Doctrine_UnitTestCase
     public function testTranslatedColumnsAreRemovedFromMainComponent()
     {
         $i = new I18nTest();
-        
+
         $columns = $i->getTable()->getColumns();
 
         $this->assertFalse(isset($columns['title']));
@@ -77,7 +79,6 @@ class Doctrine_I18n_TestCase extends Doctrine_UnitTestCase
         $i->Translation['EN']->title = 'some title';
         $this->assertEqual($i->Translation->getTable()->getComponentName(), 'I18nTestTranslation');
 
-
         $i->Translation['FI']->name = 'joku nimi';
         $i->Translation['FI']->title = 'joku otsikko';
         $i->Translation['FI']->lang = 'FI';
@@ -91,9 +92,7 @@ class Doctrine_I18n_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($t->name, 'some name');
         $this->assertEqual($t->title, 'some title');
         $this->assertEqual($t->lang, 'EN');
-
     }
-
 
     public function testUpdatingI18nItems()
     {
@@ -112,10 +111,9 @@ class Doctrine_I18n_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($t->title, 'updated title');
     }
 
-
     public function testDataFetching()
     {
-        $i = Doctrine_Query::create()->from('I18nTest i')->innerJoin('i.Translation t INDEXBY t.lang')->orderby('t.lang')->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
+        $i = Doctrine_Query::create()->from('I18nTest i')->innerJoin('i.Translation t INDEXBY t.lang')->orderby('t.lang')->fetchOne([], Doctrine_Core::HYDRATE_ARRAY);
 
         $this->assertEqual($i['Translation']['EN']['name'], 'updated name');
         $this->assertEqual($i['Translation']['EN']['title'], 'updated title');
@@ -125,13 +123,13 @@ class Doctrine_I18n_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($i['Translation']['FI']['title'], 'joku otsikko');
         $this->assertEqual($i['Translation']['FI']['lang'], 'FI');
     }
-    
+
     public function testIndexByLangIsAttachedToNewlyCreatedCollections()
     {
-    	$coll = new Doctrine_Collection('I18nTestTranslation');
+        $coll = new Doctrine_Collection('I18nTestTranslation');
 
         $coll['EN']['name'] = 'some name';
-        
+
         $this->assertEqual($coll['EN']->lang, 'EN');
     }
 

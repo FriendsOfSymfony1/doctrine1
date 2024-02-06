@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1940_TestCase
+ * Doctrine_Ticket_1940_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1940_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1940_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -43,7 +45,7 @@ class Doctrine_Ticket_1940_TestCase extends Doctrine_UnitTestCase
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE, true);
 
         $user = new Ticket_1940_User();
-        $user->fromArray(array('username' => 'jwage', 'password' => 'changeme', 'email_address' => 'jonwage@gmail.com'));
+        $user->fromArray(['username' => 'jwage', 'password' => 'changeme', 'email_address' => 'jonwage@gmail.com']);
 
         $userArray = $user->toArray();
         $this->assertEqual($userArray['username'], 'jwage-modified');
@@ -56,33 +58,33 @@ class Doctrine_Ticket_1940_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_1940_User extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('username', 'string', 255);
-		$this->hasColumn('password', 'string', 255);
-		$this->hasColumn('email_address', 'string', 255);
+    public function setTableDefinition()
+    {
+        $this->hasColumn('username', 'string', 255);
+        $this->hasColumn('password', 'string', 255);
+        $this->hasColumn('email_address', 'string', 255);
 
-		$this->hasMutator('password', 'customSetPassword');
-		$this->hasAccessor('username', 'customGetUsername');
-	}
+        $this->hasMutator('password', 'customSetPassword');
+        $this->hasAccessor('username', 'customGetUsername');
+    }
 
     public function getEmailAddress()
     {
-        return $this->_get('email_address') . '-modified';
+        return $this->_get('email_address').'-modified';
     }
 
     public function setEmailAddress($emailAddress)
     {
-        $this->_set('email_address', $emailAddress . '-modified');
+        $this->_set('email_address', $emailAddress.'-modified');
     }
 
-	public function customGetUsername()
-	{
-		return $this->_get('username').'-modified';
-	}
+    public function customGetUsername()
+    {
+        return $this->_get('username').'-modified';
+    }
 
-	public function customSetPassword($value)
-	{
-		return $this->_set('password', md5($value));
-	}
+    public function customSetPassword($value)
+    {
+        return $this->_set('password', md5($value));
+    }
 }

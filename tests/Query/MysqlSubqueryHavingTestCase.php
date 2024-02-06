@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Query_MysqlSubquery_TestCase
+ * Doctrine_Query_MysqlSubquery_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_MysqlSubqueryHaving_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_MysqlSubqueryHaving_TestCase extends Doctrine_UnitTestCase
 {
     public function setUp()
     {
@@ -54,7 +56,7 @@ class Doctrine_Query_MysqlSubqueryHaving_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($this->dbh->pop(), 'SELECT DISTINCT e2.id, COUNT(DISTINCT a2.id) AS a2__0 FROM entity e2 LEFT JOIN album a2 ON e2.id = a2.user_id WHERE (e2.type = 0) GROUP BY e2.id HAVING a2__0 > 0 ORDER BY a2__0 DESC LIMIT 5');
     }
-    
+
     public function testGetLimitSubqueryWithHavingOnAggregateValuesIncorrectAlias()
     {
         $q = new Doctrine_Query();

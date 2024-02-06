@@ -20,32 +20,26 @@
  */
 
 /**
- * Doctrine_Connection_Mysql
+ * Doctrine_Connection_Mysql.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Connection_Mock extends Doctrine_Connection_Common
 {
     /**
-     * @var string $driverName                  the name of this connection driver
+     * @var string the name of this connection driver
      */
     protected $driverName = 'Mock';
 
     /**
-     * the constructor
+     * the constructor.
      *
-     * @param Doctrine_Manager $manager
-     * @param PDO|Doctrine_Adapter $adapter     database handler
+     * @param PDO|Doctrine_Adapter $adapter database handler
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-
     }
 }

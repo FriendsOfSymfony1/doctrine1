@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_384_TestCase
+ * Doctrine_Ticket_384_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_1251_TestCase extends Doctrine_UnitTestCase
 {
@@ -37,18 +39,16 @@ class Doctrine_Ticket_1251_TestCase extends Doctrine_UnitTestCase
         $this->tables[] = 'Ticket_1251_Record';
         parent::prepareTables();
     }
-    
-    
+
     public function testAccessDataNamedField()
     {
         $t = new Ticket_1251_Record();
         $t->data = 'Foo';
         $t->save();
-        
+
         $this->assertEqual($t->data, 'Foo');
     }
 }
-
 
 class Ticket_1251_Record extends Doctrine_Record
 {

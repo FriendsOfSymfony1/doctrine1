@@ -20,41 +20,37 @@
  */
 
 /**
- * Doctrine_Task_BuildAllReload
+ * Doctrine_Task_BuildAllReload.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_BuildAllReload extends Doctrine_Task
 {
-    public $description          =   'Calls rebuild-db and load-data',
-           $requiredArguments    =   array(),
-           $optionalArguments    =   array();
+    public $description = 'Calls rebuild-db and load-data';
+    public $requiredArguments = [];
+    public $optionalArguments = [];
 
-    protected $rebuildDb,
-              $loadData;
-    
+    protected $rebuildDb;
+    protected $loadData;
+
     public function __construct($dispatcher = null)
     {
         parent::__construct($dispatcher);
 
         $this->rebuildDb = new Doctrine_Task_RebuildDb($this->dispatcher);
         $this->loadData = new Doctrine_Task_LoadData($this->dispatcher);
-        
+
         $this->requiredArguments = array_merge($this->requiredArguments, $this->rebuildDb->requiredArguments, $this->loadData->requiredArguments);
         $this->optionalArguments = array_merge($this->optionalArguments, $this->rebuildDb->optionalArguments, $this->loadData->optionalArguments);
     }
-    
+
     public function execute()
     {
         $this->rebuildDb->setArguments($this->getArguments());
         $this->rebuildDb->execute();
-        
+
         $this->loadData->setArguments($this->getArguments());
         $this->loadData->execute();
     }

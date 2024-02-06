@@ -20,41 +20,37 @@
  */
 
 /**
- * Doctrine_Task_BuildAllLoad
+ * Doctrine_Task_BuildAllLoad.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_BuildAllLoad extends Doctrine_Task
 {
-    public $description          =   'Calls build-all, and load-data',
-           $requiredArguments    =   array(),
-           $optionalArguments    =   array();
+    public $description = 'Calls build-all, and load-data';
+    public $requiredArguments = [];
+    public $optionalArguments = [];
 
-    protected $buildAll,
-              $loadData;
-    
+    protected $buildAll;
+    protected $loadData;
+
     public function __construct($dispatcher = null)
     {
         parent::__construct($dispatcher);
 
         $this->buildAll = new Doctrine_Task_BuildAll($this->dispatcher);
         $this->loadData = new Doctrine_Task_LoadData($this->dispatcher);
-        
+
         $this->requiredArguments = array_merge($this->requiredArguments, $this->buildAll->requiredArguments, $this->loadData->requiredArguments);
         $this->optionalArguments = array_merge($this->optionalArguments, $this->buildAll->optionalArguments, $this->loadData->optionalArguments);
     }
-    
+
     public function execute()
     {
         $this->buildAll->setArguments($this->getArguments());
         $this->buildAll->execute();
-        
+
         $this->loadData->setArguments($this->getArguments());
         $this->loadData->execute();
     }

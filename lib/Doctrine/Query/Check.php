@@ -20,40 +20,37 @@
  */
 
 /**
- * Doctrine_Query_Check
+ * Doctrine_Query_Check.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Check
 {
     /**
-     * @var Doctrine_Table $table           Doctrine_Table object
+     * @var Doctrine_Table Doctrine_Table object
      */
     protected $table;
 
     /**
-     * @var string $sql                     database specific sql CHECK constraint definition 
-     *                                      parsed from the given dql CHECK definition
+     * @var string database specific sql CHECK constraint definition
+     *             parsed from the given dql CHECK definition
      */
     protected $sql;
-    
+
     protected $_tokenizer;
 
     /**
-     * @param Doctrine_Table|string $table  Doctrine_Table object
+     * @param Doctrine_Table|string $table Doctrine_Table object
      */
     public function __construct($table)
     {
-        if ( ! ($table instanceof Doctrine_Table)) {
+        if (!($table instanceof Doctrine_Table)) {
             $table = Doctrine_Manager::getInstance()
-                        ->getCurrentConnection()
-                        ->getTable($table);
+                ->getCurrentConnection()
+                ->getTable($table)
+            ;
         }
         $this->table = $table;
         $this->_tokenizer = new Doctrine_Query_Tokenizer();
@@ -61,7 +58,7 @@ class Doctrine_Query_Check
 
     /**
      * getTable
-     * returns the table object associated with this object
+     * returns the table object associated with this object.
      *
      * @return Doctrine_Connection
      */
@@ -71,9 +68,9 @@ class Doctrine_Query_Check
     }
 
     /**
-     * parse
+     * parse.
      *
-     * @param string $dql       DQL CHECK constraint definition
+     * @param  string $dql DQL CHECK constraint definition
      * @return string
      */
     public function parse($dql)
@@ -82,19 +79,14 @@ class Doctrine_Query_Check
     }
 
     /**
-     * parseClause
-     *
-     * @param string $alias     component alias
-     * @param string $field     the field name
-     * @param mixed $value      the value of the field
-     * @return void
+     * parseClause.
      */
     public function parseClause($dql)
     {
         $parts = $this->_tokenizer->sqlExplode($dql, ' AND ');
 
         if (count($parts) > 1) {
-            $ret = array();
+            $ret = [];
             foreach ($parts as $part) {
                 $ret[] = $this->parseSingle($part);
             }
@@ -103,24 +95,24 @@ class Doctrine_Query_Check
         } else {
             $parts = $this->_tokenizer->quoteExplode($dql, ' OR ');
             if (count($parts) > 1) {
-                $ret = array();
+                $ret = [];
                 foreach ($parts as $part) {
                     $ret[] = $this->parseClause($part);
                 }
 
                 $r = implode(' OR ', $ret);
             } else {
-                $ret = $this->parseSingle($dql);
-                return $ret;
+                return $this->parseSingle($dql);
             }
         }
-        return '(' . $r . ')';
+
+        return '('.$r.')';
     }
-    
+
     public function parseSingle($part)
     {
         $e = explode(' ', $part);
-        
+
         $e[0] = $this->parseFunction($e[0]);
 
         switch ($e[1]) {
@@ -129,34 +121,34 @@ class Doctrine_Query_Check
             case '=':
             case '!=':
             case '<>':
-
-            break;
+                break;
             default:
-                throw new Doctrine_Query_Exception('Unknown operator ' . $e[1]);
+                throw new Doctrine_Query_Exception('Unknown operator '.$e[1]);
         }
 
         return implode(' ', $e);
     }
 
-    public function parseFunction($dql) 
+    public function parseFunction($dql)
     {
         if (($pos = strpos($dql, '(')) !== false) {
-            $func  = substr($dql, 0, $pos);
-            $value = substr($dql, ($pos + 1), -1);
-            
-            $expr  = $this->table->getConnection()->expression;
+            $func = substr($dql, 0, $pos);
+            $value = substr($dql, $pos + 1, -1);
 
-            if ( ! method_exists($expr, $func)) {
-                throw new Doctrine_Query_Exception('Unknown function ' . $func);
+            $expr = $this->table->getConnection()->expression;
+
+            if (!method_exists($expr, $func)) {
+                throw new Doctrine_Query_Exception('Unknown function '.$func);
             }
-            
-            $func  = $expr->$func($value);
+
+            $func = $expr->{$func}($value);
         }
+
         return $func;
     }
 
     /**
-     * getSql
+     * getSql.
      *
      * returns database specific sql CHECK constraint definition
      * parsed from the given dql CHECK definition

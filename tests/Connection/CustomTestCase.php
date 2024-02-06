@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Connection_Custom_TestCase
+ * Doctrine_Connection_Custom_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Connection_Custom_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Connection_Custom_TestCase extends Doctrine_UnitTestCase
 {
     protected $_conn;
     protected $_dbh;
@@ -50,10 +52,15 @@ class Doctrine_Connection_Custom_TestCase extends Doctrine_UnitTestCase
     }
 }
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class Doctrine_Connection_Test extends Doctrine_Connection_Common
 {
     /**
-     * @var string $driverName The name of this connection driver
+     * @var string The name of this connection driver
      */
     protected $driverName = 'Mock';
 }

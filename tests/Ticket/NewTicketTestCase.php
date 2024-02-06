@@ -20,14 +20,15 @@
  */
 
 /**
- * Doctrine_I18nRelation_TestCase
+ * Doctrine_I18nRelation_TestCase.
  *
- * @package     Doctrine
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_NewTicket_TestCase extends Doctrine_UnitTestCase
 {
@@ -71,8 +72,8 @@ class Doctrine_Ticket_NewTicket_TestCase extends Doctrine_UnitTestCase
 
     public function prepareTables()
     {
-        $this->tables = array('Testing_AttributeDefinition','Testing_Attribute', 'Testing_Product',
-                'Testing_ProductAttribute');
+        $this->tables = ['Testing_AttributeDefinition', 'Testing_Attribute', 'Testing_Product',
+            'Testing_ProductAttribute'];
         parent::prepareTables();
     }
 
@@ -95,25 +96,29 @@ class Doctrine_Ticket_NewTicket_TestCase extends Doctrine_UnitTestCase
         $q2->leftJoin('a.Definition ad');
 
         // This query works perfect
-        $r1 = $q1->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-        //var_dump($r1);
+        $r1 = $q1->execute([], Doctrine_Core::HYDRATE_ARRAY);
+        // var_dump($r1);
         // This query throws an exception!!!
-        $r2 = $q2->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-        //$r2 = $q2->execute();
-        //var_dump($r2);
+        $r2 = $q2->execute([], Doctrine_Core::HYDRATE_ARRAY);
+        // $r2 = $q2->execute();
+        // var_dump($r2);
     }
-   
 }
 
 class Testing_AttributeDefinition extends Doctrine_Record
 {
-        public function setTableDefinition()
+    public function setTableDefinition()
     {
         $this->setTableName('testing__attribute_definitions');
-                $this->hasColumn('id', 'integer', 4,
-                    array('primary'=>true,'autoincrement'=>true));
-                $this->hasColumn('name', 'string', 64, array('notnull'=>true));
+        $this->hasColumn(
+            'id',
+            'integer',
+            4,
+            ['primary' => true, 'autoincrement' => true]
+        );
+        $this->hasColumn('name', 'string', 64, ['notnull' => true]);
     }
+
     public function setUp()
     {
     }
@@ -121,25 +126,34 @@ class Testing_AttributeDefinition extends Doctrine_Record
 
 class Testing_Attribute extends Doctrine_Record
 {
-        public function setTableDefinition()
+    public function setTableDefinition()
     {
         $this->setTableName('testing__attributes');
 
-                $this->hasColumn('id', 'integer', 4,
-                    array('primary'=>true,'autoincrement'=>true));
-                $this->hasColumn('attribute_definition_id', 'integer', 4,
-                    array('notnull'=>true));
-                $this->hasColumn('value', 'string', 255, array('notnull'=>false));
+        $this->hasColumn(
+            'id',
+            'integer',
+            4,
+            ['primary' => true, 'autoincrement' => true]
+        );
+        $this->hasColumn(
+            'attribute_definition_id',
+            'integer',
+            4,
+            ['notnull' => true]
+        );
+        $this->hasColumn('value', 'string', 255, ['notnull' => false]);
     }
+
     public function setUp()
     {
         $this->hasOne(
-                'Testing_AttributeDefinition as Definition',
-                array(
-                                'local'   => 'attribute_definition_id',
-                                'foreign' => 'id',
-                                'onDelete' => 'CASCADE'
-                )
+            'Testing_AttributeDefinition as Definition',
+            [
+                'local' => 'attribute_definition_id',
+                'foreign' => 'id',
+                'onDelete' => 'CASCADE',
+            ]
         );
     }
 }
@@ -149,23 +163,31 @@ class Testing_Product extends Doctrine_Record
     public function setTableDefinition()
     {
         $this->setTableName('testing__products');
-                $this->hasColumn('id', 'integer', 4,
-                    array('primary'=>true,'autoincrement'=>true));
-        $this->hasColumn('name', 'string', 40,
-            array('notnull'=>true));
+        $this->hasColumn(
+            'id',
+            'integer',
+            4,
+            ['primary' => true, 'autoincrement' => true]
+        );
+        $this->hasColumn(
+            'name',
+            'string',
+            40,
+            ['notnull' => true]
+        );
     }
+
     public function setUp()
     {
-
-                $this->hasMany(
-                'Testing_Attribute as Attributes',
-                array(
-                        'local'    => 'product_id',
-                        'foreign'  => 'attribute_id',
-                        'refClass' => 'Testing_ProductAttribute',
-                                'onDelete' => 'CASCADE',
-                        )
-                );
+        $this->hasMany(
+            'Testing_Attribute as Attributes',
+            [
+                'local' => 'product_id',
+                'foreign' => 'attribute_id',
+                'refClass' => 'Testing_ProductAttribute',
+                'onDelete' => 'CASCADE',
+            ]
+        );
     }
 }
 
@@ -175,29 +197,33 @@ class Testing_ProductAttribute extends Doctrine_Record
     {
         $this->setTableName('testing__products_attributes');
 
-        $this->hasColumn('product_id', 'integer', 4, array('primary'=>true,
-            'notnull'=>true));
-        $this->hasColumn('attribute_id', 'integer', 4,
-            array('primary'=>true, 'notnull'=>true));
-    }
-    public function setUp()
-    {
-        $this->hasOne(
-                'Testing_Product as Product',
-                array(
-                        'local'    => 'product_id',
-                        'foreign'  => 'id',
-                                'onDelete' => 'CASCADE'
-                )
-        );
-        $this->hasOne(
-                'Testing_Attribute as Attribute',
-                array(
-                        'local'    => 'attribute_id',
-                        'foreign'  => 'id',
-                                'onDelete' => 'RESTRICT'
-                )
+        $this->hasColumn('product_id', 'integer', 4, ['primary' => true,
+            'notnull' => true]);
+        $this->hasColumn(
+            'attribute_id',
+            'integer',
+            4,
+            ['primary' => true, 'notnull' => true]
         );
     }
 
+    public function setUp()
+    {
+        $this->hasOne(
+            'Testing_Product as Product',
+            [
+                'local' => 'product_id',
+                'foreign' => 'id',
+                'onDelete' => 'CASCADE',
+            ]
+        );
+        $this->hasOne(
+            'Testing_Attribute as Attribute',
+            [
+                'local' => 'attribute_id',
+                'foreign' => 'id',
+                'onDelete' => 'RESTRICT',
+            ]
+        );
+    }
 }

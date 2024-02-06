@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC23_TestCase
+ * Doctrine_Ticket_DC23_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,7 +47,7 @@ class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase
 
     public function testTest()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 Ticket_DC23_BlogPost:
   BlogPost_1:
@@ -89,7 +91,8 @@ END;
                 ->from('Ticket_DC23_User u')
                 ->leftJoin('u.Contact c')
                 ->leftJoin('c.Phonenumbers p')
-                ->leftJoin('c.Address a');
+                ->leftJoin('c.Address a')
+            ;
             $results = $q->fetchArray();
 
             $this->assertTrue(isset($results[0]['Contact']['address_id']));
@@ -98,7 +101,8 @@ END;
 
             $q = Doctrine_Query::create()
                 ->from('Ticket_DC23_BlogPost p')
-                ->leftJoin('p.Translation t');
+                ->leftJoin('p.Translation t')
+            ;
             $results = $q->fetchArray();
 
             $this->assertEqual(count($results[0]['Translation']), 1);
@@ -123,7 +127,7 @@ class Ticket_DC23_BlogPost extends Doctrine_Record
 
     public function setUp()
     {
-        $this->actAs('I18n', array('fields' => array('title', 'body')));
+        $this->actAs('I18n', ['fields' => ['title', 'body']]);
     }
 }
 
@@ -137,11 +141,13 @@ class Ticket_DC23_User extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_DC23_Contact as Contact', array(
+        $this->hasOne(
+            'Ticket_DC23_Contact as Contact',
+            [
                 'local' => 'contact_id',
                 'foreign' => 'id',
-                'onDelete' => 'CASCADE'
-            )
+                'onDelete' => 'CASCADE',
+            ]
         );
     }
 }
@@ -156,17 +162,21 @@ class Ticket_DC23_Contact extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_DC23_Address as Address', array(
+        $this->hasOne(
+            'Ticket_DC23_Address as Address',
+            [
                 'local' => 'address_id',
                 'foreign' => 'id',
-                'onDelete' => 'CASCADE'
-            )
+                'onDelete' => 'CASCADE',
+            ]
         );
 
-        $this->hasMany('Ticket_DC23_Phonenumber as Phonenumbers', array(
+        $this->hasMany(
+            'Ticket_DC23_Phonenumber as Phonenumbers',
+            [
                 'local' => 'id',
-                'foreign' => 'contact_id'
-            )
+                'foreign' => 'contact_id',
+            ]
         );
     }
 }
@@ -189,11 +199,13 @@ class Ticket_DC23_Phonenumber extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_DC23_Contact as Contact', array(
+        $this->hasOne(
+            'Ticket_DC23_Contact as Contact',
+            [
                 'local' => 'contact_id',
                 'foreign' => 'id',
-                'onDelete' => 'CASCADE'
-            )
+                'onDelete' => 'CASCADE',
+            ]
         );
     }
 }

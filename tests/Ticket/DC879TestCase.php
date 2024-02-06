@@ -20,16 +20,18 @@
 */
 
 /**
-* Doctrine_Ticket_DC879_TestCase
-*
-* @package Doctrine
-* @author Enrico Stahn <mail@enricostahn.com>
-* @license http://www.opensource.org/licenses/lgpl-license.php LGPL
-* @category Object Relational Mapping
-* @link www.doctrine-project.org
-* @since 1.0
-* @version $Revision$
-*/
+ * Doctrine_Ticket_DC879_TestCase.
+ *
+ * @author Enrico Stahn <mail@enricostahn.com>
+ *
+ * @category Object Relational Mapping
+ *
+ * @see www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 class Doctrine_Ticket_DC879_TestCase extends Doctrine_UnitTestCase
 {
     private $sqlStackCounter = 0;
@@ -49,11 +51,12 @@ class Doctrine_Ticket_DC879_TestCase extends Doctrine_UnitTestCase
     public function testWhere()
     {
         Doctrine_Core::getTable('Ticket_DC879_Model')
-          ->createQuery('t')
-          ->where('foo = DATE_PART("month", foo)')
-          ->execute();
+            ->createQuery('t')
+            ->where('foo = DATE_PART("month", foo)')
+            ->execute()
+        ;
 
-        $expected = "SELECT [t].[model_id] AS [t__model_id], [t].[username] AS [t__username], [t].[password] AS [t__password], [t].[foo] AS [t__foo] FROM [ticket__d_c879__model] [t] WHERE ([t].[foo] = DATEPART(month, [t].[foo]))";
+        $expected = 'SELECT [t].[model_id] AS [t__model_id], [t].[username] AS [t__username], [t].[password] AS [t__password], [t].[foo] AS [t__foo] FROM [ticket__d_c879__model] [t] WHERE ([t].[foo] = DATEPART(month, [t].[foo]))';
         $sql = current(array_slice($this->dbh->getAll(), $this->sqlStackCounter++, 1));
 
         $this->assertEqual($expected, $sql);
@@ -64,12 +67,12 @@ class Ticket_DC879_Model extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('model_id as id', 'integer', null, array(
+        $this->hasColumn('model_id as id', 'integer', null, [
             'type' => 'integer',
             'unsigned' => false,
             'primary' => true,
             'autoincrement' => true,
-        ));
+        ]);
         $this->hasColumn('username', 'string', 255);
         $this->hasColumn('password', 'string', 255);
         $this->hasColumn('foo', 'timestamp');

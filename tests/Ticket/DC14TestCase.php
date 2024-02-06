@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC14_TestCase
+ * Doctrine_Ticket_DC14_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC14_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC14_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -42,7 +44,8 @@ class Doctrine_Ticket_DC14_TestCase extends Doctrine_UnitTestCase
     {
         $q = Doctrine_Core::getTable('Ticket_DC14_Search')
             ->createQuery('s')
-            ->where("? NOT BETWEEN s.date_from AND s.date_to", '1985-09-01 00:00:00');
+            ->where('? NOT BETWEEN s.date_from AND s.date_to', '1985-09-01 00:00:00')
+        ;
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.name AS t__name, t.date_from AS t__date_from, t.date_to AS t__date_to FROM ticket__d_c14__search t WHERE (? NOT BETWEEN t.date_from AND t.date_to)');
     }

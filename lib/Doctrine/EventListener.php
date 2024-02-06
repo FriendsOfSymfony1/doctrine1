@@ -21,99 +21,143 @@
 
 /**
  * Doctrine_EventListener     all event listeners extend this base class
- *                            the empty methods allow child classes to only implement the methods they need to implement
+ *                            the empty methods allow child classes to only implement the methods they need to implement.
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @package     Doctrine
- * @subpackage  EventListener
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_EventListener implements Doctrine_EventListener_Interface
 {
     public function preClose(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postClose(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function onCollectionDelete(Doctrine_Collection $collection)
-    { }
+    {
+    }
+
     public function onPreCollectionDelete(Doctrine_Collection $collection)
-    { }
+    {
+    }
 
     public function onOpen(Doctrine_Connection $connection)
-    { }
+    {
+    }
 
     public function preTransactionCommit(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postTransactionCommit(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preTransactionRollback(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postTransactionRollback(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preTransactionBegin(Doctrine_Event $event)
-    { }
-    public function postTransactionBegin(Doctrine_Event $event)
-    { }
+    {
+    }
 
+    public function postTransactionBegin(Doctrine_Event $event)
+    {
+    }
 
     public function preSavepointCommit(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postSavepointCommit(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preSavepointRollback(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postSavepointRollback(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preSavepointCreate(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postSavepointCreate(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function postConnect(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function preConnect(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preQuery(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postQuery(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function prePrepare(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postPrepare(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preExec(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postExec(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preError(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postError(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preFetch(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postFetch(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preFetchAll(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postFetchAll(Doctrine_Event $event)
-    { }
+    {
+    }
 
     public function preStmtExecute(Doctrine_Event $event)
-    { }
+    {
+    }
+
     public function postStmtExecute(Doctrine_Event $event)
-    { }
+    {
+    }
 }

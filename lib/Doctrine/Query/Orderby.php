@@ -20,47 +20,41 @@
  */
 
 /**
- * Doctrine_Query_Orderby
+ * Doctrine_Query_Orderby.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Orderby extends Doctrine_Query_Part
 {
     /**
      * DQL ORDER BY PARSER
-     * parses the order by part of the query string
+     * parses the order by part of the query string.
      *
      * @param string $clause
-     * @return void
      */
     public function parse($clause, $append = false)
     {
-        $terms = $this->_tokenizer->clauseExplode($clause, array(' ', ',', '+', '-', '*', '/', '<', '>', '=', '>=', '<='));
+        $terms = $this->_tokenizer->clauseExplode($clause, [' ', ',', '+', '-', '*', '/', '<', '>', '=', '>=', '<=']);
         $str = '';
 
         foreach ($terms as $term) {
             $pos = strpos($term[0], '(');
             $hasComma = false;
 
-            if ($pos !== false) {
+            if (false !== $pos) {
                 $name = substr($term[0], 0, $pos);
 
-                $term[0] = $this->query->parseFunctionExpression($term[0], array($this, 'parse'));
+                $term[0] = $this->query->parseFunctionExpression($term[0], [$this, 'parse']);
             } else {
-                if (substr($term[0], 0, 1) !== "'" && substr($term[0], -1) !== "'") {
-
-                    if (strpos($term[0], '.') !== false) {
-                        if ( ! is_numeric($term[0])) {
+                if ("'" !== substr($term[0], 0, 1) && "'" !== substr($term[0], -1)) {
+                    if (false !== strpos($term[0], '.')) {
+                        if (!is_numeric($term[0])) {
                             $e = explode('.', $term[0]);
 
                             $field = array_pop($e);
-                            
+
                             // Check if field name still has comma
                             if (($pos = strpos($field, ',')) !== false) {
                                 $field = substr($field, 0, $pos);
@@ -70,7 +64,7 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
                             // Grab query connection
                             $conn = $this->query->getConnection();
 
-                            if ($this->query->getType() === Doctrine_Query::SELECT) {
+                            if (Doctrine_Query::SELECT === $this->query->getType()) {
                                 $componentAlias = implode('.', $e);
 
                                 if (empty($componentAlias)) {
@@ -90,19 +84,19 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
                                 $field = $table->getColumnName($field);
 
                                 // check column existence
-                                if ( ! $def) {
-                                    throw new Doctrine_Query_Exception('Unknown column ' . $field);
+                                if (!$def) {
+                                    throw new Doctrine_Query_Exception('Unknown column '.$field);
                                 }
 
                                 if (isset($def['owner'])) {
-                                    $componentAlias = $componentAlias . '.' . $def['owner'];
+                                    $componentAlias = $componentAlias.'.'.$def['owner'];
                                 }
 
                                 $tableAlias = $this->query->getSqlTableAlias($componentAlias);
 
                                 // build sql expression
-                                $term[0] = $conn->quoteIdentifier($tableAlias) . '.' . $conn->quoteIdentifier($field);
-                                
+                                $term[0] = $conn->quoteIdentifier($tableAlias).'.'.$conn->quoteIdentifier($field);
+
                                 // driver specific modifications
                                 $term[0] = method_exists($conn, 'modifyOrderByColumn') ? $conn->modifyOrderByColumn($table, $field, $term[0]) : $term[0];
                             } else {
@@ -112,22 +106,21 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
                             }
                         }
                     } else {
-                        if ( ! empty($term[0]) &&
-                             ! is_numeric($term[0]) &&
-                            $term[0] !== '?' && substr($term[0], 0, 1) !== ':') {
-
+                        if (!empty($term[0])
+                             && !is_numeric($term[0])
+                            && '?' !== $term[0] && ':' !== substr($term[0], 0, 1)) {
                             $componentAlias = $this->query->getRootAlias();
 
                             $found = false;
-                            
+
                             // Check if field name still has comma
                             if (($pos = strpos($term[0], ',')) !== false) {
                                 $term[0] = substr($term[0], 0, $pos);
                                 $hasComma = true;
                             }
 
-                            if ($componentAlias !== false &&
-                                $componentAlias !== null) {
+                            if (false !== $componentAlias
+                                && null !== $componentAlias) {
                                 $queryComponent = $this->query->getQueryComponent($componentAlias);
 
                                 $table = $queryComponent['table'];
@@ -141,23 +134,22 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
                                     // get the actual column name from field name
                                     $field = $table->getColumnName($term[0]);
 
-
                                     if (isset($def['owner'])) {
-                                        $componentAlias = $componentAlias . '.' . $def['owner'];
+                                        $componentAlias = $componentAlias.'.'.$def['owner'];
                                     }
 
                                     $tableAlias = $this->query->getSqlTableAlias($componentAlias);
                                     $conn = $this->query->getConnection();
 
-                                    if ($this->query->getType() === Doctrine_Query::SELECT) {
+                                    if (Doctrine_Query::SELECT === $this->query->getType()) {
                                         // build sql expression
                                         $term[0] = $conn->quoteIdentifier($tableAlias)
-                                                 . '.' . $conn->quoteIdentifier($field);
+                                                 .'.'.$conn->quoteIdentifier($field);
                                     } else {
                                         // build sql expression
                                         $term[0] = $conn->quoteIdentifier($field);
                                     }
-                                    
+
                                     // driver specific modifications
                                     $term[0] = method_exists($conn, 'modifyOrderByColumn') ? $conn->modifyOrderByColumn($table, $field, $term[0]) : $term[0];
                                 } else {
@@ -165,10 +157,10 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
                                 }
                             }
 
-                            if ( ! $found) {
+                            if (!$found) {
                                 $tmp = strtoupper(trim($term[0], ', '));
 
-                                if ($tmp !== 'DESC' && $tmp !== 'ASC') {
+                                if ('DESC' !== $tmp && 'ASC' !== $tmp) {
                                     $term[0] = $this->query->getSqlAggregateAlias($term[0]);
                                 }
                             }
@@ -177,7 +169,7 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
                 }
             }
 
-            $str .= $term[0] . ($hasComma ? ',' : '') . $term[1];
+            $str .= $term[0].($hasComma ? ',' : '').$term[1];
         }
 
         return $str;

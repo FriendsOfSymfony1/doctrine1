@@ -22,23 +22,19 @@
 /**
  * Doctrine_Repository
  * each record is added into Doctrine_Repository at the same time they are created,
- * loaded from the database or retrieved from the cache
+ * loaded from the database or retrieved from the cache.
  *
  * @author      Jérôme Macias <jmacias@groupe-exp.com>
- * @package     Doctrine
- * @subpackage  Table
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 115 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Table_Repository_None extends Doctrine_Table_Repository implements Countable, IteratorAggregate
 {
     /**
-     * add
+     * add.
      *
-     * @param Doctrine_Record $record       record to be added into registry
-     * @return boolean
+     * @param  Doctrine_Record $record record to be added into registry
+     * @return bool
      */
     public function add(Doctrine_Record $record)
     {
@@ -46,33 +42,33 @@ class Doctrine_Table_Repository_None extends Doctrine_Table_Repository implement
     }
 
     /**
-     * get
+     * get.
      *
-     * @param integer $oid
+     * @param  int                                 $oid
      * @throws Doctrine_Table_Repository_Exception
      */
     public function get($oid)
     {
-        throw new Doctrine_Table_Repository_Exception("Unknown object identifier");
+        throw new Doctrine_Table_Repository_Exception('Unknown object identifier');
     }
 
     /**
      * count
-     * Doctrine_Registry implements interface Countable
+     * Doctrine_Registry implements interface Countable.
      *
-     * @return integer                      the number of records this registry has
+     * @return int the number of records this registry has
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return 0;
     }
 
     /**
-     * evict
+     * evict.
      *
-     * @param integer $oid                  object identifier
-     * @return boolean                      whether ot not the operation was successful
+     * @param  int  $oid object identifier
+     * @return bool whether ot not the operation was successful
      */
     public function evict($oid)
     {
@@ -80,9 +76,9 @@ class Doctrine_Table_Repository_None extends Doctrine_Table_Repository implement
     }
 
     /**
-     * evictAll
+     * evictAll.
      *
-     * @return integer                      number of records evicted
+     * @return int number of records evicted
      */
     public function evictAll()
     {

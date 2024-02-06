@@ -20,26 +20,29 @@
  */
 
 /**
- * Doctrine_Import_Oracle_TestCase
+ * Doctrine_Import_Oracle_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Import_Oracle_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Import_Oracle_TestCase extends Doctrine_UnitTestCase
 {
     public function testListSequencesExecutesSql()
     {
         $this->conn->setAttribute(Doctrine_Core::ATTR_EMULATE_DATABASE, true);
 
         $this->import->listSequences('table');
-        
-        $this->assertEqual($this->adapter->pop(), "SELECT sequence_name FROM sys.user_sequences");
+
+        $this->assertEqual($this->adapter->pop(), 'SELECT sequence_name FROM sys.user_sequences');
     }
+
     public function testListTableColumnsExecutesSql()
     {
         $this->import->listTableColumns('table');
@@ -57,57 +60,64 @@ WHERE tc.table_name = :tableName ORDER BY column_id";
 
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListTableIndexesExecutesSql()
     {
         $this->import->listTableIndexes('table');
 
         $q = 'SELECT index_name name FROM user_indexes'
-           . " WHERE table_name = 'table' OR table_name = 'TABLE'"
-           . " AND generated = 'N'";
+           ." WHERE table_name = 'table' OR table_name = 'TABLE'"
+           ." AND generated = 'N'";
 
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListTablesExecutesSql()
     {
         $this->import->listTables();
-        
+
         $q = "SELECT * FROM user_objects WHERE object_type = 'TABLE' and object_name in (select table_name from user_tables)";
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListDatabasesExecutesSql()
     {
         $this->import->listDatabases();
-        
+
         $q = 'SELECT username FROM sys.user_users';
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListUsersExecutesSql()
     {
         $this->import->listUsers();
-        
+
         $q = 'SELECT username FROM sys.all_users';
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListViewsExecutesSql()
     {
         $this->import->listViews();
-        
+
         $q = 'SELECT view_name FROM sys.user_views';
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListFunctionsExecutesSql()
     {
         $this->import->listFunctions();
-        
+
         $q = "SELECT name FROM sys.user_source WHERE line = 1 AND type = 'FUNCTION'";
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListTableConstraintsExecutesSql()
     {
         $this->import->listTableConstraints('table');
-        
-        $q = "SELECT index_name name FROM user_constraints"
-           . " WHERE table_name = 'table' OR table_name = 'TABLE'";
+
+        $q = 'SELECT index_name name FROM user_constraints'
+           ." WHERE table_name = 'table' OR table_name = 'TABLE'";
 
         $this->assertEqual($this->adapter->pop(), $q);
     }

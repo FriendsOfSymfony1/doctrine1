@@ -20,27 +20,22 @@
  */
 
 /**
- * Doctrine_Parser_Serialize
+ * Doctrine_Parser_Serialize.
  *
- * @package     Doctrine
- * @subpackage  Parser
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Parser_Serialize extends Doctrine_Parser
 {
     /**
-     * dumpData
+     * dumpData.
      *
      * Dump an array of data to a specified path or return
      *
      * @param string $array
      * @param string $path
      * @param string $charset The charset of the data being dumped
-     * @return void
      */
     public function dumpData($array, $path = null, $charset = null)
     {
@@ -50,12 +45,11 @@ class Doctrine_Parser_Serialize extends Doctrine_Parser
     }
 
     /**
-     * loadData
+     * loadData.
      *
      * Load and unserialize data from a file or from passed data
      *
      * @param string $path
-     * @return void
      */
     public function loadData($path, $charset = 'UTF-8')
     {

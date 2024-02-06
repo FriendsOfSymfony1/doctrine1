@@ -20,24 +20,27 @@
  */
 
 /**
- * Doctrine_Ticket_2123_TestCase
+ * Doctrine_Ticket_2123_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2123_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2123_TestCase extends Doctrine_UnitTestCase
 {
     public function testCheckingRelatedExistsOnCollectionThrowsException()
     {
         try {
             $user = Doctrine_Core::getTable('User')
                 ->createQuery('u')
-                ->fetchOne();
+                ->fetchOne()
+            ;
             $user->relatedExists('Phonenumber');
         } catch (Exception $e) {
             $this->pass();

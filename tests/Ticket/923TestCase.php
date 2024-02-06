@@ -20,18 +20,20 @@
  */
 
 /**
- * Doctrine_Ticket923_TestCase
+ * Doctrine_Ticket923_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_923_TestCase extends Doctrine_UnitTestCase {
-
+class Doctrine_Ticket_923_TestCase extends Doctrine_UnitTestCase
+{
     public function prepareData()
     {
         $d = new T923_Diagnostic();
@@ -59,7 +61,8 @@ class Doctrine_Ticket_923_TestCase extends Doctrine_UnitTestCase {
         $d->save();
     }
 
-    public function prepareTables() {
+    public function prepareTables()
+    {
         $this->tables[] = 'T923_Diagnostic';
         parent::prepareTables();
     }
@@ -67,17 +70,18 @@ class Doctrine_Ticket_923_TestCase extends Doctrine_UnitTestCase {
     public function testTicket()
     {
         try {
-          $q = new Doctrine_Query();
-          $result = $q->select('d.*')
-          ->from('T923_Diagnostic d')
-          ->where('d.diag_timestamp >= ? AND d.diag_timestamp <= ?', array('2008-03-27 00:00:00', '2008-03-27 23:00:00'))
-          ->addWhere('d.id_type = ?', array('101'))
-          ->orderBy('d.diag_timestamp')
-          ->limit(20)
-          ->offset(0)
-          ->execute();
-          
-          $this->assertEqual($result->count(), 3);
+            $q = new Doctrine_Query();
+            $result = $q->select('d.*')
+                ->from('T923_Diagnostic d')
+                ->where('d.diag_timestamp >= ? AND d.diag_timestamp <= ?', ['2008-03-27 00:00:00', '2008-03-27 23:00:00'])
+                ->addWhere('d.id_type = ?', ['101'])
+                ->orderBy('d.diag_timestamp')
+                ->limit(20)
+                ->offset(0)
+                ->execute()
+            ;
+
+            $this->assertEqual($result->count(), 3);
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
@@ -86,17 +90,17 @@ class Doctrine_Ticket_923_TestCase extends Doctrine_UnitTestCase {
 
 class T923_Diagnostic extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-      $this->setTableName('diagnostics');
-      $this->hasColumn('id_type', 'integer', 4);
-      $this->hasColumn('id', 'integer', 4);
-      $this->hasColumn('diagnostic_id', 'integer', 4);
-      $this->hasColumn('operator_id', 'integer', 4);
-      $this->hasColumn('diag_timestamp', 'timestamp', null);
-  }
+    public function setTableDefinition()
+    {
+        $this->setTableName('diagnostics');
+        $this->hasColumn('id_type', 'integer', 4);
+        $this->hasColumn('id', 'integer', 4);
+        $this->hasColumn('diagnostic_id', 'integer', 4);
+        $this->hasColumn('operator_id', 'integer', 4);
+        $this->hasColumn('diag_timestamp', 'timestamp', null);
+    }
 
-  public function setUp()
-  {
-  }
+    public function setUp()
+    {
+    }
 }

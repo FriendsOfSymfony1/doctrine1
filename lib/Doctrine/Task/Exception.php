@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Task_Exception
+ * Doctrine_Task_Exception.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_Exception extends Doctrine_Exception
-{ }
+{
+}

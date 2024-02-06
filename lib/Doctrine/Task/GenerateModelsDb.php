@@ -20,26 +20,22 @@
  */
 
 /**
- * Doctrine_Task_GenerateModelsDb
+ * Doctrine_Task_GenerateModelsDb.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_GenerateModelsDb extends Doctrine_Task
 {
-    public $description          =   'Generates your Doctrine_Record definitions from your existing database connections.',
-           $requiredArguments    =   array('models_path'    =>  'Specify path to your Doctrine_Record definitions.'),
-           $optionalArguments    =   array('connection'     =>  'Optionally specify a single connection to generate the models for.');
-    
+    public $description = 'Generates your Doctrine_Record definitions from your existing database connections.';
+    public $requiredArguments = ['models_path' => 'Specify path to your Doctrine_Record definitions.'];
+    public $optionalArguments = ['connection' => 'Optionally specify a single connection to generate the models for.'];
+
     public function execute()
     {
         $configs = $this->dispatcher->getConfig();
-        $options = isset($configs['generate_models_options']) ? $configs['generate_models_options'] : array();
+        $options = $configs['generate_models_options'] ?? [];
         Doctrine_Core::generateModelsFromDb($this->getArgument('models_path'), (array) $this->getArgument('connection'), $options);
 
         $this->notify('Generated models successfully from databases');

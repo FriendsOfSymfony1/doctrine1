@@ -20,46 +20,36 @@
  */
 
 /**
- * Doctrine_Export_Pgsql
+ * Doctrine_Export_Pgsql.
  *
- * @package     Doctrine
- * @subpackage  Export
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7680 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
     public $tmpConnectionDatabase = 'postgres';
 
     /**
-     * createDatabaseSql
+     * createDatabaseSql.
      *
-     * @param string $name 
-     * @return void
+     * @param string $name
      */
     public function createDatabaseSql($name)
     {
-        $query  = 'CREATE DATABASE ' . $this->conn->quoteIdentifier($name);
-        
-        return $query;
+        return 'CREATE DATABASE '.$this->conn->quoteIdentifier($name);
     }
 
     /**
-     * drop an existing database
+     * drop an existing database.
      *
-     * @param string $name name of the database that should be dropped
+     * @param  string       $name name of the database that should be dropped
      * @throws PDOException
-     * @access public
      */
     public function dropDatabaseSql($name)
     {
-        $query  = 'DROP DATABASE ' . $this->conn->quoteIdentifier($name);
-        
-        return $query;
+        return 'DROP DATABASE '.$this->conn->quoteIdentifier($name);
     }
 
     /**
@@ -67,21 +57,20 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
      * Return the FOREIGN KEY query section dealing with non-standard options
      * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
      *
-     * @param array $definition         foreign key definition
+     * @param  array  $definition foreign key definition
      * @return string
-     * @access protected
      */
     public function getAdvancedForeignKeyOptions(array $definition)
     {
         $query = '';
         if (isset($definition['match'])) {
-            $query .= ' MATCH ' . $definition['match'];
+            $query .= ' MATCH '.$definition['match'];
         }
         if (isset($definition['onUpdate'])) {
-            $query .= ' ON UPDATE ' . $definition['onUpdate'];
+            $query .= ' ON UPDATE '.$definition['onUpdate'];
         }
         if (isset($definition['onDelete'])) {
-            $query .= ' ON DELETE ' . $definition['onDelete'];
+            $query .= ' ON DELETE '.$definition['onDelete'];
         }
         if (isset($definition['deferrable'])) {
             $query .= ' DEFERRABLE';
@@ -93,18 +82,21 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         } else {
             $query .= ' INITIALLY IMMEDIATE';
         }
+
         return $query;
     }
 
     /**
-     * generates the sql for altering an existing table on postgresql
+     * generates the sql for altering an existing table on postgresql.
      *
-     * @param string $name          name of the table that is intended to be changed.
-     * @param array $changes        associative array that contains the details of each type      *
-     * @param boolean $check        indicates whether the function should just check if the DBMS driver
-     *                              can perform the requested table alterations if the value is true or
-     *                              actually perform them otherwise.
+     * @param string $name    name of the table that is intended to be changed
+     * @param array  $changes associative array that contains the details of each type      *
+     * @param bool   $check   indicates whether the function should just check if the DBMS driver
+     *                        can perform the requested table alterations if the value is true or
+     *                        actually perform them otherwise
+     *
      * @see Doctrine_Export::alterTable()
+     *
      * @return array
      */
     public function alterTableSql($name, array $changes, $check = false)
@@ -118,28 +110,28 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
                 case 'rename':
                     break;
                 default:
-                    throw new Doctrine_Export_Exception('change type "' . $changeName . '\" not yet supported');
+                    throw new Doctrine_Export_Exception('change type "'.$changeName.'\" not yet supported');
             }
         }
 
         if ($check) {
             return true;
         }
-        
-        $sql = array();
+
+        $sql = [];
 
         if (isset($changes['add']) && is_array($changes['add'])) {
             foreach ($changes['add'] as $fieldName => $field) {
-                $query = 'ADD ' . $this->getDeclaration($fieldName, $field);
-                $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
+                $query = 'ADD '.$this->getDeclaration($fieldName, $field);
+                $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' '.$query;
             }
         }
 
         if (isset($changes['remove']) && is_array($changes['remove'])) {
             foreach ($changes['remove'] as $fieldName => $field) {
                 $fieldName = $this->conn->quoteIdentifier($fieldName, true);
-                $query = 'DROP ' . $fieldName;
-                $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
+                $query = 'DROP '.$fieldName;
+                $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' '.$query;
             }
         }
 
@@ -152,16 +144,16 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
                     if (is_array($serverInfo) && $serverInfo['major'] < 8) {
                         throw new Doctrine_Export_Exception('changing column type for "'.$field['type'].'\" requires PostgreSQL 8.0 or above');
                     }
-                    $query = 'ALTER ' . $fieldName . ' TYPE ' . $this->conn->dataDict->getNativeDeclaration($field['definition']);
-                    $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
+                    $query = 'ALTER '.$fieldName.' TYPE '.$this->conn->dataDict->getNativeDeclaration($field['definition']);
+                    $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' '.$query;
                 }
                 if (array_key_exists('default', $field['definition'])) {
-                    $query = 'ALTER ' . $fieldName . ' SET DEFAULT ' . $this->conn->quote($field['definition']['default'], $field['definition']['type']);
-                    $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
+                    $query = 'ALTER '.$fieldName.' SET DEFAULT '.$this->conn->quote($field['definition']['default'], $field['definition']['type']);
+                    $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' '.$query;
                 }
-                if ( isset($field['definition']['notnull'])) {
-                    $query = 'ALTER ' . $fieldName . ' ' . ($field['definition']['notnull'] ? 'SET' : 'DROP') . ' NOT NULL';
-                    $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
+                if (isset($field['definition']['notnull'])) {
+                    $query = 'ALTER '.$fieldName.' '.($field['definition']['notnull'] ? 'SET' : 'DROP').' NOT NULL';
+                    $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' '.$query;
                 }
             }
         }
@@ -169,26 +161,26 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         if (isset($changes['rename']) && is_array($changes['rename'])) {
             foreach ($changes['rename'] as $fieldName => $field) {
                 $fieldName = $this->conn->quoteIdentifier($fieldName, true);
-                $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' RENAME COLUMN ' . $fieldName . ' TO ' . $this->conn->quoteIdentifier($field['name'], true);
+                $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' RENAME COLUMN '.$fieldName.' TO '.$this->conn->quoteIdentifier($field['name'], true);
             }
         }
 
         $name = $this->conn->quoteIdentifier($name, true);
         if (isset($changes['name'])) {
             $changeName = $this->conn->quoteIdentifier($changes['name'], true);
-            $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' RENAME TO ' . $changeName;
+            $sql[] = 'ALTER TABLE '.$this->conn->quoteIdentifier($name, true).' RENAME TO '.$changeName;
         }
-        
+
         return $sql;
     }
-    
+
     /**
-     * alter an existing table
+     * alter an existing table.
      *
-     * @param string $name         name of the table that is intended to be changed.
-     * @param array $changes     associative array that contains the details of each type
-     *                             of change that is intended to be performed. The types of
-     *                             changes that are currently supported are defined as follows:
+     * @param string $name    name of the table that is intended to be changed
+     * @param array  $changes associative array that contains the details of each type
+     *                        of change that is intended to be performed. The types of
+     *                        changes that are currently supported are defined as follows:
      *
      *                             name
      *
@@ -201,75 +193,11 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
      *                                 should be set to another associative array with the properties
      *                                 of the fields to be added. The properties of the fields should
      *                                 be the same as defined by the Metabase parser.
-     *
-     *
-     *                            remove
-     *
-     *                                Associative array with the names of fields to be removed as indexes
-     *                                 of the array. Currently the values assigned to each entry are ignored.
-     *                                 An empty array should be used for future compatibility.
-     *
-     *                            rename
-     *
-     *                                Associative array with the names of fields to be renamed as indexes
-     *                                 of the array. The value of each entry of the array should be set to
-     *                                 another associative array with the entry named name with the new
-     *                                 field name and the entry named Declaration that is expected to contain
-     *                                 the portion of the field declaration already in DBMS specific SQL code
-     *                                 as it is used in the CREATE TABLE statement.
-     *
-     *                            change
-     *
-     *                                Associative array with the names of the fields to be changed as indexes
-     *                                 of the array. Keep in mind that if it is intended to change either the
-     *                                 name of a field and any other properties, the change array entries
-     *                                 should have the new names of the fields as array indexes.
-     *
-     *                                The value of each entry of the array should be set to another associative
-     *                                 array with the properties of the fields to that are meant to be changed as
-     *                                 array entries. These entries should be assigned to the new values of the
-     *                                 respective properties. The properties of the fields should be the same
-     *                                 as defined by the Metabase parser.
-     *
-     *                            Example
-     *                                array(
-     *                                    'name' => 'userlist',
-     *                                    'add' => array(
-     *                                        'quota' => array(
-     *                                            'type' => 'integer',
-     *                                            'unsigned' => 1
-     *                                        )
-     *                                    ),
-     *                                    'remove' => array(
-     *                                        'file_limit' => array(),
-     *                                        'time_limit' => array()
-     *                                    ),
-     *                                    'change' => array(
-     *                                        'name' => array(
-     *                                            'length' => '20',
-     *                                            'definition' => array(
-     *                                                'type' => 'text',
-     *                                                'length' => 20,
-     *                                            ),
-     *                                        )
-     *                                    ),
-     *                                    'rename' => array(
-     *                                        'sex' => array(
-     *                                            'name' => 'gender',
-     *                                            'definition' => array(
-     *                                                'type' => 'text',
-     *                                                'length' => 1,
-     *                                                'default' => 'M',
-     *                                            ),
-     *                                        )
-     *                                    )
-     *                                )
-     *
-     * @param boolean $check     indicates whether the function should just check if the DBMS driver
-     *                             can perform the requested table alterations if the value is true or
-     *                             actually perform them otherwise.
+     * @param  bool                          $check indicates whether the function should just check if the DBMS driver
+     *                                              can perform the requested table alterations if the value is true or
+     *                                              actually perform them otherwise
+     * @return bool
      * @throws Doctrine_Connection_Exception
-     * @return boolean
      */
     public function alterTable($name, array $changes, $check = false)
     {
@@ -277,90 +205,88 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         foreach ($sql as $query) {
             $this->conn->exec($query);
         }
-        return true;    
+
+        return true;
     }
 
     /**
-     * return RDBMS specific create sequence statement
+     * return RDBMS specific create sequence statement.
      *
-     * @throws Doctrine_Connection_Exception     if something fails at database level
-     * @param string    $seqName        name of the sequence to be created
-     * @param string    $start          start value of the sequence; default is 1
-     * @param array     $options  An associative array of table options:
-     *                          array(
-     *                              'comment' => 'Foo',
-     *                              'charset' => 'utf8',
-     *                              'collate' => 'utf8_unicode_ci',
-     *                          );
+     * @param  string                        $start   start value of the sequence; default is 1
+     * @param  array                         $options An associative array of table options:
+     *                                                array(
+     *                                                'comment' => 'Foo',
+     *                                                'charset' => 'utf8',
+     *                                                'collate' => 'utf8_unicode_ci',
+     *                                                );
      * @return string
+     * @throws Doctrine_Connection_Exception if something fails at database level
      */
-    public function createSequenceSql($sequenceName, $start = 1, array $options = array())
+    public function createSequenceSql($sequenceName, $start = 1, array $options = [])
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName), true);
-        return 'CREATE SEQUENCE ' . $sequenceName . ' INCREMENT 1' .
-                    ($start < 1 ? ' MINVALUE ' . $start : '') . ' START ' . $start;
+
+        return 'CREATE SEQUENCE '.$sequenceName.' INCREMENT 1'.
+                    ($start < 1 ? ' MINVALUE '.$start : '').' START '.$start;
     }
 
     /**
-     * drop existing sequence
+     * drop existing sequence.
      *
      * @param string $sequenceName name of the sequence to be dropped
      */
     public function dropSequenceSql($sequenceName)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName), true);
-        return 'DROP SEQUENCE ' . $sequenceName;
+
+        return 'DROP SEQUENCE '.$sequenceName;
     }
 
     /**
      * Creates a table.
      *
-     * @param unknown_type $name
-     * @param array $fields
-     * @param array $options
+     * @param  unknown_type $name
      * @return unknown
      */
-    public function createTableSql($name, array $fields, array $options = array())
+    public function createTableSql($name, array $fields, array $options = [])
     {
-        if ( ! $name) {
+        if (!$name) {
             throw new Doctrine_Export_Exception('no valid table name specified');
         }
-        
+
         if (empty($fields)) {
-            throw new Doctrine_Export_Exception('no fields specified for table ' . $name);
+            throw new Doctrine_Export_Exception('no fields specified for table '.$name);
         }
 
         $queryFields = $this->getFieldDeclarationList($fields);
 
-
-        if (isset($options['primary']) && ! empty($options['primary'])) {
+        if (isset($options['primary']) && !empty($options['primary'])) {
             $keyColumns = array_values($options['primary']);
-            $keyColumns = array_map(array($this->conn, 'quoteIdentifier'), $keyColumns);
-            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
+            $keyColumns = array_map([$this->conn, 'quoteIdentifier'], $keyColumns);
+            $queryFields .= ', PRIMARY KEY('.implode(', ', $keyColumns).')';
         }
 
-        $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields;
+        $query = 'CREATE TABLE '.$this->conn->quoteIdentifier($name, true).' ('.$queryFields;
 
         if ($check = $this->getCheckDeclaration($fields)) {
-            $query .= ', ' . $check;
+            $query .= ', '.$check;
         }
 
         if (isset($options['checks']) && $check = $this->getCheckDeclaration($options['checks'])) {
-            $query .= ', ' . $check;
+            $query .= ', '.$check;
         }
 
         $query .= ')';
 
         $sql[] = $query;
 
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
-            foreach($options['indexes'] as $index => $definition) {
+        if (isset($options['indexes']) && !empty($options['indexes'])) {
+            foreach ($options['indexes'] as $index => $definition) {
                 $sql[] = $this->createIndexSql($name, $index, $definition);
             }
         }
-        
-        if (isset($options['foreignKeys'])) {
 
+        if (isset($options['foreignKeys'])) {
             foreach ((array) $options['foreignKeys'] as $k => $definition) {
                 if (is_array($definition)) {
                     $sql[] = $this->createForeignKeySql($name, $definition);
@@ -370,24 +296,28 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         if (isset($options['sequenceName'])) {
             $sql[] = $this->createSequenceSql($options['sequenceName']);
         }
+
         return $sql;
     }
 
-     /**
+    /**
      * Get the stucture of a field into an array.
-     * 
-     * @param string    $table         name of the table on which the index is to be created
-     * @param string    $name          name of the index to be created
-     * @param array     $definition    associative array that defines properties of the index to be created.
+     *
+     * @param string $table      name of the table on which the index is to be created
+     * @param string $name       name of the index to be created
+     * @param array  $definition associative array that defines properties of the index to be created
+     *
      * @see Doctrine_Export::createIndex()
+     *
      * @return string
      */
     public function createIndexSql($table, $name, array $definition)
     {
-		$query = parent::createIndexSql($table, $name, $definition);
-		if (isset($definition['where'])) {
-			return $query . ' WHERE ' . $definition['where'];
-		}
+        $query = parent::createIndexSql($table, $name, $definition);
+        if (isset($definition['where'])) {
+            return $query.' WHERE '.$definition['where'];
+        }
+
         return $query;
     }
 }

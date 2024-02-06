@@ -20,29 +20,25 @@
  */
 
 /**
- * Doctrine_Search_Analyzer_Utf8
+ * Doctrine_Search_Analyzer_Utf8.
  *
- * This class is used to analyze (ie tokenize) an input $text in 
+ * This class is used to analyze (ie tokenize) an input $text in
  * $encoding encoding, and return an array of words to be indexed.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Brice Figureau <brice+doctrine@daysofwonder.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_Analyzer_Utf8 extends Doctrine_Search_Analyzer_Standard
 {
     public function analyze($text, $encoding = null)
     {
         if (is_null($encoding)) {
-          $encoding = isset($this->_options['encoding']) ? $this->_options['encoding']:'utf-8';
+            $encoding = $this->_options['encoding'] ?? 'utf-8';
         }
 
         // check that $text encoding is utf-8, if not convert it
-        if (strcasecmp($encoding, 'utf-8') != 0 && strcasecmp($encoding, 'utf8') != 0) {
+        if (0 != strcasecmp($encoding, 'utf-8') && 0 != strcasecmp($encoding, 'utf8')) {
             $text = iconv($encoding, 'UTF-8', $text);
         }
 
@@ -50,9 +46,9 @@ class Doctrine_Search_Analyzer_Utf8 extends Doctrine_Search_Analyzer_Standard
         $text = str_replace('  ', ' ', $text);
 
         $terms = explode(' ', $text);
-        
-        $ret = array();
-        if ( ! empty($terms)) {
+
+        $ret = [];
+        if (!empty($terms)) {
             foreach ($terms as $i => $term) {
                 if (empty($term)) {
                     continue;
@@ -66,6 +62,7 @@ class Doctrine_Search_Analyzer_Utf8 extends Doctrine_Search_Analyzer_Standard
                 $ret[$i] = $lower;
             }
         }
+
         return $ret;
     }
 }

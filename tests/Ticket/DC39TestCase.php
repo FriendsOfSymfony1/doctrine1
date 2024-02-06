@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_DC39_TestCase
+ * Doctrine_Ticket_DC39_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC39_TestCase extends Doctrine_UnitTestCase
 {
@@ -62,53 +64,52 @@ class Doctrine_Ticket_DC39_TestCase extends Doctrine_UnitTestCase
 
     public function testOneToManyRelationsWithSynchronizeWithArray()
     {
-    		// link group (id 2) with users (id 1,2)
-    		$group = Doctrine_Core::getTable('Ticket_DC39_Group')->find(2);
-    		$group->synchronizeWithArray(array(
-    			'Users' => array(1, 2)
-    		));
-    		$group->save();
+        // link group (id 2) with users (id 1,2)
+        $group = Doctrine_Core::getTable('Ticket_DC39_Group')->find(2);
+        $group->synchronizeWithArray([
+            'Users' => [1, 2],
+        ]);
+        $group->save();
 
-    		// update the user-objects with real data from database
-    		$user1 = Doctrine_Core::getTable('Ticket_DC39_User')->find(1);
-    		$user2 = Doctrine_Core::getTable('Ticket_DC39_User')->find(2);
+        // update the user-objects with real data from database
+        $user1 = Doctrine_Core::getTable('Ticket_DC39_User')->find(1);
+        $user2 = Doctrine_Core::getTable('Ticket_DC39_User')->find(2);
 
-    		// compare the group_id (should be 2) with the group_id set through $group->synchronizeWithArray
-    		$this->assertEqual($group->Users[0]->group_id, 2);
-    		$this->assertEqual($group->Users[1]->group_id, 2);
+        // compare the group_id (should be 2) with the group_id set through $group->synchronizeWithArray
+        $this->assertEqual($group->Users[0]->group_id, 2);
+        $this->assertEqual($group->Users[1]->group_id, 2);
     }
-   
 }
 
 class Ticket_DC39_Group extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('name', 'string', 255);
-	}
-	
-	public function setUp()
-	{
-		$this->hasMany('Ticket_DC39_User as Users', array(
-			'local' => 'id',
-			'foreign' => 'group_id'
-		));
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('name', 'string', 255);
+    }
+
+    public function setUp()
+    {
+        $this->hasMany('Ticket_DC39_User as Users', [
+            'local' => 'id',
+            'foreign' => 'group_id',
+        ]);
+    }
 }
 
 class Ticket_DC39_User extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('group_id', 'integer');
-		$this->hasColumn('name', 'string', 255);
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('group_id', 'integer');
+        $this->hasColumn('name', 'string', 255);
+    }
 
-	public function setUp()
-	{
-		$this->hasOne('Ticket_DC39_Group as Group', array(
-			'local' => 'group_id',
-			'foreign' => 'id'
-		));
-	}
+    public function setUp()
+    {
+        $this->hasOne('Ticket_DC39_Group as Group', [
+            'local' => 'group_id',
+            'foreign' => 'id',
+        ]);
+    }
 }

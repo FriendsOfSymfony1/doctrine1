@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ColumnAliasTest extends Doctrine_Record
 {
     public function setTableDefinition()
@@ -8,8 +14,9 @@ class ColumnAliasTest extends Doctrine_Record
         $this->hasColumn('another_column as anotherField', 'string', 50);
         $this->hasColumn('book_id as bookId', 'integer', 4);
     }
+
     public function setUp()
     {
-        $this->hasOne('Book as book', array('local' => 'book_id', 'foreign' => 'id'));
+        $this->hasOne('Book as book', ['local' => 'book_id', 'foreign' => 'id']);
     }
 }

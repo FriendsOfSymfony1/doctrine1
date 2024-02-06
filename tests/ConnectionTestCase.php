@@ -20,39 +20,40 @@
  */
 
 /**
- * Doctrine_Connection_TestCase
+ * Doctrine_Connection_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
 {
-
-    public function testUnknownModule() 
+    public function testUnknownModule()
     {
         try {
             $this->connection->unknown;
             $this->fail();
-        } catch(Doctrine_Connection_Exception $e) {
+        } catch (Doctrine_Connection_Exception $e) {
             $this->pass();
         }
     }
 
-    public function testGetModule() 
+    public function testGetModule()
     {
         $this->assertTrue($this->connection->unitOfWork instanceof Doctrine_Connection_UnitOfWork);
-        //$this->assertTrue($this->connection->dataDict instanceof Doctrine_DataDict);
+        // $this->assertTrue($this->connection->dataDict instanceof Doctrine_DataDict);
         $this->assertTrue($this->connection->expression instanceof Doctrine_Expression_Driver);
         $this->assertTrue($this->connection->transaction instanceof Doctrine_Transaction);
         $this->assertTrue($this->connection->export instanceof Doctrine_Export);
     }
 
-    public function testFetchAll() 
+    public function testFetchAll()
     {
         $this->conn->exec('DROP TABLE entity');
         $this->conn->exec('CREATE TABLE entity (id INT, name TEXT)');
@@ -62,94 +63,90 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
 
         $a = $this->conn->fetchAll('SELECT * FROM entity');
 
-
-        $this->assertEqual($a, array (
-                            0 =>
-                            array (
-                              'id' => '1',
-                              'name' => 'zYne',
-                            ),
-                            1 =>
-                            array (
-                              'id' => '2',
-                              'name' => 'John',
-                            ),
-                          ));
+        $this->assertEqual($a, [
+            0 => [
+                'id' => '1',
+                'name' => 'zYne',
+            ],
+            1 => [
+                'id' => '2',
+                'name' => 'John',
+            ],
+        ]);
     }
 
     public function testFetchOne()
     {
         $c = $this->conn->fetchOne('SELECT COUNT(1) FROM entity');
-        
+
         $this->assertEqual($c, 2);
-        
-        $c = $this->conn->fetchOne('SELECT COUNT(1) FROM entity WHERE id = ?', array(1));
-        
+
+        $c = $this->conn->fetchOne('SELECT COUNT(1) FROM entity WHERE id = ?', [1]);
+
         $this->assertEqual($c, 1);
     }
-    
 
-    public function testFetchColumn() 
+    public function testFetchColumn()
     {
         $a = $this->conn->fetchColumn('SELECT * FROM entity');
 
-        $this->assertEqual($a, array (
-                              0 => '1',
-                              1 => '2',
-                            ));
+        $this->assertEqual($a, [
+            0 => '1',
+            1 => '2',
+        ]);
 
-        $a = $this->conn->fetchColumn('SELECT * FROM entity WHERE id = ?', array(1));
+        $a = $this->conn->fetchColumn('SELECT * FROM entity WHERE id = ?', [1]);
 
-        $this->assertEqual($a, array (
-                              0 => '1',
-                            ));
+        $this->assertEqual($a, [
+            0 => '1',
+        ]);
     }
 
-    public function testFetchArray() 
+    public function testFetchArray()
     {
         $a = $this->conn->fetchArray('SELECT * FROM entity');
 
-        $this->assertEqual($a, array (
-                              0 => '1',
-                              1 => 'zYne',
-                            ));
+        $this->assertEqual($a, [
+            0 => '1',
+            1 => 'zYne',
+        ]);
 
-        $a = $this->conn->fetchArray('SELECT * FROM entity WHERE id = ?', array(1));
+        $a = $this->conn->fetchArray('SELECT * FROM entity WHERE id = ?', [1]);
 
-        $this->assertEqual($a, array (
-                              0 => '1',
-                              1 => 'zYne',
-                            ));
+        $this->assertEqual($a, [
+            0 => '1',
+            1 => 'zYne',
+        ]);
     }
 
-    public function testFetchRow() 
+    public function testFetchRow()
     {
         $c = $this->conn->fetchRow('SELECT * FROM entity');
 
-        $this->assertEqual($c, array (
-                              'id' => '1',
-                              'name' => 'zYne',
-                            ));
+        $this->assertEqual($c, [
+            'id' => '1',
+            'name' => 'zYne',
+        ]);
 
-        $c = $this->conn->fetchRow('SELECT * FROM entity WHERE id = ?', array(1));
-        
-        $this->assertEqual($c, array (
-                              'id' => '1',
-                              'name' => 'zYne',
-                            ));
+        $c = $this->conn->fetchRow('SELECT * FROM entity WHERE id = ?', [1]);
+
+        $this->assertEqual($c, [
+            'id' => '1',
+            'name' => 'zYne',
+        ]);
     }
 
-    public function testFetchPairs() 
+    public function testFetchPairs()
     {
         $this->conn->exec('DROP TABLE entity');
     }
 
-    public function testGetManager() 
+    public function testGetManager()
     {
         $this->assertTrue($this->connection->getManager() === $this->manager);
     }
 
-    public function testDeleteOnTransientRecordIsIgnored() 
+    public function testDeleteOnTransientRecordIsIgnored()
     {
         $user = $this->connection->create('User');
         try {
@@ -159,80 +156,79 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
         }
     }
 
-    public function testGetTable() 
+    public function testGetTable()
     {
         $table = $this->connection->getTable('Group');
         $this->assertTrue($table instanceof Doctrine_Table);
         try {
             $table = $this->connection->getTable('Unknown');
             $f = false;
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $f = true;
         }
         $this->assertTrue($f);
 
         $table = $this->connection->getTable('User');
         $this->assertTrue($table instanceof UserTable);
-
     }
 
-    public function testCreate() 
+    public function testCreate()
     {
         $email = $this->connection->create('Email');
         $this->assertTrue($email instanceof Email);
     }
 
-    public function testGetDbh() 
+    public function testGetDbh()
     {
         $this->assertTrue($this->connection->getDbh() instanceof PDO);
     }
 
-    public function testCount() 
+    public function testCount()
     {
-        $this->assertTrue(is_integer(count($this->connection)));
+        $this->assertTrue(is_int(count($this->connection)));
     }
 
-    public function testGetIterator() 
+    public function testGetIterator()
     {
         $this->assertTrue($this->connection->getIterator() instanceof ArrayIterator);
     }
 
     public function testGetState()
     {
-        $this->assertEqual($this->connection->transaction->getState(),Doctrine_Transaction::STATE_SLEEP);
+        $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_SLEEP);
         $this->assertEqual(Doctrine_Lib::getConnectionStateAsString($this->connection->transaction->getState()), 'open');
     }
 
-    public function testGetTables() 
+    public function testGetTables()
     {
         $this->assertTrue(is_array($this->connection->getTables()));
     }
 
-    public function testRollback() 
+    public function testRollback()
     {
         $this->connection->beginTransaction();
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),1);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 1);
         $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_ACTIVE);
         $this->connection->rollback();
         $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_SLEEP);
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),0);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 0);
     }
 
     public function testNestedTransactions()
     {
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),0);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 0);
         $this->connection->beginTransaction();
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),1);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 1);
         $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_ACTIVE);
         $this->connection->beginTransaction();
         $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_BUSY);
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),2);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 2);
         $this->connection->commit();
         $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_ACTIVE);
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),1);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 1);
         $this->connection->commit();
         $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_SLEEP);
-        $this->assertEqual($this->connection->transaction->getTransactionLevel(),0);
+        $this->assertEqual($this->connection->transaction->getTransactionLevel(), 0);
     }
 
     public function testSqliteDsn()

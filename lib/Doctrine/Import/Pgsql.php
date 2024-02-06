@@ -20,22 +20,17 @@
  */
 
 /**
- * @package     Doctrine
- * @subpackage  Import
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Paul Cooper <pgc@ucecom.com>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7689 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Import_Pgsql extends Doctrine_Import
 {
-
-    protected $sql = array(
-                        'listDatabases' => 'SELECT datname FROM pg_database',
-                        'listFunctions' => "SELECT
+    protected $sql = [
+        'listDatabases' => 'SELECT datname FROM pg_database',
+        'listFunctions' => "SELECT
                                                 proname
                                             FROM
                                                 pg_proc pr,
@@ -47,14 +42,14 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                 AND pr.pronamespace IN
                                                     (SELECT oid FROM pg_namespace
                                                      WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema'",
-                        'listSequences' => "SELECT
+        'listSequences' => "SELECT
                                                 regexp_replace(relname, '_seq$', '')
                                             FROM
                                                 pg_class
                                             WHERE relkind = 'S' AND relnamespace IN
                                                 (SELECT oid FROM pg_namespace
                                                  WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema')",
-                        'listTables'    => "SELECT
+        'listTables' => "SELECT
                                                 c.relname AS table_name
                                             FROM pg_class c, pg_user u
                                             WHERE c.relowner = u.usesysid
@@ -68,9 +63,9 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                 AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname)
                                                 AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner)
                                                 AND c.relname !~ '^pg_'",
-                        'listViews'     => 'SELECT viewname FROM pg_views',
-                        'listUsers'     => 'SELECT usename FROM pg_user',
-                        'listTableConstraints' => "SELECT
+        'listViews' => 'SELECT viewname FROM pg_views',
+        'listUsers' => 'SELECT usename FROM pg_user',
+        'listTableConstraints' => "SELECT
                                                         relname
                                                    FROM
                                                         pg_class
@@ -81,7 +76,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                             AND pg_class.oid = pg_index.indrelid
                                                             AND (indisunique = 't' OR indisprimary = 't')
                                                         )",
-                        'listTableIndexes'     => "SELECT
+        'listTableIndexes' => "SELECT
                                                         relname
                                                    FROM
                                                         pg_class
@@ -93,7 +88,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                             AND indisunique != 't'
                                                             AND indisprimary != 't'
                                                         )",
-                        'listTableColumns'     => "SELECT
+        'listTableColumns' => "SELECT
                                                      ordinal_position as attnum,
                                                      column_name as field,
                                                      udt_name as type,
@@ -112,7 +107,7 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                    FROM information_schema.COLUMNS
                                                    WHERE table_name = %s
                                                    ORDER BY ordinal_position",
-                        'listTableRelations'   => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
+        'listTableRelations' => "SELECT pg_catalog.pg_get_constraintdef(oid, true) as condef
                                                           FROM pg_catalog.pg_constraint r
                                                           WHERE r.conrelid =
                                                           (
@@ -121,24 +116,23 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                                                               LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                                                               WHERE c.relname ~ ? AND pg_catalog.pg_table_is_visible(c.oid)
                                                           )
-                                                          AND r.contype = 'f'"
-                        );
+                                                          AND r.contype = 'f'",
+    ];
 
     /**
-     * lists all database triggers
+     * lists all database triggers.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listTriggers($database = null)
     {
-
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableConstraints($table)
@@ -150,9 +144,9 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
     }
 
     /**
-     * lists table constraints
+     * lists table constraints.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableColumns($table)
@@ -161,75 +155,75 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
         $query = sprintf($this->sql['listTableColumns'], $table);
         $result = $this->conn->fetchAssoc($query);
 
-        $columns     = array();
+        $columns = [];
         foreach ($result as $key => $val) {
             $val = array_change_key_case($val, CASE_LOWER);
 
-            if ($val['type'] == 'character varying') {
+            if ('character varying' == $val['type']) {
                 // get length from varchar definition
                 $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
                 $val['length'] = $length;
-            } else if (strpos($val['complete_type'], 'character varying') !== false) {
+            } elseif (false !== strpos($val['complete_type'], 'character varying')) {
                 // get length from varchar definition
                 $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $val['complete_type']);
                 $val['length'] = $length;
             }
-            
+
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
 
-            $description = array(
-                'name'      => $val['field'],
-                'ntype'     => $val['type'],
-                'type'      => $decl['type'][0],
-                'alltypes'  => $decl['type'],
-                'length'    => $decl['length'],
-                'fixed'     => (bool) $decl['fixed'],
-                'unsigned'  => (bool) $decl['unsigned'],
-                'notnull'   => ($val['isnotnull'] == 'NO'),
-                'default'   => $val['default'],
-                'primary'   => ($val['pri'] == 't'),
-            );
+            $description = [
+                'name' => $val['field'],
+                'ntype' => $val['type'],
+                'type' => $decl['type'][0],
+                'alltypes' => $decl['type'],
+                'length' => $decl['length'],
+                'fixed' => (bool) $decl['fixed'],
+                'unsigned' => (bool) $decl['unsigned'],
+                'notnull' => ('NO' == $val['isnotnull']),
+                'default' => $val['default'],
+                'primary' => ('t' == $val['pri']),
+            ];
 
-            // If postgres enum type            
-            if ($val['type'] == 'e'){
-                $description['default'] = isset($decl['default']) ? $decl['default'] : null;
-                $t_result = $this->conn->fetchAssoc(sprintf('select enum_range(null::%s) as range ', $decl['enum_name']));                
-                if (isset($t_result[0])){
-                    $range =  $t_result[0]['range'];
-                    $range = str_replace('{','',$range);
-                    $range = str_replace('}','',$range);
-                    $range = explode(',',$range);
+            // If postgres enum type
+            if ('e' == $val['type']) {
+                $description['default'] = $decl['default'] ?? null;
+                $t_result = $this->conn->fetchAssoc(sprintf('select enum_range(null::%s) as range ', $decl['enum_name']));
+                if (isset($t_result[0])) {
+                    $range = $t_result[0]['range'];
+                    $range = str_replace('{', '', $range);
+                    $range = str_replace('}', '', $range);
+                    $range = explode(',', $range);
                     $description['values'] = $range;
                 }
             }
 
-            $matches = array(); 
+            $matches = [];
 
-            if (preg_match("/^nextval\('(.*)'(::.*)?\)$/", $description['default'], $matches)) { 
-                $description['sequence'] = $this->conn->formatter->fixSequenceName($matches[1]); 
-                $description['default'] = null; 
-            } else if (preg_match("/^'(.*)'::character varying$/", $description['default'], $matches)) {
+            if (preg_match("/^nextval\\('(.*)'(::.*)?\\)$/", $description['default'], $matches)) {
+                $description['sequence'] = $this->conn->formatter->fixSequenceName($matches[1]);
+                $description['default'] = null;
+            } elseif (preg_match("/^'(.*)'::character varying$/", $description['default'], $matches)) {
                 $description['default'] = $matches[1];
-            } else if (preg_match("/^(.*)::character varying$/", $description['default'], $matches)) {
+            } elseif (preg_match('/^(.*)::character varying$/', $description['default'], $matches)) {
                 $description['default'] = $matches[1];
-            } else if ($description['type'] == 'boolean') {
-                if ($description['default'] === 'true') {
-                   $description['default'] = true;
-                } else if ($description['default'] === 'false') {
-                   $description['default'] = false;
+            } elseif ('boolean' == $description['type']) {
+                if ('true' === $description['default']) {
+                    $description['default'] = true;
+                } elseif ('false' === $description['default']) {
+                    $description['default'] = false;
                 }
             }
 
             $columns[$val['field']] = $description;
         }
-        
+
         return $columns;
     }
 
     /**
-     * list all indexes in a table
+     * list all indexes in a table.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableIndexes($table)
@@ -241,9 +235,9 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
     }
 
     /**
-     * lists tables
+     * lists tables.
      *
-     * @param string|null $database
+     * @param  string|null $database
      * @return array
      */
     public function listTables($database = null)
@@ -252,9 +246,9 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
     }
 
     /**
-     * lists table triggers
+     * lists table triggers.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableTriggers($table)
@@ -263,17 +257,18 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
                     FROM pg_trigger trg,
                          pg_class tbl
                    WHERE trg.tgrelid = tbl.oid';
-        if ($table !== null) {
+        if (null !== $table) {
             $table = $this->conn->quote(strtoupper($table), 'string');
-            $query .= " AND tbl.relname = $table";
+            $query .= " AND tbl.relname = {$table}";
         }
+
         return $this->conn->fetchColumn($query);
     }
 
     /**
-     * list the views in the database that reference a given table
+     * list the views in the database that reference a given table.
      *
-     * @param string $table     database table name
+     * @param  string $table database table name
      * @return array
      */
     public function listTableViews($table)
@@ -284,18 +279,18 @@ class Doctrine_Import_Pgsql extends Doctrine_Import
     public function listTableRelations($table)
     {
         $sql = $this->sql['listTableRelations'];
-        $param = array('^(' . $table . ')$');
+        $param = ['^('.$table.')$'];
 
-        $relations = array();
+        $relations = [];
 
         $results = $this->conn->fetchAssoc($sql, $param);
         foreach ($results as $result) {
             preg_match('/FOREIGN KEY \((.+)\) REFERENCES (.+)\((.+)\)/', $result['condef'], $values);
-            if ((strpos($values[1], ',') === false) && (strpos($values[3], ',') === false)) {
+            if ((false === strpos($values[1], ',')) && (false === strpos($values[3], ','))) {
                 $tableName = trim($values[2], '"');
-                $relations[] = array('table'   => $tableName,
-                                     'local'   => $values[1],
-                                     'foreign' => $values[3]);
+                $relations[] = ['table' => $tableName,
+                    'local' => $values[1],
+                    'foreign' => $values[3]];
             }
         }
 

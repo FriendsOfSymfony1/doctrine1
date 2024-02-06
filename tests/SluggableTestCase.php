@@ -1,26 +1,32 @@
 <?php
-class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase 
-{    
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
+{
     public function prepareTables()
     {
-        $this->tables[] = "SluggableItem";
-        $this->tables[] = "SluggableItem1";
-        $this->tables[] = "SluggableItem2";
-        $this->tables[] = "SluggableItem3";
-        $this->tables[] = "SluggableItem4";
-        $this->tables[] = "SluggableItem5";
-        $this->tables[] = "SluggableItem6";
-        $this->tables[] = "SluggableItem7";
-        $this->tables[] = "SluggableItem8";
-        $this->tables[] = "SluggableItem9";
-        $this->tables[] = "SluggableItem10";
-        $this->tables[] = "SluggableItem11";
-        $this->tables[] = "SluggableItem12";
-        $this->tables[] = "SluggableItem13";
-        $this->tables[] = "SluggableItem14";
-        $this->tables[] = "SluggableItem15";
-        $this->tables[] = "SluggableItem16";
-        $this->tables[] = "SluggableItem17";
+        $this->tables[] = 'SluggableItem';
+        $this->tables[] = 'SluggableItem1';
+        $this->tables[] = 'SluggableItem2';
+        $this->tables[] = 'SluggableItem3';
+        $this->tables[] = 'SluggableItem4';
+        $this->tables[] = 'SluggableItem5';
+        $this->tables[] = 'SluggableItem6';
+        $this->tables[] = 'SluggableItem7';
+        $this->tables[] = 'SluggableItem8';
+        $this->tables[] = 'SluggableItem9';
+        $this->tables[] = 'SluggableItem10';
+        $this->tables[] = 'SluggableItem11';
+        $this->tables[] = 'SluggableItem12';
+        $this->tables[] = 'SluggableItem13';
+        $this->tables[] = 'SluggableItem14';
+        $this->tables[] = 'SluggableItem15';
+        $this->tables[] = 'SluggableItem16';
+        $this->tables[] = 'SluggableItem17';
         parent::prepareTables();
     }
 
@@ -31,7 +37,7 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->save();
         $this->assertEqual($item->slug, 'result-of-to-string');
     }
-    
+
     public function testSSluggableWithNoFieldsOptionButGetUniqueSlugMethod()
     {
         $item = new SluggableItem1();
@@ -51,12 +57,12 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->name = 'My item';
         $item->save();
         $this->assertEqual($item->slug, 'my-item-1');
-        $itemTable  = Doctrine_Core::getTable('SluggableItem2');
+        $itemTable = Doctrine_Core::getTable('SluggableItem2');
         $this->assertTrue($index = $itemTable->getIndex('my_item2_sluggable'));
         $this->assertEqual($index['type'], 'unique');
-        $this->assertEqual($index['fields'], array('slug'));
+        $this->assertEqual($index['fields'], ['slug']);
     }
-    
+
     public function testSluggableUniqueSlugOnUpdate()
     {
         parent::prepareTables();
@@ -72,7 +78,7 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->save();
         $this->assertEqual($item->slug, 'New slug');
     }
-    
+
     public function testSluggableWithMultipleFieldsOption()
     {
         parent::prepareTables();
@@ -87,7 +93,7 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->save();
         $this->assertEqual($item->slug, 'my-item-my-ref-1');
     }
-    
+
     public function testSluggableWithFieldsAndNonUniqueOptions()
     {
         parent::prepareTables();
@@ -100,7 +106,7 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->save();
         $this->assertEqual($item->slug, 'my-item');
     }
-    
+
     public function testSluggableWithUniqueByOption()
     {
         parent::prepareTables();
@@ -119,12 +125,12 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->user_id = 1;
         $item->save();
         $this->assertEqual($item->slug, 'my-item-1');
-        $itemTable  = Doctrine_Core::getTable('SluggableItem5');
+        $itemTable = Doctrine_Core::getTable('SluggableItem5');
         $this->assertTrue($index = $itemTable->getIndex('my_item5_sluggable'));
         $this->assertEqual($index['type'], 'unique');
-        $this->assertEqual($index['fields'], array('slug', 'user_id'));
+        $this->assertEqual($index['fields'], ['slug', 'user_id']);
     }
-    
+
     public function testSluggableWithUniqueByOptionAndNullValue()
     {
         parent::prepareTables();
@@ -142,7 +148,7 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->save();
         $this->assertEqual($item->slug, 'my-item');
     }
-    
+
     public function testSluggableWithMultipleUniqueByOption()
     {
         parent::prepareTables();
@@ -165,15 +171,15 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item->save();
         $this->assertEqual($item->slug, 'my-item-1');
     }
-    
+
     public function testSluggableWithFieldsOptionAndNoIndex()
     {
         parent::prepareTables();
-        $itemTable  = Doctrine_Core::getTable('SluggableItem7');
+        $itemTable = Doctrine_Core::getTable('SluggableItem7');
         $this->assertFalse($itemTable->getIndex('sluggable'));
     }
-    
-    public function testSluggableUniqueSlugOnUpdateWithOptioncanUpdateSlug ()
+
+    public function testSluggableUniqueSlugOnUpdateWithOptioncanUpdateSlug()
     {
         parent::prepareTables();
         $item = new SluggableItem8();
@@ -209,7 +215,7 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
         $item0->delete(); // muhaha! I don't actually delete it!
 
         // We must have 0 as total of records
-        
+
         $this->assertEqual(Doctrine_Query::create()->from('SluggableItem9')->count(), 0);
 
         $item1 = new SluggableItem9();
@@ -219,47 +225,47 @@ class Doctrine_Sluggable_TestCase extends Doctrine_UnitTestCase
 
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
     }
-    
+
     public function testSluggableWithColumAggregationInheritance()
     {
-      parent::prepareTables();
-      $item = new SluggableItem11();
-      $item->name = 'My item';
-      $item->save();
-      $item1 = new SluggableItem12();
-      $item1->name = 'My item';
-      $item1->save();
-      // since this two items resides in the same table, they should not have the same slug
-      $this->assertNotEqual($item1->slug, $item->slug);
+        parent::prepareTables();
+        $item = new SluggableItem11();
+        $item->name = 'My item';
+        $item->save();
+        $item1 = new SluggableItem12();
+        $item1->name = 'My item';
+        $item1->save();
+        // since this two items resides in the same table, they should not have the same slug
+        $this->assertNotEqual($item1->slug, $item->slug);
     }
 
     public function testSluggableWithColumAggregationInheritanceAndUniquByType()
     {
-      parent::prepareTables();
-      $item = new SluggableItem16();
-      $item->name = 'My item';
-      $item->save();
-      $item1 = new SluggableItem17();
-      $item1->name = 'My item';
-      $item1->save();
-      $this->assertEqual($item1->slug, $item->slug);
+        parent::prepareTables();
+        $item = new SluggableItem16();
+        $item->name = 'My item';
+        $item->save();
+        $item1 = new SluggableItem17();
+        $item1->name = 'My item';
+        $item1->save();
+        $this->assertEqual($item1->slug, $item->slug);
     }
 
     public function testSluggableWithConcreteInheritance()
     {
-      parent::prepareTables();
-      $item = new SluggableItem13();
-      $item->name = 'My item';
-      $item->save();
-      $item1 = new SluggableItem14();
-      $item1->name = 'My item';
-      $item1->save();
-      // this two slugs is in different tables so they should be equal
-      $this->assertEqual($item->slug,$item1->slug);
-      $item2 = new SluggableItem14();
-      $item2->name = 'My item';
-      $item2->save();
-      $this->assertNotEqual($item2->slug,$item1->slug);
+        parent::prepareTables();
+        $item = new SluggableItem13();
+        $item->name = 'My item';
+        $item->save();
+        $item1 = new SluggableItem14();
+        $item1->name = 'My item';
+        $item1->save();
+        // this two slugs is in different tables so they should be equal
+        $this->assertEqual($item->slug, $item1->slug);
+        $item2 = new SluggableItem14();
+        $item2->name = 'My item';
+        $item2->save();
+        $this->assertNotEqual($item2->slug, $item1->slug);
     }
 }
 
@@ -275,7 +281,7 @@ class SluggableItem extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
-        $this->actAs('Sluggable', array('unique' => true));
+        $this->actAs('Sluggable', ['unique' => true]);
     }
 
     public function __toString()
@@ -296,7 +302,7 @@ class SluggableItem1 extends Doctrine_Record
     public function setUp()
     {
         parent::setUp();
-        $this->actAs('Sluggable', array('unique' => true));
+        $this->actAs('Sluggable', ['unique' => true]);
     }
 
     public function __toString()
@@ -320,10 +326,10 @@ class SluggableItem2 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable', array('unique' => true,
-                                        'fields' => array('name')));
+        $this->actAs('Sluggable', ['unique' => true,
+            'fields' => ['name']]);
     }
 }
 
@@ -337,17 +343,16 @@ class SluggableItem3 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable', array('unique' => false,
-                                        'fields' => array('name')));
+        $this->actAs('Sluggable', ['unique' => false,
+            'fields' => ['name']]);
     }
 }
 
 // Model with multiple fields option
 class SluggableItem4 extends Doctrine_Record
 {
-
     public function setTableDefinition()
     {
         $this->setTableName('my_item4');
@@ -356,10 +361,10 @@ class SluggableItem4 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable', array('unique' => true,
-                                        'fields' => array('name', 'ref')));
+        $this->actAs('Sluggable', ['unique' => true,
+            'fields' => ['name', 'ref']]);
     }
 }
 
@@ -374,43 +379,41 @@ class SluggableItem5 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable',   array('fields'      => array('name'),
-                                          'uniqueBy'    => array('user_id'),
-                                          'unique'      => true
-        ));
+        $this->actAs('Sluggable', ['fields' => ['name'],
+            'uniqueBy' => ['user_id'],
+            'unique' => true,
+        ]);
     }
 }
 
 // Model with fields and multiple uniqueBy option
 class SluggableItem6 extends Doctrine_Record
 {
-
     public function setTableDefinition()
     {
         $this->setTableName('my_item6');
         // Make sure this works the same with a column that is not named id
-        $this->hasColumn('iid', 'integer', null, array('primary' => true, 'autoincrement' => true));
+        $this->hasColumn('iid', 'integer', null, ['primary' => true, 'autoincrement' => true]);
         $this->hasColumn('name', 'string', 50);
         $this->hasColumn('user_id', 'string', 50);
         $this->hasColumn('account_id', 'string', 50);
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable',   array('fields'      => array('name'),
-                                          'uniqueBy'    => array('user_id', 'account_id'),
-                                          'unique'      => true
-        ));
+        $this->actAs('Sluggable', ['fields' => ['name'],
+            'uniqueBy' => ['user_id', 'account_id'],
+            'unique' => true,
+        ]);
     }
 }
 
 // Model with fields option and no index
 class SluggableItem7 extends Doctrine_Record
 {
-
     public function setTableDefinition()
     {
         $this->setTableName('my_item2');
@@ -418,18 +421,17 @@ class SluggableItem7 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable', array('fields'        => array('name'),
-                                        'uniqueIndex'   => false,
-                                        'unique'        => true));
+        $this->actAs('Sluggable', ['fields' => ['name'],
+            'uniqueIndex' => false,
+            'unique' => true]);
     }
 }
 
 // Model with fields option and canUpdateSlug option
 class SluggableItem8 extends Doctrine_Record
 {
-
     public function setTableDefinition()
     {
         $this->setTableName('my_item8');
@@ -437,18 +439,17 @@ class SluggableItem8 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
-        $this->actAs('Sluggable', array('unique'    => true,
-                                        'fields'    => array('name'),
-                                        'canUpdate' => true));
+        $this->actAs('Sluggable', ['unique' => true,
+            'fields' => ['name'],
+            'canUpdate' => true]);
     }
 }
 
 // Model usage with mixing of SoftDelete
 class SluggableItem9 extends Doctrine_Record
 {
-
     public function setTableDefinition()
     {
         $this->setTableName('my_item9');
@@ -456,13 +457,13 @@ class SluggableItem9 extends Doctrine_Record
     }
 
     public function setUp()
-    { 
+    {
         parent::setUp();
 
         $this->actAs('SoftDelete');
-        $this->actAs('Sluggable', array('unique'      => true,
-                                        'uniqueIndex' => true,
-                                        'fields'      => array('name')));
+        $this->actAs('Sluggable', ['unique' => true,
+            'uniqueIndex' => true,
+            'fields' => ['name']]);
     }
 }
 
@@ -470,101 +471,103 @@ class SluggableItem9 extends Doctrine_Record
 // That inherits form an abstract class
 abstract class SluggableItem10Abstract extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('my_item10');
-    $this->hasColumn('name', 'string', 50);
-    $this->hasColumn('type', 'integer',1);
-    $this->setSubclasses(array("SluggableItem11" => array("type" => 0), "SluggableItem12" => array("type" => 1)));
-  }
-  public function setUp()
-  {
-    parent::setUp();
-    
-    $this->actAs('Sluggable', array('unique'      => true,
-                                    'uniqueIndex' => true,
-                                    'fields'      => array('name'),
-                                    ));
-  }
+    public function setTableDefinition()
+    {
+        $this->setTableName('my_item10');
+        $this->hasColumn('name', 'string', 50);
+        $this->hasColumn('type', 'integer', 1);
+        $this->setSubclasses(['SluggableItem11' => ['type' => 0], 'SluggableItem12' => ['type' => 1]]);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->actAs('Sluggable', ['unique' => true,
+            'uniqueIndex' => true,
+            'fields' => ['name'],
+        ]);
+    }
 }
 
 class SluggableItem10 extends SluggableItem10Abstract
-{}
+{
+}
 
 // Two classes that extends SluggableItem10 using column aggregation
 class SluggableItem11 extends SluggableItem10
 {
-  public function setUp()
-  {
-    parent::setUp();
-  }
+    public function setUp()
+    {
+        parent::setUp();
+    }
 }
 
 class SluggableItem12 extends SluggableItem10
 {
-  public function setUp()
-  {
-    parent::setUp();
-  }
+    public function setUp()
+    {
+        parent::setUp();
+    }
 }
 
 // Two classes extending SluggableItem2 using concrete inheritance
 class SluggableItem13 extends SluggableItem2
 {
-  public function setTableDefinition()
-  {
-      parent::setTableDefinition();
-      $this->setTableName('my_item13');
-      $this->hasColumn('content', 'string', 300);
-  }
+    public function setTableDefinition()
+    {
+        parent::setTableDefinition();
+        $this->setTableName('my_item13');
+        $this->hasColumn('content', 'string', 300);
+    }
 }
 
 class SluggableItem14 extends SluggableItem2
 {
-  public function setTableDefinition()
-  {
-      parent::setTableDefinition();
-      $this->setTableName('my_item14');
-      $this->hasColumn('content', 'string', 300);
-  }
+    public function setTableDefinition()
+    {
+        parent::setTableDefinition();
+        $this->setTableName('my_item14');
+        $this->hasColumn('content', 'string', 300);
+    }
 }
 
 // A fiew models using column aggerigation inheritance and uniqueBy type
 class SluggableItem15 extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('my_item15');
-    $this->hasColumn('name', 'string', 50);
-    $this->hasColumn('type', 'integer',1);
-    $this->setSubclasses(array("SluggableItem16" => array("type" => 0), "SluggableItem17" => array("type" => 1)));
-  }
- 
-  public function setUp()
-  {
-    parent::setUp();
-    
-    $this->actAs('Sluggable', array('unique'      => true,
-                                    'uniqueIndex' => true,
-                                    'uniqueBy'    => array('type'),
-                                    'fields'      => array('name'),
-                                    ));
-  }
+    public function setTableDefinition()
+    {
+        $this->setTableName('my_item15');
+        $this->hasColumn('name', 'string', 50);
+        $this->hasColumn('type', 'integer', 1);
+        $this->setSubclasses(['SluggableItem16' => ['type' => 0], 'SluggableItem17' => ['type' => 1]]);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->actAs('Sluggable', ['unique' => true,
+            'uniqueIndex' => true,
+            'uniqueBy' => ['type'],
+            'fields' => ['name'],
+        ]);
+    }
 }
 
 // Two classes that extends SluggableItem15 using column aggregation
 class SluggableItem16 extends SluggableItem15
 {
-  public function setUp()
-  {
-    parent::setUp();
-  }
+    public function setUp()
+    {
+        parent::setUp();
+    }
 }
 
 class SluggableItem17 extends SluggableItem15
 {
-  public function setUp()
-  {
-    parent::setUp();
-  }
+    public function setUp()
+    {
+        parent::setUp();
+    }
 }

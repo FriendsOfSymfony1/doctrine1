@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Expression_Driver
+ * Doctrine_Expression_Driver.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Driver extends Doctrine_Connection_Module
@@ -44,7 +40,7 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
 
     /**
      * regexp
-     * returns the regular expression operator
+     * returns the regular expression operator.
      *
      * @return string
      */
@@ -54,66 +50,71 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     }
 
     /**
-     * Returns the average value of a column
+     * Returns the average value of a column.
      *
-     * @param string $column    the column to use
-     * @return string           generated sql including an AVG aggregate function
+     * @param  string $column the column to use
+     * @return string generated sql including an AVG aggregate function
      */
     public function avg($column)
     {
         $column = $this->getIdentifier($column);
-        return 'AVG(' .  $column . ')';
+
+        return 'AVG('.$column.')';
     }
 
     /**
-     * Returns the number of rows (without a NULL value) of a column
+     * Returns the number of rows (without a NULL value) of a column.
      *
      * If a '*' is used instead of a column the number of selected rows
      * is returned.
      *
-     * @param string|integer $column    the column to use
-     * @return string                   generated sql including a COUNT aggregate function
+     * @param  string|int $column the column to use
+     * @return string     generated sql including a COUNT aggregate function
      */
     public function count($column)
     {
         $column = $this->getIdentifier($column);
-        return 'COUNT(' . $column . ')';
+
+        return 'COUNT('.$column.')';
     }
 
     /**
-     * Returns the highest value of a column
+     * Returns the highest value of a column.
      *
-     * @param string $column    the column to use
-     * @return string           generated sql including a MAX aggregate function
+     * @param  string $column the column to use
+     * @return string generated sql including a MAX aggregate function
      */
     public function max($column)
     {
         $column = $this->getIdentifier($column);
-        return 'MAX(' . $column . ')';
+
+        return 'MAX('.$column.')';
     }
 
     /**
-     * Returns the lowest value of a column
+     * Returns the lowest value of a column.
      *
-     * @param string $column the column to use
+     * @param  string $column the column to use
      * @return string
      */
     public function min($column)
     {
         $column = $this->getIdentifier($column);
-        return 'MIN(' . $column . ')';
+
+        return 'MIN('.$column.')';
     }
 
     /**
-     * Returns the total sum of a column
+     * Returns the total sum of a column.
      *
-     * @param string $column the column to use
+     * @param  string $column the column to use
      * @return string
      */
     public function sum($column)
     {
         $column = $this->getIdentifier($column);
-        return 'SUM(' . $column . ')';
+
+        return 'SUM('.$column.')';
     }
 
     // scalar functions
@@ -128,85 +129,84 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     public function md5($column)
     {
         $column = $this->getIdentifier($column);
-        return 'MD5(' . $column . ')';
+
+        return 'MD5('.$column.')';
     }
 
     /**
      * Returns the length of a text field.
      *
-     * @param string $expression1
-     * @param string $expression2
      * @return string
      */
     public function length($column)
     {
         $column = $this->getIdentifier($column);
-        return 'LENGTH(' . $column . ')';
+
+        return 'LENGTH('.$column.')';
     }
 
     /**
      * Rounds a numeric field to the number of decimals specified.
      *
-     * @param string $expression1
-     * @param string $expression2
      * @return string
      */
     public function round($column, $decimals = 0)
     {
         $column = $this->getIdentifier($column);
 
-        return 'ROUND(' . $column . ', ' . $decimals . ')';
+        return 'ROUND('.$column.', '.$decimals.')';
     }
 
     /**
      * Returns the remainder of the division operation
      * $expression1 / $expression2.
      *
-     * @param string $expression1
-     * @param string $expression2
+     * @param  string $expression1
+     * @param  string $expression2
      * @return string
      */
     public function mod($expression1, $expression2)
     {
         $expression1 = $this->getIdentifier($expression1);
         $expression2 = $this->getIdentifier($expression2);
-        return 'MOD(' . $expression1 . ', ' . $expression2 . ')';
+
+        return 'MOD('.$expression1.', '.$expression2.')';
     }
 
     /**
      * trim
-     * returns the string $str with leading and proceeding space characters removed
+     * returns the string $str with leading and proceeding space characters removed.
      *
-     * @param string $str       literal string or column name
+     * @param  string $str literal string or column name
      * @return string
      */
     public function trim($str)
     {
-        return 'TRIM(' . $str . ')';
+        return 'TRIM('.$str.')';
     }
 
     /**
      * rtrim
-     * returns the string $str with proceeding space characters removed
+     * returns the string $str with proceeding space characters removed.
      *
-     * @param string $str       literal string or column name
+     * @param  string $str literal string or column name
      * @return string
      */
     public function rtrim($str)
     {
-        return 'RTRIM(' . $str . ')';
+        return 'RTRIM('.$str.')';
     }
 
     /**
      * ltrim
-     * returns the string $str with leading space characters removed
+     * returns the string $str with leading space characters removed.
      *
-     * @param string $str       literal string or column name
+     * @param  string $str literal string or column name
      * @return string
      */
     public function ltrim($str)
     {
-        return 'LTRIM(' . $str . ')';
+        return 'LTRIM('.$str.')';
     }
 
     /**
@@ -214,12 +214,12 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * Returns the string $str with all characters changed to
      * uppercase according to the current character set mapping.
      *
-     * @param string $str       literal string or column name
+     * @param  string $str literal string or column name
      * @return string
      */
     public function upper($str)
     {
-        return 'UPPER(' . $str . ')';
+        return 'UPPER('.$str.')';
     }
 
     /**
@@ -227,25 +227,25 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * Returns the string $str with all characters changed to
      * lowercase according to the current character set mapping.
      *
-     * @param string $str       literal string or column name
+     * @param  string $str literal string or column name
      * @return string
      */
     public function lower($str)
     {
-        return 'LOWER(' . $str . ')';
+        return 'LOWER('.$str.')';
     }
 
     /**
      * locate
-     * returns the position of the first occurrence of substring $substr in string $str
+     * returns the position of the first occurrence of substring $substr in string $str.
      *
-     * @param string $substr    literal string to find
-     * @param string $str       literal string
-     * @return integer
+     * @param  string $substr literal string to find
+     * @param  string $str    literal string
+     * @return int
      */
     public function locate($str, $substr)
     {
-        return 'LOCATE(' . $str . ', ' . $substr . ')';
+        return 'LOCATE('.$str.', '.$substr.')';
     }
 
     /**
@@ -261,12 +261,12 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     /**
      * soundex
      * Returns a string to call a function to compute the
-     * soundex encoding of a string
+     * soundex encoding of a string.
      *
      * The string "?000" is returned if the argument is NULL.
      *
-     * @param string $value
-     * @return string   SQL soundex function with given parameter
+     * @param  string $value
+     * @return string SQL soundex function with given parameter
      */
     public function soundex($value)
     {
@@ -274,41 +274,41 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     }
 
     /**
-     * return string to call a function to get a substring inside an SQL statement
+     * return string to call a function to get a substring inside an SQL statement.
      *
      * Note: Not SQL92, but common functionality.
      *
      * SQLite only supports the 2 parameter variant of this function
      *
-     * @param string $value         an sql string literal or column name/alias
-     * @param integer $position     where to start the substring portion
-     * @param integer $length       the substring portion length
-     * @return string               SQL substring function with given parameters
+     * @param  string     $value an sql string literal or column name/alias
+     * @param  mixed|null $len
+     * @return string     SQL substring function with given parameters
      */
     public function substring($value, $from, $len = null)
     {
         $value = $this->getIdentifier($value);
-        if ($len === null)
-            return 'SUBSTRING(' . $value . ' FROM ' . $from . ')';
-        else {
-            $len = $this->getIdentifier($len);
-            return 'SUBSTRING(' . $value . ' FROM ' . $from . ' FOR ' . $len . ')';
+        if (null === $len) {
+            return 'SUBSTRING('.$value.' FROM '.$from.')';
         }
+
+        $len = $this->getIdentifier($len);
+
+        return 'SUBSTRING('.$value.' FROM '.$from.' FOR '.$len.')';
     }
 
     /**
-     * Returns a series of strings concatinated
+     * Returns a series of strings concatinated.
      *
      * concat() accepts an arbitrary number of parameters. Each parameter
      * must contain an expression or an array with expressions.
      *
-     * @param string|array(string) strings that will be concatinated.
+     * @param string|array(string) strings that will be concatinated
      */
     public function concat()
     {
         $args = func_get_args();
 
-        return 'CONCAT(' . join(', ', (array) $args) . ')';
+        return 'CONCAT('.implode(', ', (array) $args).')';
     }
 
     /**
@@ -319,7 +319,8 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     public function not($expression)
     {
         $expression = $this->getIdentifier($expression);
-        return 'NOT(' . $expression . ')';
+
+        return 'NOT('.$expression.')';
     }
 
     /**
@@ -330,7 +331,7 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * must contain a value or an expression or an array with values or
      * expressions.
      *
-     * @param string $type the type of operation, can be '+', '-', '*' or '/'.
+     * @param string $type the type of operation, can be '+', '-', '*' or '/'
      * @param string|array(string)
      * @return string an expression
      */
@@ -340,11 +341,11 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
         if (count($elements) < 1) {
             return '';
         }
-        if (count($elements) == 1) {
+        if (1 == count($elements)) {
             return $elements[0];
-        } else {
-            return '(' . implode(' ' . $type . ' ', $elements) . ')';
         }
+
+        return '('.implode(' '.$type.' ', $elements).')';
     }
 
     /**
@@ -374,7 +375,7 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      */
     public function sub(array $args)
     {
-        return $this->basicMath('-', $args );
+        return $this->basicMath('-', $args);
     }
 
     /**
@@ -410,87 +411,93 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     /**
      * Returns the SQL to check if two values are equal.
      *
-     * @param string $value1 logical expression to compare
-     * @param string $value2 logical expression to compare with
+     * @param  string $value1 logical expression to compare
+     * @param  string $value2 logical expression to compare with
      * @return string logical expression
      */
     public function eq($value1, $value2)
     {
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $value1 . ' = ' . $value2;
+
+        return $value1.' = '.$value2;
     }
 
     /**
      * Returns the SQL to check if two values are unequal.
      *
-     * @param string $value1 logical expression to compare
-     * @param string $value2 logical expression to compare with
+     * @param  string $value1 logical expression to compare
+     * @param  string $value2 logical expression to compare with
      * @return string logical expression
      */
     public function neq($value1, $value2)
     {
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $value1 . ' <> ' . $value2;
+
+        return $value1.' <> '.$value2;
     }
 
     /**
      * Returns the SQL to check if one value is greater than another value.
      *
-     * @param string $value1 logical expression to compare
-     * @param string $value2 logical expression to compare with
+     * @param  string $value1 logical expression to compare
+     * @param  string $value2 logical expression to compare with
      * @return string logical expression
      */
     public function gt($value1, $value2)
     {
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $value1 . ' > ' . $value2;
+
+        return $value1.' > '.$value2;
     }
 
     /**
      * Returns the SQL to check if one value is greater than or equal to
      * another value.
      *
-     * @param string $value1 logical expression to compare
-     * @param string $value2 logical expression to compare with
+     * @param  string $value1 logical expression to compare
+     * @param  string $value2 logical expression to compare with
      * @return string logical expression
      */
     public function gte($value1, $value2)
     {
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $value1 . ' >= ' . $value2;
+
+        return $value1.' >= '.$value2;
     }
 
     /**
      * Returns the SQL to check if one value is less than another value.
      *
-     * @param string $value1        logical expression to compare
-     * @param string $value2        logical expression to compare with
+     * @param  string $value1 logical expression to compare
+     * @param  string $value2 logical expression to compare with
      * @return string logical expression
      */
     public function lt($value1, $value2)
     {
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $value1 . ' < ' . $value2;
+
+        return $value1.' < '.$value2;
     }
 
     /**
      * Returns the SQL to check if one value is less than or equal to
      * another value.
      *
-     * @param string $value1        logical expression to compare
-     * @param string $value2        logical expression to compare with
+     * @param  string $value1 logical expression to compare
+     * @param  string $value2 logical expression to compare with
      * @return string logical expression
      */
     public function lte($value1, $value2)
     {
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $value1 . ' <= ' . $value2;
+
+        return $value1.' <= '.$value2;
     }
 
     /**
@@ -502,46 +509,49 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * must contain a logical expression or an array with logical expressions.
      * These expressions will be matched against the first parameter.
      *
-     * @param string $column        the value that should be matched against
+     * @param string $column the value that should be matched against
      * @param string|array(string)  values that will be matched against $column
      * @return string logical expression
      */
     public function in($column, $values)
     {
-        if ( ! is_array($values)) {
-            $values = array($values);
+        if (!is_array($values)) {
+            $values = [$values];
         }
         $values = $this->getIdentifiers($values);
         $column = $this->getIdentifier($column);
 
-        if (count($values) == 0) {
+        if (0 == count($values)) {
             throw new Doctrine_Expression_Exception('Values array for IN operator should not be empty.');
         }
-        return $column . ' IN (' . implode(', ', $values) . ')';
+
+        return $column.' IN ('.implode(', ', $values).')';
     }
 
     /**
      * Returns SQL that checks if a expression is null.
      *
-     * @param string $expression the expression that should be compared to null
+     * @param  string $expression the expression that should be compared to null
      * @return string logical expression
      */
     public function isNull($expression)
     {
         $expression = $this->getIdentifier($expression);
-        return $expression . ' IS NULL';
+
+        return $expression.' IS NULL';
     }
 
     /**
      * Returns SQL that checks if a expression is not null.
      *
-     * @param string $expression the expression that should be compared to null
+     * @param  string $expression the expression that should be compared to null
      * @return string logical expression
      */
     public function isNotNull($expression)
     {
         $expression = $this->getIdentifier($expression);
-        return $expression . ' IS NOT NULL';
+
+        return $expression.' IS NOT NULL';
     }
 
     /**
@@ -554,9 +564,9 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
      * http://www.w3schools.com/sql/sql_between.asp. If you want complete database
      * independence you should avoid using between().
      *
-     * @param string $expression the value to compare to
-     * @param string $value1 the lower value to compare with
-     * @param string $value2 the higher value to compare with
+     * @param  string $expression the value to compare to
+     * @param  string $value1     the lower value to compare with
+     * @param  string $value2     the higher value to compare with
      * @return string logical expression
      */
     public function between($expression, $value1, $value2)
@@ -564,11 +574,12 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
         $expression = $this->getIdentifier($expression);
         $value1 = $this->getIdentifier($value1);
         $value2 = $this->getIdentifier($value2);
-        return $expression . ' BETWEEN ' .$value1 . ' AND ' . $value2;
+
+        return $expression.' BETWEEN '.$value1.' AND '.$value2;
     }
 
     /**
-     * Returns global unique identifier
+     * Returns global unique identifier.
      *
      * @return string to get global unique identifier
      */
@@ -578,30 +589,27 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     }
 
     /**
-     * returns arcus cosine SQL string
+     * returns arcus cosine SQL string.
      *
      * @return string
      */
     public function acos($value)
     {
-        return 'ACOS(' . $value . ')';
+        return 'ACOS('.$value.')';
     }
 
     /**
-     * sin
+     * sin.
      *
-     * @param string $value 
-     * @return void
+     * @param string $value
      */
     public function sin($value)
     {
-        return 'SIN(' . $value . ')';
+        return 'SIN('.$value.')';
     }
 
     /**
-     * pi
-     *
-     * @return void
+     * pi.
      */
     public function pi()
     {
@@ -609,18 +617,17 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     }
 
     /**
-     * cos
+     * cos.
      *
-     * @param string $value 
-     * @return void
+     * @param string $value
      */
     public function cos($value)
     {
-        return 'COS(' . $value . ')';
+        return 'COS('.$value.')';
     }
 
     /**
-     * coalesce
+     * coalesce.
      *
      * @return string
      */
@@ -628,20 +635,20 @@ class Doctrine_Expression_Driver extends Doctrine_Connection_Module
     {
         $args = func_get_args();
 
-	    return 'COALESCE(' . join(', ', (array) $args) . ')';
+        return 'COALESCE('.implode(', ', (array) $args).')';
     }
 
     /**
-     * __call
+     * __call.
      *
      * for all native RDBMS functions the function name itself is returned
      */
-    public function __call($m, $a) 
+    public function __call($m, $a)
     {
         if ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_EXPR) {
-            throw new Doctrine_Expression_Exception('Unknown expression: ' . $m);
+            throw new Doctrine_Expression_Exception('Unknown expression: '.$m);
         }
 
-        return $m . '(' . implode(', ', $a) . ')';
+        return $m.'('.implode(', ', $a).')';
     }
 }

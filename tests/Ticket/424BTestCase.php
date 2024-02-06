@@ -20,26 +20,29 @@
  */
 
 /**
- * Doctrine_Ticket424B_TestCase
+ * Doctrine_Ticket424B_TestCase.
  *
  * This test case tests many-many relationship with non-autoincrement primary key
  *
- * @package     Doctrine
  * @author      Tamcy <7am.online@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_424B_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { }
+    public function prepareData()
+    {
+    }
 
     public function prepareTables()
     {
-        $this->tables = array('mmrUser_B', 'mmrGroup_B', 'mmrGroupUser_B');
+        $this->tables = ['mmrUser_B', 'mmrGroup_B', 'mmrGroupUser_B'];
 
         parent::prepareTables();
     }
@@ -50,6 +53,7 @@ class Doctrine_Ticket_424B_TestCase extends Doctrine_UnitTestCase
         $group->id = $code;
         $group->name = $name;
         $group->save();
+
         return $group;
     }
 
@@ -59,11 +63,12 @@ class Doctrine_Ticket_424B_TestCase extends Doctrine_UnitTestCase
         $u->id = $code;
         $u->name = $name;
 
-        foreach ($groups as $idx=>$group) {
+        foreach ($groups as $idx => $group) {
             $u->Group[$idx] = $group;
         }
 
         $u->save();
+
         return $u;
     }
 
@@ -73,9 +78,9 @@ class Doctrine_Ticket_424B_TestCase extends Doctrine_UnitTestCase
         $groupB = $this->newGroup(2, 'Group B');
         $groupC = $this->newGroup(3, 'Group C');
 
-        $john  = $this->newUser(1, 'John',  array($groupA, $groupB));
-        $peter = $this->newUser(2, 'Peter', array($groupA, $groupC));
-        $alan  = $this->newUser(3, 'Alan',  array($groupB, $groupC));
+        $john = $this->newUser(1, 'John', [$groupA, $groupB]);
+        $peter = $this->newUser(2, 'Peter', [$groupA, $groupC]);
+        $alan = $this->newUser(3, 'Alan', [$groupB, $groupC]);
 
         $q = Doctrine_Query::create();
         $gu = $q->from('mmrGroupUser_B')->execute();
@@ -89,11 +94,11 @@ class Doctrine_Ticket_424B_TestCase extends Doctrine_UnitTestCase
         // Query by join
         $q = Doctrine_Query::create()
             ->from('mmrUser_B u, u.Group g')
-            ->where('g.name = ?', array($groupA->name));
+            ->where('g.name = ?', [$groupA->name])
+        ;
 
         $userOfGroupAByName = $q->execute();
 
         $this->assertEqual(count($userOfGroupAByName), 2);
-
     }
 }

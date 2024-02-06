@@ -20,37 +20,31 @@
  */
 
 /**
- * standard connection, the parent of pgsql, mysql and sqlite
+ * standard connection, the parent of pgsql, mysql and sqlite.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @link        www.doctrine-project.org
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Connection_Common extends Doctrine_Connection
 {
     /**
-     * Adds an driver-specific LIMIT clause to the query
+     * Adds an driver-specific LIMIT clause to the query.
      *
-     * @param string $query
-     * @param mixed $limit
-     * @param mixed $offset
+     * @param  string $query
      * @return string
      */
-    public function modifyLimitQuery($query, $limit = false,$offset = false,$isManip=false)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
         $limit = (int) $limit;
         $offset = (int) $offset;
 
         if ($limit && $offset) {
-            $query .= ' LIMIT ' . $limit . ' OFFSET ' . $offset;
-        } elseif ($limit && ! $offset) {
-            $query .= ' LIMIT ' . $limit;
-        } elseif ( ! $limit && $offset) {
-            $query .= ' LIMIT 999999999999 OFFSET ' . $offset;
+            $query .= ' LIMIT '.$limit.' OFFSET '.$offset;
+        } elseif ($limit && !$offset) {
+            $query .= ' LIMIT '.$limit;
+        } elseif (!$limit && $offset) {
+            $query .= ' LIMIT 999999999999 OFFSET '.$offset;
         }
 
         return $query;

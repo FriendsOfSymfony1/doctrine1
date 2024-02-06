@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1641_TestCase
+ * Doctrine_Ticket_1641_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1641_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1641_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -46,9 +48,9 @@ class Doctrine_Ticket_1641_TestCase extends Doctrine_UnitTestCase
 
         $user = new T1641_User();
         $user->name = 'guilhermeblanco';
-        $user->save();   
+        $user->save();
 
-        $user->delete();     
+        $user->delete();
     }
 
     public function testTicket()
@@ -58,7 +60,7 @@ class Doctrine_Ticket_1641_TestCase extends Doctrine_UnitTestCase
         $table = Doctrine_Core::getTable('T1641_User');
 
         $this->assertEqual($table->createQuery()->getCountSqlQuery(), 'SELECT COUNT(*) AS num_results FROM t1641__user t WHERE (t.deleted_at IS NULL)');
-	
+
         $this->assertEqual($table->count(), 1);
         $this->assertEqual($table->createQuery()->execute()->count(), 1);
         $this->assertEqual($table->createQuery()->count(), 1);
@@ -71,7 +73,7 @@ class T1641_User extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('user_id as id', 'integer', null, array('primary' => true, 'autoincrement' => true));
+        $this->hasColumn('user_id as id', 'integer', null, ['primary' => true, 'autoincrement' => true]);
         $this->hasColumn('name', 'string', 100);
     }
 

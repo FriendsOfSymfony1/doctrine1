@@ -20,36 +20,38 @@
  */
 
 /**
- * Doctrine_Ticket_1417_TestCase
+ * Doctrine_Ticket_1417_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1417_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1417_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $user = new User();
         $user->name = 'jwagejon';
-        $this->assertEqual($user->getModified(), array('name' => 'jwagejon'));
-        $this->assertEqual($user->getModified(true), array('name' => null));
+        $this->assertEqual($user->getModified(), ['name' => 'jwagejon']);
+        $this->assertEqual($user->getModified(true), ['name' => null]);
         $user->save();
-        $this->assertEqual($user->getModified(), array());
-        $this->assertEqual($user->getModified(true), array());
-        $this->assertEqual($user->getLastModified(), array('name' => 'jwagejon', 'type' => 0));
-        $this->assertEqual($user->getLastModified(true), array('name' => null, 'type' => null));
+        $this->assertEqual($user->getModified(), []);
+        $this->assertEqual($user->getModified(true), []);
+        $this->assertEqual($user->getLastModified(), ['name' => 'jwagejon', 'type' => 0]);
+        $this->assertEqual($user->getLastModified(true), ['name' => null, 'type' => null]);
         $user->name = 'jon';
-        $this->assertEqual($user->getModified(), array('name' => 'jon'));
-        $this->assertEqual($user->getModified(true), array('name' => 'jwagejon'));
+        $this->assertEqual($user->getModified(), ['name' => 'jon']);
+        $this->assertEqual($user->getModified(true), ['name' => 'jwagejon']);
         $user->save();
-        $this->assertEqual($user->getModified(), array());
-        $this->assertEqual($user->getModified(true), array());
-        $this->assertEqual($user->getLastModified(), array('name' => 'jon'));
-        $this->assertEqual($user->getLastModified(true), array('name' => 'jwagejon'));
+        $this->assertEqual($user->getModified(), []);
+        $this->assertEqual($user->getModified(true), []);
+        $this->assertEqual($user->getLastModified(), ['name' => 'jon']);
+        $this->assertEqual($user->getLastModified(true), ['name' => 'jwagejon']);
     }
 }

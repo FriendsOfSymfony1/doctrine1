@@ -20,16 +20,12 @@
  */
 
 /**
- * @package     Doctrine
- * @subpackage  DataDict
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @author      Frank M. Kromann <frank@kromann.info> (PEAR MDB2 Mssql driver)
  * @author      David Coallier <davidc@php.net> (PEAR MDB2 Mssql driver)
- * @version     $Revision: 7660 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_DataDict_Mssql extends Doctrine_DataDict
 {
@@ -37,9 +33,9 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
      * Obtain DBMS specific SQL code portion needed to declare an text type
      * field to be used in statements like CREATE TABLE.
      *
-     * @param array $field  associative array with the name of the properties
-     *      of the field being declared as array indexes. Currently, the types
-     *      of supported field properties are as follows:
+     * @param array $field associative array with the name of the properties
+     *                     of the field being declared as array indexes. Currently, the types
+     *                     of supported field properties are as follows:
      *
      *      length
      *          Integer value that determines the maximum length of the text
@@ -52,18 +48,18 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
      *      notnull
      *          Boolean flag that indicates whether this field is constrained
      *          to not be set to null.
-     *
-     * @return      string      DBMS specific SQL code portion that should be used to
-     *                          declare the specified field.
+     * @return string DBMS specific SQL code portion that should be used to
+     *                declare the specified field
      */
     public function getNativeDeclaration($field)
     {
-        if ( ! isset($field['type'])) {
+        if (!isset($field['type'])) {
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
             case 'enum':
-                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length'] : 255;
+                // no break
             case 'array':
             case 'object':
             case 'text':
@@ -74,25 +70,27 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 $length = !empty($field['length'])
                     ? $field['length'] : false;
 
-                $fixed  = ((isset($field['fixed']) && $field['fixed']) || $field['type'] == 'char') ? true : false;
+                $fixed = ((isset($field['fixed']) && $field['fixed']) || 'char' == $field['type']) ? true : false;
 
                 return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->varchar_max_length.')')
                     : (($length && $length <= $this->conn->varchar_max_length) ? 'VARCHAR('.$length.')' : 'TEXT');
             case 'clob':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 8000) {
                         return 'VARCHAR('.$length.')';
                     }
-                 }
-                 return 'TEXT';
+                }
+
+                return 'TEXT';
             case 'blob':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 8000) {
-                        return "VARBINARY($length)";
+                        return "VARBINARY({$length})";
                     }
                 }
+
                 return 'IMAGE';
             case 'integer':
             case 'int':
@@ -100,79 +98,83 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
             case 'boolean':
                 return 'BIT';
             case 'date':
-                return 'CHAR(' . strlen('YYYY-MM-DD') . ')';
+                return 'CHAR('.strlen('YYYY-MM-DD').')';
             case 'time':
-                return 'CHAR(' . strlen('HH:MM:SS') . ')';
+                return 'CHAR('.strlen('HH:MM:SS').')';
             case 'timestamp':
-                return 'CHAR(' . strlen('YYYY-MM-DD HH:MM:SS') . ')';
+                return 'CHAR('.strlen('YYYY-MM-DD HH:MM:SS').')';
             case 'float':
                 return 'FLOAT';
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
+
                 return 'DECIMAL('.$length.','.$scale.')';
         }
-        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
+
+        return $field['type'].(isset($field['length']) ? '('.$field['length'].')' : null);
     }
 
     /**
-     * Maps a native array description of a field to a MDB2 datatype and length
+     * Maps a native array description of a field to a MDB2 datatype and length.
      *
-     * @param   array           $field native field description
-     * @return  array           containing the various possible types, length, sign, fixed
+     * @param  array $field native field description
+     * @return array containing the various possible types, length, sign, fixed
      */
     public function getPortableDeclaration($field)
     {
-        $db_type = preg_replace('/[\d\(\)]/','', strtolower($field['type']) );
-        $length  = (isset($field['length']) && $field['length'] > 0) ? $field['length'] : null;
+        $db_type = preg_replace('/[\d\(\)]/', '', strtolower($field['type']));
+        $length = (isset($field['length']) && $field['length'] > 0) ? $field['length'] : null;
 
-        $type = array();
+        $type = [];
         // todo: unsigned handling seems to be missing
         $unsigned = $fixed = null;
 
-        if ( ! isset($field['name']))
+        if (!isset($field['name'])) {
             $field['name'] = '';
+        }
 
         switch ($db_type) {
             case 'bit':
                 $type[0] = 'boolean';
-            break;
+                break;
             case 'tinyint':
             case 'smallint':
             case 'bigint':
             case 'int':
                 $type[0] = 'integer';
-                if ($length == 1) {
+                if (1 == $length) {
                     $type[] = 'boolean';
                 }
-            break;
-            case 'date': 
-                $type[0] = 'date'; 
-            break;
+                break;
+            case 'date':
+                $type[0] = 'date';
+                break;
             case 'datetime':
             case 'timestamp':
             case 'smalldatetime':
                 $type[0] = 'timestamp';
-            break;
+                break;
             case 'float':
             case 'real':
             case 'numeric':
                 $type[0] = 'float';
-            break;
+                break;
             case 'decimal':
             case 'money':
             case 'smallmoney':
                 $type[0] = 'decimal';
-            break;
+                break;
             case 'text':
             case 'varchar':
             case 'ntext':
             case 'nvarchar':
                 $fixed = false;
+                // no break
             case 'char':
             case 'nchar':
                 $type[0] = 'string';
-                if ($length == '1') {
+                if ('1' == $length) {
                     $type[] = 'boolean';
                     if (preg_match('/^[is|has]/', $field['name'])) {
                         $type = array_reverse($type);
@@ -180,45 +182,45 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 } elseif (strstr($db_type, 'text')) {
                     $type[] = 'clob';
                 }
-                if ($fixed !== false) {
+                if (false !== $fixed) {
                     $fixed = true;
                 }
-            break;
+                break;
             case 'image':
             case 'varbinary':
                 $type[] = 'blob';
                 $length = null;
-            break;
+                break;
             case 'uniqueidentifier':
                 $type[] = 'string';
                 $length = 36;
-            break;
+                break;
             case 'sql_variant':
             case 'sysname':
             case 'binary':
                 $type[] = 'string';
                 $length = null;
-            break;
+                break;
             default:
                 $type[] = $field['type'];
-                $length = isset($field['length']) ? $field['length']:null;
+                $length = $field['length'] ?? null;
         }
 
-        return array('type'     => $type,
-                     'length'   => $length,
-                     'unsigned' => $unsigned,
-                     'fixed'    => $fixed);
+        return ['type' => $type,
+            'length' => $length,
+            'unsigned' => $unsigned,
+            'fixed' => $fixed];
     }
 
     /**
      * Obtain DBMS specific SQL code portion needed to declare an integer type
      * field to be used in statements like CREATE TABLE.
      *
-     * @param string  $name   name the field to be declared.
-     * @param string  $field  associative array with the name of the properties
-     *                        of the field being declared as array indexes.
-     *                        Currently, the types of supported field
-     *                        properties are as follows:
+     * @param string $name  name the field to be declared
+     * @param string $field associative array with the name of the properties
+     *                      of the field being declared as array indexes.
+     *                      Currently, the types of supported field
+     *                      properties are as follows:
      *
      *                       unsigned
      *                        Boolean flag that indicates whether the field
@@ -232,16 +234,16 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
      *                       notnull
      *                        Boolean flag that indicates whether this field is
      *                        constrained to not be set to null.
-     * @return string  DBMS specific SQL code portion that should be used to
-     *                 declare the specified field.
+     * @return string DBMS specific SQL code portion that should be used to
+     *                declare the specified field
      */
     public function getIntegerDeclaration($name, $field)
     {
         $default = $autoinc = '';
-        if ( ! empty($field['autoincrement'])) {
+        if (!empty($field['autoincrement'])) {
             $autoinc = ' identity';
         } elseif (array_key_exists('default', $field)) {
-            if ($field['default'] === '') {
+            if ('' === $field['default']) {
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
 
@@ -251,23 +253,22 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
 
             // Name the constraint if a name has been supplied
             if (array_key_exists('defaultConstraintName', $field)) {
-                $default .= ' CONSTRAINT ' . $field['defaultConstraintName'];
+                $default .= ' CONSTRAINT '.$field['defaultConstraintName'];
             }
 
-            $default .= ' DEFAULT ' . $value;
+            $default .= ' DEFAULT '.$value;
         }
 
-
         $notnull = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : ' NULL';
-        //$unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
+        // $unsigned = (isset($field['unsigned']) && $field['unsigned']) ? ' UNSIGNED' : '';
         // MSSQL does not support the UNSIGNED keyword
         $unsigned = '';
-        $comment  = (isset($field['comment']) && $field['comment']) 
-            ? " COMMENT " . $this->conn->quote($field['comment'], 'text') : '';
+        $comment = (isset($field['comment']) && $field['comment'])
+            ? ' COMMENT '.$this->conn->quote($field['comment'], 'text') : '';
 
         $name = $this->conn->quoteIdentifier($name, true);
 
-        return $name . ' ' . $this->getNativeDeclaration($field) . $unsigned
-            . $default . $notnull . $autoinc . $comment;
+        return $name.' '.$this->getNativeDeclaration($field).$unsigned
+            .$default.$notnull.$autoinc.$comment;
     }
 }

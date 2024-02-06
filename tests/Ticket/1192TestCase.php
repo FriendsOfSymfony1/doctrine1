@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1192_TestCase
+ * Doctrine_Ticket_1192_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1192_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1192_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -59,8 +61,9 @@ class Doctrine_Ticket_1192_TestCase extends Doctrine_UnitTestCase
     public function testTest()
     {
         $q = Doctrine_Query::create()
-                ->from('Ticket_1192_CPK t')
-                ->groupBy('t.user_id');
+            ->from('Ticket_1192_CPK t')
+            ->groupBy('t.user_id')
+        ;
 
         $this->assertEqual($q->getCountSqlQuery(), 'SELECT COUNT(*) AS num_results FROM ticket_1192__c_p_k t GROUP BY t.user_id');
         $count = $q->count();
@@ -73,8 +76,8 @@ class Ticket_1192_CPK extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-    $this->hasColumn('id', 'integer', 4, array('primary' => true, 'autoincrement' => true));
-    $this->hasColumn('user_id', 'integer', 4, array('primary' => true));
-    $this->hasColumn('name', 'string', 255);
+        $this->hasColumn('id', 'integer', 4, ['primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('user_id', 'integer', 4, ['primary' => true]);
+        $this->hasColumn('name', 'string', 255);
     }
 }

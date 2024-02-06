@@ -21,48 +21,41 @@
 
 /**
  * Base abstract class for defining templates which are the base of all behaviors that can be attached
- * to your Doctrine models
+ * to your Doctrine models.
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Template extends Doctrine_Record_Abstract
 {
     /**
-     * @var Doctrine_Record $_invoker     the record that invoked the last delegated call
+     * @var Doctrine_Record the record that invoked the last delegated call
      */
     protected $_invoker;
 
     /**
-     * @var Doctrine_Record_Generator $_plugin
+     * @var Doctrine_Record_Generator
      */
     protected $_plugin;
 
     /**
-     * @var array $_options Template options
+     * @var array Template options
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
-     * __construct
-     *
-     * @param string $array 
-     * @return void
+     * __construct.
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
 
     /**
-     * Set the table object that this Template belongs to
+     * Set the table object that this Template belongs to.
      *
-     * @var Doctrine_Table $table        the table object this Template belongs to
+     * @var Doctrine_Table the table object this Template belongs to
      */
     public function setTable(Doctrine_Table $table)
     {
@@ -70,9 +63,9 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * returns the associated table object
+     * returns the associated table object.
      *
-     * @return Doctrine_Table               the associated table object
+     * @return Doctrine_Table the associated table object
      */
     public function getTable()
     {
@@ -80,10 +73,10 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * sets the last used invoker
+     * sets the last used invoker.
      *
-     * @param Doctrine_Record $invoker      the record that invoked the last delegated call
-     * @return Doctrine_Template            this object
+     * @param  Doctrine_Record   $invoker the record that invoked the last delegated call
+     * @return Doctrine_Template this object
      */
     public function setInvoker(Doctrine_Record_Abstract $invoker)
     {
@@ -91,9 +84,9 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * returns the last used invoker
+     * returns the last used invoker.
      *
-     * @return Doctrine_Record              the record that invoked the last delegated call
+     * @return Doctrine_Record the record that invoked the last delegated call
      */
     public function getInvoker()
     {
@@ -101,22 +94,19 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * Adds a plugin as a child to this plugin
-     * 
-     * @param Doctrine_Template $template 
+     * Adds a plugin as a child to this plugin.
+     *
      * @return Doctrine_Template. Chainable.
      */
     public function addChild(Doctrine_Template $template)
     {
         $this->_plugin->addChild($template);
-        
+
         return $this;
     }
 
     /**
-     * Get plugin instance 
-     * 
-     * @return void
+     * Get plugin instance.
      */
     public function getPlugin()
     {
@@ -124,9 +114,9 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * Check if this template has a generator plugin
+     * Check if this template has a generator plugin.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPlugin()
     {
@@ -135,9 +125,9 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
 
     /**
      * getOptions
-     * returns all options of this template and the associated values
+     * returns all options of this template and the associated values.
      *
-     * @return array    all options and their values
+     * @return array all options and their values
      */
     public function getOptions()
     {
@@ -146,37 +136,31 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
 
     /**
      * getOption
-     * returns the value of given option
+     * returns the value of given option.
      *
-     * @param string $name   the name of the option
-     * @param mixed $default default value if option is not found
-     * @return mixed         the value of given option
+     * @param  string $name    the name of the option
+     * @param  mixed  $default default value if option is not found
+     * @return mixed  the value of given option
      */
     public function getOption($name, $default = null)
     {
         if (isset($this->_options[$name])) {
             return $this->_options[$name];
         }
+
         return $default;
     }
 
     /**
-     * get 
-     * 
-     * @param mixed $name 
-     * @return void
+     * get.
      */
-    public function get($name) 
+    public function get($name)
     {
         throw new Doctrine_Exception("Templates doesn't support accessors.");
     }
 
     /**
-     * set 
-     * 
-     * @param mixed $name 
-     * @param mixed $value 
-     * @return void
+     * set.
      */
     public function set($name, $value)
     {
@@ -184,22 +168,16 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * Blank method for template setup 
-     * 
-     * @return void
+     * Blank method for template setup.
      */
     public function setUp()
     {
-
     }
 
     /**
-     * Blank method for template table definition
-     * 
-     * @return void
+     * Blank method for template table definition.
      */
     public function setTableDefinition()
     {
-
     }
 }

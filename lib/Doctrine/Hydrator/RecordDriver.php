@@ -20,22 +20,18 @@
  */
 
 /**
- * Builds result sets in to the object graph using Doctrine_Record instances
+ * Builds result sets in to the object graph using Doctrine_Record instances.
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Roman Borschel <roman@code-factory.org>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
 {
-    protected $_collections = array();
-    private $_initializedRelations = array();
+    protected $_collections = [];
+    private $_initializedRelations = [];
 
     public function getElementCollection($component)
     {
@@ -44,68 +40,70 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
 
         return $coll;
     }
-    
+
     public function initRelated(&$record, $name, $keyColumn = null)
     {
-        if ( ! isset($this->_initializedRelations[$record->getOid()][$name])) {
+        if (!isset($this->_initializedRelations[$record->getOid()][$name])) {
             $relation = $record->getTable()->getRelation($name);
             $coll = Doctrine_Collection::create($relation->getTable()->getComponentName(), $keyColumn);
             $coll->setReference($record, $relation);
             $record[$name] = $coll;
             $this->_initializedRelations[$record->getOid()][$name] = true;
         }
+
         return true;
     }
-    
+
     public function registerCollection($coll)
     {
         $this->_collections[] = $coll;
     }
-    
-    public function getNullPointer() 
+
+    public function getNullPointer()
     {
         return self::$_null;
     }
-    
+
     public function getElement(array $data, $component)
     {
         $component = $this->_getClassNameToReturn($data, $component);
 
         $this->_tables[$component]->setData($data);
-        $record = $this->_tables[$component]->getRecord();
 
-        return $record;
+        return $this->_tables[$component]->getRecord();
     }
 
-    public function getLastKey(&$coll) 
+    public function getLastKey(&$coll)
     {
         $coll->end();
-        
+
         return $coll->key();
     }
 
     /**
      * sets the last element of given data array / collection
-     * as previous element
+     * as previous element.
      *
-     * @param boolean|integer $index
-     * @return void
+     * @param bool|int $index
+     *
      * @todo Detailed documentation
      */
     public function setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
     {
         if ($coll === self::$_null) {
             unset($prev[$dqlAlias]); // Ticket #1228
+
             return;
         }
 
-        if ($index !== false) {
+        if (false !== $index) {
             // Link element at $index to previous element for the component
             // identified by the DQL alias $alias
             $prev[$dqlAlias] = $coll[$index];
+
             return;
         }
-        
+
         if (count($coll) > 0) {
             $prev[$dqlAlias] = $coll->getLast();
         }
@@ -118,7 +116,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Hydrator_Graph
             $coll->takeSnapshot();
         }
         $this->_initializedRelations = null;
-        $this->_collections = array();
+        $this->_collections = [];
         $this->_tables = null;
     }
 }

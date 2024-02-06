@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Sequence_Exception
+ * Doctrine_Sequence_Exception.
  *
- * @package     Doctrine
- * @subpackage  Sequence
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Sequence_Exception extends Doctrine_Exception
-{ }
+{
+}

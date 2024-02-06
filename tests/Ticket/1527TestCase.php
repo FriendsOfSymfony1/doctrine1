@@ -20,21 +20,23 @@
  */
 
 /**
- * Doctrine_Ticket_1527_TestCase
+ * Doctrine_Ticket_1527_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1527_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1527_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 Ticket_1527_User:
   columns:
@@ -50,11 +52,11 @@ END;
         $schema = $import->buildSchema($yml, 'yml');
         $this->assertEqual($schema['Ticket_1527_User']['columns']['username']['extra']['test'], '123');
 
-        $path = dirname(__FILE__) . '/../tmp';
+        $path = dirname(__FILE__).'/../tmp';
         $import->importSchema($yml, 'yml', $path);
-        
-        require_once($path . '/generated/BaseTicket_1527_User.php');
-        require_once($path . '/Ticket_1527_User.php');
+
+        require_once $path.'/generated/BaseTicket_1527_User.php';
+        require_once $path.'/Ticket_1527_User.php';
         $username = Doctrine_Core::getTable('Ticket_1527_User')->getDefinitionOf('username');
         $this->assertEqual($username['extra']['test'], '123');
     }

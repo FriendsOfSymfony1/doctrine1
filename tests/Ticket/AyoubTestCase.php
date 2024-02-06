@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_Ayoub_TestCase
+ * Doctrine_Ticket_Ayoub_TestCase.
  *
- * @package     Doctrine
  * @author      pascal borreli
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_Ayoub_TestCase extends Doctrine_UnitTestCase
 {
@@ -45,7 +47,7 @@ class Doctrine_Ticket_Ayoub_TestCase extends Doctrine_UnitTestCase
         $placeName = 'Place Name';
 
         try {
-            $sura = new Ticket_Ayoub_Sura;
+            $sura = new Ticket_Ayoub_Sura();
             $sura->Translation['transliteration']->name = $name;
             $sura->Ticket_Ayoub_Place->Translation['transliteration']->name = $placeName;
             $sura->Ticket_Ayoub_Place->state('TDIRTY');
@@ -64,48 +66,48 @@ class Doctrine_Ticket_Ayoub_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_Ayoub_Sura extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('Ticket_Ayoub_Sura');
-    $this->hasColumn('id', 'integer', null, array('type' => 'integer', 'primary' => true, 'autoincrement' => true));
-    $this->hasColumn('name', 'string', 255, array('type' => 'string', 'length' => '255'));
-    $this->hasColumn('revelation_order', 'integer', null, array('type' => 'integer'));
-    $this->hasColumn('is_mekka', 'boolean', null, array('type' => 'boolean'));
-    $this->hasColumn('ayat_number', 'integer', null, array('type' => 'integer'));
-    $this->hasColumn('place_id', 'integer', null, array('type' => 'integer'));
+    public function setTableDefinition()
+    {
+        $this->setTableName('Ticket_Ayoub_Sura');
+        $this->hasColumn('id', 'integer', null, ['type' => 'integer', 'primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('name', 'string', 255, ['type' => 'string', 'length' => '255']);
+        $this->hasColumn('revelation_order', 'integer', null, ['type' => 'integer']);
+        $this->hasColumn('is_mekka', 'boolean', null, ['type' => 'boolean']);
+        $this->hasColumn('ayat_number', 'integer', null, ['type' => 'integer']);
+        $this->hasColumn('place_id', 'integer', null, ['type' => 'integer']);
 
-    $this->option('collate', 'utf8_unicode_ci');
-    $this->option('charset', 'utf8');
-  }
+        $this->option('collate', 'utf8_unicode_ci');
+        $this->option('charset', 'utf8');
+    }
 
-  public function setUp()
-  {
-    $this->hasOne('Ticket_Ayoub_Place', array('local' => 'place_id',
-                                 'foreign' => 'id'));
+    public function setUp()
+    {
+        $this->hasOne('Ticket_Ayoub_Place', ['local' => 'place_id',
+            'foreign' => 'id']);
 
-    $i18n0 = new Doctrine_Template_I18n(array('fields' => array(0 => 'name'), 'length' => '20'));
-    $this->actAs($i18n0);
-  }
+        $i18n0 = new Doctrine_Template_I18n(['fields' => [0 => 'name'], 'length' => '20']);
+        $this->actAs($i18n0);
+    }
 }
 
 class Ticket_Ayoub_Place extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->setTableName('Ticket_Ayoub_Place');
-    $this->hasColumn('id', 'integer', null, array('type' => 'integer', 'primary' => true, 'autoincrement' => true));
-    $this->hasColumn('name', 'string', 255, array('type' => 'string', 'length' => '255'));
+    public function setTableDefinition()
+    {
+        $this->setTableName('Ticket_Ayoub_Place');
+        $this->hasColumn('id', 'integer', null, ['type' => 'integer', 'primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('name', 'string', 255, ['type' => 'string', 'length' => '255']);
 
-    $this->option('collate', 'utf8_unicode_ci');
-    $this->option('charset', 'utf8');
-  }
+        $this->option('collate', 'utf8_unicode_ci');
+        $this->option('charset', 'utf8');
+    }
 
-  public function setUp()
-  {
-    $this->hasMany('Ticket_Ayoub_Sura', array('local' => 'id',
-                                 'foreign' => 'place_id'));
+    public function setUp()
+    {
+        $this->hasMany('Ticket_Ayoub_Sura', ['local' => 'id',
+            'foreign' => 'place_id']);
 
-    $i18n0 = new Doctrine_Template_I18n(array('fields' => array(0 => 'name'), 'length' => '20'));
-    $this->actAs($i18n0);
-  }
+        $i18n0 = new Doctrine_Template_I18n(['fields' => [0 => 'name'], 'length' => '20']);
+        $this->actAs($i18n0);
+    }
 }

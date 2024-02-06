@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1326_TestCase
+ * Doctrine_Ticket_1326_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1326_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1326_TestCase extends Doctrine_UnitTestCase
 {
     public function createTestData()
     {
@@ -58,7 +60,7 @@ class Doctrine_Ticket_1326_TestCase extends Doctrine_UnitTestCase
         $this->createTestData();
         $this->assertEqual(Doctrine_Query::create()->from('User')->count(), 2);
 
-        $nbDeleted = Doctrine_Query::create()->delete()->from('User')->where('loginname = ?', array('foo2'))->execute();
+        $nbDeleted = Doctrine_Query::create()->delete()->from('User')->where('loginname = ?', ['foo2'])->execute();
         $this->assertEqual($nbDeleted, 1);
     }
 }

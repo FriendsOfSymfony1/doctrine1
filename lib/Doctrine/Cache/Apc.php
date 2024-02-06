@@ -20,37 +20,33 @@
  */
 
 /**
- * APC Cache Driver
+ * APC Cache Driver.
  *
- * @package     Doctrine
- * @subpackage  Cache
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
 {
     /**
-     * constructor
+     * constructor.
      *
-     * @param array $options    associative array of cache driver options
+     * @param array $options associative array of cache driver options
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
-        if ( ! extension_loaded('apc')) {
+        if (!extension_loaded('apc')) {
             throw new Doctrine_Cache_Exception('The apc extension must be loaded for using this backend !');
         }
         parent::__construct($options);
     }
 
     /**
-     * Fetch a cache record from this cache driver instance
+     * Fetch a cache record from this cache driver instance.
      *
-     * @param string $id cache id
-     * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
+     * @param  string $id                cache id
+     * @param  bool   $testCacheValidity if set to false, the cache validity won't be tested
      * @return mixed  Returns either the cached data or false
      */
     protected function _doFetch($id, $testCacheValidity = true)
@@ -59,26 +55,27 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
     }
 
     /**
-     * Test if a cache record exists for the passed id
+     * Test if a cache record exists for the passed id.
      *
-     * @param string $id cache id
-     * @return mixed false (a cache is not available) or "last modified" timestamp (int) of the available cache record
+     * @param  string $id cache id
+     * @return mixed  false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
     protected function _doContains($id)
     {
         $found = false;
         apc_fetch($id, $found);
+
         return $found;
     }
 
     /**
      * Save a cache record directly. This method is implemented by the cache
-     * drivers and used in Doctrine_Cache_Driver::save()
+     * drivers and used in Doctrine_Cache_Driver::save().
      *
-     * @param string $id        cache id
-     * @param string $data      data to cache
-     * @param int $lifeTime     if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
-     * @return boolean true if no problem
+     * @param  string $id       cache id
+     * @param  string $data     data to cache
+     * @param  int    $lifeTime if != false, set a specific lifetime for this cache record (null => infinite lifeTime)
+     * @return bool   true if no problem
      */
     protected function _doSave($id, $data, $lifeTime = false)
     {
@@ -87,10 +84,10 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
 
     /**
      * Remove a cache record directly. This method is implemented by the cache
-     * drivers and used in Doctrine_Cache_Driver::delete()
+     * drivers and used in Doctrine_Cache_Driver::delete().
      *
-     * @param string $id cache id
-     * @return boolean true if no problem
+     * @param  string $id cache id
+     * @return bool   true if no problem
      */
     protected function _doDelete($id)
     {
@@ -98,18 +95,19 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
     }
 
     /**
-     * Fetch an array of all keys stored in cache
+     * Fetch an array of all keys stored in cache.
      *
      * @return array Returns the array of cache keys
      */
     protected function _getCacheKeys()
     {
         $ci = apc_cache_info('user');
-        $keys = array();
+        $keys = [];
 
         foreach ($ci['cache_list'] as $entry) {
-          $keys[] = $entry['info'];
+            $keys[] = $entry['info'];
         }
+
         return $keys;
     }
 }

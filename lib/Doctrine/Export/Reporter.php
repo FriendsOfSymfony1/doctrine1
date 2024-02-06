@@ -20,23 +20,19 @@
  */
 
 /**
- * Doctrine_Export_Reporter
+ * Doctrine_Export_Reporter.
  *
- * @package     Doctrine
- * @subpackage  Export
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Export_Reporter implements IteratorAggregate
 {
-    protected $messages = array();
+    protected $messages = [];
 
     public function add($code, $message)
     {
-        $this->messages[] = array($code, $message);
+        $this->messages[] = [$code, $message];
     }
 
     public function pop()
@@ -44,7 +40,7 @@ class Doctrine_Export_Reporter implements IteratorAggregate
         return array_pop($this->messages);
     }
 
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->messages);

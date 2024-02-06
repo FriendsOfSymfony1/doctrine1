@@ -20,23 +20,19 @@
  */
 
 /**
- * Doctrine_Task_LoadData
+ * Doctrine_Task_LoadData.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_LoadData extends Doctrine_Task
 {
-    public $description          =   'Load data from a yaml data fixture file.',
-           $requiredArguments    =   array('data_fixtures_path' =>  'Specify the complete path to load the yaml data fixtures files from.',
-                                           'models_path'        =>  'Specify path to your Doctrine_Record definitions.'),
-           $optionalArguments    =   array('append'             =>  'Whether or not to append the data',
-                                           'charset'            =>  'Specify the charset to use for yaml laod');
+    public $description = 'Load data from a yaml data fixture file.';
+    public $requiredArguments = ['data_fixtures_path' => 'Specify the complete path to load the yaml data fixtures files from.',
+        'models_path' => 'Specify path to your Doctrine_Record definitions.'];
+    public $optionalArguments = ['append' => 'Whether or not to append the data',
+        'charset' => 'Specify the charset to use for yaml laod'];
 
     public function execute()
     {

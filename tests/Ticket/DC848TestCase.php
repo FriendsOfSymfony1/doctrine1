@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_DC848_TestCase
+ * Doctrine_Ticket_DC848_TestCase.
  *
- * @package     Doctrine
  * @author      Steffen Zeidler
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.2.4
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC848_TestCase extends Doctrine_UnitTestCase
 {
@@ -40,7 +42,6 @@ class Doctrine_Ticket_DC848_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($timestampValidator->validate($timestamp));
     }
 
-
     public function testMysqlTimestamp()
     {
         $timestamp = '2010-03-02 22:08:56';
@@ -48,5 +49,4 @@ class Doctrine_Ticket_DC848_TestCase extends Doctrine_UnitTestCase
 
         $this->assertTrue($timestampValidator->validate($timestamp));
     }
-
 }

@@ -20,19 +20,15 @@
  */
 
 /**
- * Doctrine_Query_Select
+ * Doctrine_Query_Select.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Select extends Doctrine_Query_Part
 {
-    public function parse($dql) 
+    public function parse($dql)
     {
         $this->query->parseSelect($dql);
     }

@@ -20,21 +20,23 @@
  */
 
 /**
- * Doctrine_Ticket_DC437_TestCase
+ * Doctrine_Ticket_DC437_TestCase.
  *
- * @package     Doctrine
  * @author      Eugene Janusov <esycat@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC437_TestCase extends Doctrine_UnitTestCase
 {
     private function prepareConnections()
     {
-    	// Establish two new individual connections
+        // Establish two new individual connections
         $dsn = 'sqlite::memory:';
         $dbh = new PDO($dsn);
         $this->manager->openConnection($dbh, 'conn1', false);
@@ -49,7 +51,7 @@ class Doctrine_Ticket_DC437_TestCase extends Doctrine_UnitTestCase
         // Don't see any better place to perform connection preparation
         $this->prepareConnections();
 
-        $this->tables = array();
+        $this->tables = [];
         $this->tables[] = 'Doctrine_Ticket_DC437_Record';
 
         /* Export classes for each of the existing connections.
@@ -57,18 +59,18 @@ class Doctrine_Ticket_DC437_TestCase extends Doctrine_UnitTestCase
          * To trick Doctrine_Export::exportClasses() implementation to use
          * a proper connection, we need to manually re-bind all the components.
          */
-        foreach (array('conn1', 'conn2') as $dbConnName) {
+        foreach (['conn1', 'conn2'] as $dbConnName) {
             $dbConn = $this->manager->getConnection($dbConnName);
-        	foreach ($this->tables as $componentName) {
-        	    $this->manager->bindComponent($componentName, $dbConn->getName());
-        	}
-        	$dbConn->export->exportClasses($this->tables);
+            foreach ($this->tables as $componentName) {
+                $this->manager->bindComponent($componentName, $dbConn->getName());
+            }
+            $dbConn->export->exportClasses($this->tables);
         }
     }
 
     public function prepareData()
     {
-    	$conn1 = $this->manager->getConnection('conn1');
+        $conn1 = $this->manager->getConnection('conn1');
         $conn2 = $this->manager->getConnection('conn2');
 
         // Create 1 record using conn1, and 2 records using conn2
@@ -92,7 +94,7 @@ class Doctrine_Ticket_DC437_TestCase extends Doctrine_UnitTestCase
          * connection.
          */
 
-    	$conn1 = $this->manager->getConnection('conn1');
+        $conn1 = $this->manager->getConnection('conn1');
         $conn2 = $this->manager->getConnection('conn2');
 
         $dql = 'FROM Doctrine_Ticket_DC437_Record';
@@ -104,18 +106,18 @@ class Doctrine_Ticket_DC437_TestCase extends Doctrine_UnitTestCase
     }
 }
 
-class Doctrine_Ticket_DC437_Record extends Doctrine_Record {
-
+class Doctrine_Ticket_DC437_Record extends Doctrine_Record
+{
     public function setTableDefinition()
     {
         $this->setTableName('dc437records');
 
-        $this->hasColumn('id', 'integer', 5, array(
-            'unsigned'      => true,
-            'notnull'       => true,
-            'primary'       => true,
-            'autoincrement' => true
-        ));
+        $this->hasColumn('id', 'integer', 5, [
+            'unsigned' => true,
+            'notnull' => true,
+            'primary' => true,
+            'autoincrement' => true,
+        ]);
 
         $this->hasColumn('test', 'string');
     }

@@ -20,21 +20,17 @@
  */
 
 /**
- * Builds result sets in to the object graph using php arrays
+ * Builds result sets in to the object graph using php arrays.
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_Graph
 {
     public function getElementCollection($component)
     {
-        return array();
+        return [];
     }
 
     public function getElement(array $data, $component)
@@ -44,48 +40,51 @@ class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_Graph
 
     public function registerCollection($coll)
     {
-
     }
 
     public function initRelated(&$record, $name, $keyColumn = null)
     {
-        if ( ! isset($record[$name])) {
-            $record[$name] = array();
+        if (!isset($record[$name])) {
+            $record[$name] = [];
         }
+
         return true;
     }
 
-    public function getNullPointer() 
+    public function getNullPointer()
     {
-        return null;    
+        return null;
     }
 
     public function getLastKey(&$coll)
     {
         end($coll);
+
         return key($coll);
     }
 
     public function setLastElement(&$prev, &$coll, $index, $dqlAlias, $oneToOne)
     {
-        if ($coll === null) {
+        if (null === $coll) {
             unset($prev[$dqlAlias]); // Ticket #1228
+
             return;
         }
 
-        if ($index !== false) {
+        if (false !== $index) {
             // Link element at $index to previous element for the component
             // identified by the DQL alias $alias
-            $prev[$dqlAlias] =& $coll[$index];
+            $prev[$dqlAlias] = &$coll[$index];
+
             return;
         }
-        
+
         if ($coll) {
             if ($oneToOne) {
-                $prev[$dqlAlias] =& $coll;
+                $prev[$dqlAlias] = &$coll;
             } else {
                 end($coll);
-                $prev[$dqlAlias] =& $coll[key($coll)];
+                $prev[$dqlAlias] = &$coll[key($coll)];
             }
         }
     }

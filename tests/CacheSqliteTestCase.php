@@ -1,17 +1,23 @@
 <?php
-require_once("UnitTestCase.php");
 
+require_once 'UnitTestCase.php';
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class Doctrine_Cache_SqliteTestCase extends Doctrine_UnitTestCase
 {
     public function setUp()
     {
         parent::setUp();
 
-        $this->manager->setAttribute(Doctrine_Core::ATTR_CACHE,Doctrine_Core::CACHE_NONE);
+        $this->manager->setAttribute(Doctrine_Core::ATTR_CACHE, Doctrine_Core::CACHE_NONE);
         $dir = $this->connection->getAttribute(Doctrine_Core::ATTR_CACHE_DIR);
 
-        if (file_exists($dir.DIRECTORY_SEPARATOR."stats.cache")) {
-            unlink($dir.DIRECTORY_SEPARATOR."stats.cache");
+        if (file_exists($dir.DIRECTORY_SEPARATOR.'stats.cache')) {
+            unlink($dir.DIRECTORY_SEPARATOR.'stats.cache');
         }
 
         $this->cache = new Doctrine_Cache_Sqlite($this->objTable);
@@ -22,42 +28,41 @@ class Doctrine_Cache_SqliteTestCase extends Doctrine_UnitTestCase
     {
         // does not store proxy objects
         $this->assertFalse($this->cache->store($this->objTable->getProxy(4)));
-        
+
         $this->assertTrue($this->cache->store($this->objTable->find(4)));
 
         $record = $this->cache->fetch(4);
         $this->assertTrue($record instanceof Doctrine_Record);
 
-        foreach($this->old as $name => $value) {
+        foreach ($this->old as $name => $value) {
             $this->assertEqual($record->get($name), $value);
         }
         $this->assertEqual($record->obtainIdentifier(), $this->old->obtainIdentifier());
-
     }
 
     public function testFetchMultiple()
     {
-        $this->assertFalse($this->cache->fetchMultiple(array(5,6)));
+        $this->assertFalse($this->cache->fetchMultiple([5, 6]));
         $this->cache->store($this->objTable->find(5));
 
-        $array = $this->cache->fetchMultiple(array(5,6));
-        $this->assertEqual(gettype($array), "array");
+        $array = $this->cache->fetchMultiple([5, 6]);
+        $this->assertEqual(gettype($array), 'array');
         $this->assertEqual(count($array), 1);
         $this->assertTrue($array[0] instanceof Doctrine_Record);
     }
 
     public function testDeleteMultiple()
     {
-        $this->assertEqual($this->cache->deleteMultiple(array()),0);
+        $this->assertEqual($this->cache->deleteMultiple([]), 0);
         $this->cache->store($this->objTable->find(5));
         $this->cache->store($this->objTable->find(6));
 
-        $count = $this->cache->deleteMultiple(array(5,6));
+        $count = $this->cache->deleteMultiple([5, 6]);
 
-        $this->assertEqual($count,2);
+        $this->assertEqual($count, 2);
         $this->cache->store($this->objTable->find(6));
-        $count = $this->cache->deleteMultiple(array(5,6));
-        $this->assertEqual($count,1);
+        $count = $this->cache->deleteMultiple([5, 6]);
+        $this->assertEqual($count, 1);
     }
 
     public function testDelete()
@@ -65,7 +70,7 @@ class Doctrine_Cache_SqliteTestCase extends Doctrine_UnitTestCase
         $this->cache->store($this->objTable->find(5));
         $this->assertTrue($this->cache->fetch(5) instanceof Doctrine_Record);
 
-        $this->assertEqual($this->cache->delete(5),true);
+        $this->assertEqual($this->cache->delete(5), true);
         $this->assertFalse($this->cache->fetch(5));
 
         $this->assertFalse($this->cache->delete(0));
@@ -89,17 +94,17 @@ class Doctrine_Cache_SqliteTestCase extends Doctrine_UnitTestCase
         $this->cache->store($this->objTable->find(5));
         $this->cache->store($this->objTable->find(6));
         $this->cache->store($this->objTable->find(7));
-        $this->cache->fetchMultiple(array(5,6,7));
+        $this->cache->fetchMultiple([5, 6, 7]);
 
         $this->assertTrue($this->cache->saveStats());
-        $this->assertTrue(gettype($this->cache->getStats()), "array");
-        $this->assertEqual($this->cache->getStats(),array(5 => 1, 6 => 1, 7 => 1));
+        $this->assertTrue(gettype($this->cache->getStats()), 'array');
+        $this->assertEqual($this->cache->getStats(), [5 => 1, 6 => 1, 7 => 1]);
 
-        $this->cache->fetchMultiple(array(5,6,7));
+        $this->cache->fetchMultiple([5, 6, 7]);
         $this->cache->fetch(5);
         $this->cache->fetch(7);
         $this->assertTrue($this->cache->saveStats());
-        $this->assertEqual($this->cache->getStats(),array(5 => 3, 6 => 2, 7 => 3));
+        $this->assertEqual($this->cache->getStats(), [5 => 3, 6 => 2, 7 => 3]);
     }
 
     public function testClean()
@@ -113,12 +118,12 @@ class Doctrine_Cache_SqliteTestCase extends Doctrine_UnitTestCase
         $this->assertEqual($this->cache->count(), 6);
         $this->cache->fetch(5);
         $this->cache->fetch(7);
-        $this->cache->fetchMultiple(array(5,6,7));
-        $this->cache->fetchMultiple(array(5,6,7));
-        $this->cache->fetchMultiple(array(5,6,7));
-        $this->cache->fetchMultiple(array(4,5,6,7,8,9));
+        $this->cache->fetchMultiple([5, 6, 7]);
+        $this->cache->fetchMultiple([5, 6, 7]);
+        $this->cache->fetchMultiple([5, 6, 7]);
+        $this->cache->fetchMultiple([4, 5, 6, 7, 8, 9]);
         $this->assertTrue($this->cache->saveStats());
-        
+
         $this->manager->setAttribute(Doctrine_Core::ATTR_CACHE_SIZE, 3);
         $this->assertEqual($this->cache->clean(), 3);
     }

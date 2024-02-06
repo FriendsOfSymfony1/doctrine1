@@ -20,28 +20,30 @@
  */
 
 /**
- * Doctrine_Ticket_DC82_TestCase
+ * Doctrine_Ticket_DC82_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC82_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC82_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $this->dbh = new Doctrine_Adapter_Mock('pgsql');
         $this->conn = $this->manager->openConnection($this->dbh);
-        
-        $sql = $this->conn->export->exportClassesSql(array('Ticket_DC82_Article'));
-        $this->assertEqual($sql, array(
-            "CREATE UNIQUE INDEX model_unique_title ON ticket__d_c82__article (title) WHERE deleted = false",
-            "CREATE TABLE ticket__d_c82__article (id BIGSERIAL, title VARCHAR(128) NOT NULL UNIQUE, deleted BOOLEAN DEFAULT 'false' NOT NULL, PRIMARY KEY(id))"
-        ));
+
+        $sql = $this->conn->export->exportClassesSql(['Ticket_DC82_Article']);
+        $this->assertEqual($sql, [
+            'CREATE UNIQUE INDEX model_unique_title ON ticket__d_c82__article (title) WHERE deleted = false',
+            "CREATE TABLE ticket__d_c82__article (id BIGSERIAL, title VARCHAR(128) NOT NULL UNIQUE, deleted BOOLEAN DEFAULT 'false' NOT NULL, PRIMARY KEY(id))",
+        ]);
     }
 }
 
@@ -49,8 +51,8 @@ class Ticket_DC82_Article extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('title', 'string', 128, array('notnull', 'unique' => array('where' => 'deleted = false')));
-        $this->hasColumn('deleted', 'boolean', 1, array('notnull', 'default' => false));
-        $this->index('model_unique_title', array('fields' => array('title'), 'where' => 'deleted = false', 'type' => 'unique' ));
+        $this->hasColumn('title', 'string', 128, ['notnull', 'unique' => ['where' => 'deleted = false']]);
+        $this->hasColumn('deleted', 'boolean', 1, ['notnull', 'default' => false]);
+        $this->index('model_unique_title', ['fields' => ['title'], 'where' => 'deleted = false', 'type' => 'unique']);
     }
 }

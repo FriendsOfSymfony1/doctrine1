@@ -20,26 +20,22 @@
  */
 
 /**
- * Doctrine_Task_GenerateFromModels
+ * Doctrine_Task_GenerateFromModels.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_GenerateYamlModels extends Doctrine_Task
 {
-    public $description          =   'Generates a Yaml schema file from existing Doctrine_Record definitions',
-           $requiredArguments    =   array('yaml_schema_path'   =>  'Specify the complete directory path to your yaml schema files.'),
-           $optionalArguments    =   array('models_path'        =>  'Specify complete path to your Doctrine_Record definitions.');
+    public $description = 'Generates a Yaml schema file from existing Doctrine_Record definitions';
+    public $requiredArguments = ['yaml_schema_path' => 'Specify the complete directory path to your yaml schema files.'];
+    public $optionalArguments = ['models_path' => 'Specify complete path to your Doctrine_Record definitions.'];
 
     public function execute()
     {
         Doctrine_Core::generateYamlFromModels($this->getArgument('yaml_schema_path'), $this->getArgument('models_path'));
-        
+
         $this->notify('Generated YAML schema successfully from models');
     }
 }

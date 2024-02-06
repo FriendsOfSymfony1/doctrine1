@@ -20,22 +20,19 @@
  */
 
 /**
- * Doctrine_Cache_Abstract_TestCase
+ * Doctrine_Cache_Abstract_TestCase.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Cache
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array('User');
+        $this->tables = ['User'];
         parent::prepareTables();
     }
 
@@ -48,7 +45,7 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
 
     public function testAsResultCache()
     {
-        if ( !$this->_isEnabled()) {
+        if (!$this->_isEnabled()) {
             return;
         }
         $this->_clearCache();
@@ -58,14 +55,15 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
 
         $queryCountBefore = $this->conn->count();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $u = Doctrine_Query::create()
                 ->from('User u')
-                ->addWhere('u.name = ?', array('Hans'))
+                ->addWhere('u.name = ?', ['Hans'])
                 ->useResultCache($cache, 3600, 'hans_query')
-                ->execute();
+                ->execute()
+            ;
             $this->assertEqual(1, count($u));
-            $this->assertEqual("Hans", $u[0]->name);
+            $this->assertEqual('Hans', $u[0]->name);
         }
 
         // Just 1 query should be run
@@ -75,7 +73,7 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
 
     public function testCacheCore()
     {
-        if ( !$this->_isEnabled()) {
+        if (!$this->_isEnabled()) {
             return;
         }
         $this->_clearCache();
@@ -93,7 +91,7 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
 
     public function testDeleteByPrefix()
     {
-        if ( !$this->_isEnabled()) {
+        if (!$this->_isEnabled()) {
             return;
         }
         $this->_clearCache();
@@ -112,7 +110,7 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
 
     public function testDeleteBySuffix()
     {
-        if ( !$this->_isEnabled()) {
+        if (!$this->_isEnabled()) {
             return;
         }
         $this->_clearCache();
@@ -128,10 +126,10 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
         $this->assertFalse($cache->contains('bar_suffix'));
         $this->assertTrue($cache->contains('foo'));
     }
-    
+
     public function testDeleteByRegex()
     {
-        if ( !$this->_isEnabled()) {
+        if (!$this->_isEnabled()) {
             return;
         }
         $this->_clearCache();
@@ -147,8 +145,10 @@ abstract class Doctrine_Cache_Abstract_TestCase extends Doctrine_UnitTestCase
         $this->assertFalse($cache->contains('bar_match_me'));
         $this->assertTrue($cache->contains('foo'));
     }
-    
-    abstract protected function _clearCache();    
+
+    abstract protected function _clearCache();
+
     abstract protected function _isEnabled();
+
     abstract protected function _getCacheDriver();
 }

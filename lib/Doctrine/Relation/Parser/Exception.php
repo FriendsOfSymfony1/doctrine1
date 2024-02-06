@@ -17,18 +17,15 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
- */        
+ */
 
 /**
- * Doctrine_Relation_Parser_Exception
+ * Doctrine_Relation_Parser_Exception.
  *
- * @package     Doctrine
- * @subpackage  Relation
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Relation_Parser_Exception extends Doctrine_Relation_Exception
-{ }
+{
+}

@@ -20,14 +20,10 @@
  */
 
 /**
- * @package     Doctrine
- * @subpackage  DataDict
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
 {
@@ -35,9 +31,9 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
      * Obtain DBMS specific SQL code portion needed to declare an text type
      * field to be used in statements like CREATE TABLE.
      *
-     * @param array $field  associative array with the name of the properties
-     *      of the field being declared as array indexes. Currently, the types
-     *      of supported field properties are as follows:
+     * @param array $field associative array with the name of the properties
+     *                     of the field being declared as array indexes. Currently, the types
+     *                     of supported field properties are as follows:
      *
      *      length
      *          Integer value that determines the maximum length of the text
@@ -50,18 +46,21 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
      *      notnull
      *          Boolean flag that indicates whether this field is constrained
      *          to not be set to null.
+     *
      * @author Lukas Smith (PEAR MDB2 library)
-     * @return string  DBMS specific SQL code portion that should be used to
-     *      declare the specified field.
+     *
+     * @return string DBMS specific SQL code portion that should be used to
+     *                declare the specified field
      */
     public function getNativeDeclaration(array $field)
     {
-        if ( ! isset($field['type'])) {
+        if (!isset($field['type'])) {
             throw new Doctrine_DataDict_Exception('Missing column type.');
         }
         switch ($field['type']) {
             case 'enum':
-                $field['length'] = isset($field['length']) && $field['length'] ? $field['length']:255;
+                $field['length'] = isset($field['length']) && $field['length'] ? $field['length'] : 255;
+                // no break
             case 'text':
             case 'object':
             case 'array':
@@ -71,33 +70,39 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
             case 'varchar':
                 $length = (isset($field['length']) && $field['length']) ? $field['length'] : null;
 
-                $fixed  = ((isset($field['fixed']) && $field['fixed']) || $field['type'] == 'char') ? true : false;
+                $fixed = ((isset($field['fixed']) && $field['fixed']) || 'char' == $field['type']) ? true : false;
 
                 return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->varchar_max_length.')')
                     : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
             case 'clob':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 255) {
                         return 'TINYTEXT';
-                    } elseif ($length <= 65535) {
+                    }
+                    if ($length <= 65535) {
                         return 'TEXT';
-                    } elseif ($length <= 16777215) {
+                    }
+                    if ($length <= 16777215) {
                         return 'MEDIUMTEXT';
                     }
                 }
+
                 return 'LONGTEXT';
             case 'blob':
-                if ( ! empty($field['length'])) {
+                if (!empty($field['length'])) {
                     $length = $field['length'];
                     if ($length <= 255) {
                         return 'TINYBLOB';
-                    } elseif ($length <= 65535) {
+                    }
+                    if ($length <= 65535) {
                         return 'BLOB';
-                    } elseif ($length <= 16777215) {
+                    }
+                    if ($length <= 16777215) {
                         return 'MEDIUMBLOB';
                     }
                 }
+
                 return 'LONGBLOB';
             case 'integer':
             case 'boolean':
@@ -111,20 +116,22 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                 return 'DATETIME';
             case 'float':
             case 'double':
-                return 'DOUBLE';//($this->conn->options['fixed_float'] ? '('.
-                    //($this->conn->options['fixed_float']+2).','.$this->conn->options['fixed_float'].')' : '');
+                return 'DOUBLE'; // ($this->conn->options['fixed_float'] ? '('.
+                // ($this->conn->options['fixed_float']+2).','.$this->conn->options['fixed_float'].')' : '');
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
+
                 return 'DECIMAL('.$length.','.$scale.')';
         }
-        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
+
+        return $field['type'].(isset($field['length']) ? '('.$field['length'].')' : null);
     }
 
     /**
-     * Maps a native array description of a field to Doctrine datatype and length
+     * Maps a native array description of a field to Doctrine datatype and length.
      *
-     * @param array  $field native field description
+     * @param  array $field native field description
      * @return array containing the various possible types, length, sign, fixed
      */
     public function getPortableDeclaration(array $field)
@@ -138,16 +145,16 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
 
         $dbType = strtolower($field['type']);
 
-        if ( ! $dbType) {
+        if (!$dbType) {
             throw new Doctrine_DataDict_Exception('Missing "type" from field definition');
         }
 
         $length = (isset($field['length'])) ? $field['length'] : null;
         $unsigned = (isset($field['unsigned'])) ? $field['unsigned'] : null;
         $fixed = null;
-        $type = array();
+        $type = [];
 
-        if ( ! isset($field['name'])) {
+        if (!isset($field['name'])) {
             $field['name'] = '';
         }
 
@@ -199,9 +206,10 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
             case 'image':
             case 'nchar':
                 $fixed = false;
+                // no break
             case 'char':
                 $type[] = 'text';
-                if ($length == '1') {
+                if ('1' == $length) {
                     $type[] = 'boolean';
                     if (preg_match('/^(is|has)/', $field['name'])) {
                         $type = array_reverse($type);
@@ -209,7 +217,7 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                 } elseif (strstr($dbType, 'text')) {
                     $type[] = 'clob';
                 }
-                if ($fixed !== false) {
+                if (false !== $fixed) {
                     $fixed = true;
                 }
                 break;
@@ -251,24 +259,24 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                 break;
             default:
                 $type[] = $field['type'];
-                $length = isset($field['length']) ? $field['length']:null;
+                $length = $field['length'] ?? null;
         }
 
-        return array('type'     => $type,
-                     'length'   => $length,
-                     'unsigned' => $unsigned,
-                     'fixed'    => $fixed);
+        return ['type' => $type,
+            'length' => $length,
+            'unsigned' => $unsigned,
+            'fixed' => $fixed];
     }
 
     /**
      * Obtain DBMS specific SQL code portion needed to declare an integer type
      * field to be used in statements like CREATE TABLE.
      *
-     * @param string  $name   name the field to be declared.
-     * @param array  $field   associative array with the name of the properties
-     *                        of the field being declared as array indexes.
-     *                        Currently, the types of supported field
-     *                        properties are as follows:
+     * @param string $name  name the field to be declared
+     * @param array  $field associative array with the name of the properties
+     *                      of the field being declared as array indexes.
+     *                      Currently, the types of supported field
+     *                      properties are as follows:
      *
      *                       unsigned
      *                        Boolean flag that indicates whether the field
@@ -282,40 +290,39 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
      *                       notnull
      *                        Boolean flag that indicates whether this field is
      *                        constrained to not be set to null.
-     * @return string  DBMS specific SQL code portion that should be used to
-     *                 declare the specified field.
-     * @access protected
+     * @return string DBMS specific SQL code portion that should be used to
+     *                declare the specified field
      */
     public function getIntegerDeclaration($name, array $field)
     {
         $default = $autoinc = '';
-        $type    = $this->getNativeDeclaration($field);
+        $type = $this->getNativeDeclaration($field);
 
         $autoincrement = isset($field['autoincrement']) && $field['autoincrement'];
 
         if ($autoincrement) {
             $autoinc = ' PRIMARY KEY AUTOINCREMENT';
-            $type    = 'INTEGER';
+            $type = 'INTEGER';
         } elseif (array_key_exists('default', $field)) {
-            if ($field['default'] === '') {
+            if ('' === $field['default']) {
                 $field['default'] = empty($field['notnull']) ? null : 0;
             }
 
-            $default = ' DEFAULT ' . (is_null($field['default'])
+            $default = ' DEFAULT '.(is_null($field['default'])
                 ? 'NULL'
                 : $this->conn->quote($field['default'], $field['type']));
-        }/**
+        }        /**
         elseif (empty($field['notnull'])) {
             $default = ' DEFAULT NULL';
         }
-        */
-
-        $notnull  = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+         */
+        $notnull = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
 
         // sqlite does not support unsigned attribute for autoinremented fields
         $unsigned = (isset($field['unsigned']) && $field['unsigned'] && !$autoincrement) ? ' UNSIGNED' : '';
 
         $name = $this->conn->quoteIdentifier($name, true);
-        return $name . ' ' . $type . $unsigned . $default . $notnull . $autoinc;
+
+        return $name.' '.$type.$unsigned.$default.$notnull.$autoinc;
     }
 }

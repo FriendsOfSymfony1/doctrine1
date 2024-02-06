@@ -24,29 +24,24 @@
  * sets a delete flag instead of actually deleting the record and all queries automatically
  * include a check for the deleted flag to exclude deleted records.
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
 {
     /**
-     * Array of SoftDelete options
+     * Array of SoftDelete options.
      *
      * @var string
      */
-    protected $_options = array();
+    protected $_options = [];
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param string $options 
-     * @return void
+     * @param string $options
      */
     public function __construct(array $options)
     {
@@ -54,10 +49,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     }
 
     /**
-     * Set the hard delete flag so that it is really deleted
+     * Set the hard delete flag so that it is really deleted.
      *
-     * @param boolean $bool
-     * @return void
+     * @param bool $bool
      */
     public function hardDelete($bool)
     {
@@ -65,89 +59,78 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
     }
 
     /**
-     * Skip the normal delete options so we can override it with our own
-     *
-     * @param Doctrine_Event $event
-     * @return void
+     * Skip the normal delete options so we can override it with our own.
      */
     public function preDelete(Doctrine_Event $event)
     {
         $name = $this->_options['name'];
         $invoker = $event->getInvoker();
-        
-        if ($this->_options['type'] == 'timestamp') {
-            $invoker->$name = date('Y-m-d H:i:s', time());
-        } else if ($this->_options['type'] == 'boolean') {
-            $invoker->$name = true;
+
+        if ('timestamp' == $this->_options['type']) {
+            $invoker->{$name} = date('Y-m-d H:i:s', time());
+        } elseif ('boolean' == $this->_options['type']) {
+            $invoker->{$name} = true;
         }
 
-        if ( ! $this->_options['hardDelete']) {
+        if (!$this->_options['hardDelete']) {
             $event->skipOperation();
         }
     }
 
     /**
-     * Implement postDelete() hook and set the deleted flag to true
-     *
-     * @param Doctrine_Event $event
-     * @return void
+     * Implement postDelete() hook and set the deleted flag to true.
      */
     public function postDelete(Doctrine_Event $event)
     {
-        if ( ! $this->_options['hardDelete']) {
+        if (!$this->_options['hardDelete']) {
             $event->getInvoker()->save();
         }
     }
 
     /**
      * Implement preDqlDelete() hook and modify a dql delete query so it updates the deleted flag
-     * instead of deleting the record
-     *
-     * @param Doctrine_Event $event
-     * @return void
+     * instead of deleting the record.
      */
     public function preDqlDelete(Doctrine_Event $event)
     {
         $params = $event->getParams();
-        $field = $params['alias'] . '.' . $this->_options['name'];
+        $field = $params['alias'].'.'.$this->_options['name'];
         $query = $event->getQuery();
-        if ( ! $query->contains($field)) {
-            $query->from('')->update($params['component']['table']->getOption('name') . ' ' . $params['alias']);
-            
-            if ($this->_options['type'] == 'timestamp') {
+        if (!$query->contains($field)) {
+            $query->from('')->update($params['component']['table']->getOption('name').' '.$params['alias']);
+
+            if ('timestamp' == $this->_options['type']) {
                 $query->set($field, '?', date('Y-m-d H:i:s', time()));
-                $query->addWhere($field . ' IS NULL');
-            } else if ($this->_options['type'] == 'boolean') {
+                $query->addWhere($field.' IS NULL');
+            } elseif ('boolean' == $this->_options['type']) {
                 $query->set($field, $query->getConnection()->convertBooleans(true));
                 $query->addWhere(
-                    $field . ' = ' . $query->getConnection()->convertBooleans(false)
+                    $field.' = '.$query->getConnection()->convertBooleans(false)
                 );
             }
         }
     }
 
     /**
-     * Implement preDqlSelect() hook and add the deleted flag to all queries for which this model 
+     * Implement preDqlSelect() hook and add the deleted flag to all queries for which this model
      * is being used in.
-     *
-     * @param Doctrine_Event $event 
-     * @return void
      */
     public function preDqlSelect(Doctrine_Event $event)
     {
         $params = $event->getParams();
-        $field = $params['alias'] . '.' . $this->_options['name'];
+        $field = $params['alias'].'.'.$this->_options['name'];
         $query = $event->getQuery();
 
         // We only need to add the restriction if:
         // 1 - We are in the root query
         // 2 - We are in the subquery and it defines the component with that alias
-        if (( ! $query->isSubquery() || ($query->isSubquery() && $query->contains(' ' . $params['alias'] . ' '))) && ! $query->contains($field)) {
-            if ($this->_options['type'] == 'timestamp') {
-                $query->addPendingJoinCondition($params['alias'], $field . ' IS NULL');
-            } else if ($this->_options['type'] == 'boolean') {
+        if ((!$query->isSubquery() || ($query->isSubquery() && $query->contains(' '.$params['alias'].' '))) && !$query->contains($field)) {
+            if ('timestamp' == $this->_options['type']) {
+                $query->addPendingJoinCondition($params['alias'], $field.' IS NULL');
+            } elseif ('boolean' == $this->_options['type']) {
                 $query->addPendingJoinCondition(
-                    $params['alias'], $field . ' = ' . $query->getConnection()->convertBooleans(false)
+                    $params['alias'],
+                    $field.' = '.$query->getConnection()->convertBooleans(false)
                 );
             }
         }

@@ -1,29 +1,31 @@
 <?php
 
 /**
- * Doctrine_Record_Inheritance_TestCase
+ * Doctrine_Record_Inheritance_TestCase.
  *
  * This test case demonstrates the use of inheritance involving subclasses of
  * Doctrine_Record.  This type of inheritance is heavily used in sfDoctrine,
  * and as new inheritance-related features get added to Doctrine it seems to
  * be an area where subtle breakage can sneak in.
  *
- * @package     Doctrine
  * @author      David Brewer <dbrewer@secondstory.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-
 class Doctrine_Record_Inheritance_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array_merge($this->tables, array('SymfonyRecord'));
+        $this->tables = array_merge($this->tables, ['SymfonyRecord']);
         parent::prepareTables();
     }
+
     public function prepareData()
     {
         parent::prepareData();
@@ -40,7 +42,9 @@ class Doctrine_Record_Inheritance_TestCase extends Doctrine_UnitTestCase
     {
         // load our record
         $record = Doctrine_Query::create()->query(
-            'SELECT * FROM SymfonyRecord r', array())->getFirst();
+            'SELECT * FROM SymfonyRecord r',
+            []
+        )->getFirst();
 
         // did we get a record object?
         $this->assertTrue($record instanceof SymfonyRecord);
@@ -53,7 +57,5 @@ class Doctrine_Record_Inheritance_TestCase extends Doctrine_UnitTestCase
 
         // does it have the expected data?
         $this->assertEqual($record['name'], 'Test me');
-        
-
     }
 }

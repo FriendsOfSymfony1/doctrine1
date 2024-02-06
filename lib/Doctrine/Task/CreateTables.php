@@ -20,26 +20,22 @@
  */
 
 /**
- * Doctrine_Task_CreateTables
+ * Doctrine_Task_CreateTables.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_CreateTables extends Doctrine_Task
 {
-    public $description          =   'Create tables for all existing database connections. If table exists nothing happens.',
-           $requiredArguments    =   array('models_path' => 'Specify path to your models directory.'),
-           $optionalArguments    =   array();
-    
+    public $description = 'Create tables for all existing database connections. If table exists nothing happens.';
+    public $requiredArguments = ['models_path' => 'Specify path to your models directory.'];
+    public $optionalArguments = [];
+
     public function execute()
     {
         Doctrine_Core::createTablesFromModels($this->getArgument('models_path'));
-        
+
         $this->notify('Created tables successfully');
     }
 }

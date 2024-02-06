@@ -20,29 +20,25 @@
  */
 
 /**
- * Doctrine_Task_DumpData
+ * Doctrine_Task_DumpData.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_DumpData extends Doctrine_Task
 {
-    public $description          =   'Dump data to a yaml data fixture file.',
-           $requiredArguments    =   array('data_fixtures_path' =>  'Specify path to write the yaml data fixtures file to.',
-                                           'models_path'        =>  'Specify path to your Doctrine_Record definitions.'),
-           $optionalArguments    =   array();
+    public $description = 'Dump data to a yaml data fixture file.';
+    public $requiredArguments = ['data_fixtures_path' => 'Specify path to write the yaml data fixtures file to.',
+        'models_path' => 'Specify path to your Doctrine_Record definitions.'];
+    public $optionalArguments = [];
 
     public function execute()
     {
-        $models = Doctrine_Core::loadModels($this->getArgument('models_path')); 
+        $models = Doctrine_Core::loadModels($this->getArgument('models_path'));
 
-        if (empty($models)) { 
-            throw new Doctrine_Task_Exception('No models were loaded'); 
+        if (empty($models)) {
+            throw new Doctrine_Task_Exception('No models were loaded');
         }
 
         $path = $this->getArgument('data_fixtures_path');
@@ -51,7 +47,7 @@ class Doctrine_Task_DumpData extends Doctrine_Task
             $path = $path[0];
         }
 
-        if ( ! empty($path)) {
+        if (!empty($path)) {
             Doctrine_Core::dumpData($path);
 
             $this->notify(sprintf('Dumped data successfully to: %s', $path));

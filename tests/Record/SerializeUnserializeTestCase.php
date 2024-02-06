@@ -20,19 +20,20 @@
  */
 
 /**
- * Doctrine_Record_SerializeUnserialize_TestCase
+ * Doctrine_Record_SerializeUnserialize_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Record_SerializeUnserialize_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Record_SerializeUnserialize_TestCase extends Doctrine_UnitTestCase
 {
-    
     public function prepareTables()
     {
         $this->tables[] = 'SerializeTest';
@@ -40,9 +41,10 @@ class Doctrine_Record_SerializeUnserialize_TestCase extends Doctrine_UnitTestCas
 
         parent::prepareTables();
     }
-    
+
     public function prepareData()
-    { }
+    {
+    }
 
     public function testSerializeUnserialize()
     {
@@ -51,7 +53,7 @@ class Doctrine_Record_SerializeUnserialize_TestCase extends Doctrine_UnitTestCas
         $object->integertest = 13;
         $object->floattest = 0.13;
         $object->stringtest = 'string';
-        $object->arraytest = array(1, 2, 3);
+        $object->arraytest = [1, 2, 3];
         $object->objecttest = new TestObject(13);
         $object->enumtest = 'java';
         $object->blobtest = 'blobtest';
@@ -60,13 +62,13 @@ class Doctrine_Record_SerializeUnserialize_TestCase extends Doctrine_UnitTestCas
         $object->timestamptest = '2007-08-07 11:55:00';
         $object->timetest = '11:55:00';
         $object->datetest = '2007-08-07';
-        
+
         $object->save();
-        
-        $object_before = clone($object);
+
+        $object_before = clone $object;
         $serialized = serialize($object);
         $object_after = unserialize($serialized);
-        
+
         $this->assertIdentical($object_before->booltest, $object_after->booltest);
         $this->assertIdentical($object_before->integertest, $object_after->integertest);
         $this->assertIdentical($object_before->floattest, $object_after->floattest);
@@ -80,38 +82,33 @@ class Doctrine_Record_SerializeUnserialize_TestCase extends Doctrine_UnitTestCas
         $this->assertIdentical($object_before->timestamptest, $object_after->timestamptest);
         $this->assertIdentical($object_before->timetest, $object_after->timetest);
         $this->assertIdentical($object_before->datetest, $object_after->datetest);
-        
     }
-    
+
     public function testSerializeUnserializeRecord()
     {
         $test = new TestRecord();
         $test->save();
-        
+
         $object = new SerializeTest();
         $object->objecttest = $test;
-         
+
         $object->save();
-        
-        $object_before = clone($object);
-       
+
+        $object_before = clone $object;
+
         $serialized = serialize($object);
         $object_after = unserialize($serialized);
-        
+
         $this->assertIdentical(get_class($object_after->objecttest), 'TestRecord');
     }
-    
 }
 
 class TestObject
 {
-    
     private $test_field;
-    
+
     public function __construct($value)
     {
         $this->test_field = $value;
     }
-        
 }
-

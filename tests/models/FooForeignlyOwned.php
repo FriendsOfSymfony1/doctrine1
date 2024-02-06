@@ -1,4 +1,5 @@
 <?php
+
 class FooForeignlyOwned extends Doctrine_Record
 {
     public function setTableDefinition()

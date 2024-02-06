@@ -20,33 +20,37 @@
  */
 
 /**
- * Doctrine_Ticket_DC267_TestCase
+ * Doctrine_Ticket_DC267_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC267_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC267_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $q = Doctrine_Query::create()
-            ->select ('u.*, COUNT(e.id) as num_emails')
+            ->select('u.*, COUNT(e.id) as num_emails')
             ->from('User u')
             ->leftJoin('u.Email e')
-            ->groupBy('u.id');
+            ->groupBy('u.id')
+        ;
 
         $res = $q->fetchArray();
         $this->assertEqual($res[0]['num_emails'], '1');
 
         $q = Doctrine_Query::create()
-            ->select ('u.*, e.*, e.address as my_address')
+            ->select('u.*, e.*, e.address as my_address')
             ->from('User u')
-            ->leftJoin('u.Email e');
+            ->leftJoin('u.Email e')
+        ;
 
         $res = $q->fetchArray();
 

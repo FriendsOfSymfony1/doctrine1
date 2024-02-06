@@ -20,50 +20,46 @@
  */
 
 /**
- * Doctrine_Expression_Sqlite
+ * Doctrine_Expression_Sqlite.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Oracle extends Doctrine_Expression_Driver
 {
     /**
-     * Returns a series of strings concatinated
+     * Returns a series of strings concatinated.
      *
      * concat() accepts an arbitrary number of parameters. Each parameter
      * must contain an expression
      *
-     * @param string $arg1, $arg2 ... $argN     strings that will be concatinated.
      * @return string
      */
     public function concat()
     {
         $args = func_get_args();
 
-        return join(' || ' , $args);
+        return implode(' || ', $args);
     }
 
     /**
-     * return string to call a function to get a substring inside an SQL statement
+     * return string to call a function to get a substring inside an SQL statement.
      *
      * Note: Not SQL92, but common functionality.
      *
-     * @param string $value         an sql string literal or column name/alias
-     * @param integer $position     where to start the substring portion
-     * @param integer $length       the substring portion length
-     * @return string               SQL substring function with given parameters
+     * @param  string $value    an sql string literal or column name/alias
+     * @param  int    $position where to start the substring portion
+     * @param  int    $length   the substring portion length
+     * @return string SQL substring function with given parameters
      */
     public function substring($value, $position, $length = null)
     {
-        if ($length !== null)
-            return "SUBSTR($value, $position, $length)";
+        if (null !== $length) {
+            return "SUBSTR({$value}, {$position}, {$length})";
+        }
 
-        return "SUBSTR($value, $position)";
+        return "SUBSTR({$value}, {$position})";
     }
 
     /**
@@ -71,7 +67,7 @@ class Doctrine_Expression_Oracle extends Doctrine_Expression_Driver
      * There are three special variables for current date and time:
      * - CURRENT_TIMESTAMP (date and time, TIMESTAMP type)
      * - CURRENT_DATE (date, DATE type)
-     * - CURRENT_TIME (time, TIME type)
+     * - CURRENT_TIME (time, TIME type).
      *
      * @return string to call a variable with the current timestamp
      */
@@ -87,9 +83,9 @@ class Doctrine_Expression_Oracle extends Doctrine_Expression_Driver
     }
 
     /**
-     * random
+     * random.
      *
-     * @return string           an oracle SQL string that generates a float between 0 and 1
+     * @return string an oracle SQL string that generates a float between 0 and 1
      */
     public function random()
     {
@@ -97,7 +93,7 @@ class Doctrine_Expression_Oracle extends Doctrine_Expression_Driver
     }
 
     /**
-     * Returns global unique identifier
+     * Returns global unique identifier.
      *
      * @return string to get global unique identifier
      */

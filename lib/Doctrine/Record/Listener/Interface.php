@@ -20,15 +20,11 @@
  */
 
 /**
- * Doctrine_Record_Listener
+ * Doctrine_Record_Listener.
  *
- * @package     Doctrine
- * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
  */
 interface Doctrine_Record_Listener_Interface
 {
@@ -61,8 +57,8 @@ interface Doctrine_Record_Listener_Interface
     public function preInsert(Doctrine_Event $event);
 
     public function postInsert(Doctrine_Event $event);
-    
+
     public function preHydrate(Doctrine_Event $event);
-    
+
     public function postHydrate(Doctrine_Event $event);
 }

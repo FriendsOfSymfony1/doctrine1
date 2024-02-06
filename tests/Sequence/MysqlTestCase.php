@@ -20,38 +20,42 @@
  */
 
 /**
- * Doctrine_Sequence_Mysql_TestCase
+ * Doctrine_Sequence_Mysql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Sequence_Mysql_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Sequence_Mysql_TestCase extends Doctrine_UnitTestCase
 {
-    public function testCurrIdExecutesSql() 
+    public function testCurrIdExecutesSql()
     {
         $this->sequence->currId('user');
 
         $this->assertEqual($this->adapter->pop(), 'SELECT MAX(id) FROM user');
     }
-    public function testNextIdExecutesSql() 
+
+    public function testNextIdExecutesSql()
     {
         $id = $this->sequence->nextId('user');
-        
+
         $this->assertEqual($id, 1);
 
         $this->assertEqual($this->adapter->pop(), 'DELETE FROM user WHERE id < 1');
         $this->assertEqual($this->adapter->pop(), 'LAST_INSERT_ID()');
         $this->assertEqual($this->adapter->pop(), 'INSERT INTO user (id) VALUES (NULL)');
     }
-    public function testLastInsertIdCallsPdoLevelEquivalent() 
+
+    public function testLastInsertIdCallsPdoLevelEquivalent()
     {
         $id = $this->sequence->lastInsertId('user');
-        
+
         $this->assertEqual($id, 1);
 
         $this->assertEqual($this->adapter->pop(), 'LAST_INSERT_ID()');

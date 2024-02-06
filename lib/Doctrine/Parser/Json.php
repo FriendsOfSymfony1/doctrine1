@@ -20,28 +20,23 @@
  */
 
 /**
- * Doctrine_Parser_Json
+ * Doctrine_Parser_Json.
  *
- * @package     Doctrine
- * @subpackage  Parser
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Parser_Json extends Doctrine_Parser
 {
     /**
-     * dumpData
+     * dumpData.
      *
      * Dump an array of data to a specified path or return
      *
-     * @param string $array Array of data to dump to json
-     * @param string $path  Path to dump json data to
-     * @param string $charset The charset of the data being dumped
+     * @param  string $array   Array of data to dump to json
+     * @param  string $path    Path to dump json data to
+     * @param  string $charset The charset of the data being dumped
      * @return string $json
-     * @return void
      */
     public function dumpData($array, $path = null, $charset = null)
     {
@@ -51,19 +46,17 @@ class Doctrine_Parser_Json extends Doctrine_Parser
     }
 
     /**
-     * loadData
+     * loadData.
      *
      * Load and unserialize data from a file or from passed data
      *
-     * @param  string $path   Path to dump data to
+     * @param  string $path Path to dump data to
      * @return array  $json   Array of json objects
      */
     public function loadData($path, $charset = 'UTF-8')
     {
         $contents = $this->doLoad($path);
 
-        $json = json_decode($contents);
-
-        return $json;
+        return json_decode($contents);
     }
 }

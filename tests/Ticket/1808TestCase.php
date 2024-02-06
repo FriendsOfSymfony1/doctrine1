@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1808_TestCase
+ * Doctrine_Ticket_1808_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1808_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1808_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
@@ -51,6 +53,6 @@ class Doctrine_Ticket_1808_TestCase extends Doctrine_UnitTestCase
         $this->assertIdentical($user, $user2);
 
         $test = $userTable->findOneByNameAndLoginnameAndEmailId($user->name, $user->loginname, $user->email_id, Doctrine_Core::HYDRATE_ARRAY);
-        $this->assertTrue(is_array($test));   
+        $this->assertTrue(is_array($test));
     }
 }

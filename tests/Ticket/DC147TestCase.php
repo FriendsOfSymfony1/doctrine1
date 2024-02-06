@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC147_TestCase
+ * Doctrine_Ticket_DC147_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC147_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC147_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -43,7 +45,7 @@ class Doctrine_Ticket_DC147_TestCase extends Doctrine_UnitTestCase
 
     public function testInlineMultiple()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 DC147_Multiple:
   ISBN2:
@@ -78,7 +80,8 @@ END;
 
             $query = new Doctrine_Query();
             $query->from('DC147_Product p, p.MultipleValues v, v.Multiple m')
-                ->where('p.name = ?', 'book3');
+                ->where('p.name = ?', 'book3')
+            ;
 
             $product = $query->fetchOne();
 
@@ -90,7 +93,8 @@ END;
 
             $query = new Doctrine_Query();
             $query->from('DC147_Product p, p.MultipleValues v, v.Multiple m')
-                ->where('p.name = ?', 'book4');
+                ->where('p.name = ?', 'book4')
+            ;
 
             $product = $query->fetchOne();
 
@@ -116,59 +120,59 @@ class DC147_Product extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('site_id', 'integer', null, array('type' => 'integer'));
-        $this->hasColumn('name', 'string', 255, array('type' => 'string', 'notnull' => true, 'length' => '255'));
+        $this->hasColumn('site_id', 'integer', null, ['type' => 'integer']);
+        $this->hasColumn('name', 'string', 255, ['type' => 'string', 'notnull' => true, 'length' => '255']);
     }
 
     public function setUp()
     {
-        $this->hasOne('DC147_Site as Site', array('local' => 'site_id',
-                                    'foreign' => 'id'));
-        $this->hasMany('DC147_MultipleValue as MultipleValues', array('local' => 'id',
-                                                              'foreign' => 'product_id'));
+        $this->hasOne('DC147_Site as Site', ['local' => 'site_id',
+            'foreign' => 'id']);
+        $this->hasMany('DC147_MultipleValue as MultipleValues', ['local' => 'id',
+            'foreign' => 'product_id']);
     }
 }
 class DC147_Site extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', 255, array('type' => 'string', 'length' => '255'));
+        $this->hasColumn('name', 'string', 255, ['type' => 'string', 'length' => '255']);
     }
 
     public function setUp()
     {
-        $this->hasMany('DC147_Product as Products', array('local' => 'id',
-                                        'foreign' => 'site_id'));
+        $this->hasMany('DC147_Product as Products', ['local' => 'id',
+            'foreign' => 'site_id']);
     }
 }
 class DC147_Multiple extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', 255, array('type' => 'string', 'notnull' => true, 'length' => '255'));
+        $this->hasColumn('name', 'string', 255, ['type' => 'string', 'notnull' => true, 'length' => '255']);
     }
 
     public function setUp()
     {
-        $this->hasMany('DC147_MultipleValue as MultipleValues', array('local' => 'id',
-                                                 'foreign' => 'multiple_id'));
+        $this->hasMany('DC147_MultipleValue as MultipleValues', ['local' => 'id',
+            'foreign' => 'multiple_id']);
     }
 }
 class DC147_MultipleValue extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('product_id', 'integer', null, array('type' => 'integer', 'primary' => true));
-        $this->hasColumn('multiple_id', 'integer', null, array('type' => 'integer', 'primary' => true));
-        $this->hasColumn('value', 'clob', null, array('type' => 'clob'));
+        $this->hasColumn('product_id', 'integer', null, ['type' => 'integer', 'primary' => true]);
+        $this->hasColumn('multiple_id', 'integer', null, ['type' => 'integer', 'primary' => true]);
+        $this->hasColumn('value', 'clob', null, ['type' => 'clob']);
     }
 
     public function setUp()
     {
-        $this->hasOne('DC147_Multiple as Multiple', array('local' => 'multiple_id',
-                                                       'foreign' => 'id'));
+        $this->hasOne('DC147_Multiple as Multiple', ['local' => 'multiple_id',
+            'foreign' => 'id']);
 
-        $this->hasOne('DC147_Product as Product', array('local' => 'product_id',
-                                        'foreign' => 'id'));
+        $this->hasOne('DC147_Product as Product', ['local' => 'product_id',
+            'foreign' => 'id']);
     }
 }

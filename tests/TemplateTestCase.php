@@ -20,22 +20,27 @@
  */
 
 /**
- * Doctrine_Template_TestCase
+ * Doctrine_Template_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Template_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Template_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
-    { }
-    public function prepareData() 
-    { }
+    {
+    }
+
+    public function prepareData()
+    {
+    }
 
     public function testAccessingNonExistingImplementationThrowsException()
     {
@@ -47,13 +52,14 @@ class Doctrine_Template_TestCase extends Doctrine_UnitTestCase
             $this->pass();
         }
     }
-    
+
     public function testAccessingExistingImplementationSupportsAssociations()
     {
         $this->manager->setImpl('UserTemplate', 'ConcreteUser')
-                      ->setImpl('GroupUserTemplate', 'ConcreteGroupUser')
-                      ->setImpl('GroupTemplate', 'ConcreteGroup')
-                      ->setImpl('EmailTemplate', 'ConcreteEmail');
+            ->setImpl('GroupUserTemplate', 'ConcreteGroupUser')
+            ->setImpl('GroupTemplate', 'ConcreteGroup')
+            ->setImpl('EmailTemplate', 'ConcreteEmail')
+        ;
 
         $user = new ConcreteUser();
         $group = $user->Group[0];
@@ -62,9 +68,9 @@ class Doctrine_Template_TestCase extends Doctrine_UnitTestCase
 
         $this->assertTrue($group->User[0] instanceof ConcreteUser);
     }
+
     public function testAccessingExistingImplementationSupportsForeignKeyRelations()
     {
-
         $user = new ConcreteUser();
 
         $this->assertTrue($user->Email[0] instanceof ConcreteEmail);
@@ -73,9 +79,8 @@ class Doctrine_Template_TestCase extends Doctrine_UnitTestCase
     public function testShouldCallMethodInTemplate()
     {
         $user = new ConcreteUser();
-        $this->assertEqual("foo", $user->foo());
+        $this->assertEqual('foo', $user->foo());
     }
-
 }
 
 // move these to ../templates?
@@ -86,18 +91,19 @@ class UserTemplate extends Doctrine_Template
         $this->hasColumn('name', 'string');
         $this->hasColumn('password', 'string');
     }
+
     public function setUp()
     {
-        $this->hasMany('GroupTemplate as Group', array('local' => 'user_id',
-                                                       'foreign' => 'group_id',
-                                                       'refClass' => 'GroupUserTemplate'));
-        $this->hasMany('EmailTemplate as Email', array('local' => 'id',
-                                                       'foreign' => 'user_id'));
+        $this->hasMany('GroupTemplate as Group', ['local' => 'user_id',
+            'foreign' => 'group_id',
+            'refClass' => 'GroupUserTemplate']);
+        $this->hasMany('EmailTemplate as Email', ['local' => 'id',
+            'foreign' => 'user_id']);
     }
-    
+
     public function foo()
     {
-        return "foo";
+        return 'foo';
     }
 }
 class EmailTemplate extends Doctrine_Template
@@ -107,10 +113,11 @@ class EmailTemplate extends Doctrine_Template
         $this->hasColumn('address', 'string');
         $this->hasColumn('user_id', 'integer');
     }
+
     public function setUp()
     {
-        $this->hasOne('UserTemplate as User', array('local' => 'user_id',
-                                                    'foreign' => 'id'));
+        $this->hasOne('UserTemplate as User', ['local' => 'user_id',
+            'foreign' => 'id']);
     }
 }
 class GroupTemplate extends Doctrine_Template
@@ -119,11 +126,12 @@ class GroupTemplate extends Doctrine_Template
     {
         $this->hasColumn('name', 'string');
     }
+
     public function setUp()
     {
-        $this->hasMany('UserTemplate as User', array('local' => 'user_id',
-                                                     'foreign' => 'group_id',
-                                                     'refClass' => 'GroupUserTemplate'));
+        $this->hasMany('UserTemplate as User', ['local' => 'user_id',
+            'foreign' => 'group_id',
+            'refClass' => 'GroupUserTemplate']);
     }
 }
 class GroupUserTemplate extends Doctrine_Template

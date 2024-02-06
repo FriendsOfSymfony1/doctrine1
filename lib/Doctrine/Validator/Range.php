@@ -20,23 +20,18 @@
  */
 
 /**
- * Doctrine_Validator_Range
+ * Doctrine_Validator_Range.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Range extends Doctrine_Validator_Driver
 {
     /**
-     * checks if value is within given range
+     * checks if value is within given range.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
@@ -49,6 +44,7 @@ class Doctrine_Validator_Range extends Doctrine_Validator_Driver
         if (isset($this->args[1]) && $value > $this->args[1]) {
             return false;
         }
+
         return true;
     }
 }

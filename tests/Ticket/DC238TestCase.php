@@ -20,22 +20,24 @@
  */
 
 /**
- * Doctrine_Ticket_DC238_TestCase
+ * Doctrine_Ticket_DC238_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC238_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $conn = Doctrine_Manager::connection('sqlite::memory:', 'test', false);
-        $conn->export->exportClasses(array('Ticket_DC238_User'));
+        $conn->export->exportClasses(['Ticket_DC238_User']);
 
         $user = new Ticket_DC238_User();
         $user->username = 'jwage';
@@ -48,7 +50,8 @@ class Doctrine_Ticket_DC238_TestCase extends Doctrine_UnitTestCase
         $cacheDriver = new Doctrine_Cache_Array();
         $q = Doctrine_Core::getTable('Ticket_DC238_User')
             ->createQuery('u')
-            ->useResultCache($cacheDriver, 3600, 'user_query');
+            ->useResultCache($cacheDriver, 3600, 'user_query')
+        ;
 
         $this->assertEqual(0, $profiler->count());
 

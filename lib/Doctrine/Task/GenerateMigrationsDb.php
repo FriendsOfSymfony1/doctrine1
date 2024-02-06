@@ -20,22 +20,18 @@
  */
 
 /**
- * Doctrine_Task_GenerateMigrationsDb
+ * Doctrine_Task_GenerateMigrationsDb.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_GenerateMigrationsDb extends Doctrine_Task
 {
-    public $description          =   'Generate migration classes for an existing database',
-           $requiredArguments    =   array('migrations_path' => 'Specify the complete path to your migration classes folder.'),
-           $optionalArguments    =   array();
-    
+    public $description = 'Generate migration classes for an existing database';
+    public $requiredArguments = ['migrations_path' => 'Specify the complete path to your migration classes folder.'];
+    public $optionalArguments = [];
+
     public function execute()
     {
         try {
@@ -43,23 +39,22 @@ class Doctrine_Task_GenerateMigrationsDb extends Doctrine_Task
             $yamlSchemaPath = $this->getArgument('yaml_schema_path');
             $migration = new Doctrine_Migration($migrationsPath);
             $result1 = false;
-            if ( ! count($migration->getMigrationClasses())) {
+            if (!count($migration->getMigrationClasses())) {
                 $result1 = Doctrine_Core::generateMigrationsFromDb($migrationsPath);
             }
-            $connections = array();
+            $connections = [];
             foreach (Doctrine_Manager::getInstance() as $connection) {
                 $connections[] = $connection->getName();
             }
             $changes = Doctrine_Core::generateMigrationsFromDiff($migrationsPath, $connections, $yamlSchemaPath);
             $numChanges = count($changes, true) - count($changes);
-            $result = ($result1 || $numChanges) ? true:false;
+            $result = ($result1 || $numChanges) ? true : false;
         } catch (Exception $e) {
             $result = false;
         }
-        if ( ! $result) {
+        if (!$result) {
             throw new Doctrine_Task_Exception('Could not generate migration classes from database');
-        } else {
-            $this->notify('Generated migration classes successfully from database');
         }
+        $this->notify('Generated migration classes successfully from database');
     }
 }

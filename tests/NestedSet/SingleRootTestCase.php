@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Record_State_TestCase
+ * Doctrine_Record_State_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_NestedSet_SingleRoot_TestCase extends Doctrine_UnitTestCase
 {
@@ -44,16 +46,16 @@ class Doctrine_NestedSet_SingleRoot_TestCase extends Doctrine_UnitTestCase
         $node->name = 'root';
         $treeMngr = $this->conn->getTable('NestedSetTest_SingleRootNode')->getTree();
         $treeMngr->createRoot($node);
-        
+
         $node2 = new NestedSetTest_SingleRootNode();
         $node2->name = 'node2';
         $node2->getNode()->insertAsLastChildOf($node);
-        
+
         $node3 = new NestedSetTest_SingleRootNode();
         $node3->name = 'node3';
         $node3->getNode()->insertAsLastChildOf($node2);
     }
-    
+
     public function testLftRgtValues()
     {
         $treeMngr = $this->conn->getTable('NestedSetTest_SingleRootNode')->getTree();
@@ -67,7 +69,7 @@ class Doctrine_NestedSet_SingleRoot_TestCase extends Doctrine_UnitTestCase
         $treeMngr = $this->conn->getTable('NestedSetTest_SingleRootNode')->getTree();
         $root = $treeMngr->fetchRoot();
         $desc = $root->getNode()->getDescendants();
-        $this->assertTrue($desc !== false);
+        $this->assertTrue(false !== $desc);
         $this->assertEqual(2, count($desc));
         $this->assertEqual('node2', $desc[0]['name']);
         $this->assertEqual(1, $desc[0]['level']);
@@ -80,13 +82,15 @@ class Doctrine_NestedSet_SingleRoot_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual(1, $root->getNode()->getNumberChildren());
         $this->assertFalse($root->getNode()->hasParent());
     }
-    
+
     public function testGetAncestors()
     {
-        $node = $this->conn->query("SELECT n.* FROM NestedSetTest_SingleRootNode n WHERE n.name = ?",
-                array('node2'))->getFirst();
+        $node = $this->conn->query(
+            'SELECT n.* FROM NestedSetTest_SingleRootNode n WHERE n.name = ?',
+            ['node2']
+        )->getFirst();
         $anc = $node->getNode()->getAncestors();
-        $this->assertTrue($anc !== false);
+        $this->assertTrue(false !== $anc);
         $this->assertEqual(1, count($anc));
         $this->assertEqual('root', $anc[0]['name']);
         $this->assertEqual(0, $anc[0]['level']);

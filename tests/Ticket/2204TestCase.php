@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_2204_TestCase
+ * Doctrine_Ticket_2204_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2204_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2204_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -57,6 +59,6 @@ class Ticket_2204_Model extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('test_decimal', 'decimal', 9, array('scale' => 6));
+        $this->hasColumn('test_decimal', 'decimal', 9, ['scale' => 6]);
     }
 }

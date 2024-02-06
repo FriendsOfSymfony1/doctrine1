@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_1452_TestCase
+ * Doctrine_Ticket_1452_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_1452_TestCase extends Doctrine_UnitTestCase
 {
@@ -44,7 +46,7 @@ class Doctrine_Ticket_1452_TestCase extends Doctrine_UnitTestCase
         $description = 'En dansk beskrivelse';
 
         try {
-            $item = new Model_Product;
+            $item = new Model_Product();
             $item->name = $name;
             $item->Translation['DK']->description = $description;
             $item->Translation['EN']->description = 'Some english description';
@@ -63,15 +65,15 @@ class Doctrine_Ticket_1452_TestCase extends Doctrine_UnitTestCase
 
 class Model_Product extends Doctrine_Record
 {
-    public function setTableDefinition ()
+    public function setTableDefinition()
     {
         $this->hasColumn('name', 'string', 30);
         $this->hasColumn('description', 'string', 65555);
         $this->hasColumn('price', 'integer', 20);
     }
 
-    public function setUp ()
+    public function setUp()
     {
-        $this->actAs('I18n', array('fields' => array('description')));
+        $this->actAs('I18n', ['fields' => ['description']]);
     }
 }

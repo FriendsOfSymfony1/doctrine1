@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1725_TestCase
+ * Doctrine_Ticket_1725_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1725_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1725_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -67,8 +69,8 @@ class Ticket_1725_User extends Doctrine_Record
     {
         $this->actAs('Timestampable');
         $this->actAs('SoftDelete');
-        $this->actAs('Versionable', array(
-        		'generateRelations' => false,
-        		'deleteVersions' => false));
+        $this->actAs('Versionable', [
+            'generateRelations' => false,
+            'deleteVersions' => false]);
     }
 }

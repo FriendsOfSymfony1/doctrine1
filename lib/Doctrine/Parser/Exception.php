@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Parser_Exception
+ * Doctrine_Parser_Exception.
  *
- * @package     Doctrine
- * @subpackage  Parser
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Parser_Exception extends Doctrine_Exception
-{ }
+{
+}

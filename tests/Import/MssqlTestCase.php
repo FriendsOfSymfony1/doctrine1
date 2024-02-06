@@ -20,53 +20,60 @@
  */
 
 /**
- * Doctrine_Import_Mssql_TestCase
+ * Doctrine_Import_Mssql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Import_Mssql_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Import_Mssql_TestCase extends Doctrine_UnitTestCase
 {
-    public function testListSequencesExecutesSql() 
+    public function testListSequencesExecutesSql()
     {
         $this->import->listSequences('table');
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT name FROM sysobjects WHERE xtype = 'U'");
     }
+
     public function testListTableColumnsExecutesSql()
     {
         $this->conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, false);
         $this->import->listTableColumns('table');
-        
-        $this->assertEqual($this->adapter->pop(), "EXEC sp_columns @table_name = table");
+
+        $this->assertEqual($this->adapter->pop(), 'EXEC sp_columns @table_name = table');
     }
+
     public function testListTablesExecutesSql()
     {
         $this->import->listTables();
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT name FROM sysobjects WHERE type = 'U' AND name <> 'dtproperties' AND name <> 'sysdiagrams' ORDER BY name");
     }
+
     public function testListTriggersExecutesSql()
     {
         $this->import->listTriggers();
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT name FROM sysobjects WHERE xtype = 'TR'");
     }
+
     public function testListTableTriggersExecutesSql()
     {
         $this->import->listTableTriggers('table');
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT name FROM sysobjects WHERE xtype = 'TR' AND object_name(parent_obj) = 'table'");
     }
+
     public function testListViewsExecutesSql()
     {
         $this->import->listViews();
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT name FROM sysobjects WHERE xtype = 'V'");
     }
 }

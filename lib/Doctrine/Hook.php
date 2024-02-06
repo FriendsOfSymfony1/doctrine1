@@ -20,61 +20,57 @@
  */
 
 /**
- * Doctrine_Hook
+ * Doctrine_Hook.
  *
- * @package     Doctrine
- * @subpackage  Hook
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hook
 {
     /**
-     * @var Doctrine_Query $query           the base query
+     * @var Doctrine_Query the base query
      */
     protected $query;
 
     /**
-     * @var array $joins                    the optional joins of the base query
+     * @var array the optional joins of the base query
      */
     protected $joins;
 
     /**
-     * @var array $hooks                    hooks array
+     * @var array hooks array
      */
-    protected $hooks        = array(
-                             'where',
-                             'orderby',
-                             'limit',
-                             'offset'
-                              );
+    protected $hooks = [
+        'where',
+        'orderby',
+        'limit',
+        'offset',
+    ];
 
     /**
-     * @var array $fieldParsers             custom field parsers array
-     *                                      keys as field names in the format componentAlias.FieldName
-     *                                      values as parser names / objects
+     * @var array custom field parsers array
+     *            keys as field names in the format componentAlias.FieldName
+     *            values as parser names / objects
      */
-    protected $fieldParsers = array();
+    protected $fieldParsers = [];
 
     /**
-     * @var array $typeParsers              type parsers array
-     *                                      keys as type names and values as parser names / objects
+     * @var array type parsers array
+     *            keys as type names and values as parser names / objects
      */
-    protected $typeParsers  = array(
-                              'char'      => 'Doctrine_Hook_WordLike',
-                              'string'    => 'Doctrine_Hook_WordLike',
-                              'varchar'   => 'Doctrine_Hook_WordLike',
-                              'integer'   => 'Doctrine_Hook_Integer',
-                              'enum'      => 'Doctrine_Hook_Integer',
-                              'time'      => 'Doctrine_Hook_Time',
-                              'date'      => 'Doctrine_Hook_Date',
-                              );
+    protected $typeParsers = [
+        'char' => 'Doctrine_Hook_WordLike',
+        'string' => 'Doctrine_Hook_WordLike',
+        'varchar' => 'Doctrine_Hook_WordLike',
+        'integer' => 'Doctrine_Hook_Integer',
+        'enum' => 'Doctrine_Hook_Integer',
+        'time' => 'Doctrine_Hook_Time',
+        'date' => 'Doctrine_Hook_Date',
+    ];
 
     /**
-     * @param Doctrine_Query $query         the base query
+     * @param Doctrine_Query $query the base query
      */
     public function __construct($query)
     {
@@ -84,16 +80,16 @@ class Doctrine_Hook
         } elseif ($query instanceof Doctrine_Query) {
             $this->query = $query;
         } else {
-            throw new Doctrine_Exception('Constructor argument should be either Doctrine_Query object or valid DQL query');          
+            throw new Doctrine_Exception('Constructor argument should be either Doctrine_Query object or valid DQL query');
         }
-        
+
         $this->query->getSqlQuery();
     }
 
     /**
-     * getQuery
+     * getQuery.
      *
-     * @return Doctrine_Query       returns the query object associated with this hook
+     * @return Doctrine_Query returns the query object associated with this hook
      */
     public function getQuery()
     {
@@ -101,21 +97,21 @@ class Doctrine_Hook
     }
 
     /**
-     * setTypeParser
+     * setTypeParser.
      *
-     * @param string $type              type name
-     * @param string|object $parser     parser name or custom parser object
+     * @param string        $type   type name
+     * @param string|object $parser parser name or custom parser object
      */
-    public function setTypeParser($type, $parser) 
+    public function setTypeParser($type, $parser)
     {
         $this->typeParsers[$type] = $parser;
     }
 
     /**
-     * setFieldParser
+     * setFieldParser.
      *
-     * @param string $field             field name
-     * @param string|object $parser     parser name or custom parser object
+     * @param string        $field  field name
+     * @param string|object $parser parser name or custom parser object
      */
     public function setFieldParser($field, $parser)
     {
@@ -124,39 +120,38 @@ class Doctrine_Hook
 
     /**
      * hookWhere
-     * builds DQL query where part from given parameter array
+     * builds DQL query where part from given parameter array.
      *
-     * @param array $params         an associative array containing field
-     *                              names and their values
-     * @return boolean              whether or not the hooking was
+     * @param  array $params an associative array containing field
+     *                       names and their values
+     * @return bool  whether or not the hooking was
      */
     public function hookWhere($params)
     {
-        if ( ! is_array($params)) {
+        if (!is_array($params)) {
             return false;
         }
         foreach ($params as $name => $value) {
-            if ($value === '' || $value === '-') {
+            if ('' === $value || '-' === $value) {
                 continue;
             }
             $e = explode('.', $name);
 
-            if (count($e) == 2) {
-                list($alias, $column) = $e;
+            if (2 == count($e)) {
+                [$alias, $column] = $e;
 
-                $map   = $this->query->getQueryComponent($alias);
+                $map = $this->query->getQueryComponent($alias);
                 $table = $map['table'];
 
-                if ( ! $table) {
-                    throw new Doctrine_Exception('Unknown alias ' . $alias);
+                if (!$table) {
+                    throw new Doctrine_Exception('Unknown alias '.$alias);
                 }
 
                 if ($def = $table->getDefinitionOf($column)) {
-
-                $def[0] = gettype($value);
+                    $def[0] = gettype($value);
                     if (isset($this->typeParsers[$def[0]])) {
-                        $name   = $this->typeParsers[$def[0]];
-                        $parser = new $name;
+                        $name = $this->typeParsers[$def[0]];
+                        $parser = new $name();
                     }
 
                     $parser->parse($alias, $column, $value);
@@ -171,15 +166,15 @@ class Doctrine_Hook
 
     /**
      * hookOrderBy
-     * builds DQL query orderby part from given parameter array
+     * builds DQL query orderby part from given parameter array.
      *
-     * @param array $params         an array containing all fields which the built query
-     *                              should be ordered by
-     * @return boolean              whether or not the hooking was successful
+     * @param  array $params an array containing all fields which the built query
+     *                       should be ordered by
+     * @return bool  whether or not the hooking was successful
      */
     public function hookOrderby($params)
     {
-        if ( ! is_array($params)) {
+        if (!is_array($params)) {
             return false;
         }
         foreach ($params as $name) {
@@ -188,30 +183,30 @@ class Doctrine_Hook
             $order = 'ASC';
 
             if (count($e) > 1) {
-                $order = ($e[1] == 'DESC') ? 'DESC' : 'ASC';
+                $order = ('DESC' == $e[1]) ? 'DESC' : 'ASC';
             }
 
             $e = explode('.', $e[0]);
 
-            if (count($e) == 2) {
-                list($alias, $column) = $e;
+            if (2 == count($e)) {
+                [$alias, $column] = $e;
 
-                $map   = $this->query->getQueryComponent($alias);
+                $map = $this->query->getQueryComponent($alias);
                 $table = $map['table'];
 
-                if ($def = $table->getDefinitionOf($column)) {   
-                    $this->query->addOrderBy($alias . '.' . $column . ' ' . $order);
+                if ($def = $table->getDefinitionOf($column)) {
+                    $this->query->addOrderBy($alias.'.'.$column.' '.$order);
                 }
             }
         }
+
         return true;
     }
 
     /**
-     * set the hook limit 
-     * 
-     * @param integer $limit 
-     * @return void
+     * set the hook limit.
+     *
+     * @param int $limit
      */
     public function hookLimit($limit)
     {
@@ -219,9 +214,9 @@ class Doctrine_Hook
     }
 
     /**
-     * set the hook offset
+     * set the hook offset.
      *
-     * @param integer $offset
+     * @param int $offset
      */
     public function hookOffset($offset)
     {

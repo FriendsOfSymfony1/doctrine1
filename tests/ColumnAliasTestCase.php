@@ -20,44 +20,46 @@
  */
 
 /**
- * Doctrine_ColumnAlias_TestCase
+ * Doctrine_ColumnAlias_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_ColumnAlias_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_ColumnAlias_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
+    public function prepareData()
     {
         $book1 = new Book();
         $book1->name = 'Das Boot';
         $book1->save();
-        
+
         $record1 = new ColumnAliasTest();
         $record1->alias1 = 'first';
         $record1->alias2 = 123;
         $record1->anotherField = 'camelCase';
         $record1->bookId = $book1->id;
         $record1->save();
-        
+
         $record2 = new ColumnAliasTest();
         $record2->alias1 = 'one';
         $record2->alias2 = 456;
         $record2->anotherField = 'KoQ';
         $record2->save();
-        
+
         $record2->anotherField = 'foo';
     }
-    
+
     public function prepareTables()
-    { 
-        $this->tables = array('ColumnAliasTest', 'Book');
-        
+    {
+        $this->tables = ['ColumnAliasTest', 'Book'];
+
         parent::prepareTables();
     }
 
@@ -65,20 +67,22 @@ class Doctrine_ColumnAlias_TestCase extends Doctrine_UnitTestCase
     {
         $q = new Doctrine_Query();
         $q->select('c.*, b.name')->from('ColumnAliasTest c')
-                ->innerJoin('c.book b')
-                ->where('c.anotherField = ?', 'camelCase');
+            ->innerJoin('c.book b')
+            ->where('c.anotherField = ?', 'camelCase')
+        ;
         $result = $q->execute();
         $this->assertTrue(isset($result[0]->book));
         $this->assertEqual($result[0]->book->name, 'Das Boot');
     }
-    
+
     public function testAliasesAreSupportedForArrayFetching()
     {
         $q = new Doctrine_Query();
         $q->select('c.*, b.name')->from('ColumnAliasTest c')
-                ->innerJoin('c.book b')
-                ->where('c.anotherField = ?', 'camelCase')
-                ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
+            ->innerJoin('c.book b')
+            ->where('c.anotherField = ?', 'camelCase')
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY)
+        ;
         $result = $q->execute();
         $this->assertEqual($result[0]['alias1'], 'first');
         $this->assertEqual($result[0]['alias2'], 123);
@@ -89,18 +93,18 @@ class Doctrine_ColumnAlias_TestCase extends Doctrine_UnitTestCase
 
     public function testAliasesAreSupportedForRecordPropertyAccessors()
     {
-        $record = new ColumnAliasTest;
+        $record = new ColumnAliasTest();
         try {
             $record->alias1 = 'someone';
             $record->alias2 = 187;
-            
+
             $this->assertEqual($record->alias1, 'someone');
             $this->assertEqual($record->alias2, 187);
         } catch (Doctrine_Record_Exception $e) {
             $this->fail();
         }
     }
-    
+
     public function testAliasesAreSupportedForDqlSelectPart()
     {
         $q = new Doctrine_Query();
@@ -111,22 +115,23 @@ class Doctrine_ColumnAlias_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($coll[0]->alias2, 123);
         $this->assertEqual($coll[0]->anotherField, 'camelCase');
     }
-    
+
     public function testAliasesAreSupportedForDqlWherePart()
     {
         $q = new Doctrine_Query();
 
         $q->select('c.alias1, c.alias2, c.anotherField')
-          ->from('ColumnAliasTest c')
-          ->where('c.anotherField = ?');
+            ->from('ColumnAliasTest c')
+            ->where('c.anotherField = ?')
+        ;
 
-        $coll = $q->execute(array('KoQ'));
+        $coll = $q->execute(['KoQ']);
 
         $this->assertEqual($coll[0]->alias1, 'one');
         $this->assertEqual($coll[0]->alias2, 456);
         $this->assertEqual($coll[0]->anotherField, 'KoQ');
     }
-    
+
     public function testAliasesAreSupportedForDqlAggregateFunctions()
     {
         $q = new Doctrine_Query();
@@ -137,19 +142,19 @@ class Doctrine_ColumnAlias_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($coll[0]->MAX, 456);
     }
-    
+
     public function testAliasesAreSupportedForDqlHavingPart()
     {
         $q = new Doctrine_Query();
 
         $q->select('c.alias2')
-          ->from('ColumnAliasTest c')
-          ->groupby('c.id')
-          ->having('c.alias2 > 123');
+            ->from('ColumnAliasTest c')
+            ->groupby('c.id')
+            ->having('c.alias2 > 123')
+        ;
 
         $coll = $q->execute();
-        
+
         $this->assertEqual($coll[0]->alias2, 456);
     }
 }
-

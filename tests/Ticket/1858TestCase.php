@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1858_TestCase
+ * Doctrine_Ticket_1858_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1858_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1858_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -40,24 +42,26 @@ class Doctrine_Ticket_1858_TestCase extends Doctrine_UnitTestCase
 
     public function testTest()
     {
-        $foo_id = 1234; 
+        $foo_id = 1234;
         $adjustment = -3;
 
         $query = Doctrine_Query::create()
             ->update('T1858_Foo')
             ->set(
-            	'quantity','GREATEST(CAST(quantity AS SIGNED) + :adjustment,0)', 
-                array(':adjustment' => $adjustment)
+                'quantity',
+                'GREATEST(CAST(quantity AS SIGNED) + :adjustment,0)',
+                [':adjustment' => $adjustment]
             )
-            ->where('id = :id', array(':id' => $foo_id));
-            
+            ->where('id = :id', [':id' => $foo_id])
+        ;
+
         $this->assertEqual($query->getSqlQuery(), 'UPDATE t1858__foo SET quantity = GREATEST(CAST(quantity AS SIGNED + :adjustment,0)) WHERE (id = :id)');
     }
 }
 
 class T1858_Foo extends Doctrine_Record
 {
-    public $hooks = array();
+    public $hooks = [];
 
     public function setTableDefinition()
     {

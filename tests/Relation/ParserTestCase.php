@@ -20,91 +20,99 @@
  */
 
 /**
- * Doctrine_Relation_Parser_TestCase
+ * Doctrine_Relation_Parser_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Relation_Parser_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Relation_Parser_TestCase extends Doctrine_UnitTestCase
 {
     public function testPendingRelations()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
-        
-        $p = array('type' => Doctrine_Relation::ONE, 
-                   'local' => 'email_id');
+
+        $p = ['type' => Doctrine_Relation::ONE,
+            'local' => 'email_id'];
 
         $r->bind('Email', $p);
 
-        $this->assertEqual($r->getPendingRelation('Email'), array('type' => Doctrine_Relation::ONE, 
-                                                                  'local' => 'email_id',
-                                                                  'class' => 'Email',
-                                                                  'alias' => 'Email'
-                                                                  ));
+        $this->assertEqual($r->getPendingRelation('Email'), ['type' => Doctrine_Relation::ONE,
+            'local' => 'email_id',
+            'class' => 'Email',
+            'alias' => 'Email',
+        ]);
     }
+
     public function testBindThrowsExceptionIfTypeNotSet()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $p = array('local' => 'email_id');
+        $p = ['local' => 'email_id'];
         try {
             $r->bind('Email', $p);
             $this->fail('should throw exception');
-        } catch(Doctrine_Relation_Exception $e) {
+        } catch (Doctrine_Relation_Exception $e) {
             $this->pass();
         }
     }
+
     public function testRelationParserSupportsLocalColumnGuessing()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeDefinition(array('class'   => 'Phonenumber',
-                                          'type'    => Doctrine_Relation::MANY,
-                                          'foreign' => 'entity_id'));
+        $d = $r->completeDefinition(['class' => 'Phonenumber',
+            'type' => Doctrine_Relation::MANY,
+            'foreign' => 'entity_id']);
 
         $this->assertEqual($d['local'], 'id');
     }
+
     public function testRelationParserSupportsLocalColumnGuessing2()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeDefinition(array('class'   => 'Email',
-                                          'type'    => Doctrine_Relation::ONE,
-                                          'foreign' => 'id'));
+        $d = $r->completeDefinition(['class' => 'Email',
+            'type' => Doctrine_Relation::ONE,
+            'foreign' => 'id']);
 
         $this->assertEqual($d['local'], 'email_id');
     }
+
     public function testRelationParserSupportsForeignColumnGuessing()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeDefinition(array('class' => 'Phonenumber',
-                                          'type'  => Doctrine_Relation::MANY,
-                                          'local' => 'id'));
+        $d = $r->completeDefinition(['class' => 'Phonenumber',
+            'type' => Doctrine_Relation::MANY,
+            'local' => 'id']);
 
         $this->assertEqual($d['foreign'], 'entity_id');
     }
+
     public function testRelationParserSupportsForeignColumnGuessing2()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeDefinition(array('class' => 'Email',
-                                          'type'  => Doctrine_Relation::ONE,
-                                          'local' => 'email_id'));
+        $d = $r->completeDefinition(['class' => 'Email',
+            'type' => Doctrine_Relation::ONE,
+            'local' => 'email_id']);
 
         $this->assertEqual($d['foreign'], 'id');
     }
+
     public function testRelationParserSupportsGuessingOfBothColumns()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeDefinition(array('class' => 'Email',
-                                          'type'  => Doctrine_Relation::ONE));
+        $d = $r->completeDefinition(['class' => 'Email',
+            'type' => Doctrine_Relation::ONE]);
 
         $this->assertEqual($d['foreign'], 'id');
         $this->assertEqual($d['local'], 'email_id');
@@ -114,50 +122,54 @@ class Doctrine_Relation_Parser_TestCase extends Doctrine_UnitTestCase
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeDefinition(array('class' => 'Phonenumber',
-                                          'type'  => Doctrine_Relation::MANY));
+        $d = $r->completeDefinition(['class' => 'Phonenumber',
+            'type' => Doctrine_Relation::MANY]);
 
         $this->assertEqual($d['foreign'], 'entity_id');
         $this->assertEqual($d['local'], 'id');
     }
+
     public function testRelationParserSupportsForeignColumnGuessingForAssociations()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeAssocDefinition(array('class'    => 'Group',
-                                               'type'     => Doctrine_Relation::MANY,
-                                               'local'    => 'user_id',
-                                               'refClass' => 'GroupUser'));
+        $d = $r->completeAssocDefinition(['class' => 'Group',
+            'type' => Doctrine_Relation::MANY,
+            'local' => 'user_id',
+            'refClass' => 'GroupUser']);
 
         $this->assertEqual($d['foreign'], 'group_id');
     }
+
     public function testRelationParserSupportsLocalColumnGuessingForAssociations()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
 
-        $d = $r->completeAssocDefinition(array('class'    => 'Group',
-                                               'type'     => Doctrine_Relation::MANY,
-                                               'foreign'  => 'group_id',
-                                               'refClass' => 'GroupUser'));
+        $d = $r->completeAssocDefinition(['class' => 'Group',
+            'type' => Doctrine_Relation::MANY,
+            'foreign' => 'group_id',
+            'refClass' => 'GroupUser']);
 
         $this->assertEqual($d['local'], 'user_id');
     }
+
     public function testGetRelationReturnsForeignKeyObjectForOneToOneRelation()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
-        $p = array('type' => Doctrine_Relation::ONE, 
-                   'local' => 'email_id');
+        $p = ['type' => Doctrine_Relation::ONE,
+            'local' => 'email_id'];
 
         $r->bind('Email', $p);
 
         $rel = $r->getRelation('Email');
-        
+
         $this->assertTrue($rel instanceof Doctrine_Relation_LocalKey);
     }
+
     public function testGetRelationReturnsForeignKeyObjectForOneToManyRelation()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
-        $p = array('type' => Doctrine_Relation::MANY);
+        $p = ['type' => Doctrine_Relation::MANY];
 
         $r->bind('Phonenumber', $p);
 
@@ -165,27 +177,29 @@ class Doctrine_Relation_Parser_TestCase extends Doctrine_UnitTestCase
 
         $this->assertTrue($rel instanceof Doctrine_Relation_ForeignKey);
     }
+
     public function testGetRelationReturnsForeignKeyObjectForManytToManyRelation()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('User'));
-        $p = array('type' => Doctrine_Relation::MANY,
-                   'refClass' => 'GroupUser');
+        $p = ['type' => Doctrine_Relation::MANY,
+            'refClass' => 'GroupUser'];
 
         $r->bind('Group', $p);
 
         $rel = $r->getRelation('Group');
-        
+
         $this->assertTrue($rel instanceof Doctrine_Relation_Association);
         $rel = $r->getRelation('GroupUser');
         $this->assertTrue($rel instanceof Doctrine_Relation_ForeignKey);
     }
+
     public function testGetRelationReturnsForeignKeyObjectForNestRelation()
     {
         $r = new Doctrine_Relation_Parser($this->conn->getTable('Entity'));
-        $p = array('type' => Doctrine_Relation::MANY,
-                   'refClass' => 'EntityReference',
-                   'local' => 'entity1',
-                   'foreign' => 'entity2');
+        $p = ['type' => Doctrine_Relation::MANY,
+            'refClass' => 'EntityReference',
+            'local' => 'entity1',
+            'foreign' => 'entity2'];
 
         $r->bind('Entity', $p);
 
@@ -195,6 +209,6 @@ class Doctrine_Relation_Parser_TestCase extends Doctrine_UnitTestCase
         $rel = $r->getRelation('EntityReference');
         $this->assertTrue($rel instanceof Doctrine_Relation_ForeignKey);
     }
-    
+
     // TODO: BETTER ASSOCIATION TABLE GUESSING
 }

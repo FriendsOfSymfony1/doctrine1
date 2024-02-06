@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Hydrate_CollectionInitialization_TestCase
+ * Doctrine_Hydrate_CollectionInitialization_TestCase.
  *
- * @package     Doctrine
  * @author      Roman Borschel <roman@code-factory.org>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Hydrate_CollectionInitialization_TestCase extends Doctrine_UnitTestCase
 {
@@ -36,35 +38,37 @@ class Doctrine_Hydrate_CollectionInitialization_TestCase extends Doctrine_UnitTe
     {
         $user = new User();
         $user->name = 'romanb';
-        
+
         $user->Phonenumber[0]->phonenumber = '112';
         $user->Phonenumber[1]->phonenumber = '110';
-        
+
         $user->save();
     }
-    
+
     public function prepareTables()
     {
-        $this->tables = array('Entity', 'Phonenumber'); 
+        $this->tables = ['Entity', 'Phonenumber'];
         parent::prepareTables();
     }
-    
+
     public function testCollectionsAreReinitializedOnHydration()
     {
         // query for user with first phonenumber.
         $q = Doctrine_Query::create();
-        $q->select("u.*, p.*")->from("User u")->innerJoin("u.Phonenumber p")
-                ->where("p.phonenumber = '112'");
-        
+        $q->select('u.*, p.*')->from('User u')->innerJoin('u.Phonenumber p')
+            ->where("p.phonenumber = '112'")
+        ;
+
         $users = $q->execute();
         $this->assertEqual(1, count($users));
         $this->assertEqual(1, count($users[0]->Phonenumber));
         $this->assertEqual('112', $users[0]->Phonenumber[0]->phonenumber);
-        
+
         // now query again. this time for the other phonenumber. collection should be re-initialized.
         $q = Doctrine_Query::create();
-        $q->select("u.*, p.*")->from("User u")->innerJoin("u.Phonenumber p")
-                ->where("p.phonenumber = '110'");
+        $q->select('u.*, p.*')->from('User u')->innerJoin('u.Phonenumber p')
+            ->where("p.phonenumber = '110'")
+        ;
         $users = $q->execute();
         $this->assertEqual(1, count($users));
         $this->assertEqual(1, count($users[0]->Phonenumber));
@@ -72,7 +76,7 @@ class Doctrine_Hydrate_CollectionInitialization_TestCase extends Doctrine_UnitTe
 
         // now query again. this time for both phonenumbers. collection should be re-initialized.
         $q = Doctrine_Query::create();
-        $q->select("u.*, p.*")->from("User u")->innerJoin("u.Phonenumber p");
+        $q->select('u.*, p.*')->from('User u')->innerJoin('u.Phonenumber p');
         $users = $q->execute();
         $this->assertEqual(1, count($users));
         $this->assertEqual(2, count($users[0]->Phonenumber));
@@ -81,7 +85,7 @@ class Doctrine_Hydrate_CollectionInitialization_TestCase extends Doctrine_UnitTe
 
         // now query AGAIN for both phonenumbers. collection should be re-initialized (2 elements, not 4).
         $q = Doctrine_Query::create();
-        $q->select("u.*, p.*")->from("User u")->innerJoin("u.Phonenumber p");
+        $q->select('u.*, p.*')->from('User u')->innerJoin('u.Phonenumber p');
         $users = $q->execute();
         $this->assertEqual(1, count($users));
         $this->assertEqual(2, count($users[0]->Phonenumber));
@@ -91,7 +95,7 @@ class Doctrine_Hydrate_CollectionInitialization_TestCase extends Doctrine_UnitTe
 
     public function testOneToManyReverseMatching()
     {
-        $users  = Doctrine_Query::create()
+        $users = Doctrine_Query::create()
             ->from('User u')
             ->leftJoin('u.Phonenumber p')
             ->having('COUNT(p.id) > 0')

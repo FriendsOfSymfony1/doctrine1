@@ -20,18 +20,15 @@
  */
 
 /**
- * Doctrine_Collection_Iterator_Normal
+ * Doctrine_Collection_Iterator_Normal.
  *
- * @package     Doctrine
- * @subpackage  Collection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Collection_Iterator_Offset extends Doctrine_Collection_Iterator
 {
     public function valid()
-    { }
+    {
+    }
 }

@@ -20,26 +20,22 @@
  */
 
 /**
- * Doctrine_Task_Migrate
+ * Doctrine_Task_Migrate.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_Migrate extends Doctrine_Task
 {
-    public $description          =   'Migrate database to latest version or the specified version',
-           $requiredArguments    =   array('migrations_path' => 'Specify path to your migrations directory.'),
-           $optionalArguments    =   array('version' => 'Version to migrate to. If you do not specify, the db will be migrated from the current version to the latest.');
-    
+    public $description = 'Migrate database to latest version or the specified version';
+    public $requiredArguments = ['migrations_path' => 'Specify path to your migrations directory.'];
+    public $optionalArguments = ['version' => 'Version to migrate to. If you do not specify, the db will be migrated from the current version to the latest.'];
+
     public function execute()
     {
         $version = Doctrine_Core::migrate($this->getArgument('migrations_path'), $this->getArgument('version'));
-        
-        $this->notify('migrated successfully to version #' . $version);
+
+        $this->notify('migrated successfully to version #'.$version);
     }
 }

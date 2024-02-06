@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Search_Exception
+ * Doctrine_Search_Exception.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_Exception extends Doctrine_Exception
-{ }
+{
+}

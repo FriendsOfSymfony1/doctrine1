@@ -20,23 +20,18 @@
  */
 
 /**
- * Doctrine_Validator_Regexp
+ * Doctrine_Validator_Regexp.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Gijs van Dulmen <gijs@vandulmen.net>
  */
 class Doctrine_Validator_Minlength extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is more length than the minimum length required
+     * checks if given value is more length than the minimum length required.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {

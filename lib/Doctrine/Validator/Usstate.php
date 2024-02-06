@@ -20,89 +20,86 @@
  */
 
 /**
- * Doctrine_Validator_Usstate
+ * Doctrine_Validator_Usstate.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Usstate extends Doctrine_Validator_Driver
 {
-    private static $states = array(
-                'AK' => true,
-                'AL' => true,
-                'AR' => true,
-                'AZ' => true,
-                'CA' => true,
-                'CO' => true,
-                'CT' => true,
-                'DC' => true,
-                'DE' => true,
-                'FL' => true,
-                'GA' => true,
-                'HI' => true,
-                'IA' => true,
-                'ID' => true,
-                'IL' => true,
-                'IN' => true,
-                'KS' => true,
-                'KY' => true,
-                'LA' => true,
-                'MA' => true,
-                'MD' => true,
-                'ME' => true,
-                'MI' => true,
-                'MN' => true,
-                'MO' => true,
-                'MS' => true,
-                'MT' => true,
-                'NC' => true,
-                'ND' => true,
-                'NE' => true,
-                'NH' => true,
-                'NJ' => true,
-                'NM' => true,
-                'NV' => true,
-                'NY' => true,
-                'OH' => true,
-                'OK' => true,
-                'OR' => true,
-                'PA' => true,
-                'PR' => true,
-                'RI' => true,
-                'SC' => true,
-                'SD' => true,
-                'TN' => true,
-                'TX' => true,
-                'UT' => true,
-                'VA' => true,
-                'VI' => true,
-                'VT' => true,
-                'WA' => true,
-                'WI' => true,
-                'WV' => true,
-                'WY' => true
-            );
+    private static $states = [
+        'AK' => true,
+        'AL' => true,
+        'AR' => true,
+        'AZ' => true,
+        'CA' => true,
+        'CO' => true,
+        'CT' => true,
+        'DC' => true,
+        'DE' => true,
+        'FL' => true,
+        'GA' => true,
+        'HI' => true,
+        'IA' => true,
+        'ID' => true,
+        'IL' => true,
+        'IN' => true,
+        'KS' => true,
+        'KY' => true,
+        'LA' => true,
+        'MA' => true,
+        'MD' => true,
+        'ME' => true,
+        'MI' => true,
+        'MN' => true,
+        'MO' => true,
+        'MS' => true,
+        'MT' => true,
+        'NC' => true,
+        'ND' => true,
+        'NE' => true,
+        'NH' => true,
+        'NJ' => true,
+        'NM' => true,
+        'NV' => true,
+        'NY' => true,
+        'OH' => true,
+        'OK' => true,
+        'OR' => true,
+        'PA' => true,
+        'PR' => true,
+        'RI' => true,
+        'SC' => true,
+        'SD' => true,
+        'TN' => true,
+        'TX' => true,
+        'UT' => true,
+        'VA' => true,
+        'VI' => true,
+        'VT' => true,
+        'WA' => true,
+        'WI' => true,
+        'WV' => true,
+        'WY' => true,
+    ];
+
     public function getStates()
     {
         return self::$states;
     }
 
     /**
-     * checks if given value is a valid US state code
+     * checks if given value is a valid US state code.
      *
-     * @param string $args
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
         if (is_null($value)) {
             return true;
         }
+
         return isset(self::$states[$value]);
     }
 }

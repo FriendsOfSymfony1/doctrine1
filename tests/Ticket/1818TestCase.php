@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1818_TestCase
+ * Doctrine_Ticket_1818_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1818_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1818_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -61,38 +63,36 @@ class Ticket_1818_Foo extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('bar_id', 'integer', null, array('type' => 'integer'));
+        $this->hasColumn('bar_id', 'integer', null, ['type' => 'integer']);
     }
 
     public function setUp()
     {
-        $this->hasOne('Ticket_1818_Bar as Bar', array('local' => 'bar_id',
-                                   'foreign' => 'id'));
+        $this->hasOne('Ticket_1818_Bar as Bar', ['local' => 'bar_id',
+            'foreign' => 'id']);
     }
 }
 
 class Ticket_1818_BarB extends Ticket_1818_Bar
 {
-
 }
 
 class Ticket_1818_BarA extends Ticket_1818_Bar
 {
-
 }
 
 class Ticket_1818_Bar extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('type', 'string', null, array('type' => 'string'));
+        $this->hasColumn('type', 'string', null, ['type' => 'string']);
 
-        $this->setSubClasses(array('Ticket_1818_BarA' => array('type' => 'A'), 'Ticket_1818_BarB' => array('type' => 'B')));
+        $this->setSubClasses(['Ticket_1818_BarA' => ['type' => 'A'], 'Ticket_1818_BarB' => ['type' => 'B']]);
     }
 
     public function setUp()
     {
-        $this->hasMany('Ticket_1818_Foo as Foos', array('local' => 'id',
-                                            'foreign' => 'bar_id'));
+        $this->hasMany('Ticket_1818_Foo as Foos', ['local' => 'id',
+            'foreign' => 'bar_id']);
     }
 }

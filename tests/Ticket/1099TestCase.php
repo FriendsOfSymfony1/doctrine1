@@ -1,9 +1,15 @@
 <?php
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class Doctrine_Ticket_1099_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array();
+        $this->tables = [];
         $this->tables[] = 'T1099_Page';
         $this->tables[] = 'T1099_SubPage';
 
@@ -24,9 +30,10 @@ class Doctrine_Ticket_1099_TestCase extends Doctrine_UnitTestCase
     public function testCAINestedSet()
     {
         $child = Doctrine_Query::create()
-           ->from('T1099_Page p')
-           ->where('p.type = \'subpage\'')
-           ->fetchOne();
+            ->from('T1099_Page p')
+            ->where('p.type = \'subpage\'')
+            ->fetchOne()
+        ;
 
         $this->assertEqual('T1099_SubPage', get_class($child));
         $this->assertNotEqual(false, $child->getNode()->getParent());
@@ -38,16 +45,16 @@ class T1099_Page extends Doctrine_Record
     public function setTableDefinition()
     {
         $this->setTableName('pages');
-        $this->hasColumn('id', 'integer', 15, array('autoincrement' => true, 'primary' => true, 'notnull' => true));
+        $this->hasColumn('id', 'integer', 15, ['autoincrement' => true, 'primary' => true, 'notnull' => true]);
         $this->hasColumn('type', 'string', 10);
     }
 
     public function setUp()
     {
         $this->actAs('Doctrine_Template_NestedSet');
-        $this->setSubclasses(array(
-        'T1099_SubPage' => array('type' => 'subpage')
-        ));
+        $this->setSubclasses([
+            'T1099_SubPage' => ['type' => 'subpage'],
+        ]);
         parent::setUp();
     }
 }

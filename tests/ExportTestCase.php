@@ -20,71 +20,78 @@
  */
 
 /**
- * Doctrine_Export_TestCase
+ * Doctrine_Export_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Export_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Export_TestCase extends Doctrine_UnitTestCase
 {
-    public function testCreateTableThrowsExceptionWithoutValidTableName() 
+    public function testCreateTableThrowsExceptionWithoutValidTableName()
     {
         try {
-            $this->export->createTable(0, array(), array());
+            $this->export->createTable(0, [], []);
 
             $this->fail();
-        } catch(Doctrine_Export_Exception $e) {
+        } catch (Doctrine_Export_Exception $e) {
             $this->pass();
         }
     }
-    public function testCreateTableThrowsExceptionWithEmptyFieldsArray() 
+
+    public function testCreateTableThrowsExceptionWithEmptyFieldsArray()
     {
         try {
-            $this->export->createTable('sometable', array(), array());
+            $this->export->createTable('sometable', [], []);
 
             $this->fail();
-        } catch(Doctrine_Export_Exception $e) {
+        } catch (Doctrine_Export_Exception $e) {
             $this->pass();
         }
     }
-    public function testDropConstraintExecutesSql() 
+
+    public function testDropConstraintExecutesSql()
     {
         $this->export->dropConstraint('sometable', 'relevancy');
 
         $this->assertEqual($this->adapter->pop(), 'ALTER TABLE sometable DROP CONSTRAINT relevancy');
     }
-    public function testCreateIndexExecutesSql() 
+
+    public function testCreateIndexExecutesSql()
     {
-        $this->export->createIndex('sometable', 'relevancy', array('fields' => array('title' => array(), 'content' => array())));
-        
+        $this->export->createIndex('sometable', 'relevancy', ['fields' => ['title' => [], 'content' => []]]);
+
         $this->assertEqual($this->adapter->pop(), 'CREATE INDEX relevancy_idx ON sometable (title, content)');
     }
 
-    public function testDropIndexExecutesSql() 
+    public function testDropIndexExecutesSql()
     {
         $this->export->dropIndex('sometable', 'relevancy');
-        
+
         $this->assertEqual($this->adapter->pop(), 'DROP INDEX relevancy_idx');
     }
-    public function testDropTableExecutesSql() 
+
+    public function testDropTableExecutesSql()
     {
         $this->export->dropTable('sometable');
-        
+
         $this->assertEqual($this->adapter->pop(), 'DROP TABLE sometable');
     }
-    public function testRecordIsExportedProperly() 
-    {
 
-    }
-    public function testExport() 
+    public function testRecordIsExportedProperly()
     {
-        
     }
+
+    public function testExport()
+    {
+    }
+
     public function testDropDottedForeignKey()
     {
         $this->export->dropForeignKey('sometable', 'normal_foreign_key');

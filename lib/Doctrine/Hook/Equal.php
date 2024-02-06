@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Hook_Equal
+ * Doctrine_Hook_Equal.
  *
- * @package     Doctrine
- * @subpackage  Hook
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hook_Equal extends Doctrine_Hook_Parser
@@ -39,14 +35,13 @@ class Doctrine_Hook_Equal extends Doctrine_Hook_Parser
      * prepared statement conditions (conditions that use
      * placeholders instead of literal values).
      *
-     * @param string $alias     component alias
-     * @param string $field     the field name
-     * @param mixed $value      the value of the field
-     * @return void
+     * @param string $alias component alias
+     * @param string $field the field name
+     * @param mixed  $value the value of the field
      */
     public function parse($alias, $field, $value)
     {
-        $this->params    = (array) $value;
-        $this->condition = $alias . '.' . $field . ' = ?';
+        $this->params = (array) $value;
+        $this->condition = $alias.'.'.$field.' = ?';
     }
 }

@@ -20,104 +20,107 @@
  */
 
 /**
- * Doctrine_Connection_Mssql_TestCase
+ * Doctrine_Connection_Mssql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Connection_Mssql_TestCase extends Doctrine_UnitTestCase
 {
-    public function testAlreadyExistsErrorIsSupported() {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 2714, '')));
-        
+    public function testAlreadyExistsErrorIsSupported()
+    {
+        $this->assertTrue($this->exc->processErrorInfo([0, 2714, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_ALREADY_EXISTS);
     }
 
     public function testAlreadyExistsErrorIsSupported2()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 1913, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 1913, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_ALREADY_EXISTS);
     }
 
     public function testValueCountOnRowErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 110, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 110, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_VALUE_COUNT_ON_ROW);
     }
 
     public function testNoSuchFieldErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 155, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 155, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHFIELD);
     }
 
     public function testNoSuchFieldErrorIsSupported2()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 207, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 207, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHFIELD);
     }
 
     public function testNoSuchTableErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 208, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 208, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHTABLE);
     }
 
     public function testNoSuchTableErrorIsSupported2()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 3701, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 3701, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_NOSUCHTABLE);
     }
 
     public function testSyntaxErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 170, '')));
-        
+        $this->assertTrue($this->exc->processErrorInfo([0, 170, '']));
+
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_SYNTAX);
     }
 
     public function testInvalidNumberErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 245, '')));
+        $this->assertTrue($this->exc->processErrorInfo([0, 245, '']));
 
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_INVALID_NUMBER);
     }
 
     public function testNotNullConstraintErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 515, '')));
+        $this->assertTrue($this->exc->processErrorInfo([0, 515, '']));
 
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT_NOT_NULL);
     }
 
     public function testConstraintErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 547, '')));
+        $this->assertTrue($this->exc->processErrorInfo([0, 547, '']));
 
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testConstraintErrorIsSupported2()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 2627, '')));
+        $this->assertTrue($this->exc->processErrorInfo([0, 2627, '']));
 
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_CONSTRAINT);
     }
 
     public function testDivZeroErrorIsSupported()
     {
-        $this->assertTrue($this->exc->processErrorInfo(array(0, 8134, '')));
+        $this->assertTrue($this->exc->processErrorInfo([0, 8134, '']));
 
         $this->assertEqual($this->exc->getPortableCode(), Doctrine_Core::ERR_DIVZERO);
     }

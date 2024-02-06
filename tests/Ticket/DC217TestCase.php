@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC217_TestCase
+ * Doctrine_Ticket_DC217_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC217_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC217_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -42,7 +44,7 @@ class Doctrine_Ticket_DC217_TestCase extends Doctrine_UnitTestCase
     {
         $o = new Ticket_DC217_Industry();
         $o->name = 'test';
-        //$o->parent_id = null;
+        // $o->parent_id = null;
         $o->save();
     }
 }
@@ -51,34 +53,34 @@ class Ticket_DC217_Industry extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', 4, array(
-             'type' => 'integer',
-             'primary' => true,
-             'autoincrement' => true,
-             'length' => '4',
-             ));
+        $this->hasColumn('id', 'integer', 4, [
+            'type' => 'integer',
+            'primary' => true,
+            'autoincrement' => true,
+            'length' => '4',
+        ]);
 
-        $this->hasColumn('parent_id', 'integer', 4, array(
-             'type' => 'integer',
-             'notnull' => false,
-             'length' => '4',
-             ));
+        $this->hasColumn('parent_id', 'integer', 4, [
+            'type' => 'integer',
+            'notnull' => false,
+            'length' => '4',
+        ]);
 
-        $this->hasColumn('name', 'string', 30, array(
-             'type' => 'string',
-             'notnull' => true,
-             'length' => '30',
-             ));
+        $this->hasColumn('name', 'string', 30, [
+            'type' => 'string',
+            'notnull' => true,
+            'length' => '30',
+        ]);
     }
 
     public function setUp()
     {
-        $this->hasOne('Ticket_DC217_Industry as ParentIndustry', array(
-             'local' => 'parent_id',
-             'foreign' => 'id'));
+        $this->hasOne('Ticket_DC217_Industry as ParentIndustry', [
+            'local' => 'parent_id',
+            'foreign' => 'id']);
 
-        $this->hasMany('Ticket_DC217_Industry as ChildIndustries', array(
-             'local' => 'id',
-             'foreign' => 'parent_id'));
+        $this->hasMany('Ticket_DC217_Industry as ChildIndustries', [
+            'local' => 'id',
+            'foreign' => 'parent_id']);
     }
 }

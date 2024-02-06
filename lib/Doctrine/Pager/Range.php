@@ -20,52 +20,46 @@
  */
 
 /**
- * Doctrine_Pager_Range
+ * Doctrine_Pager_Range.
  *
  * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @package     Doctrine
- * @subpackage  Pager
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       0.9
+ *
+ * @see        www.doctrine-project.org
  */
 abstract class Doctrine_Pager_Range
 {
     /**
-     * @var array $_options     Custom Doctrine_Pager_Range implementation options
+     * @var array Custom Doctrine_Pager_Range implementation options
      */
     protected $_options;
 
     /**
-     * @var Doctrine_Pager $pager     Doctrine_Pager object related to the pager range
+     * @var Doctrine_Pager Doctrine_Pager object related to the pager range
      */
     private $pager;
 
-
     /**
-     * __construct
+     * __construct.
      *
-     * @param array $options     Custom subclass implementation options.
-     *                           Default is a blank array
-     * @param Doctrine_Pager $pager     Optional Doctrine_Pager object to be associated
-     * @return void
+     * @param array          $options Custom subclass implementation options.
+     *                                Default is a blank array
+     * @param Doctrine_Pager $pager   Optional Doctrine_Pager object to be associated
      */
-    final public function __construct($options = array(), $pager = null)
+    final public function __construct($options = [], $pager = null)
     {
         $this->_setOptions($options);
 
-        if ($pager !== null) {
+        if (null !== $pager) {
             $this->setPager($pager);
         }
     }
 
     /**
-     * getPager
+     * getPager.
      *
      * Returns the Doctrine_Pager object related to the pager range
      *
-     * @return Doctrine_Pager        Doctrine_Pager object related to the pager range
+     * @return Doctrine_Pager Doctrine_Pager object related to the pager range
      */
     public function getPager()
     {
@@ -73,13 +67,12 @@ abstract class Doctrine_Pager_Range
     }
 
     /**
-     * setPager
+     * setPager.
      *
      * Defines the Doctrine_Pager object related to the pager range and
      * automatically (re-)initialize Doctrine_Pager_Range
      *
-     * @param $pager       Doctrine_Pager object related to the pager range
-     * @return void
+     * @param $pager Doctrine_Pager object related to the pager range
      */
     public function setPager($pager)
     {
@@ -92,11 +85,11 @@ abstract class Doctrine_Pager_Range
     }
 
     /**
-     * getOptions
+     * getOptions.
      *
      * Returns the custom Doctrine_Pager_Range implementation options
      *
-     * @return array        Custom Doctrine_Pager_Range implementation options
+     * @return array Custom Doctrine_Pager_Range implementation options
      */
     public function getOptions()
     {
@@ -104,11 +97,11 @@ abstract class Doctrine_Pager_Range
     }
 
     /**
-     * getOption
+     * getOption.
      *
      * Returns the custom Doctrine_Pager_Range implementation offset option
      *
-     * @return array        Custom Doctrine_Pager_Range implementation options
+     * @return array Custom Doctrine_Pager_Range implementation options
      */
     public function getOption($option)
     {
@@ -116,18 +109,15 @@ abstract class Doctrine_Pager_Range
             return $this->_options[$option];
         }
 
-        throw new Doctrine_Pager_Exception(
-            'Cannot access unexistent option \'' . $option . '\' in Doctrine_Pager_Range class'
-        );
+        throw new Doctrine_Pager_Exception('Cannot access unexistent option \''.$option.'\' in Doctrine_Pager_Range class');
     }
 
     /**
-     * _setOptions
+     * _setOptions.
      *
      * Defines the subclass implementation options
      *
-     * @param $options       Custom Doctrine_Pager_Range implementation options
-     * @return void
+     * @param $options Custom Doctrine_Pager_Range implementation options
      */
     protected function _setOptions($options)
     {
@@ -135,32 +125,27 @@ abstract class Doctrine_Pager_Range
     }
 
     /**
-     * isInRange
+     * isInRange.
      *
      * Check if a given page is in the range
      *
-     * @param $page       Page to be checked
-     * @return boolean
+     * @param       $page Page to be checked
+     * @return bool
      */
     public function isInRange($page)
     {
-        return (array_search($page, $this->rangeAroundPage()) !== false);
+        return false !== array_search($page, $this->rangeAroundPage());
     }
 
-
-
     /**
-     * _initialize
+     * _initialize.
      *
      * Initialize Doctrine_Page_Range subclass which does custom class definitions
-     *
-     * @return void
      */
     abstract protected function _initialize();
 
-
     /**
-     * rangeAroundPage
+     * rangeAroundPage.
      *
      * Calculate and returns an array representing the range around the current page
      *

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1315_TestCase
+ * Doctrine_Ticket_1315_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1315_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1315_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
@@ -40,7 +42,8 @@ class Doctrine_Ticket_1315_TestCase extends Doctrine_UnitTestCase
 
         try {
             $q = Doctrine_Query::create()
-                ->from('User u');
+                ->from('User u')
+            ;
 
             $users = $q->execute();
             $this->fail();
@@ -52,7 +55,8 @@ class Doctrine_Ticket_1315_TestCase extends Doctrine_UnitTestCase
 
         try {
             $q = Doctrine_Query::create()
-                ->from('User u');
+                ->from('User u')
+            ;
 
             $users = $q->execute();
             $this->pass();
@@ -66,8 +70,8 @@ class Doctrine_Ticket_1315_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_1315_Listener extends Doctrine_Record_Listener
 {
-   public function preDqlSelect(Doctrine_Event $event)
-   {
-       throw new Doctrine_Exception('Test');
-   }
+    public function preDqlSelect(Doctrine_Event $event)
+    {
+        throw new Doctrine_Exception('Test');
+    }
 }

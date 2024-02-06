@@ -24,20 +24,19 @@ class DC521TestModel extends Doctrine_Record
     public function setTableDefinition()
     {
         $this->setTableName('dc521_test_model');
-        $this->hasColumn('id', 'integer', null, array(
-             'type' => 'integer',
-             'primary' => true,
-             'autoincrement' => true,
-             ));
-        $this->hasColumn('data', 'string', null, array(
-             'type' => 'string',
-             ));
+        $this->hasColumn('id', 'integer', null, [
+            'type' => 'integer',
+            'primary' => true,
+            'autoincrement' => true,
+        ]);
+        $this->hasColumn('data', 'string', null, [
+            'type' => 'string',
+        ]);
     }
 
     public function setUp()
     {
         parent::setUp();
-        
     }
 }
 
@@ -46,48 +45,49 @@ class DC521IdOnlyTestModel extends Doctrine_Record
     public function setTableDefinition()
     {
         $this->setTableName('dc521_idonly_test_model');
-        $this->hasColumn('id', 'integer', null, array(
-             'type' => 'integer',
-             'primary' => true,
-             'autoincrement' => true,
-             ));
+        $this->hasColumn('id', 'integer', null, [
+            'type' => 'integer',
+            'primary' => true,
+            'autoincrement' => true,
+        ]);
     }
 
     public function setUp()
     {
         parent::setUp();
-        
     }
 }
 
 /**
- * Doctrine_Ticket_DC521_TestCase
+ * Doctrine_Ticket_DC521_TestCase.
  *
- * @package     Doctrine
  * @author      Gergely Kis <gergely.kis@mattakis.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.2
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC521_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC521_TestCase extends Doctrine_UnitTestCase
 {
     public function init()
     {
         Doctrine_Manager::connection('pgsql://test:test@localhost/doctrine', 'Pgsql');
-    	   $this->driverName = 'Pgsql';
-    	   parent::init();
+        $this->driverName = 'Pgsql';
+        parent::init();
         $this->prepareTables();
     }
-    
+
     public function setUp()
     {
-    	   $this->driverName = 'Pgsql';
+        $this->driverName = 'Pgsql';
         Doctrine_Manager::connection('pgsql://test:test@localhost/doctrine', 'Pgsql');
-    	   parent::setUp();
+        parent::setUp();
     }
-    
+
     public function testEmptyPgsqlAutoIncrementField()
     {
         $m = new DC521TestModel();
@@ -101,7 +101,7 @@ class Doctrine_Ticket_DC521_TestCase extends Doctrine_UnitTestCase
         $m->save();
         $this->assertEqual($m->id, 1);
     }
-    
+
     public function testIdOnlyPgsqlAutoIncrementFieldWithDefinedValue()
     {
         $m = new DC521IdOnlyTestModel();
@@ -109,7 +109,7 @@ class Doctrine_Ticket_DC521_TestCase extends Doctrine_UnitTestCase
         $m->save();
         $this->assertEqual($m->id, 9999);
     }
-    
+
     public function testPgsqlAutoIncrementFieldWithDefinedValue()
     {
         $m = new DC521TestModel();
@@ -117,27 +117,27 @@ class Doctrine_Ticket_DC521_TestCase extends Doctrine_UnitTestCase
         $m->save();
         $this->assertEqual($m->id, 9999);
     }
-    
+
     public function testPgsqlAutoIncrementFieldWithDefinedValueAndData()
     {
         $m = new DC521TestModel();
         $this->assertEqual($m->id, null);
         $m->id = 111111;
-        $m->data = "testdata";
+        $m->data = 'testdata';
         $m->save();
         $this->assertEqual($m->id, 111111);
     }
-    
-    public function prepareTables() 
+
+    public function prepareTables()
     {
-        $this->tables = array('DC521TestModel', 'DC521IdOnlyTestModel');
+        $this->tables = ['DC521TestModel', 'DC521IdOnlyTestModel'];
         parent::prepareTables();
     }
-    
+
     public function tearDown()
     {
         Doctrine_Manager::resetInstance();
-    	   $this->driverName = null;
-    	   parent::tearDown();
+        $this->driverName = null;
+        parent::tearDown();
     }
 }

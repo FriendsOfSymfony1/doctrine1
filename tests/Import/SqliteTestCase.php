@@ -20,40 +20,45 @@
  */
 
 /**
- * Doctrine_Import_Sqlite_TestCase
+ * Doctrine_Import_Sqlite_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Import_Sqlite_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Import_Sqlite_TestCase extends Doctrine_UnitTestCase
 {
-    public function testListSequencesExecutesSql() 
+    public function testListSequencesExecutesSql()
     {
         $this->import->listSequences('table');
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT name FROM sqlite_master WHERE type='table' AND sql NOT NULL ORDER BY name");
     }
+
     public function testListTableColumnsExecutesSql()
     {
         $this->import->listTableColumns('table');
-        
-        $this->assertEqual($this->adapter->pop(), "PRAGMA table_info(table)");
+
+        $this->assertEqual($this->adapter->pop(), 'PRAGMA table_info(table)');
     }
+
     public function testListTableIndexesExecutesSql()
     {
         $this->import->listTableIndexes('table');
-        
-        $this->assertEqual($this->adapter->pop(), "PRAGMA index_list(table)");
+
+        $this->assertEqual($this->adapter->pop(), 'PRAGMA index_list(table)');
     }
+
     public function testListTablesExecutesSql()
     {
         $this->import->listTables();
-        
+
         $q = "SELECT name FROM sqlite_master WHERE type = 'table' AND name != 'sqlite_sequence' UNION ALL SELECT name FROM sqlite_temp_master WHERE type = 'table' ORDER BY name";
 
         $this->assertEqual($this->adapter->pop(), $q);

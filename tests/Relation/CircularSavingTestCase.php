@@ -20,26 +20,29 @@
  */
 
 /**
- * Doctrine_Relation_CircularSaving_TestCase
+ * Doctrine_Relation_CircularSaving_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @author      Jan Schaefer <tanken@gmx.de> 
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @author      Jan Schaefer <tanken@gmx.de>
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Relation_CircularSaving_TestCase extends Doctrine_UnitTestCase
 {
-
-    public function prepareData() 
-    { }
-    public function prepareTables() 
+    public function prepareData()
     {
-        $this->tables = array('NestTest', 'NestReference');
-        
+    }
+
+    public function prepareTables()
+    {
+        $this->tables = ['NestTest', 'NestReference'];
+
         parent::prepareTables();
     }
 
@@ -59,7 +62,7 @@ class Doctrine_Relation_CircularSaving_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual(count($coll), 0);
     }
 
-    public function testCircularNonEqualSelfReferencingRelationSaving() 
+    public function testCircularNonEqualSelfReferencingRelationSaving()
     {
         $n1 = new NestTest();
         $n1->set('name', 'node1');
@@ -86,7 +89,7 @@ class Doctrine_Relation_CircularSaving_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual(count($coll), 0);
     }
 
-    public function testCircularEqualSelfReferencingRelationSaving() 
+    public function testCircularEqualSelfReferencingRelationSaving()
     {
         $n1 = new NestTest();
         $n1->set('name', 'node1');
@@ -101,7 +104,7 @@ class Doctrine_Relation_CircularSaving_TestCase extends Doctrine_UnitTestCase
         $n2->save();
 
         $q = new Doctrine_Query();
-        $coll = $q->from('NestReference')->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+        $coll = $q->from('NestReference')->execute([], Doctrine_Core::HYDRATE_ARRAY);
 
         $this->assertEqual(count($coll), 1);
     }

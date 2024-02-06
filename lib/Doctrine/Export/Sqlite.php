@@ -20,66 +20,60 @@
  */
 
 /**
- * Doctrine_Export_Sqlite
+ * Doctrine_Export_Sqlite.
  *
- * @package     Doctrine
- * @subpackage  Export
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Export_Sqlite extends Doctrine_Export
 {
     /**
-     * dropDatabase
+     * dropDatabase.
      *
      * drop an existing database
      *
-     * @param string $databaseFile          Path of the database that should be dropped
-     * @throws Doctrine_Export_Exception    if the database file does not exist
-     * @throws Doctrine_Export_Exception    if something failed during the removal of the database file
-     * @return void
+     * @param  string                    $databaseFile Path of the database that should be dropped
+     * @throws Doctrine_Export_Exception if the database file does not exist
+     * @throws Doctrine_Export_Exception if something failed during the removal of the database file
      */
     public function dropDatabase($databaseFile)
     {
-        if ( ! @file_exists($databaseFile)) {
+        if (!@file_exists($databaseFile)) {
             throw new Doctrine_Export_Exception('database does not exist');
         }
 
         $result = @unlink($databaseFile);
 
-        if ( ! $result) {
+        if (!$result) {
             throw new Doctrine_Export_Exception('could not remove the database file');
         }
     }
 
     /**
-     * createDatabase
+     * createDatabase.
      *
      * Create sqlite database file
      *
-     * @param string $databaseFile  Path of the database that should be dropped
-     * @return void
+     * @param string $databaseFile Path of the database that should be dropped
      */
     public function createDatabase($databaseFile)
     {
-        return new PDO('sqlite:' . $databaseFile);
+        return new PDO('sqlite:'.$databaseFile);
     }
 
     /**
-     * Get the stucture of a field into an array
+     * Get the stucture of a field into an array.
      *
-     * @param string    $table         name of the table on which the index is to be created
-     * @param string    $name         name of the index to be created
-     * @param array     $definition        associative array that defines properties of the index to be created.
-     *                                 Currently, only one property named FIELDS is supported. This property
-     *                                 is also an associative with the names of the index fields as array
-     *                                 indexes. Each entry of this array is set to another type of associative
-     *                                 array that specifies properties of the index that are specific to
-     *                                 each field.
+     * @param string $table      name of the table on which the index is to be created
+     * @param string $name       name of the index to be created
+     * @param array  $definition associative array that defines properties of the index to be created.
+     *                           Currently, only one property named FIELDS is supported. This property
+     *                           is also an associative with the names of the index fields as array
+     *                           indexes. Each entry of this array is set to another type of associative
+     *                           array that specifies properties of the index that are specific to
+     *                           each field.
      *
      *                                Currently, only the sorting property is supported. It should be used
      *                                 to define the sorting direction of the index. It may be set to either
@@ -98,28 +92,25 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      *                                        )
      *                                    )
      * @throws PDOException
-     * @return void
      */
     public function createIndexSql($table, $name, array $definition)
     {
-        $name  = $this->conn->formatter->getIndexName($name);
-        $name  = $this->conn->quoteIdentifier($name);
-        $type  = '';
+        $name = $this->conn->formatter->getIndexName($name);
+        $name = $this->conn->quoteIdentifier($name);
+        $type = '';
 
         if (isset($definition['type'])) {
             switch (strtolower($definition['type'])) {
                 case 'unique':
-                    $type = strtoupper($definition['type']) . ' ';
-                break;
+                    $type = strtoupper($definition['type']).' ';
+                    break;
                 default:
-                    throw new Doctrine_Export_Exception(
-                        'Unknown type ' . $definition['type'] . ' for index ' . $name . ' in table ' . $table
-                    );
+                    throw new Doctrine_Export_Exception('Unknown type '.$definition['type'].' for index '.$name.' in table '.$table);
             }
         }
 
-        $query = 'CREATE ' . $type . 'INDEX ' . $name . ' ON ' . $table;
-        $query .= ' (' . $this->getIndexFieldDeclarationList($definition['fields']) . ')';
+        $query = 'CREATE '.$type.'INDEX '.$name.' ON '.$table;
+        $query .= ' ('.$this->getIndexFieldDeclarationList($definition['fields']).')';
 
         return $query;
     }
@@ -129,11 +120,11 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      * Obtain DBMS specific SQL code portion needed to set an index
      * declaration to be used in statements like CREATE TABLE.
      *
-     * @return string   
+     * @return string
      */
     public function getIndexFieldDeclarationList(array $fields)
     {
-        $declFields = array();
+        $declFields = [];
 
         foreach ($fields as $fieldName => $field) {
             $fieldString = $this->conn->quoteIdentifier($fieldName);
@@ -144,7 +135,7 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
                     switch ($sort) {
                         case 'ASC':
                         case 'DESC':
-                            $fieldString .= ' ' . $sort;
+                            $fieldString .= ' '.$sort;
                             break;
                         default:
                             throw new Doctrine_Export_Exception('Unknown index sorting option given.');
@@ -155,79 +146,78 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
             }
             $declFields[] = $fieldString;
         }
+
         return implode(', ', $declFields);
     }
 
     /**
-     * create a new table
+     * create a new table.
      *
-     * @param string $name   Name of the database that should be created
-     * @param array $fields  Associative array that contains the definition of each field of the new table
-     *                       The indexes of the array entries are the names of the fields of the table an
-     *                       the array entry values are associative arrays like those that are meant to be
-     *                       passed with the field definitions to get[Type]Declaration() functions.
-     *                          array(
-     *                              'id' => array(
-     *                                  'type' => 'integer',
-     *                                  'unsigned' => 1
-     *                                  'notnull' => 1
-     *                                  'default' => 0
-     *                              ),
-     *                              'name' => array(
-     *                                  'type' => 'text',
-     *                                  'length' => 12
-     *                              ),
-     *                              'password' => array(
-     *                                  'type' => 'text',
-     *                                  'length' => 12
-     *                              )
-     *                          );
-     * @param array $options  An associative array of table options:
-     *
-     * @return void
+     * @param string $name    Name of the database that should be created
+     * @param array  $fields  Associative array that contains the definition of each field of the new table
+     *                        The indexes of the array entries are the names of the fields of the table an
+     *                        the array entry values are associative arrays like those that are meant to be
+     *                        passed with the field definitions to get[Type]Declaration() functions.
+     *                        array(
+     *                        'id' => array(
+     *                        'type' => 'integer',
+     *                        'unsigned' => 1
+     *                        'notnull' => 1
+     *                        'default' => 0
+     *                        ),
+     *                        'name' => array(
+     *                        'type' => 'text',
+     *                        'length' => 12
+     *                        ),
+     *                        'password' => array(
+     *                        'type' => 'text',
+     *                        'length' => 12
+     *                        )
+     *                        );
+     * @param array  $options An associative array of table options:
      */
-    public function createTableSql($name, array $fields, array $options = array())
+    public function createTableSql($name, array $fields, array $options = [])
     {
-        if ( ! $name) {
+        if (!$name) {
             throw new Doctrine_Export_Exception('no valid table name specified');
         }
-        
+
         if (empty($fields)) {
             throw new Doctrine_Export_Exception('no fields specified for table '.$name);
         }
         $queryFields = $this->getFieldDeclarationList($fields);
-        
+
         $autoinc = false;
-        foreach($fields as $field) {
-            if (isset($field['autoincrement']) && $field['autoincrement'] || 
-              (isset($field['autoinc']) && $field['autoinc'])) {
+        foreach ($fields as $field) {
+            if (isset($field['autoincrement']) && $field['autoincrement']
+              || (isset($field['autoinc']) && $field['autoinc'])) {
                 $autoinc = true;
                 break;
             }
         }
 
-        if ( ! $autoinc && isset($options['primary']) && ! empty($options['primary'])) {
+        if (!$autoinc && isset($options['primary']) && !empty($options['primary'])) {
             $keyColumns = array_values($options['primary']);
-            $keyColumns = array_map(array($this->conn, 'quoteIdentifier'), $keyColumns);
-            $queryFields.= ', PRIMARY KEY('.implode(', ', $keyColumns).')';
+            $keyColumns = array_map([$this->conn, 'quoteIdentifier'], $keyColumns);
+            $queryFields .= ', PRIMARY KEY('.implode(', ', $keyColumns).')';
         }
 
-        $name  = $this->conn->quoteIdentifier($name, true);
-        $sql   = 'CREATE TABLE ' . $name . ' (' . $queryFields;
+        $name = $this->conn->quoteIdentifier($name, true);
+        $sql = 'CREATE TABLE '.$name.' ('.$queryFields;
 
         if ($check = $this->getCheckDeclaration($fields)) {
-            $sql .= ', ' . $check;
+            $sql .= ', '.$check;
         }
 
         if (isset($options['checks']) && $check = $this->getCheckDeclaration($options['checks'])) {
-            $sql .= ', ' . $check;
+            $sql .= ', '.$check;
         }
 
         $sql .= ')';
 
         $query[] = $sql;
 
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+        if (isset($options['indexes']) && !empty($options['indexes'])) {
             foreach ($options['indexes'] as $index => $definition) {
                 $query[] = $this->createIndexSql($name, $index, $definition);
             }
@@ -241,21 +231,20 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      * Return the FOREIGN KEY query section dealing with non-standard options
      * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
      *
-     * @param array $definition         foreign key definition
+     * @param  array  $definition foreign key definition
      * @return string
-     * @access protected
      */
     public function getAdvancedForeignKeyOptions(array $definition)
     {
         $query = '';
         if (isset($definition['match'])) {
-            $query .= ' MATCH ' . $definition['match'];
+            $query .= ' MATCH '.$definition['match'];
         }
         if (isset($definition['onUpdate'])) {
-            $query .= ' ON UPDATE ' . $definition['onUpdate'];
+            $query .= ' ON UPDATE '.$definition['onUpdate'];
         }
         if (isset($definition['onDelete'])) {
-            $query .= ' ON DELETE ' . $definition['onDelete'];
+            $query .= ' ON DELETE '.$definition['onDelete'];
         }
         if (isset($definition['deferrable'])) {
             $query .= ' DEFERRABLE';
@@ -267,43 +256,45 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
         } else {
             $query .= ' INITIALLY IMMEDIATE';
         }
+
         return $query;
     }
 
     /**
-     * create sequence
+     * create sequence.
      *
-     * @param string    $seqName        name of the sequence to be created
-     * @param string    $start          start value of the sequence; default is 1
-     * @param array     $options  An associative array of table options:
-     *                          array(
-     *                              'comment' => 'Foo',
-     *                              'charset' => 'utf8',
-     *                              'collate' => 'utf8_unicode_ci',
-     *                          );
-     * @return boolean
+     * @param  string $seqName name of the sequence to be created
+     * @param  string $start   start value of the sequence; default is 1
+     * @param  array  $options An associative array of table options:
+     *                         array(
+     *                         'comment' => 'Foo',
+     *                         'charset' => 'utf8',
+     *                         'collate' => 'utf8_unicode_ci',
+     *                         );
+     * @return bool
      */
-    public function createSequence($seqName, $start = 1, array $options = array())
+    public function createSequence($seqName, $start = 1, array $options = [])
     {
-        $sequenceName   = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
-        $query          = 'CREATE TABLE ' . $sequenceName . ' (' . $seqcolName . ' INTEGER PRIMARY KEY DEFAULT 0 NOT NULL)';
+        $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
+        $seqcolName = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
+        $query = 'CREATE TABLE '.$sequenceName.' ('.$seqcolName.' INTEGER PRIMARY KEY DEFAULT 0 NOT NULL)';
 
         $this->conn->exec($query);
 
-        if ($start == 1) {
+        if (1 == $start) {
             return true;
         }
 
         try {
-            $this->conn->exec('INSERT INTO ' . $sequenceName . ' (' . $seqcolName . ') VALUES (' . ($start-1) . ')');
+            $this->conn->exec('INSERT INTO '.$sequenceName.' ('.$seqcolName.') VALUES ('.($start - 1).')');
+
             return true;
-        } catch(Doctrine_Connection_Exception $e) {
-            // Handle error    
+        } catch (Doctrine_Connection_Exception $e) {
+            // Handle error
 
             try {
-                $result = $db->exec('DROP TABLE ' . $sequenceName);
-            } catch(Doctrine_Connection_Exception $e) {
+                $result = $db->exec('DROP TABLE '.$sequenceName);
+            } catch (Doctrine_Connection_Exception $e) {
                 throw new Doctrine_Export_Exception('could not drop inconsistent sequence table');
             }
         }
@@ -311,21 +302,21 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
     }
 
     /**
-     * drop existing sequence
+     * drop existing sequence.
      *
-     * @param string $sequenceName      name of the sequence to be dropped
+     * @param  string $sequenceName name of the sequence to be dropped
      * @return string
      */
     public function dropSequenceSql($sequenceName)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName), true);
 
-        return 'DROP TABLE ' . $sequenceName;
+        return 'DROP TABLE '.$sequenceName;
     }
-    
+
     public function alterTableSql($name, array $changes, $check = false)
     {
-        if ( ! $name) {
+        if (!$name) {
             throw new Doctrine_Export_Exception('no valid table name specified');
         }
         foreach ($changes as $changeName => $change) {
@@ -336,7 +327,7 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
                 case 'name':
                     break;
                 default:
-                    throw new Doctrine_Export_Exception('change type "' . $changeName . '" not yet supported');
+                    throw new Doctrine_Export_Exception('change type "'.$changeName.'" not yet supported');
             }
         }
 
@@ -345,31 +336,31 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
         }
 
         $query = '';
-        if ( ! empty($changes['name'])) {
+        if (!empty($changes['name'])) {
             $change_name = $this->conn->quoteIdentifier($changes['name']);
-            $query .= 'RENAME TO ' . $change_name;
+            $query .= 'RENAME TO '.$change_name;
         }
 
-        if ( ! empty($changes['add']) && is_array($changes['add'])) {
+        if (!empty($changes['add']) && is_array($changes['add'])) {
             foreach ($changes['add'] as $fieldName => $field) {
                 if ($query) {
-                    $query.= ', ';
+                    $query .= ', ';
                 }
-                $query.= 'ADD ' . $this->getDeclaration($fieldName, $field);
+                $query .= 'ADD '.$this->getDeclaration($fieldName, $field);
             }
         }
 
-        $rename = array();
-        if ( ! empty($changes['rename']) && is_array($changes['rename'])) {
+        $rename = [];
+        if (!empty($changes['rename']) && is_array($changes['rename'])) {
             foreach ($changes['rename'] as $fieldName => $field) {
                 $rename[$field['name']] = $fieldName;
             }
         }
 
-        if ( ! empty($changes['change']) && is_array($changes['change'])) {
+        if (!empty($changes['change']) && is_array($changes['change'])) {
             foreach ($changes['change'] as $fieldName => $field) {
                 if ($query) {
-                    $query.= ', ';
+                    $query .= ', ';
                 }
                 if (isset($rename[$fieldName])) {
                     $oldFieldName = $rename[$fieldName];
@@ -378,40 +369,40 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
                     $oldFieldName = $fieldName;
                 }
                 $oldFieldName = $this->conn->quoteIdentifier($oldFieldName, true);
-                $query .= 'CHANGE ' . $oldFieldName . ' ' 
-                        . $this->getDeclaration($fieldName, $field['definition']);
+                $query .= 'CHANGE '.$oldFieldName.' '
+                        .$this->getDeclaration($fieldName, $field['definition']);
             }
         }
 
-        if ( ! empty($rename) && is_array($rename)) {
+        if (!empty($rename) && is_array($rename)) {
             foreach ($rename as $renameName => $renamedField) {
                 if ($query) {
-                    $query.= ', ';
+                    $query .= ', ';
                 }
                 $field = $changes['rename'][$renamedField];
                 $renamedField = $this->conn->quoteIdentifier($renamedField, true);
-                $query .= 'CHANGE ' . $renamedField . ' '
-                        . $this->getDeclaration($field['name'], $field['definition']);
+                $query .= 'CHANGE '.$renamedField.' '
+                        .$this->getDeclaration($field['name'], $field['definition']);
             }
         }
 
-        if ( ! $query) {
+        if (!$query) {
             return false;
         }
 
         $name = $this->conn->quoteIdentifier($name, true);
-        
-        return 'ALTER TABLE ' . $name . ' ' . $query;
+
+        return 'ALTER TABLE '.$name.' '.$query;
     }
 
     /**
-     * createForeignKey
+     * createForeignKey.
      *
      * Sqlite does not support foreign keys so we are not even going to do anything if this function is called
      * to avoid any sql errors if a user tries to use this on sqlite
      *
-     * @param string    $table         name of the table on which the foreign key is to be created
-     * @param array     $definition    associative array that defines properties of the foreign key to be created.
+     * @param  string $table      name of the table on which the foreign key is to be created
+     * @param  array  $definition associative array that defines properties of the foreign key to be created
      * @return string
      */
     public function createForeignKey($table, array $definition)

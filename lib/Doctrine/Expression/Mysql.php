@@ -20,20 +20,16 @@
  */
 
 /**
- * Doctrine_Expression_Mysql
+ * Doctrine_Expression_Mysql.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
 {
     /**
-     * returns the regular expression operator
+     * returns the regular expression operator.
      *
      * @return string
      */
@@ -43,7 +39,7 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
     }
 
     /**
-     * return string to call a function to get random value inside an SQL statement
+     * return string to call a function to get random value inside an SQL statement.
      *
      * @return string to generate float between 0 and 1
      */
@@ -53,26 +49,23 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
     }
 
     /**
-     * build a pattern matching string
+     * build a pattern matching string.
      *
      * EXPERIMENTAL
      *
      * WARNING: this function is experimental and may change signature at
      * any time until labelled as non-experimental
      *
-     * @access public
-     *
-     * @param array $pattern even keys are strings, odd are patterns (% and _)
-     * @param string $operator optional pattern operator (LIKE, ILIKE and maybe others in the future)
-     * @param string $field optional field name that is being matched against
-     *                  (might be required when emulating ILIKE)
-     *
+     * @param  array  $pattern  even keys are strings, odd are patterns (% and _)
+     * @param  string $operator optional pattern operator (LIKE, ILIKE and maybe others in the future)
+     * @param  string $field    optional field name that is being matched against
+     *                          (might be required when emulating ILIKE)
      * @return string SQL pattern
      */
     public function matchPattern($pattern, $operator = null, $field = null)
     {
         $match = '';
-        if ( ! is_null($operator)) {
+        if (!is_null($operator)) {
             $field = is_null($field) ? '' : $field.' ';
             $operator = strtoupper($operator);
             switch ($operator) {
@@ -80,15 +73,15 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
                 case 'ILIKE':
                     $match = $field.'LIKE ';
                     break;
-                // case sensitive
+                    // case sensitive
                 case 'LIKE':
                     $match = $field.'LIKE BINARY ';
                     break;
                 default:
-                    throw new Doctrine_Expression_Mysql_Exception('not a supported operator type:'. $operator);
+                    throw new Doctrine_Expression_Mysql_Exception('not a supported operator type:'.$operator);
             }
         }
-        $match.= "'";
+        $match .= "'";
         foreach ($pattern as $key => $value) {
             if ($key % 2) {
                 $match .= $value;
@@ -96,13 +89,14 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
                 $match .= $this->conn->escapePattern($this->conn->escape($value));
             }
         }
-        $match.= "'";
-        $match.= $this->patternEscapeString();
+        $match .= "'";
+        $match .= $this->patternEscapeString();
+
         return $match;
     }
 
     /**
-     * Returns global unique identifier
+     * Returns global unique identifier.
      *
      * @return string to get global unique identifier
      */
@@ -112,49 +106,52 @@ class Doctrine_Expression_Mysql extends Doctrine_Expression_Driver
     }
 
     /**
-     * Returns the year from dbms
+     * Returns the year from dbms.
      *
-     * @param string $column 
+     * @param  string $column
      * @return string to get year from dbms
      */
     public function year($column)
     {
         $column = $this->getIdentifier($column);
-        return 'YEAR(' .  $column . ')';
+
+        return 'YEAR('.$column.')';
     }
 
     /**
-     * Returns the month from dbms
+     * Returns the month from dbms.
      *
-     * @param string $column 
+     * @param  string $column
      * @return string to get month from dbms
      */
     public function month($column)
     {
         $column = $this->getIdentifier($column);
-        return 'MONTH(' .  $column . ')';
+
+        return 'MONTH('.$column.')';
     }
 
     /**
-     * Returns day from dbms
+     * Returns day from dbms.
      *
-     * @param string $column 
+     * @param  string $column
      * @return string to get day from dbms
      */
     public function day($column)
     {
         $column = $this->getIdentifier($column);
-        return 'DAY(' .  $column . ')';
+
+        return 'DAY('.$column.')';
     }
 
     /**
-     * Returns soundex from dbms
+     * Returns soundex from dbms.
      *
-     * @param string $column
+     * @param  string $column
      * @return string to get soundex from dbms
      */
     public function soundex($column)
     {
-        return 'SOUNDEX(' . $column . ')';
+        return 'SOUNDEX('.$column.')';
     }
 }

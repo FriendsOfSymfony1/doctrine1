@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1537_TestCase
+ * Doctrine_Ticket_1537_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1537_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1537_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,7 +47,8 @@ class Doctrine_Ticket_1537_TestCase extends Doctrine_UnitTestCase
             ->update('Ticket_1537_User u')
             ->set('password', '?', 'changeme')
             ->set('email_address', '?', 'jonwage@gmail.com')
-            ->where('username = ?', 'jwage');
+            ->where('username = ?', 'jwage')
+        ;
         $this->assertEqual($q->getSqlQuery(), 'UPDATE ticket_1537__user SET password = ?, email_address = ?, updated_at = ? WHERE (username = ?)');
         $params = $q->getFlattenedParams();
 

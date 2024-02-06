@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1341_TestCase
+ * Doctrine_Ticket_1341_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1341_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1341_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -48,20 +50,20 @@ class Doctrine_Ticket_1341_TestCase extends Doctrine_UnitTestCase
             $user->Profile->name = 'Jonathan H. Wage';
             $user->save();
             $this->pass();
-            $this->assertEqual($user->toArray(true), array(
-              'id' => '1',
-              'username' => 'jwage',
-              'password' => 'changeme',
-              'Profile' => 
-              array(
+            $this->assertEqual($user->toArray(true), [
                 'id' => '1',
-                'name' => 'Jonathan H. Wage',
-                'user_id' => '1',
-              ),
-            ));
+                'username' => 'jwage',
+                'password' => 'changeme',
+                'Profile' => [
+                    'id' => '1',
+                    'name' => 'Jonathan H. Wage',
+                    'user_id' => '1',
+                ],
+            ]);
             $q = Doctrine_Query::create()
                 ->from('Ticket_1341_User u')
-                ->leftJoin('u.Profile p');
+                ->leftJoin('u.Profile p')
+            ;
             $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.username AS t__username, t.password AS t__password, t2.id AS t2__id, t2.name AS t2__name, t2.userid AS t2__userid FROM ticket_1341__user t LEFT JOIN ticket_1341__profile t2 ON t.id = t2.userid');
         } catch (Exception $e) {
             $this->fail($e->getMessage());
@@ -79,7 +81,7 @@ class Ticket_1341_User extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_1341_Profile as Profile', array('local' => 'id', 'foreign' => 'user_id'));
+        $this->hasOne('Ticket_1341_Profile as Profile', ['local' => 'id', 'foreign' => 'user_id']);
     }
 }
 
@@ -93,6 +95,6 @@ class Ticket_1341_Profile extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_1341_User as User', array('local' => 'user_id', 'foreign' => 'id'));
+        $this->hasOne('Ticket_1341_User as User', ['local' => 'user_id', 'foreign' => 'id']);
     }
 }

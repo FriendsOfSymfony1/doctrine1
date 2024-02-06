@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Hook_Integer
+ * Doctrine_Hook_Integer.
  *
- * @package     Doctrine
- * @subpackage  Hook
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hook_Integer extends Doctrine_Hook_Parser_Complex
@@ -39,37 +35,36 @@ class Doctrine_Hook_Integer extends Doctrine_Hook_Parser_Complex
      * prepared statement conditions (conditions that use
      * placeholders instead of literal values).
      *
-     * @param string $alias     component alias
-     * @param string $field     the field name
-     * @param mixed $value      the value of the field
-     * @return void
+     * @param string $alias component alias
+     * @param string $field the field name
+     * @param mixed  $value the value of the field
      */
     public function parseSingle($alias, $field, $value)
     {
         $e = explode(' ', $value);
 
         foreach ($e as $v) {
-             $v = trim($v);
+            $v = trim($v);
 
-             $e2   = explode('-', $v);
+            $e2 = explode('-', $v);
 
-            $name = $alias. '.' . $field;
+            $name = $alias.'.'.$field;
 
-             if (count($e2) == 1) {
-                 // one '-' found
+            if (1 == count($e2)) {
+                // one '-' found
 
-                $a[] = $name . ' = ?';
+                $a[] = $name.' = ?';
 
                 $this->params[] = $v;
             } else {
                 // more than one '-' found
 
-                $a[] = '(' . $name . ' > ? AND ' . $name . ' < ?)';
+                $a[] = '('.$name.' > ? AND '.$name.' < ?)';
 
-                $this->params += array($e2[0], $e2[1]);
+                $this->params += [$e2[0], $e2[1]];
             }
-
         }
+
         return implode(' OR ', $a);
     }
 }

@@ -20,16 +20,12 @@
  */
 
 /**
- * Doctrine_Validator_ErrorStack
+ * Doctrine_Validator_ErrorStack.
  *
- * @package     Doctrine
- * @subpackage  Validator
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Roman Borschel <roman@code-factory.org>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable, IteratorAggregate
 {
@@ -38,25 +34,24 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
      *
      * @var array
      */
-    protected $_errors = array();
+    protected $_errors = [];
 
     /**
-     * Array of validators that failed
+     * Array of validators that failed.
      *
      * @var array
      */
-    protected $_validators = array();
+    protected $_validators = [];
 
     /**
-     * Get model class name for the error stack
+     * Get model class name for the error stack.
      *
      * @var string
      */
     protected $_className;
 
     /**
-     * Constructor
-     *
+     * Constructor.
      */
     public function __construct($className)
     {
@@ -66,14 +61,14 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     /**
      * Adds an error to the stack.
      *
-     * @param string                           $invalidFieldName
-     * @param string|Doctrine_Validator_Driver $errorCode
+     * @param  string                           $invalidFieldName
+     * @param  string|Doctrine_Validator_Driver $errorCode
      * @throws Doctrine_Exception
      */
     public function add($invalidFieldName, $errorCode = 'general')
     {
         if (is_object($errorCode)) {
-            if ( ! ($errorCode instanceof Doctrine_Validator_Driver)) {
+            if (!($errorCode instanceof Doctrine_Validator_Driver)) {
                 throw new Doctrine_Exception('Validators must be an instance of Doctrine_Validator_Driver');
             }
             $validator = $errorCode;
@@ -100,22 +95,20 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     }
 
     /**
-     * Get errors for field
+     * Get errors for field.
      *
      * @param string $fieldName
-     * @return mixed
      */
     public function get($fieldName)
     {
-        return isset($this->_errors[$fieldName]) ? $this->_errors[$fieldName] : null;
+        return $this->_errors[$fieldName] ?? null;
     }
 
     /**
-     * Alias for add()
+     * Alias for add().
      *
      * @param string $fieldName
      * @param string $errorCode
-     * @return void
      */
     public function set($fieldName, $errorCode)
     {
@@ -123,10 +116,10 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     }
 
     /**
-     * Check if a field has an error
+     * Check if a field has an error.
      *
-     * @param string $fieldName
-     * @return boolean
+     * @param  string $fieldName
+     * @return bool
      */
     public function contains($fieldName)
     {
@@ -135,13 +128,11 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
 
     /**
      * Removes all errors from the stack.
-     *
-     * @return void
      */
     public function clear()
     {
-        $this->_errors = array();
-        $this->_validators = array();
+        $this->_errors = [];
+        $this->_validators = [];
     }
 
     /**
@@ -149,7 +140,7 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
      *
      * @return ArrayIterator unknown
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->_errors);
@@ -161,18 +152,18 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     }
 
     /**
-     * Count the number of errors
+     * Count the number of errors.
      *
-     * @return integer
+     * @return int
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->_errors);
     }
 
     /**
-     * Get the classname where the errors occured
+     * Get the classname where the errors occured.
      *
      * @return string
      */
@@ -182,7 +173,7 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     }
 
     /**
-     * Get array of failed validators
+     * Get array of failed validators.
      *
      * @return array
      */

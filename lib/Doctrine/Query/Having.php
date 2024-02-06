@@ -20,75 +20,68 @@
  */
 
 /**
- * Doctrine_Query_Having
+ * Doctrine_Query_Having.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7666 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Having extends Doctrine_Query_Condition
 {
     /**
-     * DQL Aggregate Function parser
+     * DQL Aggregate Function parser.
      *
      * @param string $func
-     * @return mixed
      */
     private function parseAggregateFunction($func)
     {
         $pos = strpos($func, '(');
 
         // Check for subqueries
-        if ($pos === 0 && substr($func, 1, 6) == 'SELECT') {
+        if (0 === $pos && 'SELECT' == substr($func, 1, 6)) {
             // This code is taken from WHERE.php
             $sub = $this->_tokenizer->bracketTrim($func);
             $q = $this->query->createSubquery()->parseDqlQuery($sub, false);
             $sql = $q->getSqlQuery();
             $q->free();
-            return '(' . $sql . ')';
+
+            return '('.$sql.')';
         }
 
-        if ($pos !== false) {
-            $funcs  = array();
+        if (false !== $pos) {
+            $funcs = [];
 
-            $name   = substr($func, 0, $pos);
-            $func   = substr($func, ($pos + 1), -1);
+            $name = substr($func, 0, $pos);
+            $func = substr($func, $pos + 1, -1);
             $params = $this->_tokenizer->bracketExplode($func, ',', '(', ')');
 
             foreach ($params as $k => $param) {
                 $params[$k] = $this->parseAggregateFunction($param);
             }
 
-            $funcs = $name . '(' . implode(', ', $params) . ')';
-
-            return $funcs;
-        } else {
-            return $this->_parseAliases($func);
+            return $name.'('.implode(', ', $params).')';
         }
+
+        return $this->_parseAliases($func);
     }
 
     /**
      * _parseAliases
-     * Processes part of the query not being an aggregate function
+     * Processes part of the query not being an aggregate function.
      *
-     * @param mixed $value
      * @return string
      */
     private function _parseAliases($value)
     {
-        if ( ! is_numeric($value)) {
+        if (!is_numeric($value)) {
             $a = explode('.', $value);
 
             if (count($a) > 1) {
                 $field = array_pop($a);
-                $ref   = implode('.', $a);
-                $map   = $this->query->load($ref, false);
+                $ref = implode('.', $a);
+                $map = $this->query->load($ref, false);
                 $field = $map['table']->getColumnName($field);
-                $value = $this->query->getConnection()->quoteIdentifier($this->query->getSqlTableAlias($ref) . '.' . $field);
+                $value = $this->query->getConnection()->quoteIdentifier($this->query->getSqlTableAlias($ref).'.'.$field);
             } else {
                 $field = end($a);
                 if ($this->query->hasSqlAggregateAlias($field)) {
@@ -102,22 +95,22 @@ class Doctrine_Query_Having extends Doctrine_Query_Condition
 
     /**
      * load
-     * returns the parsed query part
+     * returns the parsed query part.
      *
-     * @param string $having
+     * @param  string $having
      * @return string
      */
     final public function load($having)
     {
         $tokens = $this->_tokenizer->bracketExplode($having, ' ', '(', ')');
         $part = $this->parseAggregateFunction(array_shift($tokens));
-        $operator  = array_shift($tokens);
-        $value     = implode(' ', $tokens);
+        $operator = array_shift($tokens);
+        $value = implode(' ', $tokens);
 
         // check the RHS for aggregate functions
         $value = $this->parseAggregateFunction($value);
 
-        $part .= ' ' . $operator . ' ' . $value;
+        $part .= ' '.$operator.' '.$value;
 
         return $part;
     }

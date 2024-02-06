@@ -20,14 +20,10 @@
  */
 
 /**
- * Builds result sets in to a scalar php array
+ * Builds result sets in to a scalar php array.
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
@@ -37,8 +33,8 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
      */
     public function hydrateResultSet($stmt)
     {
-        $cache = array();
-        $result = array();
+        $cache = [];
+        $result = [];
 
         while ($data = $stmt->fetch(Doctrine_Core::FETCH_ASSOC)) {
             $result[] = $this->_gatherRowData($data, $cache);
@@ -49,11 +45,11 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
 
     protected function _gatherRowData($data, &$cache, $aliasPrefix = true)
     {
-        $rowData = array();
+        $rowData = [];
         foreach ($data as $key => $value) {
             // Parse each column name only once. Cache the results.
-            if ( ! isset($cache[$key])) {
-                if ($key == 'DOCTRINE_ROWNUM') {
+            if (!isset($cache[$key])) {
+                if ('DOCTRINE_ROWNUM' == $key) {
                     continue;
                 }
                 // cache general information like the column name <-> field name mapping
@@ -74,7 +70,7 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
 
                 // cache type information
                 $type = $table->getTypeOfColumn($columnName);
-                if ($type == 'integer' || $type == 'string') {
+                if ('integer' == $type || 'string' == $type) {
                     $cache[$key]['isSimpleType'] = true;
                 } else {
                     $cache[$key]['type'] = $type;
@@ -86,15 +82,19 @@ class Doctrine_Hydrator_ScalarDriver extends Doctrine_Hydrator_Abstract
             $dqlAlias = $cache[$key]['dqlAlias'];
             $fieldName = $cache[$key]['fieldName'];
 
-            $rowDataKey = $aliasPrefix ? $dqlAlias . '_' . $fieldName:$fieldName;
+            $rowDataKey = $aliasPrefix ? $dqlAlias.'_'.$fieldName : $fieldName;
 
             if ($cache[$key]['isSimpleType'] || $cache[$key]['isAgg']) {
                 $rowData[$rowDataKey] = $value;
             } else {
                 $rowData[$rowDataKey] = $table->prepareValue(
-                        $fieldName, $value, $cache[$key]['type']);
+                    $fieldName,
+                    $value,
+                    $cache[$key]['type']
+                );
             }
         }
+
         return $rowData;
     }
 }

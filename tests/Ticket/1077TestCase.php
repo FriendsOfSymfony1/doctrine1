@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1077_TestCase
+ * Doctrine_Ticket_1077_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1077_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1077_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -60,7 +62,7 @@ class Doctrine_Ticket_1077_TestCase extends Doctrine_UnitTestCase
 
         $numbers = new Doctrine_Collection('Phonenumber');
         $user->Phonenumbers = $numbers;
-        
+
         $this->assertIdentical($user->phonenumbersTest, $numbers);
 
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE, $orig);
@@ -82,7 +84,7 @@ class Doctrine_Ticket_1077_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_1077_User extends Doctrine_Record
 {
-    public $phonenumbersTest = null;
+    public $phonenumbersTest;
 
     public function setTableDefinition()
     {
@@ -92,8 +94,8 @@ class Ticket_1077_User extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_1077_Phonenumber as Phonenumbers', array('local'   => 'id',
-                                                                        'foreign' => 'user_id'));
+        $this->hasMany('Ticket_1077_Phonenumber as Phonenumbers', ['local' => 'id',
+            'foreign' => 'user_id']);
     }
 
     public function usernameAccessor()
@@ -114,12 +116,13 @@ class Ticket_1077_User extends Doctrine_Record
     public function setPhonenumbers($phonenumbers)
     {
         $this->phonenumbersTest = $phonenumbers;
+
         return $this->_set('Phonenumbers', $phonenumbers);
     }
 
     public function getUsername($load = true)
     {
-        return 'Username: ' . $this->_get('username', $load);
+        return 'Username: '.$this->_get('username', $load);
     }
 
     public function setPassword($password)
@@ -143,7 +146,7 @@ class Ticket_1077_Phonenumber extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_1077_User as User', array('local'   => 'user_id',
-                                                        'foreign' => 'id'));
+        $this->hasOne('Ticket_1077_User as User', ['local' => 'user_id',
+            'foreign' => 'id']);
     }
 }

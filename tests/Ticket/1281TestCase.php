@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1281_TestCase
+ * Doctrine_Ticket_1281_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1281_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1281_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
@@ -39,9 +41,9 @@ class Doctrine_Ticket_1281_TestCase extends Doctrine_UnitTestCase
         $user->name = 'zYne-';
 
         // new values
-        $this->assertEqual($user->getModified(), array('name' => 'zYne-'));
+        $this->assertEqual($user->getModified(), ['name' => 'zYne-']);
 
         // old values
-        $this->assertEqual($user->getModified(true), array('name' => 'zYne'));
+        $this->assertEqual($user->getModified(true), ['name' => 'zYne']);
     }
 }

@@ -20,32 +20,34 @@
  */
 
 /**
- * Doctrine_Cache_Memcache_TestCase
+ * Doctrine_Cache_Memcache_TestCase.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Cache
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Cache_Memcache_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Cache_Memcache_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() 
-    { }
+    public function prepareTables()
+    {
+    }
+
     public function prepareData()
-    { }
+    {
+    }
 }
-class Doctrine_Cache_Memcache_Mock extends Doctrine_Cache_Memcache 
+class Doctrine_Cache_Memcache_Mock extends Doctrine_Cache_Memcache
 {
 }
 
-if ( ! class_exists('Memcache'))
-{
+if (!class_exists('Memcache')) {
     class Memcache
     {
-
     }
 }

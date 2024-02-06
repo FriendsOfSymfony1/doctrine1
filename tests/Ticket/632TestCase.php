@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_632_TestCase
+ * Doctrine_Ticket_632_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_632_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_632_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -57,7 +59,8 @@ class Doctrine_Ticket_632_TestCase extends Doctrine_UnitTestCase
             ->from('Ticket_632_User u, u.Groups g')
             ->where('u.username = ?', 'jwage')
             ->limit(1)
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($user->Groups->count(), 3);
         unset($user->Groups[2]);
         $this->assertEqual($user->Groups->count(), 2);
@@ -79,9 +82,9 @@ class Ticket_632_User extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_632_Group as Groups', array('local'   => 'user_id',
-                                                           'foreign' => 'group_id',
-                                                           'refClass' => 'Ticket_632_UserGroup'));
+        $this->hasMany('Ticket_632_Group as Groups', ['local' => 'user_id',
+            'foreign' => 'group_id',
+            'refClass' => 'Ticket_632_UserGroup']);
     }
 }
 
@@ -94,9 +97,9 @@ class Ticket_632_Group extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_632_User as Users', array('local'   => 'group_id',
-                                                         'foreign' => 'user_id',
-                                                         'refClass' => 'Ticket_632_UserGroup'));
+        $this->hasMany('Ticket_632_User as Users', ['local' => 'group_id',
+            'foreign' => 'user_id',
+            'refClass' => 'Ticket_632_UserGroup']);
     }
 }
 
@@ -104,16 +107,16 @@ class Ticket_632_UserGroup extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('user_id', 'integer', 4, array('primary' => true));
-        $this->hasColumn('group_id', 'integer', 4, array('primary' => true));
+        $this->hasColumn('user_id', 'integer', 4, ['primary' => true]);
+        $this->hasColumn('group_id', 'integer', 4, ['primary' => true]);
     }
 
     public function setUp()
     {
-        $this->hasOne('Ticket_632_User as User', array('local'   => 'user_id',
-                                                       'foreign' => 'id'));
+        $this->hasOne('Ticket_632_User as User', ['local' => 'user_id',
+            'foreign' => 'id']);
 
-        $this->hasOne('Ticket_632_Group as Group', array('local' => 'group_id',
-                                                         'foreign' => 'id'));
+        $this->hasOne('Ticket_632_Group as Group', ['local' => 'group_id',
+            'foreign' => 'id']);
     }
 }

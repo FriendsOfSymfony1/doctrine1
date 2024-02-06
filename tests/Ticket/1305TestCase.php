@@ -20,50 +20,50 @@
  */
 
 /**
- * Doctrine_Ticket_1305_TestCase
+ * Doctrine_Ticket_1305_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_1305_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() 
+    public function prepareTables()
     {
         $this->tables[] = 'Ticket_1305_Record';
 
         parent::prepareTables();
     }
 
-
     public function testTicket()
     {
         $t = new Ticket_1305_Record();
         $t->save();
-        
+
         $this->assertEqual($t['name'], 'test');
 
         $t->name = 'foo';
         $t->save();
-        
+
         $this->assertEqual($t['name'], 'foo');
 
         $t->name = null;
         $t->save();
-        
+
         $this->assertEqual($t['name'], 'test');
     }
 }
-
 
 class Ticket_1305_Record extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', 255, array('notnull' => true, 'default' => 'test'));
+        $this->hasColumn('name', 'string', 255, ['notnull' => true, 'default' => 'test']);
     }
 }

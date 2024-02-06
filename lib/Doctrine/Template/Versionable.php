@@ -20,53 +20,44 @@
  */
 
 /**
- * Doctrine_Template_Versionable
+ * Doctrine_Template_Versionable.
  *
  * Add revisioning/audit log to your models
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Template_Versionable extends Doctrine_Template
 {
     /**
-     * Array of AuditLog Options
+     * Array of AuditLog Options.
      *
      * @var array
      */
-    protected $_options = array('version'           => array('name'   => 'version',
-                                                             'alias'  => null,
-                                                             'type'   => 'integer',
-                                                             'length' => 8,
-                                                             'options' => array()),
-								'generateRelations' => true,
-                                'tableName'         => false,
-                                'generateFiles'     => false,
-                                'auditLog'          => true,
-                                'deleteVersions'    => true,
-                                'listener'          => 'Doctrine_AuditLog_Listener');
+    protected $_options = ['version' => ['name' => 'version',
+        'alias' => null,
+        'type' => 'integer',
+        'length' => 8,
+        'options' => []],
+        'generateRelations' => true,
+        'tableName' => false,
+        'generateFiles' => false,
+        'auditLog' => true,
+        'deleteVersions' => true,
+        'listener' => 'Doctrine_AuditLog_Listener'];
 
     /**
-     * __construct
-     *
-     * @param array $options
-     * @return void
+     * __construct.
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
-	    parent::__construct($options);
+        parent::__construct($options);
         $this->_plugin = new Doctrine_AuditLog($this->_options);
     }
 
     /**
-     * Setup the Versionable behavior for the template
-     *
-     * @return void
+     * Setup the Versionable behavior for the template.
      */
     public function setUp()
     {
@@ -75,7 +66,7 @@ class Doctrine_Template_Versionable extends Doctrine_Template
         }
 
         $version = $this->_options['version'];
-        $name = $version['name'] . (isset($version['alias']) ? ' as ' . $version['alias'] : '');
+        $name = $version['name'].(isset($version['alias']) ? ' as '.$version['alias'] : '');
         $this->hasColumn($name, $version['type'], $version['length'], $version['options']);
 
         $listener = $this->_options['listener'];
@@ -83,40 +74,37 @@ class Doctrine_Template_Versionable extends Doctrine_Template
     }
 
     /**
-     * Get plugin for Versionable template
-     *
-     * @return void
+     * Get plugin for Versionable template.
      */
     public function getAuditLog()
     {
         return $this->_plugin;
     }
 
-     /**
+    /**
      * revert
      * reverts this record to given version, this method only works if versioning plugin
-     * is enabled
+     * is enabled.
      *
-     * @throws Doctrine_Record_Exception    if given version does not exist
-     * @param integer $version      an integer > 1
-     * @return Doctrine_Record      this object
+     * @param  int                       $version an integer > 1
+     * @return Doctrine_Record           this object
+     * @throws Doctrine_Record_Exception if given version does not exist
      */
     public function revert($version)
     {
         $auditLog = $this->_plugin;
 
-        if ( ! $auditLog->getOption('auditLog')) {
+        if (!$auditLog->getOption('auditLog')) {
             throw new Doctrine_Record_Exception('Audit log is turned off, no version history is recorded.');
         }
 
         $data = $auditLog->getVersion($this->getInvoker(), $version);
 
-        if ( ! isset($data[0])) {
-            throw new Doctrine_Record_Exception('Version ' . $version . ' does not exist!');
+        if (!isset($data[0])) {
+            throw new Doctrine_Record_Exception('Version '.$version.' does not exist!');
         }
 
         $this->getInvoker()->merge($data[0]);
-
 
         return $this->getInvoker();
     }

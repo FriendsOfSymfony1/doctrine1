@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_DC843_TestCase
+ * Doctrine_Ticket_DC843_TestCase.
  *
- * @package     Doctrine
  * @author      Enrico Stahn <mail@enricostahn.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_DC843_TestCase extends Doctrine_UnitTestCase
 {
@@ -62,7 +64,8 @@ class Doctrine_Ticket_DC843_TestCase extends Doctrine_UnitTestCase
             ->createQuery('t')
             ->where('t.username = ?', 'foo')
             ->andWhere('t.foo = ?', 'bar')
-            ->execute();
+            ->execute()
+        ;
 
         $expected = "SELECT [t].[model_id] AS [t__model_id], [t].[username] AS [t__username], [t].[password] AS [t__password], [t].[foo] AS [t__foo] FROM [ticket__d_c843__model] [t] WHERE ([t].[username] = 'foo' AND [t].[foo] LIKE 'bar')";
         $sql = current(array_slice($this->dbh->getAll(), $this->sqlStackCounter++, 1));
@@ -76,7 +79,8 @@ class Doctrine_Ticket_DC843_TestCase extends Doctrine_UnitTestCase
             ->createQuery('t')
             ->where('t.username LIKE ?', 'foo')
             ->andWhere('t.foo = ?', 'bar')
-            ->execute();
+            ->execute()
+        ;
 
         $expected = "SELECT [t].[model_id] AS [t__model_id], [t].[username] AS [t__username], [t].[password] AS [t__password], [t].[foo] AS [t__foo] FROM [ticket__d_c843__model] [t] WHERE ([t].[username] LIKE 'foo' AND [t].[foo] LIKE 'bar')";
         $sql = current(array_slice($this->dbh->getAll(), $this->sqlStackCounter++, 1));
@@ -90,7 +94,8 @@ class Doctrine_Ticket_DC843_TestCase extends Doctrine_UnitTestCase
             ->createQuery('t')
             ->where('t.username LIKE ?', 'foo')
             ->andWhere('t.foo IS NULL')
-            ->execute();
+            ->execute()
+        ;
 
         $expected = "SELECT [t].[model_id] AS [t__model_id], [t].[username] AS [t__username], [t].[password] AS [t__password], [t].[foo] AS [t__foo] FROM [ticket__d_c843__model] [t] WHERE ([t].[username] LIKE 'foo' AND [t].[foo] IS NULL)";
         $sql = current(array_slice($this->dbh->getAll(), $this->sqlStackCounter++, 1));
@@ -103,12 +108,12 @@ class Ticket_DC843_Model extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('model_id as id', 'integer', null, array(
+        $this->hasColumn('model_id as id', 'integer', null, [
             'type' => 'integer',
             'unsigned' => false,
             'primary' => true,
             'autoincrement' => true,
-        ));
+        ]);
         $this->hasColumn('username', 'string', 255);
         $this->hasColumn('password', 'string', 255);
         $this->hasColumn('foo', 'string');

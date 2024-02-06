@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_2105_TestCase
+ * Doctrine_Ticket_2105_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2105_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2105_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,32 +47,32 @@ class Doctrine_Ticket_2105_TestCase extends Doctrine_UnitTestCase
                 ->select('a.id, t.lang')
                 ->from('Ticket_2105_Article a')
                 ->innerJoin('a.Translation t WITH t.name != ?', 'test')
-                ;
+            ;
             $q->execute();
-            //echo $q->getSqlQuery().PHP_EOL;
-            
+            // echo $q->getSqlQuery().PHP_EOL;
+
             $this->assertEqual(
-                $q->getSqlQuery(), 
+                $q->getSqlQuery(),
                 'SELECT t.id AS t__id, t2.id AS t2__id, t2.lang AS t2__lang '.
                 'FROM ticket_2105__article t '.
                 'INNER JOIN ticket_2105__article_translation t2 '.
                 'ON t.id = t2.id AND (t2.name != ?)'
             );
-            
+
             // we need to modify the query here - it can be anything, I've chosen addSelect
             $q->addSelect('t.name');
             $q->execute();
-            //echo $q->getSqlQuery().PHP_EOL;
-            
+            // echo $q->getSqlQuery().PHP_EOL;
+
             $this->assertEqual(
-                $q->getSqlQuery(), 
+                $q->getSqlQuery(),
                 'SELECT t.id AS t__id, t2.id AS t2__id, t2.lang AS t2__lang, t2.name AS t2__name '.
                 'FROM ticket_2105__article t '.
                 'INNER JOIN ticket_2105__article_translation t2 '.
                 'ON t.id = t2.id AND (t2.name != ?)'
             );
-            
-            //$this->pass();
+
+            // $this->pass();
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
@@ -86,7 +88,7 @@ class Ticket_2105_Article extends Doctrine_Record
 
     public function setUp()
     {
-        $i18n = new Doctrine_Template_I18n(array('fields' => array(0 => 'name')));
+        $i18n = new Doctrine_Template_I18n(['fields' => [0 => 'name']]);
         $this->actAs($i18n);
     }
 }

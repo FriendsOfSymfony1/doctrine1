@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Pager_Exception
+ * Doctrine_Pager_Exception.
  *
  * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @package     Doctrine
- * @subpackage  Pager
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       0.9
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Pager_Exception extends Doctrine_Exception
-{ }
+{
+}

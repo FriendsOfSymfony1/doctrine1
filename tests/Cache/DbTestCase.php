@@ -20,16 +20,17 @@
  */
 
 /**
- * Doctrine_Cache_Db_TestCase
+ * Doctrine_Cache_Db_TestCase.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Cache
  * @author      David Abdemoulaie <dave@hobodave.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.2
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Cache_Db_TestCase extends Doctrine_Cache_Abstract_TestCase
 {
@@ -39,13 +40,14 @@ class Doctrine_Cache_Db_TestCase extends Doctrine_Cache_Abstract_TestCase
     {
         parent::setUp();
 
-        $this->cache = new Doctrine_Cache_Db(array(
+        $this->cache = new Doctrine_Cache_Db([
             'connection' => $this->connection,
             'tableName' => 'd_cache',
-        ));
+        ]);
         $this->connection->exec('DROP TABLE IF EXISTS d_cache');
         $this->cache->createTable();
     }
+
     protected function _clearCache()
     {
         $this->connection->exec('DELETE FROM d_cache');
@@ -63,7 +65,7 @@ class Doctrine_Cache_Db_TestCase extends Doctrine_Cache_Abstract_TestCase
 
     public function testAsResultCache()
     {
-        if ( !$this->_isEnabled()) {
+        if (!$this->_isEnabled()) {
             return;
         }
         $this->_clearCache();
@@ -73,14 +75,15 @@ class Doctrine_Cache_Db_TestCase extends Doctrine_Cache_Abstract_TestCase
 
         $queryCountBefore = $this->conn->count();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $u = Doctrine_Query::create()
                 ->from('User u')
-                ->addWhere('u.name = ?', array('Hans'))
+                ->addWhere('u.name = ?', ['Hans'])
                 ->useResultCache($cache, 3600, 'hans_query')
-                ->execute();
+                ->execute()
+            ;
             $this->assertEqual(1, count($u));
-            $this->assertEqual("Hans", $u[0]->name);
+            $this->assertEqual('Hans', $u[0]->name);
         }
 
         $this->assertTrue($cache->contains('hans_query'));

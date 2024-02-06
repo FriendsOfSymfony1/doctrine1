@@ -20,23 +20,25 @@
  */
 
 /**
- * Doctrine_Ticket_486_TestCase
+ * Doctrine_Ticket_486_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() {
-        $this->tables = array('Country', 'State', 'Resort');
+    public function prepareTables()
+    {
+        $this->tables = ['Country', 'State', 'Resort'];
         parent::prepareTables();
     }
-
 
     public function prepareData()
     {
@@ -72,7 +74,6 @@ class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase
         $r7 = $this->createResort($s8, 'Hilton');
     }
 
-
     public function testLimitSubqueryQuoteIdentifier()
     {
         // Change the quote identifier
@@ -83,14 +84,14 @@ class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase
             ->select('c.id')
             ->from('Country c, c.State.Resort r')
             ->where('r.id = 3')
-            ->limit(1);
+            ->limit(1)
+        ;
 
         $this->assertEqual('SELECT "c"."id" AS "c__id" FROM "country" "c" LEFT JOIN "state" "s" ON "c"."id" = "s"."country_id" LEFT JOIN "resort" "r" ON "s"."id" = "r"."state_id" WHERE "c"."id" IN (SELECT DISTINCT "c2"."id" FROM "country" "c2" LEFT JOIN "state" "s2" ON "c2"."id" = "s2"."country_id" LEFT JOIN "resort" "r2" ON "s2"."id" = "r2"."state_id" WHERE "r2"."id" = 3 LIMIT 1) AND ("r"."id" = 3)', $q->getSqlQuery());
 
         // Restoring quote identifier
         $this->getConnection()->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, $curQuoteIdentifier);
     }
-
 
     public function createCountry($name)
     {
@@ -101,7 +102,6 @@ class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase
         return $tmp;
     }
 
-
     public function createState($country, $name)
     {
         $tmp = new State();
@@ -111,7 +111,6 @@ class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase
 
         return $tmp;
     }
-
 
     public function createResort($state, $name)
     {
@@ -124,7 +123,6 @@ class Doctrine_Ticket_486_TestCase extends Doctrine_UnitTestCase
     }
 }
 
-
 class Country extends Doctrine_Record
 {
     public function setTableDefinition()
@@ -132,13 +130,11 @@ class Country extends Doctrine_Record
         $this->hasColumn('name', 'string', 255);
     }
 
-
     public function setUp()
     {
-        $this->hasMany('State', array('local' => 'id', 'foreign' => 'country_id'));
+        $this->hasMany('State', ['local' => 'id', 'foreign' => 'country_id']);
     }
 }
-
 
 class State extends Doctrine_Record
 {
@@ -148,14 +144,12 @@ class State extends Doctrine_Record
         $this->hasColumn('name', 'string', 255);
     }
 
-
     public function setUp()
     {
-        $this->hasOne('Country', array('local' => 'country_id', 'foreign' => 'id'));
-        $this->hasMany('Resort', array('local' => 'id', 'foreign' => 'state_id'));
+        $this->hasOne('Country', ['local' => 'country_id', 'foreign' => 'id']);
+        $this->hasMany('Resort', ['local' => 'id', 'foreign' => 'state_id']);
     }
 }
-
 
 class Resort extends Doctrine_Record
 {
@@ -165,9 +159,8 @@ class Resort extends Doctrine_Record
         $this->hasColumn('name', 'string', 255);
     }
 
-
     public function setUp()
     {
-        $this->hasOne('State', array('local' => 'state_id', 'foreign' => 'id'));
+        $this->hasOne('State', ['local' => 'state_id', 'foreign' => 'id']);
     }
 }

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_SoftDeleteBC_TestCase
+ * Doctrine_SoftDeleteBC_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_SoftDeleteBC_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_SoftDeleteBC_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -41,7 +43,7 @@ class Doctrine_SoftDeleteBC_TestCase extends Doctrine_UnitTestCase
     public function testDoctrineRecordDeleteSetsFlag()
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-        
+
         $test = new SoftDeleteBCTest();
         $test->name = 'test';
         $test->something = 'test';
@@ -50,17 +52,17 @@ class Doctrine_SoftDeleteBC_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($test->deleted);
         $test->free();
 
-        
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
     }
 
     public function testDoctrineQueryIsFilteredWithDeleteFlagCondition()
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-        
+
         $q = Doctrine_Query::create()
-                    ->from('SoftDeleteBCTest s')
-                    ->where('s.name = ?', array('test'));
+            ->from('SoftDeleteBCTest s')
+            ->where('s.name = ?', ['test'])
+        ;
 
         $this->assertEqual($q->getSqlQuery(), 'SELECT s.name AS s__name, s.something AS s__something, s.deleted AS s__deleted FROM soft_delete_bc_test s WHERE (s.name = ? AND (s.deleted = 0))');
         $params = $q->getFlattenedParams();
@@ -69,29 +71,30 @@ class Doctrine_SoftDeleteBC_TestCase extends Doctrine_UnitTestCase
 
         $test = $q->fetchOne();
         $this->assertFalse($test);
-        
+
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
     }
 
     public function testTicket1132()
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-        
+
         $test = new SoftDeleteBCTest();
         $test->name = 'test1';
         $test->something = 'test2';
         $test->save();
 
         $q = Doctrine_Query::create()
-                ->from('SoftDeleteBCTest s')
-                ->addWhere('s.name = ?')
-                ->addWhere('s.something = ?');
+            ->from('SoftDeleteBCTest s')
+            ->addWhere('s.name = ?')
+            ->addWhere('s.something = ?')
+        ;
 
-        $results = $q->execute(array('test1', 'test2'));
+        $results = $q->execute(['test1', 'test2']);
         $this->assertEqual($q->getSqlQuery(), 'SELECT s.name AS s__name, s.something AS s__something, s.deleted AS s__deleted FROM soft_delete_bc_test s WHERE (s.name = ? AND s.something = ? AND (s.deleted = 0))');
-        $this->assertEqual($q->getFlattenedParams(array('test1', 'test2')), array('test1', 'test2'));
+        $this->assertEqual($q->getFlattenedParams(['test1', 'test2']), ['test1', 'test2']);
         $this->assertEqual($results->count(), 1);
-        
+
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
     }
 
@@ -99,16 +102,18 @@ class Doctrine_SoftDeleteBC_TestCase extends Doctrine_UnitTestCase
     public function testTicket1170()
     {
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
-        
+
         Doctrine_Query::create()
             ->delete()
             ->from('SoftDeleteBCTest s')
-            ->execute();
+            ->execute()
+        ;
 
         $q = Doctrine_Query::create()
-                ->from('SoftDeleteBCTest s')
-                ->addWhere('s.name = ?', 'test1')
-                ->addWhere('s.something = ?', 'test2');
+            ->from('SoftDeleteBCTest s')
+            ->addWhere('s.name = ?', 'test1')
+            ->addWhere('s.something = ?', 'test2')
+        ;
 
         $this->assertEqual($q->getCountSqlQuery(), 'SELECT COUNT(*) AS num_results FROM soft_delete_bc_test s WHERE s.name = ? AND s.something = ? AND (s.deleted = 0)');
         $this->assertEqual($q->count(), 0);

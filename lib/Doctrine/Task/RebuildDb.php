@@ -20,30 +20,26 @@
  */
 
 /**
- * Doctrine_Task_RebuildDb
+ * Doctrine_Task_RebuildDb.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_RebuildDb extends Doctrine_Task
 {
-    public $description          =   'Drops and re-creates databases',
-           $requiredArguments    =   array(),
-           $optionalArguments    =   array();
+    public $description = 'Drops and re-creates databases';
+    public $requiredArguments = [];
+    public $optionalArguments = [];
 
-    protected $dropDb,
-              $createDb,
-              $createTables;
-    
+    protected $dropDb;
+    protected $createDb;
+    protected $createTables;
+
     public function __construct($dispatcher = null)
     {
         parent::__construct($dispatcher);
-        
+
         $this->dropDb = new Doctrine_Task_DropDb($this->dispatcher);
         $this->createDb = new Doctrine_Task_CreateDb($this->dispatcher);
         $this->createTables = new Doctrine_Task_CreateTables($this->dispatcher);

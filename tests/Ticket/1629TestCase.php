@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1629_TestCase
+ * Doctrine_Ticket_1629_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1629_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1629_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -52,10 +54,11 @@ class Doctrine_Ticket_1629_TestCase extends Doctrine_UnitTestCase
 
         $q = Doctrine_Query::create()
             ->from('Ticket_1629_User u')
-            ->leftJoin('u.Phonenumbers p');
-            
+            ->leftJoin('u.Phonenumbers p')
+        ;
+
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.username AS t__username, t.password AS t__password, t.deleted_at AS t__deleted_at, t2.id AS t2__id, t2.user_id AS t2__user_id, t2.phonenumber AS t2__phonenumber, t2.deleted_at AS t2__deleted_at FROM ticket_1629__user t LEFT JOIN ticket_1629__phonenumber t2 ON t.id = t2.user_id AND (t2.deleted_at IS NULL) WHERE (t.deleted_at IS NULL)');
-            
+
         $users = $q->fetchArray();
         $this->assertEqual(count($users), 1);
         $this->assertEqual(count($users[0]['Phonenumbers']), 0);
@@ -75,7 +78,7 @@ class Ticket_1629_User extends Doctrine_Record
     public function setUp()
     {
         $this->actAs('SoftDelete');
-        $this->hasMany('Ticket_1629_Phonenumber as Phonenumbers', array('local' => 'id', 'foreign' => 'user_id'));
+        $this->hasMany('Ticket_1629_Phonenumber as Phonenumbers', ['local' => 'id', 'foreign' => 'user_id']);
     }
 }
 
@@ -90,6 +93,6 @@ class Ticket_1629_Phonenumber extends Doctrine_Record
     public function setUp()
     {
         $this->actAs('SoftDelete');
-        $this->hasOne('Ticket_1629_User as User', array('local' => 'user_id', 'foreign' => 'id'));
+        $this->hasOne('Ticket_1629_User as User', ['local' => 'user_id', 'foreign' => 'id']);
     }
 }

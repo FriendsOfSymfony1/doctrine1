@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1134_TestCase
+ * Doctrine_Ticket_1134_TestCase.
  *
- * @package     Doctrine
  * @author      Jeff Hansen <jhansen@hivalley.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1134_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1134_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -38,36 +40,32 @@ class Doctrine_Ticket_1134_TestCase extends Doctrine_UnitTestCase
         parent::prepareTables();
     }
 
-
     public function prepareData()
     {
         $user = new Ticket_1134_User();
-		$user->is_pimp = TRUE;
+        $user->is_pimp = true;
         $user->save();
     }
-
 
     public function testAfterOriginalSave()
     {
         $user = Doctrine_Query::create()->from('Ticket_1134_User u')->fetchOne();
-        $this->assertEqual($user->is_pimp, TRUE);
-    
+        $this->assertEqual($user->is_pimp, true);
     }
 
     public function testAfterModification()
     {
         $user = Doctrine_Query::create()->from('Ticket_1134_User u')->fetchOne();
-		$user->is_pimp = "1";
-		$this->assertEqual($user->getModified(), FALSE);    
-    }	
-	
+        $user->is_pimp = '1';
+        $this->assertEqual($user->getModified(), false);
+    }
 }
 
 class Ticket_1134_User extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('is_pimp', 'boolean', TRUE);
+        $this->hasColumn('is_pimp', 'boolean', true);
     }
 
     public function setUp()

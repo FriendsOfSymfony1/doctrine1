@@ -20,48 +20,52 @@
  */
 
 /**
- * Doctrine_Sequence_TestCase
+ * Doctrine_Sequence_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Sequence_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Sequence_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
+    public function prepareData()
     {
     }
-    public function prepareTables() 
+
+    public function prepareTables()
     {
     }
+
     public function testSequencesAreSupportedForRecords()
     {
         $this->adapter->forceLastInsertIdFail();
-        $r = new CustomSequenceRecord;
+        $r = new CustomSequenceRecord();
         $r->name = 'custom seq';
         $r->save();
-        
-                 /**
-        // the last profiled event is transaction commit
-        $this->assertEqual($this->adapter->pop(), 'COMMIT');
-        // query execution                                         
 
-        $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_sequence_record (name, id) VALUES (?, ?)');
-        // query prepare
-        $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_sequence_record (name, id) VALUES (?, ?)');
-
-        // sequence generation (first fails)
-        $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_seq_seq (id) VALUES (1)');
-        $this->assertEqual($this->adapter->pop(), 'CREATE TABLE custom_seq_seq (id INTEGER PRIMARY KEY DEFAULT 0 NOT NULL)');
-        $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_seq_seq (id) VALUES (NULL)');
-
-        // transaction begin
-        $this->assertEqual($this->adapter->pop(), 'BEGIN TRANSACTION');
-        $this->assertEqual($this->adapter->pop(), 'CREATE TABLE custom_sequence_record (id INTEGER, name VARCHAR(2147483647), PRIMARY KEY(id))');
-        */
+        /*
+         * // the last profiled event is transaction commit
+         * $this->assertEqual($this->adapter->pop(), 'COMMIT');
+         * // query execution
+         *
+         * $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_sequence_record (name, id) VALUES (?, ?)');
+         * // query prepare
+         * $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_sequence_record (name, id) VALUES (?, ?)');
+         *
+         * // sequence generation (first fails)
+         * $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_seq_seq (id) VALUES (1)');
+         * $this->assertEqual($this->adapter->pop(), 'CREATE TABLE custom_seq_seq (id INTEGER PRIMARY KEY DEFAULT 0 NOT NULL)');
+         * $this->assertEqual($this->adapter->pop(), 'INSERT INTO custom_seq_seq (id) VALUES (NULL)');
+         *
+         * // transaction begin
+         * $this->assertEqual($this->adapter->pop(), 'BEGIN TRANSACTION');
+         * $this->assertEqual($this->adapter->pop(), 'CREATE TABLE custom_sequence_record (id INTEGER, name VARCHAR(2147483647), PRIMARY KEY(id))');
+         */
     }
 }

@@ -1,7 +1,8 @@
 <?php
-class MysqlTestRecord extends Doctrine_Record 
+
+class MysqlTestRecord extends Doctrine_Record
 {
-    public function setTableDefinition() 
+    public function setTableDefinition()
     {
         $this->hasColumn('name', 'string', null, 'primary');
         $this->hasColumn('code', 'integer', null, 'primary');

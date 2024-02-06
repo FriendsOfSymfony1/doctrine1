@@ -20,37 +20,33 @@
  */
 
 /**
- * Doctrine_Search
+ * Doctrine_Search.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_File extends Doctrine_Search
 {
     /**
-     * constructor
+     * constructor.
      *
-     * @param array $options    an array of plugin options
+     * @param array $options an array of plugin options
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         parent::__construct($options);
 
-        if ( ! isset($this->_options['resource'])) {
+        if (!isset($this->_options['resource'])) {
             $conn = Doctrine_Manager::connection();
             $tableClass = $conn->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS);
             $table = new $tableClass('File', $conn);
 
-            $table->setColumn('url', 'string', 255, array('primary' => true));
+            $table->setColumn('url', 'string', 255, ['primary' => true]);
         }
 
         if (empty($this->_options['fields'])) {
-            $this->_options['fields'] = array('url', 'content');
+            $this->_options['fields'] = ['url', 'content'];
         }
 
         $this->initialize($table);
@@ -58,22 +54,22 @@ class Doctrine_Search_File extends Doctrine_Search
 
     public function buildRelation()
     {
-    	
     }
 
     /**
-     * indexes given directory
+     * indexes given directory.
      *
-     * @param string $dir   the name of the directory to index
-     * @return void
+     * @param string $dir the name of the directory to index
      */
     public function indexDirectory($dir)
     {
-        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
-                                                RecursiveIteratorIterator::LEAVES_ONLY);
-                                                
+        $it = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
         foreach ($it as $file) {
-            if (strpos($file, DIRECTORY_SEPARATOR . '.svn') !== false) {
+            if (false !== strpos($file, DIRECTORY_SEPARATOR.'.svn')) {
                 continue;
             }
 
@@ -81,8 +77,8 @@ class Doctrine_Search_File extends Doctrine_Search
                 continue;
             }
 
-            $this->updateIndex(array('url' => $file->getPathName(),
-                                     'content' => file_get_contents($file)));
+            $this->updateIndex(['url' => $file->getPathName(),
+                'content' => file_get_contents($file)]);
         }
     }
 }

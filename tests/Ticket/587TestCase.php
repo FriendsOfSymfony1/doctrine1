@@ -1,24 +1,26 @@
 <?php
 
 /**
- * Doctrine_Ticket_587_TestCase
+ * Doctrine_Ticket_587_TestCase.
  *
- * @package     Doctrine
  * @author      David Brewer <dbrewer@secondstory.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-
 class Doctrine_Ticket_587_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array_merge($this->tables, array('BookmarkUser', 'Bookmark', 'Page'));
+        $this->tables = array_merge($this->tables, ['BookmarkUser', 'Bookmark', 'Page']);
         parent::prepareTables();
     }
+
     public function prepareData()
     {
         parent::prepareData();
@@ -52,7 +54,8 @@ class Doctrine_Ticket_587_TestCase extends Doctrine_UnitTestCase
     {
         // load our user and our collection of pages
         $user = Doctrine_Query::create()->query(
-            'SELECT * FROM BookmarkUser u WHERE u.name=?', array('Anonymous')
+            'SELECT * FROM BookmarkUser u WHERE u.name=?',
+            ['Anonymous']
         )->getFirst();
         $pages = Doctrine_Query::create()->query('SELECT * FROM Page');
 

@@ -20,19 +20,20 @@
  */
 
 /**
- * Doctrine_Table_TestCase
+ * Doctrine_Table_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
 {
-
     public function prepareTables()
     {
         $this->tables[] = 'FieldNameTest';
@@ -66,14 +67,14 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
         $t->someColumn = 'abc';
         $t->someEnum = 'php';
         $t->someInt = 1;
-        $t->someArray = array();
-        $obj = new StdClass();
+        $t->someArray = [];
+        $obj = new stdClass();
         $t->someObject = $obj;
 
         $this->assertEqual($t->someColumn, 'abc');
         $this->assertEqual($t->someEnum, 'php');
         $this->assertEqual($t->someInt, 1);
-        $this->assertEqual($t->someArray, array());
+        $this->assertEqual($t->someArray, []);
         $this->assertEqual($t->someObject, $obj);
 
         $t->save();
@@ -81,7 +82,7 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($t->someColumn, 'abc');
         $this->assertEqual($t->someEnum, 'php');
         $this->assertEqual($t->someInt, 1);
-        $this->assertEqual($t->someArray, array());
+        $this->assertEqual($t->someArray, []);
         $this->assertEqual($t->someObject, $obj);
 
         $t->refresh();
@@ -89,7 +90,7 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($t->someColumn, 'abc');
         $this->assertEqual($t->someEnum, 'php');
         $this->assertEqual($t->someInt, 1);
-        $this->assertEqual($t->someArray, array());
+        $this->assertEqual($t->someArray, []);
         $this->assertEqual($t->someObject, $obj);
 
         $this->connection->clear();
@@ -99,7 +100,7 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($t->someColumn, 'abc');
         $this->assertEqual($t->someEnum, 'php');
         $this->assertEqual($t->someInt, 1);
-        $this->assertEqual($t->someArray, array());
+        $this->assertEqual($t->someArray, []);
         $this->assertEqual($t->someObject, $obj);
 
         $this->dbh->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
@@ -107,38 +108,36 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
 
     public function testGetForeignKey()
     {
-        $fk = $this->objTable->getRelation("Group");
+        $fk = $this->objTable->getRelation('Group');
         $this->assertTrue($fk instanceof Doctrine_Relation_Association);
         $this->assertTrue($fk->getTable() instanceof Doctrine_Table);
-        $this->assertTrue($fk->getType() == Doctrine_Relation::MANY);
-        $this->assertTrue($fk->getLocal() == "user_id");
-        $this->assertTrue($fk->getForeign() == "group_id");
+        $this->assertTrue(Doctrine_Relation::MANY == $fk->getType());
+        $this->assertTrue('user_id' == $fk->getLocal());
+        $this->assertTrue('group_id' == $fk->getForeign());
 
-        $fk = $this->objTable->getRelation("Email");
+        $fk = $this->objTable->getRelation('Email');
         $this->assertTrue($fk instanceof Doctrine_Relation_LocalKey);
         $this->assertTrue($fk->getTable() instanceof Doctrine_Table);
-        $this->assertTrue($fk->getType() == Doctrine_Relation::ONE);
-        $this->assertTrue($fk->getLocal() == "email_id");
+        $this->assertTrue(Doctrine_Relation::ONE == $fk->getType());
+        $this->assertTrue('email_id' == $fk->getLocal());
         $this->assertTrue($fk->getForeign() == $fk->getTable()->getIdentifier());
-
 
         $fk = $this->objTable->getRelation('Phonenumber');
         $this->assertTrue($fk instanceof Doctrine_Relation_ForeignKey);
         $this->assertTrue($fk->getTable() instanceof Doctrine_Table);
-        $this->assertTrue($fk->getType() == Doctrine_Relation::MANY);
+        $this->assertTrue(Doctrine_Relation::MANY == $fk->getType());
         $this->assertTrue($fk->getLocal() == $this->objTable->getIdentifier());
-        $this->assertTrue($fk->getForeign() == 'entity_id');
-
-
+        $this->assertTrue('entity_id' == $fk->getForeign());
     }
+
     public function testGetComponentName()
     {
-        $this->assertTrue($this->objTable->getComponentName() == 'User');
+        $this->assertTrue('User' == $this->objTable->getComponentName());
     }
 
     public function testGetTableName()
     {
-        $this->assertTrue($this->objTable->tableName == 'entity');
+        $this->assertTrue('entity' == $this->objTable->tableName);
     }
 
     public function testGetConnection()
@@ -148,7 +147,7 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
 
     public function testGetData()
     {
-        $this->assertTrue($this->objTable->getData() == array());
+        $this->assertTrue([] == $this->objTable->getData());
     }
 
     public function testSetSequenceName()
@@ -162,7 +161,7 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
     {
         $record = $this->objTable->create();
         $this->assertTrue($record instanceof Doctrine_Record);
-        $this->assertTrue($record->state() == Doctrine_Record::STATE_TCLEAN);
+        $this->assertTrue(Doctrine_Record::STATE_TCLEAN == $record->state());
     }
 
     public function testFind()
@@ -173,39 +172,39 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
         try {
             $record = $this->objTable->find('4');
             $this->assertTrue($record instanceof Doctrine_Record);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
 
         try {
             $record = $this->objTable->find('4', Doctrine_Core::HYDRATE_ARRAY);
             $this->assertTrue(is_array($record));
-            $this->assertTrue( ! is_object($record));
+            $this->assertTrue(!is_object($record));
             $this->assertTrue(array_key_exists('id', $record));
             $this->assertTrue(array_key_exists('name', $record));
-            $this->assertTrue( ! $record instanceof Doctrine_Record);
-        } catch(Exception $e) {
+            $this->assertTrue(!$record instanceof Doctrine_Record);
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
 
         try {
             $record = $this->objTable->find(123);
-            $this->assertTrue($record === false);
-        } catch(Exception $e) {
+            $this->assertTrue(false === $record);
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
 
         try {
             $record = $this->objTable->find(null);
-            $this->assertTrue($record === false);
-        } catch(Exception $e) {
+            $this->assertTrue(false === $record);
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
 
         try {
             $record = $this->objTable->find(false);
-            $this->assertTrue($record === false);
-        } catch(Exception $e) {
+            $this->assertTrue(false === $record);
+        } catch (Exception $e) {
             $this->assertTrue(false);
         }
     }
@@ -217,9 +216,9 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($users instanceof Doctrine_Collection);
 
         $users = $this->objTable->findAll(Doctrine_Core::HYDRATE_ARRAY);
-        $this->assertTrue( ! $users instanceof Doctrine_Collection);
+        $this->assertTrue(!$users instanceof Doctrine_Collection);
         $this->assertTrue(is_array($users));
-        $this->assertTrue( ! is_object($users));
+        $this->assertTrue(!is_object($users));
         $this->assertEqual(count($users), 8);
     }
 
@@ -244,8 +243,8 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
 
         try {
             $record = $this->objTable->find(123);
-        } catch(Exception $e) {
-            $this->assertTrue($e instanceOf Doctrine_Find_Exception);
+        } catch (Exception $e) {
+            $this->assertTrue($e instanceof Doctrine_Find_Exception);
         }
     }
 
@@ -253,11 +252,10 @@ class Doctrine_Table_TestCase extends Doctrine_UnitTestCase
     {
         $columns = $this->objTable->getColumns();
         $this->assertTrue(is_array($columns));
-
     }
 
     public function testApplyInheritance()
     {
-        $this->assertEqual($this->objTable->applyInheritance("id = 3"), "id = 3 AND type = ?");
+        $this->assertEqual($this->objTable->applyInheritance('id = 3'), 'id = 3 AND type = ?');
     }
 }

@@ -20,21 +20,17 @@
  */
 
 /**
- * Doctrine_Node_MaterializedPath_LevelOrderIterator
+ * Doctrine_Node_MaterializedPath_LevelOrderIterator.
  *
- * @package     Doctrine
- * @subpackage  Node
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Joe Simms <joe.simms@websites4.com>
  */
 class Doctrine_Node_MaterializedPath_LevelOrderIterator implements Iterator
 {
-    private $topNode = null;
+    private $topNode;
 
-    private $curNode = null;
+    private $curNode;
 
     public function __construct($node, $opts)
     {

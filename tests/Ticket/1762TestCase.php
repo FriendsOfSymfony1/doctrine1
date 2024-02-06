@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1762_TestCase
+ * Doctrine_Ticket_1762_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1762_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1762_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
@@ -43,7 +45,8 @@ class Doctrine_Ticket_1762_TestCase extends Doctrine_UnitTestCase
         $query = Doctrine_Query::create()
             ->from('User2 u')
             ->leftJoin('u.Roles')
-            ->orderBy('u.id');
+            ->orderBy('u.id')
+        ;
         $pager = new Doctrine_Pager($query, 1, 20);
         $records = $pager->execute($conn);
 
@@ -63,9 +66,9 @@ class User2 extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Role2 as Roles', array('refClass' => 'UserRole2', 
-                                                          'local'    => 'user_id',
-                                                          'foreign'  => 'role_id'));
+        $this->hasMany('Role2 as Roles', ['refClass' => 'UserRole2',
+            'local' => 'user_id',
+            'foreign' => 'role_id']);
     }
 }
 
@@ -78,9 +81,9 @@ class Role2 extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('User2 as Users', array('refClass' => 'UserRole2', 
-                                                          'local'    => 'role_id',
-                                                          'foreign'  => 'User_id'));
+        $this->hasMany('User2 as Users', ['refClass' => 'UserRole2',
+            'local' => 'role_id',
+            'foreign' => 'User_id']);
     }
 }
 
@@ -88,7 +91,7 @@ class UserRole2 extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('user_id', 'integer', null, array('primary' => true));
-        $this->hasColumn('role_id', 'integer', null, array('primary' => true));
+        $this->hasColumn('user_id', 'integer', null, ['primary' => true]);
+        $this->hasColumn('role_id', 'integer', null, ['primary' => true]);
     }
 }

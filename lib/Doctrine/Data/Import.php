@@ -20,70 +20,67 @@
  */
 
 /**
- * Doctrine_Data_Import
+ * Doctrine_Data_Import.
  *
- * @package     Doctrine
- * @package     Data
  * @author      Jonathan H. Wage <jwage@mac.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2552 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Data_Import extends Doctrine_Data
 {
     /**
-     * Array of imported objects for processing and saving
+     * Array of imported objects for processing and saving.
      *
      * @var array
      */
-    protected $_importedObjects = array();
+    protected $_importedObjects = [];
 
     /**
-     * Array of the raw data parsed from yaml
+     * Array of the raw data parsed from yaml.
      *
      * @var array
      */
-    protected $_rows = array();
+    protected $_rows = [];
 
     /**
-     * Optionally pass the directory/path to the yaml for importing
+     * Optionally pass the directory/path to the yaml for importing.
      *
      * @param string $directory
-     * @return void
      */
     public function __construct($directory = null)
     {
-        if ($directory !== null) {
+        if (null !== $directory) {
             $this->setDirectory($directory);
         }
     }
 
     /**
-     * Do the parsing of the yaml files and return the final parsed array
+     * Do the parsing of the yaml files and return the final parsed array.
      *
      * @return array $array
      */
     public function doParsing()
     {
         $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute(Doctrine_Core::ATTR_RECURSIVE_MERGE_FIXTURES);
-        $mergeFunction = $recursiveMerge === true ? 'array_merge_recursive':'array_merge';
+        $mergeFunction = true === $recursiveMerge ? 'array_merge_recursive' : 'array_merge';
         $directory = $this->getDirectory();
 
-        $array = array();
+        $array = [];
 
-        if ($directory !== null) {
+        if (null !== $directory) {
             foreach ((array) $directory as $dir) {
                 $e = explode('.', $dir);
 
                 // If they specified a specific yml file
-                if (end($e) == 'yml') {
+                if ('yml' == end($e)) {
                     $array = $mergeFunction($array, Doctrine_Parser::load($dir, $this->getFormat(), $this->getCharset()));
                 // If they specified a directory
-                } else if (is_dir($dir)) {
-                    $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
-                                                            RecursiveIteratorIterator::LEAVES_ONLY);
-                    $filesOrdered = array();
+                } elseif (is_dir($dir)) {
+                    $it = new RecursiveIteratorIterator(
+                        new RecursiveDirectoryIterator($dir),
+                        RecursiveIteratorIterator::LEAVES_ONLY
+                    );
+                    $filesOrdered = [];
                     foreach ($it as $file) {
                         $filesOrdered[] = $file;
                     }
@@ -103,15 +100,13 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * Do the importing of the data parsed from the fixtures
-     *
-     * @return void
+     * Do the importing of the data parsed from the fixtures.
      */
     public function doImport($append = false)
     {
         $array = $this->doParsing();
 
-        if ( ! $append) {
+        if (!$append) {
             $this->purge(array_reverse(array_keys($array)));
         }
 
@@ -119,9 +114,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * Recursively loop over all data fixtures and build the array of className rows
-     *
-     * @return void
+     * Recursively loop over all data fixtures and build the array of className rows.
      */
     protected function _buildRows($className, $data)
     {
@@ -132,15 +125,15 @@ class Doctrine_Data_Import extends Doctrine_Data
             $this->_rows[$className][$rowKey] = $row;
 
             foreach ((array) $row as $key => $value) {
-                if ($table->hasRelation($key) && is_array($value) && ! $table->hasTemplate('Doctrine_Template_I18n')) {
+                if ($table->hasRelation($key) && is_array($value) && !$table->hasTemplate('Doctrine_Template_I18n')) {
                     // Skip associative arrays defining keys to relationships
-                    if ( ! isset($value[0]) || (isset($value[0]) && is_array($value[0]))) {
+                    if (!isset($value[0]) || (isset($value[0]) && is_array($value[0]))) {
                         $rel = $table->getRelation($key);
                         $relClassName = $rel->getTable()->getOption('name');
-                        $relRowKey = $rowKey . '_' . $relClassName;
+                        $relRowKey = $rowKey.'_'.$relClassName;
 
-                        if ($rel->getType() == Doctrine_Relation::ONE) {
-                            $val = array($relRowKey => $value);
+                        if (Doctrine_Relation::ONE == $rel->getType()) {
+                            $val = [$relRowKey => $value];
                             $this->_rows[$className][$rowKey][$key] = $relRowKey;
                         } else {
                             $val = $value;
@@ -155,14 +148,12 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * Build the rows for nested set models
-     *
-     * @return void
+     * Build the rows for nested set models.
      */
     protected function _buildNestedSetRows($className, $data)
     {
         foreach ($data as $rowKey => $row) {
-            $children = isset($row['children']) ? $row['children']:array();
+            $children = $row['children'] ?? [];
             unset($row['children']);
             $this->_rows[$className][$rowKey] = $row;
 
@@ -172,133 +163,124 @@ class Doctrine_Data_Import extends Doctrine_Data
 
     /**
      * Get the unsaved object for a specified row key and validate that it is the valid object class
-     * for the passed record and relation name
+     * for the passed record and relation name.
      *
-     * @param  string $rowKey
-     * @param  Doctrine_Record $record
-     * @param  string $relationName
-     * @param  string $referringRowKey
+     * @param  string                  $rowKey
+     * @param  string                  $relationName
+     * @param  string                  $referringRowKey
      * @return Doctrine_Record
      * @throws Doctrine_Data_Exception
      */
     protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
         $relation = $record->getTable()->getRelation($relationName);
-        $rowKey = $this->_getRowKeyPrefix($relation->getTable()) . $rowKey;
+        $rowKey = $this->_getRowKeyPrefix($relation->getTable()).$rowKey;
 
-        if ( ! isset($this->_importedObjects[$rowKey])) {
-            throw new Doctrine_Data_Exception(
-                sprintf('Invalid row key specified: %s, referred to in %s', $rowKey, $referringRowKey)
-            );
+        if (!isset($this->_importedObjects[$rowKey])) {
+            throw new Doctrine_Data_Exception(sprintf('Invalid row key specified: %s, referred to in %s', $rowKey, $referringRowKey));
         }
 
         $relatedRowKeyObject = $this->_importedObjects[$rowKey];
 
         $relationClass = $relation->getClass();
-        if ( ! $relatedRowKeyObject instanceof $relationClass) {
-            throw new Doctrine_Data_Exception(sprintf(
-                'Class referred to in "%s" is expected to be "%s" and "%s" was given',
-                $referringRowKey, $relation->getClass(), get_class($relatedRowKeyObject)
-            ));
+        if (!$relatedRowKeyObject instanceof $relationClass) {
+            throw new Doctrine_Data_Exception(sprintf('Class referred to in "%s" is expected to be "%s" and "%s" was given', $referringRowKey, $relation->getClass(), get_class($relatedRowKeyObject)));
         }
 
         return $relatedRowKeyObject;
     }
 
     /**
-     * Process a row and make all the appropriate relations between the imported data
+     * Process a row and make all the appropriate relations between the imported data.
      *
      * @param string $rowKey
      * @param string $row
-     * @return void
      */
     protected function _processRow($rowKey, $row)
     {
         $obj = $this->_importedObjects[$rowKey];
 
         foreach ((array) $row as $key => $value) {
-            if (method_exists($obj, 'set' . Doctrine_Inflector::classify($key))) {
-                $func = 'set' . Doctrine_Inflector::classify($key);
-                $obj->$func($value);
-            } else if ($obj->getTable()->hasField($key)) {
-                if ($obj->getTable()->getTypeOf($key) == 'object') {
+            if (method_exists($obj, 'set'.Doctrine_Inflector::classify($key))) {
+                $func = 'set'.Doctrine_Inflector::classify($key);
+                $obj->{$func}($value);
+            } elseif ($obj->getTable()->hasField($key)) {
+                if ('object' == $obj->getTable()->getTypeOf($key)) {
                     $value = unserialize($value);
                 }
                 $obj->set($key, $value);
-            } else if ($obj->getTable()->hasRelation($key)) {
+            } elseif ($obj->getTable()->hasRelation($key)) {
                 if (is_array($value)) {
-                    if (isset($value[0]) && ! is_array($value[0])) {
+                    if (isset($value[0]) && !is_array($value[0])) {
                         foreach ($value as $link) {
-                            if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::ONE) {
+                            if (Doctrine_Relation::ONE === $obj->getTable()->getRelation($key)->getType()) {
                                 $obj->set($key, $this->_getImportedObject($link, $obj, $key, $rowKey));
-                            } else if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::MANY) {
-                                $relation = $obj->$key;
+                            } elseif (Doctrine_Relation::MANY === $obj->getTable()->getRelation($key)->getType()) {
+                                $relation = $obj->{$key};
 
                                 $relation[] = $this->_getImportedObject($link, $obj, $key, $rowKey);
                             }
                         }
                     } else {
-                        $obj->$key->fromArray($value);
+                        $obj->{$key}->fromArray($value);
                     }
                 } else {
                     $obj->set($key, $this->_getImportedObject($value, $obj, $key, $rowKey));
                 }
             } else {
                 try {
-                    $obj->$key = $value;
+                    $obj->{$key} = $value;
                 } catch (Exception $e) {
                     // used for Doctrine plugin methods (Doctrine_Template)
-                    if (is_callable(array($obj, 'set' . Doctrine_Inflector::classify($key)))) {
-                        $func = 'set' . Doctrine_Inflector::classify($key);
-                        $obj->$func($value);
+                    if (is_callable([$obj, 'set'.Doctrine_Inflector::classify($key)])) {
+                        $func = 'set'.Doctrine_Inflector::classify($key);
+                        $obj->{$func}($value);
                     } else {
-                        throw new Doctrine_Data_Exception('Invalid fixture element "'. $key . '" under "' . $rowKey . '"');
+                        throw new Doctrine_Data_Exception('Invalid fixture element "'.$key.'" under "'.$rowKey.'"');
                     }
                 }
             }
         }
     }
 
-   /**
-    * NestedSet fixtures may come in a 'natural' format with nested children listed under a 'children'
-    * key or in a raw, non-nested format with lft/rgt values.
-    *
-    * This method returns true if the given $data is a nested set in 'natural' form.
-    *
-    * @param $className
-    * @param $data
-    * @return boolean
-    */
+    /**
+     * NestedSet fixtures may come in a 'natural' format with nested children listed under a 'children'
+     * key or in a raw, non-nested format with lft/rgt values.
+     *
+     * This method returns true if the given $data is a nested set in 'natural' form.
+     *
+     * @return bool
+     */
     protected function _hasNaturalNestedSetFormat($className, array &$data)
     {
         if (Doctrine_Core::getTable($className)->isTree()) {
-            if (isset($data['NestedSet']) && $data['NestedSet'] == true) {
+            if (isset($data['NestedSet']) && true == $data['NestedSet']) {
                 unset($data['NestedSet']);
+
                 return true;
-            } else {
-                $first = current($data);
-                return array_key_exists('children', $first);
             }
-        } else {
-            return false;
+            $first = current($data);
+
+            return array_key_exists('children', $first);
         }
+
+        return false;
     }
 
     /**
-     * Perform the loading of the data from the passed array
+     * Perform the loading of the data from the passed array.
      *
      * @param string $array
-     * @return void
      */
     protected function _loadData(array $array)
     {
-        $nestedSets = array();
+        $nestedSets = [];
 
         $specifiedModels = $this->getModels();
-        $rows = array();
+        $rows = [];
 
         foreach ($array as $className => $data) {
-            if ( ! empty($specifiedModels) && !in_array($className, $specifiedModels)) {
+            if (!empty($specifiedModels) && !in_array($className, $specifiedModels)) {
                 continue;
             }
 
@@ -312,18 +294,18 @@ class Doctrine_Data_Import extends Doctrine_Data
             }
         }
 
-        $buildRows = array();
+        $buildRows = [];
         foreach ($this->_rows as $className => $classRows) {
             $rowKeyPrefix = $this->_getRowKeyPrefix(Doctrine_Core::getTable($className));
             foreach ($classRows as $rowKey => $row) {
-                $rowKey = $rowKeyPrefix . $rowKey;
+                $rowKey = $rowKeyPrefix.$rowKey;
                 $buildRows[$rowKey] = $row;
                 $this->_importedObjects[$rowKey] = new $className();
                 $this->_importedObjects[$rowKey]->state('TDIRTY');
             }
         }
 
-        foreach($buildRows as $rowKey => $row) {
+        foreach ($buildRows as $rowKey => $row) {
             $this->_processRow($rowKey, $row);
         }
 
@@ -341,7 +323,6 @@ class Doctrine_Data_Import extends Doctrine_Data
             $connection->beginTransaction();
             foreach ($tree as $model) {
                 foreach ($this->_importedObjects as $obj) {
-
                     if ($obj instanceof $model) {
                         $obj->save();
                     }
@@ -352,18 +333,17 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * Load nested set data for models with nested set enabled
+     * Load nested set data for models with nested set enabled.
      *
      * @param string $model
      * @param string $nestedSetData
      * @param string $parent
-     * @return void
      */
     protected function _loadNestedSetData($model, $nestedSetData, $parent = null)
     {
-        foreach($nestedSetData AS $rowKey => $nestedSet) {
-            $children = array();
-            $data  = array();
+        foreach ($nestedSetData as $rowKey => $nestedSet) {
+            $children = [];
+            $data = [];
 
             if (array_key_exists('children', $nestedSet)) {
                 $children = (array) $nestedSet['children'];
@@ -371,20 +351,20 @@ class Doctrine_Data_Import extends Doctrine_Data
                 unset($nestedSet['children']);
             }
 
-            $rowKey = $this->_getRowKeyPrefix(Doctrine_Core::getTable($model)) . $rowKey;
+            $rowKey = $this->_getRowKeyPrefix(Doctrine_Core::getTable($model)).$rowKey;
 
             $record = $this->_importedObjects[$rowKey];
             // remove this nested set from _importedObjects so it's not processed in the save routine for normal objects
             unset($this->_importedObjects[$rowKey]);
 
-            if ( ! $parent) {
+            if (!$parent) {
                 $record->save(); // save, so that createRoot can do: root id = id
                 Doctrine_Core::getTable($model)->getTree()->createRoot($record);
             } else {
                 $parent->getNode()->addChild($record);
             }
 
-            if (is_array($children) AND !empty($children)) {
+            if (is_array($children) and !empty($children)) {
                 $this->_loadNestedSetData($model, $children, $record);
             }
         }
@@ -393,7 +373,6 @@ class Doctrine_Data_Import extends Doctrine_Data
     /**
      * Returns the prefix to use when indexing an object from the supplied table.
      *
-     * @param Doctrine_Table $table
      * @return string
      */
     protected function _getRowKeyPrefix(Doctrine_Table $table)

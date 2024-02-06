@@ -20,57 +20,49 @@
  */
 
 /**
- *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Paul Cooper <pgc@ucecom.com> (PEAR MDB2 Pgsql driver)
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @package     Doctrine
- * @subpackage  Transaction
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Transaction_Pgsql extends Doctrine_Transaction
 {
     /**
      * createSavepoint
-     * creates a new savepoint
+     * creates a new savepoint.
      *
-     * @param string $savepoint     name of a savepoint to set
-     * @return void
+     * @param string $savepoint name of a savepoint to set
      */
     protected function createSavePoint($savepoint)
     {
-        $query = 'SAVEPOINT ' . $savepoint;
+        $query = 'SAVEPOINT '.$savepoint;
 
         return $this->conn->execute($query);
     }
 
     /**
      * releaseSavePoint
-     * releases given savepoint
+     * releases given savepoint.
      *
-     * @param string $savepoint     name of a savepoint to release
-     * @return void
+     * @param string $savepoint name of a savepoint to release
      */
     protected function releaseSavePoint($savepoint)
     {
-        $query = 'RELEASE SAVEPOINT ' . $savepoint;
+        $query = 'RELEASE SAVEPOINT '.$savepoint;
 
         return $this->conn->execute($query);
     }
 
     /**
      * rollbackSavePoint
-     * releases given savepoint
+     * releases given savepoint.
      *
-     * @param string $savepoint     name of a savepoint to rollback to
-     * @return void
+     * @param string $savepoint name of a savepoint to rollback to
      */
     protected function rollbackSavePoint($savepoint)
     {
-        $query = 'ROLLBACK TO SAVEPOINT ' . $savepoint;
+        $query = 'ROLLBACK TO SAVEPOINT '.$savepoint;
 
         return $this->conn->execute($query);
     }
@@ -83,9 +75,8 @@ class Doctrine_Transaction_Pgsql extends Doctrine_Transaction
      *                  READ COMMITTED (prevents dirty reads)
      *                  REPEATABLE READ (prevents nonrepeatable reads)
      *                  SERIALIZABLE (prevents phantom reads)
-     * @throws PDOException                         if something fails at the PDO level
-     * @throws Doctrine_Transaction_Exception       if using unknown isolation level or unknown wait option
-     * @return void
+     * @throws PDOException                   if something fails at the PDO level
+     * @throws Doctrine_Transaction_Exception if using unknown isolation level or unknown wait option
      */
     public function setIsolation($isolation)
     {
@@ -99,7 +90,8 @@ class Doctrine_Transaction_Pgsql extends Doctrine_Transaction
                 throw new Doctrine_Transaction_Exception('Isolation level '.$isolation.' is not supported.');
         }
 
-        $query = 'SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL ' . $isolation;
+        $query = 'SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL '.$isolation;
+
         return $this->conn->execute($query);
     }
 }

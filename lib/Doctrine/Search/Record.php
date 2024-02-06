@@ -20,29 +20,25 @@
  */
 
 /**
- * Doctrine_Search_Record
+ * Doctrine_Search_Record.
  *
- * @package     Doctrine
- * @subpackage  Search
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Search_Record extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('keyword', 'string', 250, array('notnull' => true));
-        $this->hasColumn('field', 'string', 50, array('notnull' => true));
+        $this->hasColumn('keyword', 'string', 250, ['notnull' => true]);
+        $this->hasColumn('field', 'string', 50, ['notnull' => true]);
         $this->hasColumn('position', 'integer', 8);
-        // depending on the identifiers of the owner record this record 
+        // depending on the identifiers of the owner record this record
         // has also one to many foreign key columns
     }
 
     public function setUp()
     {
-        $this->hasOne('[Component]', array('onDelete' => 'CASCADE'));
+        $this->hasOne('[Component]', ['onDelete' => 'CASCADE']);
     }
 }

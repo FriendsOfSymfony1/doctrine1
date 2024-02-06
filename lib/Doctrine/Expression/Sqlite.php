@@ -20,14 +20,10 @@
  */
 
 /**
- * Doctrine_Expression_Sqlite
+ * Doctrine_Expression_Sqlite.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
@@ -35,7 +31,6 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     /**
      * Returns the md5 sum of the data that SQLite's md5() function receives.
      *
-     * @param mixed $data
      * @return string
      */
     public static function md5Impl($data)
@@ -46,8 +41,8 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     /**
      * Returns the modules of the data that SQLite's mod() function receives.
      *
-     * @param integer $dividend
-     * @param integer $divisor
+     * @param  int    $dividend
+     * @param  int    $divisor
      * @return string
      */
     public static function modImpl($dividend, $divisor)
@@ -63,16 +58,17 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     public static function concatImpl()
     {
         $args = func_get_args();
-        return join('', $args);
+
+        return implode('', $args);
     }
 
     /**
      * locate
      * returns the position of the first occurrence of substring $substr in string $str that
-     * SQLite's locate() function receives
+     * SQLite's locate() function receives.
      *
-     * @param string $substr    literal string to find
-     * @param string $str       literal string
+     * @param  string $substr literal string to find
+     * @param  string $str    literal string
      * @return string
      */
     public static function locateImpl($substr, $str)
@@ -99,13 +95,14 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     {
         return trim($str);
     }
+
     public static function nowImpl()
     {
         return date('Y-m-d h:i:s');
     }
 
     /**
-     * returns the regular expression operator
+     * returns the regular expression operator.
      *
      * @return string
      */
@@ -117,23 +114,23 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     /**
      * soundex
      * Returns a string to call a function to compute the
-     * soundex encoding of a string
+     * soundex encoding of a string.
      *
      * The string "?000" is returned if the argument is NULL.
      *
-     * @param string $value
-     * @return string   SQL soundex function with given parameter
+     * @param  string $value
+     * @return string SQL soundex function with given parameter
      */
     public function soundex($value)
     {
-        return 'SOUNDEX(' . $value . ')';
+        return 'SOUNDEX('.$value.')';
     }
 
     /**
      * Return string to call a variable with the current timestamp inside an SQL statement
      * There are three special variables for current date and time.
      *
-     * @return string       sqlite function as string
+     * @return string sqlite function as string
      */
     public function now($type = 'timestamp')
     {
@@ -149,7 +146,7 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     }
 
     /**
-     * return string to call a function to get random value inside an SQL statement
+     * return string to call a function to get random value inside an SQL statement.
      *
      * @return string to generate float between 0 and 1
      */
@@ -159,22 +156,23 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     }
 
     /**
-     * return string to call a function to get a substring inside an SQL statement
+     * return string to call a function to get a substring inside an SQL statement.
      *
      * Note: Not SQL92, but common functionality.
      *
      * SQLite only supports the 2 parameter variant of this function
      *
-     * @param string $value         an sql string literal or column name/alias
-     * @param integer $position     where to start the substring portion
-     * @param integer $length       the substring portion length
-     * @return string               SQL substring function with given parameters
+     * @param  string $value    an sql string literal or column name/alias
+     * @param  int    $position where to start the substring portion
+     * @param  int    $length   the substring portion length
+     * @return string SQL substring function with given parameters
      */
     public function substring($value, $position, $length = null)
     {
-        if ($length !== null) {
-            return 'SUBSTR(' . $value . ', ' . $position . ', ' . $length . ')';
+        if (null !== $length) {
+            return 'SUBSTR('.$value.', '.$position.', '.$length.')';
         }
-        return 'SUBSTR(' . $value . ', ' . $position . ', LENGTH(' . $value . '))';
+
+        return 'SUBSTR('.$value.', '.$position.', LENGTH('.$value.'))';
     }
 }

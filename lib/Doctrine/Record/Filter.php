@@ -21,15 +21,11 @@
 
 /**
  * Doctrine_Record_Filter
- * Filters the record getters and setters
+ * Filters the record getters and setters.
  *
- * @package     Doctrine
- * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1298 $
+ *
+ * @see        www.doctrine-project.org
  */
 abstract class Doctrine_Record_Filter
 {
@@ -52,8 +48,7 @@ abstract class Doctrine_Record_Filter
     /**
      * Provides a way for setting property or relation value to the given record.
      *
-     * @param string $propertyOrRelation
-     *
+     * @param  string          $propertyOrRelation
      * @return Doctrine_Record the given record
      *
      * @thrown Doctrine_Exception when this way is not available
@@ -64,8 +59,6 @@ abstract class Doctrine_Record_Filter
      * Provides a way for getting property or relation value from the given record.
      *
      * @param string $propertyOrRelation
-     *
-     * @return mixed
      *
      * @thrown Doctrine_Exception when this way is not available
      */

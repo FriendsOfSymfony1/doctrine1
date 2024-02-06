@@ -20,69 +20,65 @@
  */
 
 /**
- * Doctrine_Parser
+ * Doctrine_Parser.
  *
- * @package     Doctrine
- * @subpackage  Parser
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 abstract class Doctrine_Parser
 {
     /**
-     * loadData
+     * loadData.
      *
      * Override in the parser driver
      *
      * @param string $array
-     * @return void
+     *
      * @author Jonathan H. Wage
      */
     abstract public function loadData($array, $charset = 'UTF-8');
 
     /**
-     * dumpData
+     * dumpData.
      *
      * Override in the parser driver
      *
      * @param string $array
      * @param string $path
      * @param string $charset The charset of the data being dumped
-     * @return void
+     *
      * @author Jonathan H. Wage
      */
     abstract public function dumpData($array, $path = null, $charset = null);
 
     /**
-     * getParser
+     * getParser.
      *
      * Get instance of the specified parser
      *
      * @param string $type
-     * @return void
+     *
      * @author Jonathan H. Wage
      */
-    static public function getParser($type)
+    public static function getParser($type)
     {
         $class = 'Doctrine_Parser_'.ucfirst($type);
 
-        return new $class;
+        return new $class();
     }
 
     /**
-     * load
+     * load.
      *
      * Interface for loading and parsing data from a file
      *
      * @param string $path
      * @param string $type
-     * @return void
+     *
      * @author Jonathan H. Wage
      */
-    static public function load($path, $type = 'xml', $charset = 'UTF-8')
+    public static function load($path, $type = 'xml', $charset = 'UTF-8')
     {
         $parser = self::getParser($type);
 
@@ -90,7 +86,7 @@ abstract class Doctrine_Parser
     }
 
     /**
-     * dump
+     * dump.
      *
      * Interface for pulling and dumping data to a file
      *
@@ -98,10 +94,10 @@ abstract class Doctrine_Parser
      * @param string $path
      * @param string $type
      * @param string $charset The charset of the data being dumped
-     * @return void
+     *
      * @author Jonathan H. Wage
      */
-    static public function dump($array, $type = 'xml', $path = null, $charset = null)
+    public static function dump($array, $type = 'xml', $path = null, $charset = null)
     {
         $parser = self::getParser($type);
 
@@ -109,45 +105,43 @@ abstract class Doctrine_Parser
     }
 
     /**
-     * doLoad
+     * doLoad.
      *
      * Get contents whether it is the path to a file file or a string of txt.
      * Either should allow php code in it.
      *
      * @param string $path
-     * @return void
      */
     public function doLoad($path)
     {
         ob_start();
-        if ( ! file_exists($path)) {
+        if (!file_exists($path)) {
             $contents = $path;
-            $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dparser_' . microtime();
+            $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'dparser_'.microtime();
 
             file_put_contents($path, $contents);
         }
 
-        include($path);
+        include $path;
 
         // Fix #1569. Need to check if it's still all valid
-        $contents = ob_get_clean(); //iconv("UTF-8", "UTF-8", ob_get_clean());
+        $contents = ob_get_clean(); // iconv("UTF-8", "UTF-8", ob_get_clean());
 
         return $contents;
     }
 
     /**
-     * doDump
+     * doDump.
      *
      * @param string $data
      * @param string $path
-     * @return void
      */
     public function doDump($data, $path = null)
     {
-      if ($path !== null) {
+        if (null !== $path) {
             return file_put_contents($path, $data);
-        } else {
-            return $data;
         }
+
+        return $data;
     }
 }

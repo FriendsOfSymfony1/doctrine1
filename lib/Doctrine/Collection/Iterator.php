@@ -21,72 +21,64 @@
 
 /**
  * Doctrine_Collection_Iterator
- * iterates through Doctrine_Collection
+ * iterates through Doctrine_Collection.
  *
- * @package     Doctrine
- * @subpackage  Collection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Collection_Iterator implements Iterator
 {
     /**
-     * @var Doctrine_Collection $collection
+     * @var Doctrine_Collection
      */
     protected $collection;
 
     /**
-     * @var array $keys
+     * @var array
      */
     protected $keys;
 
-    /**
-     * @var mixed $key
-     */
     protected $key;
 
     /**
-     * @var integer $index
+     * @var int
      */
     protected $index;
 
     /**
-     * @var integer $count
+     * @var int
      */
     protected $count;
 
     /**
-     * constructor
-     * @var Doctrine_Collection $collection
+     * constructor.
+     *
+     * @var Doctrine_Collection
      */
     public function __construct($collection)
     {
         $this->collection = $collection;
-        $this->keys       = $this->collection->getKeys();
-        $this->count      = $this->collection->count();
+        $this->keys = $this->collection->getKeys();
+        $this->count = $this->collection->count();
     }
 
     /**
-     * rewinds the iterator
-     *
-     * @return void
+     * rewinds the iterator.
      */
     public function rewind()
     {
         $this->index = 0;
         $i = $this->index;
         if (isset($this->keys[$i])) {
-            $this->key   = $this->keys[$i];
+            $this->key = $this->keys[$i];
         }
     }
 
     /**
-     * returns the current key
+     * returns the current key.
      *
-     * @return integer
+     * @return int
      */
     public function key()
     {
@@ -94,7 +86,7 @@ abstract class Doctrine_Collection_Iterator implements Iterator
     }
 
     /**
-     * returns the current record
+     * returns the current record.
      *
      * @return Doctrine_Record
      */
@@ -104,16 +96,14 @@ abstract class Doctrine_Collection_Iterator implements Iterator
     }
 
     /**
-     * advances the internal pointer
-     *
-     * @return void
+     * advances the internal pointer.
      */
     public function next()
     {
-        $this->index++;
+        ++$this->index;
         $i = $this->index;
         if (isset($this->keys[$i])) {
-            $this->key   = $this->keys[$i];
+            $this->key = $this->keys[$i];
         }
     }
 }

@@ -20,80 +20,77 @@
  */
 
 /**
- * Doctrine_Connection_Profiler
+ * Doctrine_Connection_Profiler.
  *
- * @package     Doctrine
- * @subpackage  Connection
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAggregate, Countable
 {
     /**
-     * @param array $listeners      an array containing all availible listeners
+     * @param array $listeners an array containing all availible listeners
      */
-    private $listeners  = array('query',
-                                'prepare',
-                                'commit',
-                                'rollback',
-                                'connect',
-                                'begintransaction',
-                                'exec',
-                                'execute');
+    private $listeners = ['query',
+        'prepare',
+        'commit',
+        'rollback',
+        'connect',
+        'begintransaction',
+        'exec',
+        'execute'];
 
     /**
-     * @param array $events         an array containing all listened events
+     * @param array $events an array containing all listened events
      */
-    private $events     = array();
+    private $events = [];
 
     /**
-     * @param array $eventSequences         an array containing sequences of all listened events as keys
+     * @param array $eventSequences an array containing sequences of all listened events as keys
      */
-    private $eventSequences = array();
+    private $eventSequences = [];
 
     /**
-     * constructor
+     * constructor.
      */
-    public function __construct() {
-
+    public function __construct()
+    {
     }
 
     /**
-     * setFilterQueryType
+     * setFilterQueryType.
      *
-     * @param integer $filter
-     * @return boolean
+     * @return bool
      */
-    public function setFilterQueryType() {
-
+    public function setFilterQueryType()
+    {
     }
+
     /**
      * method overloader
      * this method is used for invoking different listeners, for the full
-     * list of availible listeners, see Doctrine_EventListener
+     * list of availible listeners, see Doctrine_EventListener.
      *
-     * @param string $m     the name of the method
-     * @param array $a      method arguments
+     * @param string $m the name of the method
+     * @param array  $a method arguments
+     *
      * @see Doctrine_EventListener
-     * @return boolean
+     *
+     * @return bool
      */
     public function __call($m, $a)
     {
         // first argument should be an instance of Doctrine_Event
-        if ( ! ($a[0] instanceof Doctrine_Event)) {
+        if (!($a[0] instanceof Doctrine_Event)) {
             throw new Doctrine_Connection_Profiler_Exception("Couldn't listen event. Event should be an instance of Doctrine_Event.");
         }
 
-
-        if (substr($m, 0, 3) === 'pre') {
+        if ('pre' === substr($m, 0, 3)) {
             // pre-event listener found
             $a[0]->start();
 
             $eventSequence = $a[0]->getSequence();
-            if ( ! isset($this->eventSequences[$eventSequence])) {
+            if (!isset($this->eventSequences[$eventSequence])) {
                 $this->events[] = $a[0];
                 $this->eventSequences[$eventSequence] = true;
             }
@@ -104,9 +101,8 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
     }
 
     /**
-     * get
+     * get.
      *
-     * @param mixed $key
      * @return Doctrine_Event|null
      */
     public function get($key)
@@ -114,12 +110,13 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
         if (isset($this->events[$key])) {
             return $this->events[$key];
         }
+
         return null;
     }
 
     /**
      * getAll
-     * returns all profiled events as an array
+     * returns all profiled events as an array.
      *
      * @return Doctrine_Event[] All events in an array
      */
@@ -130,39 +127,39 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
 
     /**
      * getIterator
-     * returns an iterator that iterates through the logged events
+     * returns an iterator that iterates through the logged events.
      *
      * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->events);
     }
 
     /**
-     * count
+     * count.
      *
-     * @return integer
+     * @return int
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->events);
     }
 
     /**
-     * pop the last event from the event stack
+     * pop the last event from the event stack.
      *
      * @return Doctrine_Event|null
      */
     public function pop()
     {
         $event = array_pop($this->events);
-        if ($event !== null)
-        {
+        if (null !== $event) {
             unset($this->eventSequences[$event->getSequence()]);
         }
+
         return $event;
     }
 
@@ -179,6 +176,7 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
         }
 
         end($this->events);
+
         return current($this->events);
     }
 }

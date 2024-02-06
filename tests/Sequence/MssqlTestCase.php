@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Sequence_Mssql_TestCase
+ * Doctrine_Sequence_Mssql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Sequence_Mssql_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Sequence_Mssql_TestCase extends Doctrine_UnitTestCase
 {
     public function testCurrIdExecutesSql()
     {
@@ -38,23 +40,25 @@ class Doctrine_Sequence_Mssql_TestCase extends Doctrine_UnitTestCase
 
         $this->assertEqual($this->adapter->pop(), 'DELETE FROM user_seq WHERE id < 0');
 
-        $this->assertEqual($this->adapter->pop(), 'SELECT @@IDENTITY');  
+        $this->assertEqual($this->adapter->pop(), 'SELECT @@IDENTITY');
         $this->assertEqual($this->adapter->pop(), 'SELECT @@VERSION');
         $this->assertEqual($this->adapter->pop(), 'SET IDENTITY_INSERT user_seq OFF INSERT INTO user_seq DEFAULT VALUES');
         $this->assertEqual($this->adapter->pop(), 'SELECT COUNT(1) FROM user_seq');
     }
+
     public function testNextIdExecutesSql()
     {
         $id = $this->sequence->nextId('user');
 
         $this->assertEqual($this->adapter->pop(), 'DELETE FROM user_seq WHERE id < 0');
 
-        $this->assertEqual($this->adapter->pop(), 'SELECT @@IDENTITY');  
-        $this->assertEqual($this->adapter->pop(), 'SELECT @@VERSION'); 
+        $this->assertEqual($this->adapter->pop(), 'SELECT @@IDENTITY');
+        $this->assertEqual($this->adapter->pop(), 'SELECT @@VERSION');
         $this->assertEqual($this->adapter->pop(), 'SET IDENTITY_INSERT user_seq OFF INSERT INTO user_seq DEFAULT VALUES');
         $this->assertEqual($this->adapter->pop(), 'SELECT COUNT(1) FROM user_seq');
     }
-    public function testLastInsertIdCallsPdoLevelEquivalent() 
+
+    public function testLastInsertIdCallsPdoLevelEquivalent()
     {
         $id = $this->sequence->lastInsertId('user');
 

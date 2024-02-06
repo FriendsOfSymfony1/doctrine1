@@ -20,43 +20,45 @@
  */
 
 /**
- * Doctrine_Export_Schema_TestCase
+ * Doctrine_Export_Schema_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase
 {
-    public $tables =   array('Entity',
-                      'EntityReference',
-                      'EntityAddress',
-                      'Email',
-                      'Phonenumber',
-                      'Groupuser',
-                      'Group',
-                      'User',
-                      'Album',
-                      'Song',
-                      'Element',
-                      'TestError',
-                      'Description',
-                      'Address',
-                      'Account',
-                      'Task',
-                      'Resource',
-                      'Assignment',
-                      'ResourceType',
-                      'ResourceReference');
-    
+    public $tables = ['Entity',
+        'EntityReference',
+        'EntityAddress',
+        'Email',
+        'Phonenumber',
+        'Groupuser',
+        'Group',
+        'User',
+        'Album',
+        'Song',
+        'Element',
+        'TestError',
+        'Description',
+        'Address',
+        'Account',
+        'Task',
+        'Resource',
+        'Assignment',
+        'ResourceType',
+        'ResourceReference'];
+
     public function testYmlExport()
     {
         $export = new Doctrine_Export_Schema();
-        $export->exportSchema('schema-export.yml', 'yml', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'models', $this->tables);
+        $export->exportSchema('schema-export.yml', 'yml', dirname(__FILE__, 2).DIRECTORY_SEPARATOR.'models', $this->tables);
         unlink('schema-export.yml');
     }
 }

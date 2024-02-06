@@ -20,28 +20,21 @@
  */
 
 /**
- * Doctrine_Query_Filter_Chain
+ * Doctrine_Query_Filter_Chain.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_Filter_Chain
 {
     /**
-     * @var array $_filters         an array of Doctrine_Query_Filter objects
+     * @var array an array of Doctrine_Query_Filter objects
      */
-    protected $_filters = array();
+    protected $_filters = [];
 
     /**
-     * add
-     *
-     * @param Doctrine_Query_Filter $filter
-     * @return void
+     * add.
      */
     public function add(Doctrine_Query_Filter $filter)
     {
@@ -50,25 +43,19 @@ class Doctrine_Query_Filter_Chain
 
     /**
      * returns a Doctrine_Query_Filter on success
-     * and null on failure
-     *
-     * @param mixed $key
-     * @return mixed
+     * and null on failure.
      */
     public function get($key)
     {
-        if ( ! isset($this->_filters[$key])) {
-            throw new Doctrine_Query_Exception('Unknown filter ' . $key);
+        if (!isset($this->_filters[$key])) {
+            throw new Doctrine_Query_Exception('Unknown filter '.$key);
         }
+
         return $this->_filters[$key];
     }
 
     /**
-     * set
-     *
-     * @param mixed $key
-     * @param Doctrine_Query_Filter $listener
-     * @return void
+     * set.
      */
     public function set($key, Doctrine_Query_Filter $listener)
     {
@@ -76,13 +63,11 @@ class Doctrine_Query_Filter_Chain
     }
 
     /**
-     * preQuery
+     * preQuery.
      *
      * Method for listening the preQuery method of Doctrine_Query and
      * hooking into the query building procedure, doing any custom / specialized
      * query building procedures that are neccessary.
-     *
-     * @return void
      */
     public function preQuery(Doctrine_Query $query)
     {
@@ -92,13 +77,11 @@ class Doctrine_Query_Filter_Chain
     }
 
     /**
-     * postQuery
+     * postQuery.
      *
      * Method for listening the postQuery method of Doctrine_Query and
      * to hook into the query building procedure, doing any custom / specialized
      * post query procedures (for example logging) that are neccessary.
-     *
-     * @return void
      */
     public function postQuery(Doctrine_Query $query)
     {

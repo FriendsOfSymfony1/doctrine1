@@ -20,23 +20,25 @@
  */
 
 /**
- * Doctrine_Ticket_1865_TestCase
+ * Doctrine_Ticket_1865_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1865_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1865_TestCase extends Doctrine_UnitTestCase
 {
-
-    public function prepareData() 
+    public function prepareData()
     {
     }
-    public function prepareTables() 
+
+    public function prepareTables()
     {
         $this->tables[] = 'Ticket_1865_User';
         $this->tables[] = 'Ticket_1865_Profile';
@@ -51,11 +53,11 @@ class Doctrine_Ticket_1865_TestCase extends Doctrine_UnitTestCase
         $user->password = '!';
         $user->Profile;
         $user->save();
-        
+
         $this->assertNotEqual($user->Profile->id, null); // Ticket_1865_Profile is saved
         $user->delete();
     }
-    
+
     public function testSaveWithRelatedWithPreInsert()
     {
         $user = new Ticket_1865_User();
@@ -63,39 +65,42 @@ class Doctrine_Ticket_1865_TestCase extends Doctrine_UnitTestCase
         $user->loginname = 'world';
         $user->password = '!';
         $user->save(); // $user->Ticket_1865_Profile must be called in Ticket_1865_User::preInsert
-        
+
         $this->assertNotEqual($user->Profile->id, null); // Ticket_1865_Profile is NOT saved - test failure
         $user->delete();
     }
 }
 
-class Ticket_1865_Profile extends Doctrine_Record 
+class Ticket_1865_Profile extends Doctrine_Record
 {
-    public function setUp() 
+    public function setUp()
     {
-        $this->hasOne('Ticket_1865_User as User', array('local' => 'id', 'foreign' => 'id', 'onDelete' => 'CASCADE'));
+        $this->hasOne('Ticket_1865_User as User', ['local' => 'id', 'foreign' => 'id', 'onDelete' => 'CASCADE']);
     }
-    public function setTableDefinition() 
+
+    public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer',20, array('autoincrement', 'primary'));
-        $this->hasColumn('user_id', 'integer', 20, array('notnull', 'unique'));
-        $this->hasColumn('icq', 'string', 9, array('notnull'));  
+        $this->hasColumn('id', 'integer', 20, ['autoincrement', 'primary']);
+        $this->hasColumn('user_id', 'integer', 20, ['notnull', 'unique']);
+        $this->hasColumn('icq', 'string', 9, ['notnull']);
     }
 }
 
-class Ticket_1865_User extends Doctrine_Record 
+class Ticket_1865_User extends Doctrine_Record
 {
-    public function setUp() 
+    public function setUp()
     {
-        $this->hasOne('Ticket_1865_Profile as Profile', array('local' => 'id', 'foreign' => 'user_id'));
+        $this->hasOne('Ticket_1865_Profile as Profile', ['local' => 'id', 'foreign' => 'user_id']);
     }
-    public function setTableDefinition() 
+
+    public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer',20, array('autoincrement', 'primary'));
-        $this->hasColumn('name', 'string',50);
-        $this->hasColumn('loginname', 'string',20, array('unique'));
-        $this->hasColumn('password', 'string',16);
+        $this->hasColumn('id', 'integer', 20, ['autoincrement', 'primary']);
+        $this->hasColumn('name', 'string', 50);
+        $this->hasColumn('loginname', 'string', 20, ['unique']);
+        $this->hasColumn('password', 'string', 16);
     }
+
     public function preInsert($event)
     {
         $this->Profile;

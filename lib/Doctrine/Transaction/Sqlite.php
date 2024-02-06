@@ -20,15 +20,10 @@
  */
 
 /**
- *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @package     Doctrine
- * @subpackage  Transaction
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Transaction_Sqlite extends Doctrine_Transaction
 {
@@ -40,9 +35,8 @@ class Doctrine_Transaction_Sqlite extends Doctrine_Transaction
      *                  READ COMMITTED (prevents dirty reads)
      *                  REPEATABLE READ (prevents nonrepeatable reads)
      *                  SERIALIZABLE (prevents phantom reads)
-     * @throws PDOException                         if something fails at the PDO level
-     * @throws Doctrine_Transaction_Exception       if using unknown isolation level
-     * @return void
+     * @throws PDOException                   if something fails at the PDO level
+     * @throws Doctrine_Transaction_Exception if using unknown isolation level
      */
     public function setIsolation($isolation)
     {
@@ -56,10 +50,10 @@ class Doctrine_Transaction_Sqlite extends Doctrine_Transaction
                 $isolation = 1;
                 break;
             default:
-                throw new Doctrine_Transaction_Exception('Isolation level ' . $isolation . 'is not supported.');
+                throw new Doctrine_Transaction_Exception('Isolation level '.$isolation.'is not supported.');
         }
 
-        $query = 'PRAGMA read_uncommitted = ' . $isolation;
+        $query = 'PRAGMA read_uncommitted = '.$isolation;
 
         return $this->conn->execute($query);
     }

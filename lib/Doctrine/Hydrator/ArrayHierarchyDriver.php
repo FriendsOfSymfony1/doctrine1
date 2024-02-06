@@ -20,14 +20,10 @@
  */
 
 /**
- * Builds result sets in to the hierarchy graph using php arrays
+ * Builds result sets in to the hierarchy graph using php arrays.
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.2
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
  */
 class Doctrine_Hydrator_ArrayHierarchyDriver extends Doctrine_Hydrator_ArrayDriver
@@ -41,46 +37,47 @@ class Doctrine_Hydrator_ArrayHierarchyDriver extends Doctrine_Hydrator_ArrayDriv
 
         $table = $this->getRootComponent();
 
-        if ( ! $table->isTree() || ! $table->hasColumn('level')) {
+        if (!$table->isTree() || !$table->hasColumn('level')) {
             throw new Doctrine_Exception('Cannot hydrate model that does not implements Tree behavior with `level` column');
         }
 
         // Trees mapped
-        $trees = array();
+        $trees = [];
         $l = 0;
 
         if (count($collection) > 0) {
             // Node Stack. Used to help building the hierarchy
-            $stack = array();
+            $stack = [];
 
             foreach ($collection as $child) {
                 $item = $child;
 
-                $item['__children'] = array();
+                $item['__children'] = [];
 
                 // Number of stack items
                 $l = count($stack);
 
                 // Check if we're dealing with different levels
-                while($l > 0 && $stack[$l - 1]['level'] >= $item['level']) {
+                while ($l > 0 && $stack[$l - 1]['level'] >= $item['level']) {
                     array_pop($stack);
-                    $l--;
+                    --$l;
                 }
 
                 // Stack is empty (we are inspecting the root)
-                if ($l == 0) {
+                if (0 == $l) {
                     // Assigning the root child
                     $i = count($trees);
                     $trees[$i] = $item;
-                    $stack[] = & $trees[$i];
+                    $stack[] = &$trees[$i];
                 } else {
                     // Add child to parent
                     $i = count($stack[$l - 1]['__children']);
                     $stack[$l - 1]['__children'][$i] = $item;
-                    $stack[] = & $stack[$l - 1]['__children'][$i];
+                    $stack[] = &$stack[$l - 1]['__children'][$i];
                 }
             }
         }
+
         return $trees;
     }
 }

@@ -20,26 +20,32 @@
  */
 
 /**
- * Doctrine_OneTableOneClassInheritance_TestCase
+ * Doctrine_OneTableOneClassInheritance_TestCase.
  *
- * @package     Doctrine
- * @author      Bjarte Stien Karlsen <bjartka@pvv.ntnu.no> 
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @author      Bjarte Stien Karlsen <bjartka@pvv.ntnu.no>
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_OneTableOneClassInheritance_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_OneTableOneClassInheritance_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
-    { }
-    public function prepareTables() 
-    { }
+    public function prepareData()
+    {
+    }
+
+    public function prepareTables()
+    {
+    }
+
     public function testTableExporting()
     {
-        $sql = $this->conn->export->exportClassesSql(array('ConcreteInheritanceTestParent',
-                                                           'ConcreteInheritanceTestChild'));
+        $sql = $this->conn->export->exportClassesSql(['ConcreteInheritanceTestParent',
+            'ConcreteInheritanceTestChild']);
         $this->assertEqual($sql[0], 'CREATE TABLE concrete_inheritance_test_parent (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(2147483647))');
         $this->assertEqual($sql[1], 'CREATE TABLE concrete_inheritance_test_child (id INTEGER PRIMARY KEY AUTOINCREMENT, age INTEGER, name VARCHAR(2147483647))');
     }

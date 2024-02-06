@@ -21,15 +21,12 @@
 
 /**
  * Doctrine_Expression_Mock
- * Mock driver that is used for testing purposes
+ * Mock driver that is used for testing purposes.
  *
- * @package     Doctrine
- * @subpackage  Expression
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Mock extends Doctrine_Expression_Driver
-{ }
+{
+}

@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Record_State_TestCase
+ * Doctrine_Record_State_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
 {
@@ -44,11 +46,11 @@ class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
         $node->name = 'root';
         $treeMngr = $this->conn->getTable('NestedSetTest_SingleRootNode')->getTree();
         $treeMngr->createRoot($node);
-        
+
         $node2 = new NestedSetTest_SingleRootNode();
         $node2->name = 'node2';
         $node2->getNode()->insertAsLastChildOf($node);
-        
+
         $node3 = new NestedSetTest_SingleRootNode();
         $node3->name = 'node3';
         $node3->getNode()->insertAsLastChildOf($node2);
@@ -58,7 +60,8 @@ class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
     {
         $results = Doctrine_Core::getTable('NestedSetTest_SingleRootNode')
             ->createQuery('n')
-            ->execute(array(), Doctrine_Core::HYDRATE_RECORD_HIERARCHY);
+            ->execute([], Doctrine_Core::HYDRATE_RECORD_HIERARCHY)
+        ;
 
         $this->assertEqual($results[0]['__children'][0]['__children'][0]['name'], 'node3');
         $this->assertTrue($results instanceof Doctrine_Collection);
@@ -68,7 +71,8 @@ class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
     {
         $results = Doctrine_Core::getTable('NestedSetTest_SingleRootNode')
             ->createQuery('n')
-            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY);
+            ->execute([], Doctrine_Core::HYDRATE_ARRAY_HIERARCHY)
+        ;
 
         $this->assertEqual($results[0]['__children'][0]['__children'][0]['name'], 'node3');
         $this->assertTrue(is_array($results));
@@ -78,11 +82,13 @@ class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
     {
         $array = Doctrine_Core::getTable('NestedSetTest_SingleRootNode')
             ->createQuery('n')
-            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY);
+            ->execute([], Doctrine_Core::HYDRATE_ARRAY_HIERARCHY)
+        ;
 
         $coll = Doctrine_Core::getTable('NestedSetTest_SingleRootNode')
             ->createQuery('n')
-            ->execute(array(), Doctrine_Core::HYDRATE_RECORD_HIERARCHY);
+            ->execute([], Doctrine_Core::HYDRATE_RECORD_HIERARCHY)
+        ;
 
         $this->assertEqual($array, $coll->toArray());
     }
@@ -92,7 +98,8 @@ class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
         try {
             $results = Doctrine_Core::getTable('User')
                 ->createQuery('u')
-                ->execute(array(), Doctrine_Core::HYDRATE_RECORD_HIERARCHY);
+                ->execute([], Doctrine_Core::HYDRATE_RECORD_HIERARCHY)
+            ;
 
             $this->fail();
         } catch (Exception $e) {
@@ -102,7 +109,8 @@ class Doctrine_NestedSet_Hydration_TestCase extends Doctrine_UnitTestCase
         try {
             $results = Doctrine_Core::getTable('User')
                 ->createQuery('u')
-                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY_HIERARCHY);
+                ->execute([], Doctrine_Core::HYDRATE_ARRAY_HIERARCHY)
+            ;
 
             $this->fail();
         } catch (Exception $e) {

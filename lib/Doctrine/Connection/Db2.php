@@ -20,45 +20,40 @@
  */
 
 /**
- * Doctrine_Connection_Db2
+ * Doctrine_Connection_Db2.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Connection_Db2 extends Doctrine_Connection_Common
 {
     /**
-     * Adds an driver-specific LIMIT clause to the query
+     * Adds an driver-specific LIMIT clause to the query.
      *
-     * @param string $query         query to modify
-     * @param integer $limit        limit the number of rows
-     * @param integer $offset       start reading from given offset
-     * @return string               the modified query
+     * @param  string $query  query to modify
+     * @param  int    $limit  limit the number of rows
+     * @param  int    $offset start reading from given offset
+     * @return string the modified query
      */
     public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
-        if ($limit <= 0)
+        if ($limit <= 0) {
             return $query;
-
-        if ($offset == 0) {
-            return $query . ' FETCH FIRST '. (int)$limit .' ROWS ONLY';
-        } else {
-            $sqlPieces = explode('from', $query);
-            $select = $sqlPieces[0];
-            $table = $sqlPieces[1];
-
-            $col = explode('select', $select);
-
-            $sql = 'WITH OFFSET AS(' . $select . ', ROW_NUMBER() ' .
-               'OVER(ORDER BY ' . $col[1] . ') AS doctrine_rownum FROM ' . $table . ')' .
-               $select . 'FROM OFFSET WHERE doctrine_rownum BETWEEN ' . (int)$offset .
-                   'AND ' . ((int)$offset + (int)$limit - 1);
-            return $sql;
         }
+
+        if (0 == $offset) {
+            return $query.' FETCH FIRST '.(int) $limit.' ROWS ONLY';
+        }
+        $sqlPieces = explode('from', $query);
+        $select = $sqlPieces[0];
+        $table = $sqlPieces[1];
+
+        $col = explode('select', $select);
+
+        return 'WITH OFFSET AS('.$select.', ROW_NUMBER() '.
+           'OVER(ORDER BY '.$col[1].') AS doctrine_rownum FROM '.$table.')'.
+           $select.'FROM OFFSET WHERE doctrine_rownum BETWEEN '.(int) $offset.
+               'AND '.((int) $offset + (int) $limit - 1);
     }
 }

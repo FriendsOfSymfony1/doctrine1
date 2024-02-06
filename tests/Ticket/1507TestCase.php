@@ -20,74 +20,76 @@
  */
 
 /**
- * Doctrine_Ticket_1500_TestCase
+ * Doctrine_Ticket_1500_TestCase.
  *
- * @package     Doctrine
  * @author      David Zülke <david.zuelke@bitextender.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    ?
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1507_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1507_TestCase extends Doctrine_UnitTestCase
 {
-	public function testInitiallyEmpty()
-	{
-		$c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		
-		$this->assertEqual(null, $c->getParam('foo'));
-		$this->assertEqual(null, $c->getParam('foo', 'bar'));
-		$this->assertEqual(null, $c->getParams());
-		$this->assertEqual(null, $c->getParams('bar'));
-		$this->assertEqual(array(), $c->getParamNamespaces());
-	}
-	
-	public function testSetGetParamWithNamespace()
-	{
-		$c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		
-		$c->setParam('foo', 'bar', 'namespace');
-		
-		$this->assertEqual(array('foo' => 'bar'), $c->getParams('namespace'));
-		$this->assertEqual('bar', $c->getParam('foo', 'namespace'));
-		
-		$this->assertEqual(array('namespace'), $c->getParamNamespaces());
-	}
-	
-	public function testSetGetParamWithoutNamespace()
-	{
-		$c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		
-		$c->setParam('foo', 'bar');
-		
-		$this->assertEqual(array('foo' => 'bar'), $c->getParams());
-		$this->assertEqual('bar', $c->getParam('foo'));
-		
-		$this->assertEqual(array($c->getAttribute(Doctrine_Core::ATTR_DEFAULT_PARAM_NAMESPACE)), $c->getParamNamespaces());
-	}
-	
-	public function testSetGetParamWithNamespaceParent()
-	{
-		$p = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		$c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		$c->setParent($p);
-		
-		$p->setParam('foo', 'bar', 'namespace');
-		
-		$this->assertEqual('bar', $c->getParam('foo', 'namespace'));
-	}
-	
-	public function testSetGetParamWithoutNamespaceParent()
-	{
-		$p = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		$c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
-		$c->setParent($p);
-		
-		$p->setParam('foo', 'bar');
-		
-		$this->assertEqual('bar', $c->getParam('foo'));
-	}
+    public function testInitiallyEmpty()
+    {
+        $c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+
+        $this->assertEqual(null, $c->getParam('foo'));
+        $this->assertEqual(null, $c->getParam('foo', 'bar'));
+        $this->assertEqual(null, $c->getParams());
+        $this->assertEqual(null, $c->getParams('bar'));
+        $this->assertEqual([], $c->getParamNamespaces());
+    }
+
+    public function testSetGetParamWithNamespace()
+    {
+        $c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+
+        $c->setParam('foo', 'bar', 'namespace');
+
+        $this->assertEqual(['foo' => 'bar'], $c->getParams('namespace'));
+        $this->assertEqual('bar', $c->getParam('foo', 'namespace'));
+
+        $this->assertEqual(['namespace'], $c->getParamNamespaces());
+    }
+
+    public function testSetGetParamWithoutNamespace()
+    {
+        $c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+
+        $c->setParam('foo', 'bar');
+
+        $this->assertEqual(['foo' => 'bar'], $c->getParams());
+        $this->assertEqual('bar', $c->getParam('foo'));
+
+        $this->assertEqual([$c->getAttribute(Doctrine_Core::ATTR_DEFAULT_PARAM_NAMESPACE)], $c->getParamNamespaces());
+    }
+
+    public function testSetGetParamWithNamespaceParent()
+    {
+        $p = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+        $c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+        $c->setParent($p);
+
+        $p->setParam('foo', 'bar', 'namespace');
+
+        $this->assertEqual('bar', $c->getParam('foo', 'namespace'));
+    }
+
+    public function testSetGetParamWithoutNamespaceParent()
+    {
+        $p = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+        $c = new Doctrine_Ticket_1507_TestCase_TestConfigurable();
+        $c->setParent($p);
+
+        $p->setParam('foo', 'bar');
+
+        $this->assertEqual('bar', $c->getParam('foo'));
+    }
 }
 
 class Doctrine_Ticket_1507_TestCase_TestConfigurable extends Doctrine_Configurable

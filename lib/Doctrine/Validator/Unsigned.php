@@ -20,38 +20,32 @@
  */
 
 /**
- * Doctrine_Validator_Unsigned
+ * Doctrine_Validator_Unsigned.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Unsigned extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is a valid unsigned integer or float
+     * checks if given value is a valid unsigned integer or float.
      *
      * valid values: null, '', 5, '5', 5.9, '5.9'
      * invalid values: -5, '-5', 'five', -5.9, '-5.9', '5.5.5'
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {
-        if (is_null($value) || $value == '') {
+        if (is_null($value) || '' == $value) {
             return true;
         }
         if (preg_match('/[^0-9\-\.]/', $value)) {
             return false;
         }
 
-        if ((double) $value >= 0)
-        {
+        if ((float) $value >= 0) {
             return true;
         }
 

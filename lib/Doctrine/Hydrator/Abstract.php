@@ -20,23 +20,18 @@
  */
 
 /**
- * Doctrine_Hydrator_Abstract
+ * Doctrine_Hydrator_Abstract.
  *
- * @package     Doctrine
- * @subpackage  Hydrate
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 3192 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
 {
-    protected
-        $_queryComponents = array(),
-        $_tableAliases = array(),
-        $_priorRow,
-        $_hydrationMode;
+    protected $_queryComponents = [];
+    protected $_tableAliases = [];
+    protected $_priorRow;
+    protected $_hydrationMode;
 
     public function __construct($queryComponents = null, $tableAliases = null, $hydrationMode = null)
     {
@@ -46,10 +41,9 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     }
 
     /**
-     * Set the query components (structure and query instructions)
+     * Set the query components (structure and query instructions).
      *
      * @param array $queryComponents
-     * @return void
      */
     public function setQueryComponents($queryComponents)
     {
@@ -57,10 +51,9 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     }
 
     /**
-     * Set the table aliases for this query
+     * Set the table aliases for this query.
      *
      * @param array $tableAliases
-     * @return void
      */
     public function setTableAliases($tableAliases)
     {
@@ -68,12 +61,11 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     }
 
     /**
-     * Set the hydration mode
+     * Set the hydration mode.
      *
-     * @param mixed $hydrationMode  One of the Doctrine_Core::HYDRATE_* constants or
-     *                              a string representing the name of the hydration mode or
-     *                              or an instance of the hydration class
-     * @return void
+     * @param mixed $hydrationMode One of the Doctrine_Core::HYDRATE_* constants or
+     *                             a string representing the name of the hydration mode or
+     *                             or an instance of the hydration class
      */
     public function setHydrationMode($hydrationMode)
     {
@@ -83,6 +75,7 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     public function getRootComponent()
     {
         $queryComponents = array_values($this->_queryComponents);
+
         return $queryComponents[0]['table'];
     }
 
@@ -96,25 +89,23 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
      * certain elements in the result set that do not have any meaning for the result.
      * (I.e. ORACLE limit/offset emulation adds doctrine_rownum to the result set).
      *
-     * @param string $name
+     * @param  string $name
      * @return bool
      */
     protected function _isIgnoredName($name)
     {
-        return $name === 'DOCTRINE_ROWNUM';
+        return 'DOCTRINE_ROWNUM' === $name;
     }
 
     /**
      * hydrateResultSet
-     * parses the data returned by statement object
+     * parses the data returned by statement object.
      *
      * This is method defines the core of Doctrine object population algorithm
      * hence this method strives to be as fast as possible
      *
      * The key idea is the loop over the rowset only once doing all the needed operations
      * within this massive loop.
-     *
-     * @return mixed
      */
     abstract public function hydrateResultSet($stmt);
 }

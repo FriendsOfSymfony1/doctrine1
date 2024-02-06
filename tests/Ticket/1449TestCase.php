@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1449_TestCase
+ * Doctrine_Ticket_1449_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1449_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1449_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -56,10 +58,10 @@ class Doctrine_Ticket_1449_TestCase extends Doctrine_UnitTestCase
             ->from('Ticket_1449_Document d')
             ->leftJoin('d.Attachments a')
             ->limit(1)
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($document->state(), 4);
-        foreach ($document->Attachments as $attachment)
-        {
+        foreach ($document->Attachments as $attachment) {
             $this->assertEqual($attachment->state(), 4);
         }
     }
@@ -75,8 +77,8 @@ class Ticket_1449_Document extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_1449_Attachment as Attachments', array('local'   => 'id',
-                                                                      'foreign' => 'document_id'));
+        $this->hasMany('Ticket_1449_Attachment as Attachments', ['local' => 'id',
+            'foreign' => 'document_id']);
     }
 }
 
@@ -90,7 +92,7 @@ class Ticket_1449_Attachment extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_1449_Document as Document', array('local'   => 'document_id',
-                                                                'foreign' => 'id'));
+        $this->hasOne('Ticket_1449_Document as Document', ['local' => 'document_id',
+            'foreign' => 'id']);
     }
 }

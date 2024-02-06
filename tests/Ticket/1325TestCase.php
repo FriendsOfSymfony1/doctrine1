@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1325_TestCase
+ * Doctrine_Ticket_1325_TestCase.
  *
- * @package     Doctrine
  * @author      Andrea Baron <andrea@bhweb.it>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -46,10 +48,11 @@ class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase
         $elem = new Ticket_1325_TableName_NoAlias();
         $elem->id = 1;
         $elem->save();
-        
+
         $res = Doctrine_Query::create()
             ->from('Ticket_1325_TableName_NoAlias')
-            ->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
+            ->fetchOne([], Doctrine_Core::HYDRATE_ARRAY)
+        ;
 
         $time = strtotime($res['event_date']);
         $this->assertTrue(($now + 5 >= $time) && ($time >= $now));
@@ -62,10 +65,11 @@ class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase
         $elem = new Ticket_1325_TableName_Aliased();
         $elem->id = 1;
         $elem->save();
-        
+
         $res = Doctrine_Query::create()
             ->from('Ticket_1325_TableName_Aliased')
-            ->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
+            ->fetchOne([], Doctrine_Core::HYDRATE_ARRAY)
+        ;
 
         $time = strtotime($res['eventDate']);
         $this->assertTrue(($now + 5 >= $time) && ($time >= $now));
@@ -76,12 +80,12 @@ class Ticket_1325_TableName_NoAlias extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', 4, array('primary' => true, 'autoincrement' => true));
+        $this->hasColumn('id', 'integer', 4, ['primary' => true, 'autoincrement' => true]);
     }
 
     public function setUp()
     {
-        $this->actAs(new Doctrine_Template_Timestampable(array('created' => array('name' => 'event_date', 'type' => 'timestamp'), 'updated' => array('disabled' => true))));
+        $this->actAs(new Doctrine_Template_Timestampable(['created' => ['name' => 'event_date', 'type' => 'timestamp'], 'updated' => ['disabled' => true]]));
     }
 }
 
@@ -89,11 +93,11 @@ class Ticket_1325_TableName_Aliased extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', 4, array('primary' => true, 'autoincrement' => true));
+        $this->hasColumn('id', 'integer', 4, ['primary' => true, 'autoincrement' => true]);
     }
 
     public function setUp()
     {
-        $this->actAs(new Doctrine_Template_Timestampable(array('created' => array('name' => 'event_date', 'alias' => 'eventDate', 'type' => 'timestamp'), 'updated' => array('disabled' => true))));
+        $this->actAs(new Doctrine_Template_Timestampable(['created' => ['name' => 'event_date', 'alias' => 'eventDate', 'type' => 'timestamp'], 'updated' => ['disabled' => true]]));
     }
 }

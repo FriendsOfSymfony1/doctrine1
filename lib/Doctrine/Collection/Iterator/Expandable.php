@@ -20,14 +20,10 @@
  */
 
 /**
- * Expandable collection iterator class
+ * Expandable collection iterator class.
  *
- * @package     Doctrine
- * @subpackage  Collection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Collection_Iterator_Expandable extends Doctrine_Collection_Iterator
@@ -36,14 +32,16 @@ class Doctrine_Collection_Iterator_Expandable extends Doctrine_Collection_Iterat
     {
         if ($this->index < $this->count) {
             return true;
-        } elseif ($this->index == $this->count) {
-            $coll  = $this->collection->expand($this->index);
+        }
+        if ($this->index == $this->count) {
+            $coll = $this->collection->expand($this->index);
 
             if ($coll instanceof Doctrine_Collection) {
                 $count = count($coll);
                 if ($count > 0) {
-                    $this->keys   = array_merge($this->keys, $coll->getKeys());
+                    $this->keys = array_merge($this->keys, $coll->getKeys());
                     $this->count += $count;
+
                     return true;
                 }
             }

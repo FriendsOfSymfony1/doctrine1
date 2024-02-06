@@ -20,44 +20,47 @@
  */
 
 /**
- * Doctrine_Record_State_TestCase
+ * Doctrine_Record_State_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Record_State_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Record_State_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() 
-    { 
-        $this->tables = array('Entity');
-        
+    public function prepareTables()
+    {
+        $this->tables = ['Entity'];
+
         parent::prepareTables();
     }
 
-    public function prepareData() 
-    { }
+    public function prepareData()
+    {
+    }
 
     public function testAssigningAutoincId()
     {
         $user = new User();
-        
+
         $this->assertEqual($user->id, null);
-        
+
         $user->name = 'zYne';
 
         $user->save();
 
         $this->assertEqual($user->id, 1);
-        
+
         $user->id = 2;
 
         $this->assertEqual($user->id, 2);
-        
+
         $user->save();
     }
 }

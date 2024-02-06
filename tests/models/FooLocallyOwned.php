@@ -1,4 +1,5 @@
 <?php
+
 class FooLocallyOwned extends Doctrine_Record
 {
     public function setTableDefinition()
@@ -6,4 +7,3 @@ class FooLocallyOwned extends Doctrine_Record
         $this->hasColumn('name', 'string', 200);
     }
 }
-

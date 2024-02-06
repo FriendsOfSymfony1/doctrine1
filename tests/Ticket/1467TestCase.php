@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1467_TestCase
+ * Doctrine_Ticket_1467_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1467_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1467_TestCase extends Doctrine_UnitTestCase
 {
     public function testTicket()
     {
@@ -39,13 +41,13 @@ class Doctrine_Ticket_1467_TestCase extends Doctrine_UnitTestCase
             ->select('pic.id')
             ->from('T1467_Picture pic')
             ->innerJoin('pic.Items ite')
-            ->innerJoin('ite.Puzzles puz');
+            ->innerJoin('ite.Puzzles puz')
+        ;
 
         $this->assertEqual($q->getDql(), 'SELECT pic.id FROM T1467_Picture pic INNER JOIN pic.Items ite INNER JOIN ite.Puzzles puz');
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id FROM t1467__picture t INNER JOIN t1467__item_picture t3 ON (t.id = t3.picture_id) INNER JOIN t1467__item t2 ON t2.id = t3.item_id INNER JOIN t1467__item_puzzle t5 ON (t2.id = t5.item_id) INNER JOIN t1467__puzzle t4 ON t4.id = t5.puzzle_id');
     }
 }
-
 
 class T1467_Item extends Doctrine_Record
 {
@@ -56,20 +58,19 @@ class T1467_Item extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('T1467_Picture as Pictures', array(
+        $this->hasMany('T1467_Picture as Pictures', [
             'refClass' => 'T1467_ItemPicture',
             'local' => 'item_id',
-            'foreign' => 'picture_id'
-        ));
+            'foreign' => 'picture_id',
+        ]);
 
-        $this->hasMany('T1467_Puzzle as Puzzles', array(
+        $this->hasMany('T1467_Puzzle as Puzzles', [
             'refClass' => 'T1467_ItemPuzzle',
             'local' => 'item_id',
-            'foreign' => 'puzzle_id'
-        ));
+            'foreign' => 'puzzle_id',
+        ]);
     }
 }
-
 
 class T1467_Picture extends Doctrine_Record
 {
@@ -80,14 +81,13 @@ class T1467_Picture extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('T1467_Item as Items', array(
+        $this->hasMany('T1467_Item as Items', [
             'refClass' => 'T1467_ItemPicture',
             'local' => 'picture_id',
-            'foreign' => 'item_id'
-        ));
+            'foreign' => 'item_id',
+        ]);
     }
 }
-
 
 class T1467_Puzzle extends Doctrine_Record
 {
@@ -98,30 +98,28 @@ class T1467_Puzzle extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('T1467_Item as Items', array(
+        $this->hasMany('T1467_Item as Items', [
             'refClass' => 'T1467_ItemPicture',
             'local' => 'puzzle_id',
-            'foreign' => 'item_id'
-        ));
+            'foreign' => 'item_id',
+        ]);
     }
 }
-
 
 class T1467_ItemPicture extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('item_id', 'integer', null, array('primary' => true));
-        $this->hasColumn('picture_id', 'integer', null, array('primary' => true));
+        $this->hasColumn('item_id', 'integer', null, ['primary' => true]);
+        $this->hasColumn('picture_id', 'integer', null, ['primary' => true]);
     }
 }
-
 
 class T1467_ItemPuzzle extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('item_id', 'integer', null, array('primary' => true));
-        $this->hasColumn('puzzle_id', 'integer', null, array('primary' => true));
+        $this->hasColumn('item_id', 'integer', null, ['primary' => true]);
+        $this->hasColumn('puzzle_id', 'integer', null, ['primary' => true]);
     }
 }

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1545_TestCase
+ * Doctrine_Ticket_1545_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1545_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1545_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -70,22 +72,22 @@ class Ticket_1545_FooFilter extends Doctrine_Record_Filter
 {
     public function init()
     {
-        
     }
 
     public function filterGet(Doctrine_Record $record, $name)
     {
-        if ($name == 'b') {
+        if ('b' == $name) {
             return $record->a;
-        } else if ($name == 'custom') {
+        }
+        if ('custom' == $name) {
             return $record->a;
         }
     }
 
     public function filterSet(Doctrine_Record $record, $name, $value)
     {
-        if ($name == 'custom') {
-            return $record->a = $value . '2';
+        if ('custom' == $name) {
+            return $record->a = $value.'2';
         }
     }
 }

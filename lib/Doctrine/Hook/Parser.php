@@ -20,20 +20,16 @@
  */
 
 /**
- * Doctrine_Hook_Parser
+ * Doctrine_Hook_Parser.
  *
- * @package     Doctrine
- * @subpackage  Hook
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Hook_Parser
 {
     protected $condition;
-    protected $params = array();
+    protected $params = [];
 
     public function getCondition()
     {
@@ -42,7 +38,7 @@ abstract class Doctrine_Hook_Parser
 
     /**
      * getParams
-     * returns the parameters associated with this parser
+     * returns the parameters associated with this parser.
      *
      * @return array
      */
@@ -58,10 +54,9 @@ abstract class Doctrine_Hook_Parser
      * prepared statement conditions (conditions that use
      * placeholders instead of literal values).
      *
-     * @param string $alias     component alias
-     * @param string $field     the field name
-     * @param mixed $value      the value of the field
-     * @return void
+     * @param string $alias component alias
+     * @param string $field the field name
+     * @param mixed  $value the value of the field
      */
     abstract public function parse($alias, $field, $value);
 }

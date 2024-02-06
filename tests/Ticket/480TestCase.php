@@ -20,46 +20,45 @@
  */
 
 /**
- * Doctrine_Ticket_480_TestCase
+ * Doctrine_Ticket_480_TestCase.
  *
- * @package     Doctrine
  * @author      Miloslav Kmet <adrive-nospam@hip-hop.sk>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
  */
- 
 class stComment extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->setTableName('st_comment');
-		$this->hasColumn('title', 'string', 100, array());
-		$this->hasColumn('body', 'string', 1000, array());
-
-	}
+    public function setTableDefinition()
+    {
+        $this->setTableName('st_comment');
+        $this->hasColumn('title', 'string', 100, []);
+        $this->hasColumn('body', 'string', 1000, []);
+    }
 }
 
-class Doctrine_Ticket_480_TestCase extends Doctrine_UnitTestCase 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class Doctrine_Ticket_480_TestCase extends Doctrine_UnitTestCase
 {
-	
-	public function testInit()
-	{
-                $this->dbh = new Doctrine_Adapter_Mock('oracle');
-                $this->conn = Doctrine_Manager::getInstance()->openConnection($this->dbh);
-	}
-	
-	public function testTicket()
-	{
-	    $this->conn->export->exportClasses(array('stComment'));
-	    $queries = $this->dbh->getAll();
-	    
-	    // (2nd|1st except transaction init.) executed query must be CREATE TABLE or CREATE SEQUENCE, not CREATE TRIGGER
-	    // Trigger can be created after both CREATE TABLE and CREATE SEQUENCE
-	    $this->assertFalse(preg_match('~^CREATE TRIGGER.*~', $queries[1]));
-	    $this->assertFalse(preg_match('~^CREATE TRIGGER.*~', $queries[2]));
+    public function testInit()
+    {
+        $this->dbh = new Doctrine_Adapter_Mock('oracle');
+        $this->conn = Doctrine_Manager::getInstance()->openConnection($this->dbh);
+    }
 
-	}
+    public function testTicket()
+    {
+        $this->conn->export->exportClasses(['stComment']);
+        $queries = $this->dbh->getAll();
+
+        // (2nd|1st except transaction init.) executed query must be CREATE TABLE or CREATE SEQUENCE, not CREATE TRIGGER
+        // Trigger can be created after both CREATE TABLE and CREATE SEQUENCE
+        $this->assertFalse(preg_match('~^CREATE TRIGGER.*~', $queries[1]));
+        $this->assertFalse(preg_match('~^CREATE TRIGGER.*~', $queries[2]));
+    }
 }

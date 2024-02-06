@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1257_TestCase
+ * Doctrine_Ticket_1257_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1257_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1257_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -48,10 +50,11 @@ class Doctrine_Ticket_1257_TestCase extends Doctrine_UnitTestCase
         $user->save();
 
         $q = Doctrine_Query::create()
-                ->select('u.id, u.username')
-                ->from('Ticket_1257_User u')
-                ->leftJoin('u.Role r')
-                ->addSelect('r.id, r.name, r.description');
+            ->select('u.id, u.username')
+            ->from('Ticket_1257_User u')
+            ->leftJoin('u.Role r')
+            ->addSelect('r.id, r.name, r.description')
+        ;
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.username AS t__username, t2.id AS t2__id, t2.name AS t2__name, t2.description AS t2__description FROM ticket_1257__user t LEFT JOIN ticket_1257__role t2 ON t.role_id = t2.id');
         $results = $q->fetchArray();
         $this->assertEqual($results[0]['Role']['name'], 'Developer');
@@ -69,7 +72,7 @@ class Ticket_1257_User extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('Ticket_1257_Role as Role', array('local' => 'role_id', 'foreign' => 'id'));
+        $this->hasOne('Ticket_1257_Role as Role', ['local' => 'role_id', 'foreign' => 'id']);
     }
 }
 
@@ -83,6 +86,6 @@ class Ticket_1257_Role extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('Ticket_1257_User as Users', array('local' => 'id', 'foreign' => 'role_id'));
+        $this->hasMany('Ticket_1257_User as Users', ['local' => 'id', 'foreign' => 'role_id']);
     }
 }

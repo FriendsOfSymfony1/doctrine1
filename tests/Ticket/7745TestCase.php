@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_7745_TestCase
+ * Doctrine_Ticket_7745_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_7745_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_7745_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -53,7 +55,7 @@ class Doctrine_Ticket_7745_TestCase extends Doctrine_UnitTestCase
         $test1->name = 'test';
         $test1->RecordTest2 = $test2;
         $test1->save();
-        
+
         $id = $test2->id;
         $test2->free();
 
@@ -61,7 +63,8 @@ class Doctrine_Ticket_7745_TestCase extends Doctrine_UnitTestCase
             ->createQuery('a')
             ->select('a.id')
             ->where('a.id = ?', $id)
-            ->fetchOne();
+            ->fetchOne()
+        ;
 
         $test2->load();
 
@@ -81,10 +84,10 @@ class RecordTest1 extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasOne('RecordTest2', array(
+        $this->hasOne('RecordTest2', [
             'local' => 'record_test2_id',
-            'foreign' => 'id'
-        ));
+            'foreign' => 'id',
+        ]);
     }
 }
 
@@ -97,10 +100,10 @@ class RecordTest2 extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('RecordTest1', array(
+        $this->hasMany('RecordTest1', [
             'local' => 'id',
-            'foreign' => 'record_test2_id'
-        ));
+            'foreign' => 'record_test2_id',
+        ]);
     }
 }
 
@@ -111,6 +114,6 @@ class RecordTest2Listener extends Doctrine_Record_Listener
         $params = $event->getParams();
         $alias = $params['alias'];
 
-        $event->getQuery()->leftJoin($alias . '.RecordTest1');
+        $event->getQuery()->leftJoin($alias.'.RecordTest1');
     }
 }

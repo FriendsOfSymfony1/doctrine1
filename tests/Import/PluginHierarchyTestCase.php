@@ -20,23 +20,23 @@
  */
 
 /**
- * Doctrine_Import_PluginHierarchy_TestCase
+ * Doctrine_Import_PluginHierarchy_TestCase.
  *
- * @package     Doctrine
- * @subpackage  Doctrine_Import_Builder
  * @author      Brice Figureau <brice+doctrine@daysofwonder.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Import_PluginHierarchy_TestCase extends Doctrine_UnitTestCase
 {
-
     public function testImportOfHieriarchyOfPluginGeneration()
     {
-        $yml = <<<END
+        $yml = <<<'END'
 ---
 WikiTest:
   actAs:
@@ -53,9 +53,9 @@ WikiTest:
     title: string(255)
     content: string
 END;
-        
+
         file_put_contents('wiki.yml', $yml);
-        $path = dirname(__FILE__) . '/tmp/import_builder_test';
+        $path = dirname(__FILE__).'/tmp/import_builder_test';
 
         $import = new Doctrine_Import_Schema();
         $import->setOption('generateTableClasses', true);
@@ -65,21 +65,21 @@ END;
         // this is almost an end-to-end testing :-)
         $models = Doctrine_Core::loadModels($path, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
 
-        $sql = $this->conn->export->exportSortedClassesSql(array('WikiTest'));
+        $sql = $this->conn->export->exportSortedClassesSql(['WikiTest']);
         $sql = current($sql);
 
-        $result = array(
+        $result = [
             0 => 'CREATE TABLE wiki_test_translation_version (id INTEGER, lang CHAR(2), title VARCHAR(255), content TEXT, version INTEGER, PRIMARY KEY(id, lang, version))',
             1 => 'CREATE TABLE wiki_test_translation_index (keyword VARCHAR(200), field VARCHAR(50), position INTEGER, id INTEGER, lang CHAR(2), PRIMARY KEY(keyword, field, position, id, lang))',
             2 => 'CREATE TABLE wiki_test_translation (id INTEGER, title VARCHAR(255), content TEXT, lang CHAR(2), version INTEGER, slug VARCHAR(255), PRIMARY KEY(id, lang))',
             3 => 'CREATE TABLE wiki_test (id INTEGER PRIMARY KEY AUTOINCREMENT)',
             4 => 'CREATE UNIQUE INDEX wiki_test_translation_sluggable_idx ON wiki_test_translation (slug)',
-        );
-            
-        foreach($sql as $idx => $req) {
+        ];
+
+        foreach ($sql as $idx => $req) {
             $this->assertEqual($req, $result[$idx]);
-        }        
-        
+        }
+
         Doctrine_Lib::removeDirectories($path);
         unlink('wiki.yml');
     }

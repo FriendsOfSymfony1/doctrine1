@@ -20,33 +20,35 @@
  */
 
 /**
- * Doctrine_Import_Schema_TestCase
+ * Doctrine_Import_Schema_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Import_Schema_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Import_Schema_TestCase extends Doctrine_UnitTestCase
 {
     public $buildSchema;
     public $schema;
-    
+
     public function testYmlImport()
     {
-        $path = dirname(__FILE__) . '/import_builder_test';
-        
+        $path = dirname(__FILE__).'/import_builder_test';
+
         $import = new Doctrine_Import_Schema();
         $import->importSchema('schema.yml', 'yml', $path);
-        
-        if ( ! file_exists($path . '/SchemaTestUser.php')) {
+
+        if (!file_exists($path.'/SchemaTestUser.php')) {
             $this->fail();
         }
-        
-        if ( ! file_exists($path . '/SchemaTestProfile.php')) {
+
+        if (!file_exists($path.'/SchemaTestProfile.php')) {
             $this->fail();
         }
 
@@ -54,12 +56,12 @@ class Doctrine_Import_Schema_TestCase extends Doctrine_UnitTestCase
 
         Doctrine_Lib::removeDirectories($path);
     }
-    
+
     public function testBuildSchema()
     {
         $schema = new Doctrine_Import_Schema();
         $array = $schema->buildSchema('schema.yml', 'yml');
-        
+
         $model = $array['SchemaTestUser'];
 
         $this->assertTrue(array_key_exists('connection', $model));
@@ -77,37 +79,37 @@ class Doctrine_Import_Schema_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue(array_key_exists('detect_relations', $model) && is_bool($model['detect_relations']));
         $this->assertEqual($array['AliasTest']['columns']['test_col']['name'], 'test_col as test_col_alias');
     }
-    
+
     public function testSchemaRelationshipCompletion()
     {
         $this->buildSchema = new Doctrine_Import_Schema();
         $this->schema = $this->buildSchema->buildSchema('schema.yml', 'yml');
-        
+
         foreach ($this->schema as $name => $properties) {
             foreach ($properties['relations'] as $alias => $relation) {
-                if ( ! $this->_verifyMultiDirectionalRelationship($name, $alias, $relation)) {
+                if (!$this->_verifyMultiDirectionalRelationship($name, $alias, $relation)) {
                     $this->fail();
-                    
+
                     return false;
                 }
             }
         }
-        
+
         $this->pass();
     }
-    
+
     protected function _verifyMultiDirectionalRelationship($class, $relationAlias, $relation)
     {
         $foreignClass = $relation['class'];
-        $foreignAlias = isset($relation['foreignAlias']) ? $relation['foreignAlias']:$class;
-        
+        $foreignAlias = $relation['foreignAlias'] ?? $class;
+
         $foreignClassRelations = $this->schema[$foreignClass]['relations'];
-        
+
         // Check to see if the foreign class has the opposite end defined for the class/foreignAlias
         if (isset($foreignClassRelations[$foreignAlias])) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

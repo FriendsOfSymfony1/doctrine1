@@ -18,37 +18,33 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.doctrine-project.org>.
  */
-                 
+
 /**
- * Doctrine_Tree
+ * Doctrine_Tree.
  *
- * @package     Doctrine
- * @subpackage  Tree
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Joe Simms <joe.simms@websites4.com>
  */
 class Doctrine_Tree
 {
     /**
-     * @param object $table   reference to associated Doctrine_Table instance
+     * @param object $table reference to associated Doctrine_Table instance
      */
     protected $table;
 
     /**
      * @param array $options
      */
-    protected $options = array();
-    
+    protected $options = [];
+
     protected $_baseComponent;
 
     /**
-     * constructor, creates tree with reference to table and any options
+     * constructor, creates tree with reference to table and any options.
      *
-     * @param object $table                     instance of Doctrine_Table
-     * @param array $options                    options
+     * @param object $table   instance of Doctrine_Table
+     * @param array  $options options
      */
     public function __construct(Doctrine_Table $table, $options)
     {
@@ -63,13 +59,13 @@ class Doctrine_Tree
             }
             $this->_baseComponent = $class;
         }
-        //echo $this->_baseComponent;
+        // echo $this->_baseComponent;
     }
 
     /**
-     * Used to define table attributes required for the given implementation
+     * Used to define table attributes required for the given implementation.
      *
-     * @throws Doctrine_Tree_Exception          if table attributes have not been defined
+     * @throws Doctrine_Tree_Exception if table attributes have not been defined
      */
     public function setTableDefinition()
     {
@@ -77,8 +73,7 @@ class Doctrine_Tree
     }
 
     /**
-     * this method is used for setting up relations and attributes and should be used by specific implementations
-     *
+     * this method is used for setting up relations and attributes and should be used by specific implementations.
      */
     public function setUp()
     {
@@ -87,41 +82,38 @@ class Doctrine_Tree
     /**
      * Factory method to create a Tree.
      *
-     * This is a factory method that returns a tree instance based upon 
+     * This is a factory method that returns a tree instance based upon
      * chosen implementation.
      *
-     * @param object $table                     instance of Doctrine_Table
-     * @param string $impName                   implementation (NestedSet, AdjacencyList, MaterializedPath)
-     * @param array $options                    options
+     * @param  object             $table   instance of Doctrine_Table
+     * @param  array              $options options
      * @return Doctrine_Tree
-     * @throws Doctrine_Exception               if class $implName does not extend Doctrine_Tree
+     * @throws Doctrine_Exception if class $implName does not extend Doctrine_Tree
      */
-    public static function factory(Doctrine_Table $table, $implName, $options = array())
+    public static function factory(Doctrine_Table $table, $implName, $options = [])
     {
-        $class = 'Doctrine_Tree_' . $implName;
-        if ( ! class_exists($class)) {
+        $class = 'Doctrine_Tree_'.$implName;
+        if (!class_exists($class)) {
             throw new Doctrine_Exception('The chosen class must extend Doctrine_Tree');
         }
+
         return new $class($table, $options);
     }
 
     /**
-     * gets tree attribute value
-     *        
-     */     
+     * gets tree attribute value.
+     */
     public function getAttribute($name)
     {
-      return isset($this->options[$name]) ? $this->options[$name] : null;
+        return $this->options[$name] ?? null;
     }
 
     /**
-     * sets tree attribute value
-     *
-     * @param mixed            
+     * sets tree attribute value.
      */
     public function setAttribute($name, $value)
     {
-      $this->options[$name] = $value;
+        $this->options[$name] = $value;
     }
 
     /**

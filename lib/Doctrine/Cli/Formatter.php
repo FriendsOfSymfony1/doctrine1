@@ -29,28 +29,23 @@
 
 /**
  * Doctrine_Cli_Formatter provides methods to format text to be displayed on a console.
- * This class was taken from the symfony-project source
+ * This class was taken from the symfony-project source.
  *
- * @package     Doctrine
- * @subpackage  Cli
  * @author      Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Cli_Formatter
 {
     protected $_size = 65;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param string $maxLineSize 
-     * @return void
+     * @param string $maxLineSize
      */
-    function __construct($maxLineSize = 65)
+    public function __construct($maxLineSize = 65)
     {
         $this->_size = $maxLineSize;
     }
@@ -61,10 +56,9 @@ class Doctrine_Cli_Formatter
      * @param  string The test to style
      * @param  mixed  An array of parameters
      * @param  stream A stream (default to STDOUT)
-     *
      * @return string The formatted text
      */
-    public function format($text = '', $parameters = array(), $stream = STDOUT)
+    public function format($text = '', $parameters = [], $stream = STDOUT)
     {
         return $text;
     }
@@ -74,24 +68,25 @@ class Doctrine_Cli_Formatter
      *
      * @param string  The section name
      * @param string  The text message
-     * @param integer The maximum size allowed for a line (65 by default)
+     * @param int The maximum size allowed for a line (65 by default)
+     * @param mixed|null $size
      */
     public function formatSection($section, $text, $size = null)
     {
-        return sprintf(">> %-$9s %s", $section, $this->excerpt($text, $size));
+        return sprintf('>> %-$9s %s', $section, $this->excerpt($text, $size));
     }
 
     /**
      * Truncates a line.
      *
      * @param string  The text
-     * @param integer The maximum size of the returned string (65 by default)
-     *
-     * @return string The truncated string
+     * @param int The maximum size of the returned string (65 by default)
+     * @param  mixed|null $size
+     * @return string     The truncated string
      */
     public function excerpt($text, $size = null)
     {
-        if ( ! $size) {
+        if (!$size) {
             $size = $this->_size;
         }
 
@@ -107,7 +102,7 @@ class Doctrine_Cli_Formatter
     /**
      * Sets the maximum line size.
      *
-     * @param integer The maximum line size for a message
+     * @param int The maximum line size for a message
      */
     public function setMaxLineSize($size)
     {

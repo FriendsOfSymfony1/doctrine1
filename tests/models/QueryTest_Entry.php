@@ -1,16 +1,25 @@
 <?php
+
 class QueryTest_Entry extends Doctrine_Record
 {
     /**
      * Table structure.
      */
     public function setTableDefinition()
-    {        
-        $this->hasColumn('id', 'integer', 4, array('primary', 'autoincrement', 'notnull'));
-        $this->hasColumn('authorId', 'integer', 4,
-                array('notnull'));
-        $this->hasColumn('date', 'integer', 4,
-                array('notnull'));
+    {
+        $this->hasColumn('id', 'integer', 4, ['primary', 'autoincrement', 'notnull']);
+        $this->hasColumn(
+            'authorId',
+            'integer',
+            4,
+            ['notnull']
+        );
+        $this->hasColumn(
+            'date',
+            'integer',
+            4,
+            ['notnull']
+        );
     }
 
     /**
@@ -18,8 +27,8 @@ class QueryTest_Entry extends Doctrine_Record
      */
     public function setUp()
     {
-        $this->hasOne('QueryTest_User as author', array(
-            'local' => 'authorId', 'foreign' => 'id'
-        ));
+        $this->hasOne('QueryTest_User as author', [
+            'local' => 'authorId', 'foreign' => 'id',
+        ]);
     }
 }

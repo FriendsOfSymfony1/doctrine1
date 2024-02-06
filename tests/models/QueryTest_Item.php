@@ -1,4 +1,5 @@
 <?php
+
 class QueryTest_Item extends Doctrine_Record
 {
     public function setTableDefinition()
@@ -7,4 +8,3 @@ class QueryTest_Item extends Doctrine_Record
         $this->hasColumn('quantity', 'integer');
     }
 }
-

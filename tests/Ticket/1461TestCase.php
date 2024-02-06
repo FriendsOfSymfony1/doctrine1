@@ -20,67 +20,72 @@
  */
 
 /**
- * Doctrine_Ticket_1461_TestCase
+ * Doctrine_Ticket_1461_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1461_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1461_TestCase extends Doctrine_UnitTestCase
 {
     public function testFetchArraySupportsTwoAggregates()
     {
         $q = new Doctrine_Query();
 
         $q->select("u.*, p.*, CONCAT(u.name, '_1') concat1, CONCAT(u.name, '_2') concat2")
-        ->from('User u')
-        ->innerJoin('u.Phonenumber p')
-        ->where("u.name = 'zYne'");
-        
-        $users = $q->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+            ->from('User u')
+            ->innerJoin('u.Phonenumber p')
+            ->where("u.name = 'zYne'")
+        ;
+
+        $users = $q->execute([], Doctrine_Core::HYDRATE_ARRAY);
 
         $this->assertEqual($users[0]['concat1'], 'zYne_1');
 
         $this->assertEqual($users[0]['concat2'], 'zYne_2');
     }
-    
+
     public function testFetchArraySupportsTwoAggregatesInRelation()
     {
         $q = new Doctrine_Query();
 
         $q->select("u.*, p.*, CONCAT(p.phonenumber, '_1') concat1, CONCAT(p.phonenumber, '_2') concat2")
-        ->from('User u')
-        ->innerJoin('u.Phonenumber p')
-        ->where("u.name = 'zYne'");
-        
-        $users = $q->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+            ->from('User u')
+            ->innerJoin('u.Phonenumber p')
+            ->where("u.name = 'zYne'")
+        ;
+
+        $users = $q->execute([], Doctrine_Core::HYDRATE_ARRAY);
 
         $this->assertEqual($users[0]['concat2'], '123 123_2');
-        
+
         $this->assertEqual($users[0]['concat1'], '123 123_1');
-    } 
+    }
 
     public function testFetchArraySupportsTwoAggregatesInRelationAndRoot()
     {
         $q = new Doctrine_Query();
 
         $q->select("u.*, p.*, CONCAT(u.name, '_1') concat1, CONCAT(u.name, '_2') concat2, CONCAT(p.phonenumber, '_3') concat3, CONCAT(p.phonenumber, '_3') concat4")
-        ->from('User u')
-        ->innerJoin('u.Phonenumber p')
-        ->where("u.name = 'zYne'");
-        
-        $users = $q->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+            ->from('User u')
+            ->innerJoin('u.Phonenumber p')
+            ->where("u.name = 'zYne'")
+        ;
+
+        $users = $q->execute([], Doctrine_Core::HYDRATE_ARRAY);
 
         $this->assertEqual($users[0]['concat1'], 'zYne_1');
 
         $this->assertEqual($users[0]['concat2'], 'zYne_2');
 
         $this->assertEqual($users[0]['concat3'], '123 123_3');
-        
+
         $this->assertTrue(isset($users[0]['concat4']));
     }
 }

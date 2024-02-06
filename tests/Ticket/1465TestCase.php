@@ -20,23 +20,26 @@
  */
 
 /**
- * Doctrine_Ticket_1465_TestCase
+ * Doctrine_Ticket_1465_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1465_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1465_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         try {
             $q = Doctrine_Query::create()
-                ->from('User u, Phonenumber p');
+                ->from('User u, Phonenumber p')
+            ;
             $users = $q->fetchArray();
             $this->fail();
         } catch (Exception $e) {

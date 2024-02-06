@@ -20,22 +20,25 @@
  */
 
 /**
- * Doctrine_Ticket_2159_TestCase
+ * Doctrine_Ticket_2159_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_2159_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2159_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $q = Doctrine_Core::getTable('User')
-          ->createQuery('u');
+            ->createQuery('u')
+        ;
 
         $sql = 'SELECT COUNT(*) AS num_results FROM entity e WHERE (e.type = 0)';
         $this->assertEqual($q->getCountSqlQuery(), $sql);

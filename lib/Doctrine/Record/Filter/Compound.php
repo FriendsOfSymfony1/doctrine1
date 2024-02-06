@@ -20,22 +20,18 @@
  */
 
 /**
- * Doctrine_Record_Filter_Compound
+ * Doctrine_Record_Filter_Compound.
  *
- * @package     Doctrine
- * @subpackage  Record
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1298 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
 {
     /**
      * @var string[]
      */
-    protected $_aliases = array();
+    protected $_aliases = [];
 
     /**
      * @param string[] $aliases A list of relation name
@@ -59,8 +55,7 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
     /**
      * Provides a way for setting property or relation value to the given record.
      *
-     * @param string $propertyOrRelation
-     *
+     * @param  string          $propertyOrRelation
      * @return Doctrine_Record the given record
      *
      * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
@@ -72,7 +67,7 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
             // Related to PHP-7.0 compatibility so an explicit call to method get is required.
             $record[$alias];
 
-            if ( ! $record->exists()) {
+            if (!$record->exists()) {
                 if (isset($record[$alias][$propertyOrRelation])) {
                     $record[$alias][$propertyOrRelation] = $value;
 
@@ -94,8 +89,6 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
      *
      * @param string $propertyOrRelation
      *
-     * @return mixed
-     *
      * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
      */
     public function filterGet(Doctrine_Record $record, $propertyOrRelation)
@@ -105,7 +98,7 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
             // Related to PHP-7.0 compatibility so an explicit call to method get is required.
             $record[$alias];
 
-            if ( ! $record->exists()) {
+            if (!$record->exists()) {
                 if (isset($record[$alias][$propertyOrRelation])) {
                     return $record[$alias][$propertyOrRelation];
                 }

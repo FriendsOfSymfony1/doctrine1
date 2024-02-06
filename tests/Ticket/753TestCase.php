@@ -20,33 +20,35 @@
  */
 
 /**
- * Doctrine_Ticket_753_TestCase
+ * Doctrine_Ticket_753_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_753_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_753_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $origOptions = $this->conn->getAttribute(Doctrine_Core::ATTR_DEFAULT_COLUMN_OPTIONS);
-        $this->conn->setAttribute(Doctrine_Core::ATTR_DEFAULT_COLUMN_OPTIONS, array('type' => 'string', 'length' => 255, 'notnull' => true));
+        $this->conn->setAttribute(Doctrine_Core::ATTR_DEFAULT_COLUMN_OPTIONS, ['type' => 'string', 'length' => 255, 'notnull' => true]);
 
         $origIdOptions = $this->conn->getAttribute(Doctrine_Core::ATTR_DEFAULT_IDENTIFIER_OPTIONS);
-        $this->conn->setAttribute(Doctrine_Core::ATTR_DEFAULT_IDENTIFIER_OPTIONS, array('name' => '%s_id', 'length' => 25, 'type' => 'string', 'autoincrement' => false));
+        $this->conn->setAttribute(Doctrine_Core::ATTR_DEFAULT_IDENTIFIER_OPTIONS, ['name' => '%s_id', 'length' => 25, 'type' => 'string', 'autoincrement' => false]);
 
         $userTable = Doctrine_Core::getTable('Ticket_753_User');
 
         $definition = $userTable->getDefinitionOf('username');
-        $this->assertEqual($definition, array('type' => 'string', 'length' => 255, 'notnull' => true));
+        $this->assertEqual($definition, ['type' => 'string', 'length' => 255, 'notnull' => true]);
 
         $definition = $userTable->getDefinitionOf('ticket_753__user_id');
-        $this->assertEqual($definition, array('type' => 'string', 'length' => 25, 'autoincrement' => false, 'primary' => true, 'notnull' => true));
+        $this->assertEqual($definition, ['type' => 'string', 'length' => 25, 'autoincrement' => false, 'primary' => true, 'notnull' => true]);
 
         $this->conn->setAttribute(Doctrine_Core::ATTR_DEFAULT_COLUMN_OPTIONS, $origOptions);
         $this->conn->setAttribute(Doctrine_Core::ATTR_DEFAULT_IDENTIFIER_OPTIONS, $origIdOptions);

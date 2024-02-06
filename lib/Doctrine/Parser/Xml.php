@@ -20,28 +20,23 @@
  */
 
 /**
- * Doctrine_Parser_Xml
+ * Doctrine_Parser_Xml.
  *
- * @package     Doctrine
- * @subpackage  Parser
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 1080 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Parser_Xml extends Doctrine_Parser
 {
     /**
-     * dumpData
+     * dumpData.
      *
      * Convert array to xml and dump to specified path or return the xml
      *
-     * @param  string $array Array of data to convert to xml
-     * @param  string $path  Path to write xml data to
-     * @param string $charset The charset of the data being dumped
+     * @param  string $array   Array of data to convert to xml
+     * @param  string $path    Path to write xml data to
+     * @param  string $charset The charset of the data being dumped
      * @return string $xml
-     * @return void
      */
     public function dumpData($array, $path = null, $charset = null)
     {
@@ -51,24 +46,24 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
     }
 
     /**
-     * arrayToXml
+     * arrayToXml.
      *
-     * @param  string $array        Array to convert to xml
-     * @param  string $rootNodeName Name of the root node
-     * @param  string $xml          SimpleXmlElement
-     * @return string $asXml        String of xml built from array
+     * @param  string     $array        Array to convert to xml
+     * @param  string     $rootNodeName Name of the root node
+     * @param  string     $xml          SimpleXmlElement
+     * @param  mixed|null $charset
+     * @return string     $asXml        String of xml built from array
      */
     public static function arrayToXml($array, $rootNodeName = 'data', $xml = null, $charset = null)
     {
-        if ($xml === null) {
-            $xml = new SimpleXmlElement("<?xml version=\"1.0\" encoding=\"utf-8\"?><$rootNodeName/>");
+        if (null === $xml) {
+            $xml = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\"?><{$rootNodeName}/>");
         }
 
-        foreach($array as $key => $value)
-        {
+        foreach ($array as $key => $value) {
             $key = preg_replace('/[^a-z]/i', '', $key);
 
-            if (is_array($value) && ! empty($value)) {
+            if (is_array($value) && !empty($value)) {
                 $node = $xml->addChild($key);
 
                 foreach ($value as $k => $v) {
@@ -79,11 +74,11 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
                 }
 
                 self::arrayToXml($value, $rootNodeName, $node, $charset);
-            } else if (is_int($key)) {
+            } elseif (is_int($key)) {
                 $xml->addChild($value, 'true');
             } else {
                 $charset = $charset ? $charset : 'utf-8';
-                if (strcasecmp($charset, 'utf-8') !== 0 && strcasecmp($charset, 'utf8') !== 0) {
+                if (0 !== strcasecmp($charset, 'utf-8') && 0 !== strcasecmp($charset, 'utf8')) {
                     $value = iconv($charset, 'UTF-8', $value);
                 }
                 $value = htmlspecialchars((string) $value, ENT_COMPAT, 'UTF-8');
@@ -95,11 +90,11 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
     }
 
     /**
-     * loadData
+     * loadData.
      *
      * Load xml file and return array of data
      *
-     * @param  string $path  Path to load xml data from
+     * @param  string $path Path to load xml data from
      * @return array  $array Array of data converted from xml
      */
     public function loadData($path, $charset = 'UTF-8')
@@ -112,7 +107,7 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
     }
 
     /**
-     * prepareData
+     * prepareData.
      *
      * Prepare simple xml to array for return
      *
@@ -133,11 +128,11 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
                 if (count($values) > 0) {
                     $return[$element] = $this->prepareData($value);
                 } else {
-                    if ( ! isset($return[$element])) {
+                    if (!isset($return[$element])) {
                         $return[$element] = (string) $value;
                     } else {
-                        if ( ! is_array($return[$element])) {
-                            $return[$element] = array($return[$element], (string) $value);
+                        if (!is_array($return[$element])) {
+                            $return[$element] = [$return[$element], (string) $value];
                         } else {
                             $return[$element][] = (string) $value;
                         }
@@ -148,8 +143,8 @@ class Doctrine_Parser_Xml extends Doctrine_Parser
 
         if (is_array($return)) {
             return $return;
-        } else {
-            return array();
         }
+
+        return [];
     }
 }

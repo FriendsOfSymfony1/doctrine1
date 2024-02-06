@@ -20,27 +20,23 @@
  */
 
 /**
- * Doctrine_Task_GenerateMigration
+ * Doctrine_Task_GenerateMigration.
  *
- * @package     Doctrine
- * @subpackage  Task
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 2761 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Task_GenerateMigration extends Doctrine_Task
 {
-    public $description          =   'Generate new migration class definition',
-           $requiredArguments    =   array('class_name'      => 'Name of the migration class to generate',
-                                           'migrations_path' => 'Specify the complete path to your migration classes folder.'),
-           $optionalArguments    =   array();
-    
+    public $description = 'Generate new migration class definition';
+    public $requiredArguments = ['class_name' => 'Name of the migration class to generate',
+        'migrations_path' => 'Specify the complete path to your migration classes folder.'];
+    public $optionalArguments = [];
+
     public function execute()
     {
         Doctrine_Core::generateMigrationClass($this->getArgument('class_name'), $this->getArgument('migrations_path'));
-        
+
         $this->notify(sprintf('Generated migration class: %s successfully to %s', $this->getArgument('class_name'), $this->getArgument('migrations_path')));
     }
 }

@@ -21,26 +21,29 @@
 
 /**
  * Doctrine_Query_Subquery_TestCase
- * This test case is used for testing DQL subquery functionality
+ * This test case is used for testing DQL subquery functionality.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_Subquery_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_Subquery_TestCase extends Doctrine_UnitTestCase
 {
-
     public function testSubqueryWithWherePartAndInExpression()
     {
         $q = new Doctrine_Query();
         $q->from('User u')->where("u.id NOT IN (SELECT u2.id FROM User u2 WHERE u2.name = 'zYne')");
 
-        $this->assertEqual($q->getSqlQuery(),
-        "SELECT e.id AS e__id, e.name AS e__name, e.loginname AS e__loginname, e.password AS e__password, e.type AS e__type, e.created AS e__created, e.updated AS e__updated, e.email_id AS e__email_id FROM entity e WHERE (e.id NOT IN (SELECT e2.id AS e2__id FROM entity e2 WHERE (e2.name = 'zYne' AND (e2.type = 0))) AND (e.type = 0))");
+        $this->assertEqual(
+            $q->getSqlQuery(),
+            "SELECT e.id AS e__id, e.name AS e__name, e.loginname AS e__loginname, e.password AS e__password, e.type AS e__type, e.created AS e__created, e.updated AS e__updated, e.email_id AS e__email_id FROM entity e WHERE (e.id NOT IN (SELECT e2.id AS e2__id FROM entity e2 WHERE (e2.name = 'zYne' AND (e2.type = 0))) AND (e.type = 0))"
+        );
 
         $users = $q->execute();
 
@@ -53,14 +56,14 @@ class Doctrine_Query_Subquery_TestCase extends Doctrine_UnitTestCase
         $q = new Doctrine_Query();
         $q->from('User u')->where('u.id NOT IN (SELECT g.user_id FROM Groupuser g)');
 
-        $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id, e.name AS e__name, e.loginname AS e__loginname, e.password AS e__password, e.type AS e__type, e.created AS e__created, e.updated AS e__updated, e.email_id AS e__email_id FROM entity e WHERE (e.id NOT IN (SELECT g.user_id AS g__user_id FROM groupuser g) AND (e.type = 0))");
+        $this->assertEqual($q->getSqlQuery(), 'SELECT e.id AS e__id, e.name AS e__name, e.loginname AS e__loginname, e.password AS e__password, e.type AS e__type, e.created AS e__created, e.updated AS e__updated, e.email_id AS e__email_id FROM entity e WHERE (e.id NOT IN (SELECT g.user_id AS g__user_id FROM groupuser g) AND (e.type = 0))');
     }
 
     public function testSubqueryInSelectPart()
     {
         // ticket #307
         $q = new Doctrine_Query();
-        
+
         $q->parseDqlQuery("SELECT u.name, (SELECT COUNT(p.id) FROM Phonenumber p WHERE p.entity_id = u.id) pcount FROM User u WHERE u.name = 'zYne' LIMIT 1");
 
         $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id, e.name AS e__name, (SELECT COUNT(p.id) AS p__0 FROM phonenumber p WHERE (p.entity_id = e.id)) AS e__0 FROM entity e WHERE (e.name = 'zYne' AND (e.type = 0)) LIMIT 1");
@@ -79,7 +82,7 @@ class Doctrine_Query_Subquery_TestCase extends Doctrine_UnitTestCase
     {
         // ticket DC-706
         $q = new Doctrine_Query();
-        
+
         $q->parseDqlQuery("SELECT u.name, (SQL:SELECT COUNT(p.id) AS p__0 FROM phonenumber p WHERE (p.entity_id = e.id)) as pcount FROM User u WHERE u.name = 'zYne' LIMIT 1");
 
         $this->assertEqual($q->getSqlQuery(), "SELECT e.id AS e__id, e.name AS e__name, (SELECT COUNT(p.id) AS p__0 FROM phonenumber p WHERE (p.entity_id = e.id)) AS e__0 FROM entity e WHERE (e.name = 'zYne' AND (e.type = 0)) LIMIT 1");
@@ -98,11 +101,10 @@ class Doctrine_Query_Subquery_TestCase extends Doctrine_UnitTestCase
     {
         // ticket #307
         $q = new Doctrine_Query();
-        
-        $q->parseDqlQuery("SELECT u.name, (SELECT COUNT(w.id) FROM User w WHERE w.id = u.id) pcount FROM User u WHERE u.name = 'zYne' LIMIT 1");
-        
-        $this->assertNotEqual($q->getSqlQuery(), "SELECT e.id AS e__id, e.name AS e__name, (SELECT COUNT(e.id) AS e__0 FROM entity e WHERE e.id = e.id AND (e.type = 0)) AS e__0 FROM entity e WHERE e.name = 'zYne' AND (e.type = 0) LIMIT 1");
 
+        $q->parseDqlQuery("SELECT u.name, (SELECT COUNT(w.id) FROM User w WHERE w.id = u.id) pcount FROM User u WHERE u.name = 'zYne' LIMIT 1");
+
+        $this->assertNotEqual($q->getSqlQuery(), "SELECT e.id AS e__id, e.name AS e__name, (SELECT COUNT(e.id) AS e__0 FROM entity e WHERE e.id = e.id AND (e.type = 0)) AS e__0 FROM entity e WHERE e.name = 'zYne' AND (e.type = 0) LIMIT 1");
     }
 
     public function testGetLimitSubqueryOrderBy2()
@@ -132,17 +134,18 @@ class Doctrine_Query_Subquery_TestCase extends Doctrine_UnitTestCase
         $q = new Doctrine_Query();
 
         $q->select('u.*, COUNT(a.id) num_albums')
-          ->from('User u')
-          ->leftJoin('u.Album a')
-          ->orderby('num_albums desc')
-          ->groupby('u.id')
-          ->having('num_albums > 0')
-          ->limit(5);
-        
+            ->from('User u')
+            ->leftJoin('u.Album a')
+            ->orderby('num_albums desc')
+            ->groupby('u.id')
+            ->having('num_albums > 0')
+            ->limit(5)
+        ;
+
         try {
             $this->assertEqual($q->getCountSqlQuery(), 'SELECT COUNT(*) AS num_results FROM (SELECT e.id, COUNT(a.id) AS a__0 FROM entity e LEFT JOIN album a ON e.id = a.user_id WHERE (e.type = 0) GROUP BY e.id HAVING a__0 > 0) dctrn_count_query');
             $q->count();
-            
+
             $this->pass();
         } catch (Doctrine_Exception $e) {
             $this->fail($e->getMessage());

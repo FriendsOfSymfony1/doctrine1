@@ -1,5 +1,13 @@
 <?php
-class Doctrine_RepositoryTestCase extends Doctrine_UnitTestCase {
-    public function testAdd() {
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class Doctrine_RepositoryTestCase extends Doctrine_UnitTestCase
+{
+    public function testAdd()
+    {
     }
 }

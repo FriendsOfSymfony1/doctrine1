@@ -20,38 +20,39 @@
  */
 
 /**
- * Doctrine_Query_ApplyInheritance_TestCase
+ * Doctrine_Query_ApplyInheritance_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Query_ApplyInheritance_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Query_ApplyInheritance_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
+    public function prepareData()
     {
-        
     }
-    
-    public function prepareTables() 
+
+    public function prepareTables()
     {
-        $this->tables = array('InheritanceDeal', 'InheritanceEntityUser', 'InheritanceUser');
-        
+        $this->tables = ['InheritanceDeal', 'InheritanceEntityUser', 'InheritanceUser'];
+
         parent::prepareTables();
     }
-    
+
     public function testApplyInheritance()
     {
         $query = new Doctrine_Query();
         $query->from('InheritanceDeal d, d.Users u');
         $query->where('u.id = 1');
-        
+
         $sql = 'SELECT i.id AS i__id, i.name AS i__name, i2.id AS i2__id, i2.username AS i2__username FROM inheritance_deal i LEFT JOIN inheritance_entity_user i3 ON (i.id = i3.entity_id) AND i3.type = 1 LEFT JOIN inheritance_user i2 ON i2.id = i3.user_id WHERE (i2.id = 1)';
-        
+
         $this->assertEqual($sql, $query->getSqlQuery());
     }
 }

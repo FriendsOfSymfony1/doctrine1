@@ -1,15 +1,15 @@
 <?php
-class Rec2  extends Doctrine_Record
+
+class Rec2 extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('user_id', 'integer', 10, array (  'unique' => true,));
-        $this->hasColumn('address', 'string', 150, array ());
+        $this->hasColumn('user_id', 'integer', 10, ['unique' => true]);
+        $this->hasColumn('address', 'string', 150, []);
     }
 
     public function setUp()
     {
-        $this->hasOne('Rec1 as User', array('local' => 'id', 'foreign' => 'user_id', 'onDelete' => 'CASCADE'));
+        $this->hasOne('Rec1 as User', ['local' => 'id', 'foreign' => 'user_id', 'onDelete' => 'CASCADE']);
     }
-
 }

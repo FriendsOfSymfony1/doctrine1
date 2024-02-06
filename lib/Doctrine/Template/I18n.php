@@ -20,44 +20,33 @@
  */
 
 /**
- * Add multilingual capabilities to your Doctrine models
+ * Add multilingual capabilities to your Doctrine models.
  *
- * @package     Doctrine
- * @subpackage  Template
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Template_I18n extends Doctrine_Template
 {
     /**
-     * __construct
-     *
-     * @param string $array 
-     * @return void
+     * __construct.
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
-	    parent::__construct($options);
+        parent::__construct($options);
         $this->_plugin = new Doctrine_I18n($this->_options);
     }
 
     /**
-     * Initialize the I18n plugin for the template
-     *
-     * @return void
+     * Initialize the I18n plugin for the template.
      */
     public function setUp()
     {
-        $this->_plugin->initialize($this->_table); 
+        $this->_plugin->initialize($this->_table);
     }
 
     /**
-     * Get the plugin instance for the I18n template
-     *
-     * @return void
+     * Get the plugin instance for the I18n template.
      */
     public function getI18n()
     {

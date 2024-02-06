@@ -20,39 +20,40 @@
  */
 
 /**
- * Doctrine_Ticket_786_TestCase
+ * Doctrine_Ticket_786_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_786_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_786_TestCase extends Doctrine_UnitTestCase
 {
-  public function testConflictingQueriesHydration()
-  {
-    // Query for the User with Phonenumbers joined in
-    // So you can access User->Phonenumber instanceof Doctrine_Collection
-    $query = new Doctrine_Query();
-    $query->from('User u, u.Phonenumber p');
-    
-    $user1 = $query->execute()->getFirst();
-    
-    // Now query for the same data, without the Phonenumber
-    $query = new Doctrine_Query();
-    $query->from('User u');
-    
-    $user2 = $query->execute()->getFirst();
-    
-    // Now if we try and see if Phonenumber is present in $user1 after the 2nd query
-    if ( ! isset($user1->Phonenumber))
+    public function testConflictingQueriesHydration()
     {
-      $this->fail('Phonenumber overwritten by 2nd query hydrating');
-    } else {
-      $this->pass();
+        // Query for the User with Phonenumbers joined in
+        // So you can access User->Phonenumber instanceof Doctrine_Collection
+        $query = new Doctrine_Query();
+        $query->from('User u, u.Phonenumber p');
+
+        $user1 = $query->execute()->getFirst();
+
+        // Now query for the same data, without the Phonenumber
+        $query = new Doctrine_Query();
+        $query->from('User u');
+
+        $user2 = $query->execute()->getFirst();
+
+        // Now if we try and see if Phonenumber is present in $user1 after the 2nd query
+        if (!isset($user1->Phonenumber)) {
+            $this->fail('Phonenumber overwritten by 2nd query hydrating');
+        } else {
+            $this->pass();
+        }
     }
-  }
 }

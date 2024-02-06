@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1764_TestCase
+ * Doctrine_Ticket_1764_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1764_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1764_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -48,7 +50,7 @@ class Doctrine_Ticket_1764_TestCase extends Doctrine_UnitTestCase
         $user->rate = 1;
         $this->assertEqual($user->isValid(), true);
 
-        $sql = Doctrine_Core::generateSqlFromArray(array('Ticket_1764_User'));
+        $sql = Doctrine_Core::generateSqlFromArray(['Ticket_1764_User']);
         $this->assertEqual($sql[0], 'CREATE TABLE ticket_1764__user (id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR(255), password VARCHAR(255), rate DECIMAL(18,2) NOT NULL)');
 
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_NONE);
@@ -61,6 +63,6 @@ class Ticket_1764_User extends Doctrine_Record
     {
         $this->hasColumn('username', 'string', 255);
         $this->hasColumn('password', 'string', 255);
-        $this->hasColumn('rate', 'decimal', null, array('notnull' => true));
+        $this->hasColumn('rate', 'decimal', null, ['notnull' => true]);
     }
 }

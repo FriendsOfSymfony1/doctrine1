@@ -20,41 +20,37 @@
  */
 
 /**
- * Doctrine_Query_From
+ * Doctrine_Query_From.
  *
- * @package     Doctrine
- * @subpackage  Query
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Query_From extends Doctrine_Query_Part
 {
     /**
      * DQL FROM PARSER
-     * parses the FROM part of the query string
+     * parses the FROM part of the query string.
      *
      * @param string $str
-     * @param boolean $return if to return the parsed FROM and skip load()
-     * @return void
+     * @param bool   $return if to return the parsed FROM and skip load()
      */
     public function parse($str, $return = false)
     {
         $str = trim($str);
         $parts = $this->_tokenizer->bracketExplode($str, 'JOIN ');
 
-        $from = $return ? array() : null;
+        $from = $return ? [] : null;
 
         $operator = false;
 
         switch (trim($parts[0])) {
             case 'INNER':
                 $operator = ':';
+                // no break
             case 'LEFT':
                 array_shift($parts);
-            break;
+                break;
         }
 
         $last = '';
@@ -68,7 +64,7 @@ class Doctrine_Query_From extends Doctrine_Query_Part
 
             $e = explode(' ', $part);
 
-            if (end($e) == 'INNER' || end($e) == 'LEFT') {
+            if ('INNER' == end($e) || 'LEFT' == end($e)) {
                 $last = array_pop($e);
             }
             $part = implode(' ', $e);
@@ -79,7 +75,7 @@ class Doctrine_Query_From extends Doctrine_Query_Part
                 $e2 = explode('.', $e[0]);
 
                 if ($operator) {
-                    $e[0] = array_shift($e2) . $operator . implode('.', $e2);
+                    $e[0] = array_shift($e2).$operator.implode('.', $e2);
                 }
 
                 if ($return) {
@@ -89,8 +85,9 @@ class Doctrine_Query_From extends Doctrine_Query_Part
                 }
             }
 
-            $operator = ($last == 'INNER') ? ':' : '.';
+            $operator = ('INNER' == $last) ? ':' : '.';
         }
+
         return $from;
     }
 }

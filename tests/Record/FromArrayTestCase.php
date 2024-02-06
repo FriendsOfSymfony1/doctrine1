@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Record_FromArray_TestCase
+ * Doctrine_Record_FromArray_TestCase.
  *
- * @package     Doctrine
  * @author      Stephen Ostrow <sostrow@sowebdesigns.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Record_FromArray_TestCase extends Doctrine_UnitTestCase
 {
@@ -38,10 +40,10 @@ class Doctrine_Record_FromArray_TestCase extends Doctrine_UnitTestCase
     {
         parent::prepareTables();
     }
-    
+
     public function prepareData()
     {
-        # Create an existing group
+        // Create an existing group
         $group = new Group();
         $group->name = 'Group One';
         $group->save();
@@ -53,28 +55,28 @@ class Doctrine_Record_FromArray_TestCase extends Doctrine_UnitTestCase
         $user = new User();
         $userArray = $user->toArray();
 
-        # add a Phonenumber
+        // add a Phonenumber
         $userArray['Phonenumber'][0]['phonenumber'] = '555 321';
-        
-        # add an Email address
+
+        // add an Email address
         $userArray['Email']['address'] = 'johndow@mail.com';
-        
-        # add group
-        $userArray['Group'][0]['name'] = 'New Group'; # This is a n-m relationship
-        # add a group which exists
-        $userArray['Group'][1]['_identifier'] = $this->previous_group; # This is a n-m relationship where the group was made in prepareData
-          
+
+        // add group
+        $userArray['Group'][0]['name'] = 'New Group'; // This is a n-m relationship
+        // add a group which exists
+        $userArray['Group'][1]['_identifier'] = $this->previous_group; // This is a n-m relationship where the group was made in prepareData
+
         $user->fromArray($userArray);
-        
+
         $this->assertEqual($user->Phonenumber->count(), 1);
         $this->assertEqual($user->Phonenumber[0]->phonenumber, '555 321');
         $this->assertEqual($user->Group[0]->name, 'New Group');
         $this->assertEqual($user->Group[1]->name, 'Group One');
-        
+
         try {
-          $user->save();
-        } catch (Exception $e ) {
-          $this->fail("Failed saving with " . $e->getMessage());
+            $user->save();
+        } catch (Exception $e) {
+            $this->fail('Failed saving with '.$e->getMessage());
         }
     }
 

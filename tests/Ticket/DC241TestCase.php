@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_DC241_TestCase
+ * Doctrine_Ticket_DC241_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC241_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC241_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -42,15 +44,16 @@ class Doctrine_Ticket_DC241_TestCase extends Doctrine_UnitTestCase
     public function testTest()
     {
         $q = Doctrine_Query::create()
-        	->from('Ticket_DC241_Poll p')
-        	->leftJoin('p.Answers pa ON pa.votes = ?', 100)
-        	->addWhere('p.id = ?', 200)
-        	->addWhere('p.id = ?', 300)
-        	->addWhere('p.id = ?', 400)
-        	->addWhere('p.id = ?', 400)
-        	->groupBy('p.id')
-        	->having('p.id > ?', 300)
-        	->limit(10);
+            ->from('Ticket_DC241_Poll p')
+            ->leftJoin('p.Answers pa ON pa.votes = ?', 100)
+            ->addWhere('p.id = ?', 200)
+            ->addWhere('p.id = ?', 300)
+            ->addWhere('p.id = ?', 400)
+            ->addWhere('p.id = ?', 400)
+            ->groupBy('p.id')
+            ->having('p.id > ?', 300)
+            ->limit(10)
+        ;
 
         $this->assertEqual($q->getCountSqlQuery(), 'SELECT COUNT(*) AS num_results FROM (SELECT t.id FROM ticket__d_c241__poll t LEFT JOIN module_polls_answers m ON (m.votes = ?) WHERE t.id = ? AND t.id = ? AND t.id = ? AND t.id = ? GROUP BY t.id HAVING t.id > ?) dctrn_count_query');
 
@@ -65,32 +68,32 @@ class Doctrine_Ticket_DC241_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_DC241_Poll extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->hasColumn('id_category', 'integer', null, array('notnull' => true));
-		$this->hasColumn('question', 'string', 256);
-	}
-	
-	public function setUp()
-	{
-		$this->hasMany('Ticket_DC241_PollAnswer as Answers', array('local' => 'id', 'foreign' => 'id_poll', 'orderBy' => 'position'));
-	}
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id_category', 'integer', null, ['notnull' => true]);
+        $this->hasColumn('question', 'string', 256);
+    }
+
+    public function setUp()
+    {
+        $this->hasMany('Ticket_DC241_PollAnswer as Answers', ['local' => 'id', 'foreign' => 'id_poll', 'orderBy' => 'position']);
+    }
 }
 
 class Ticket_DC241_PollAnswer extends Doctrine_Record
 {
-	public function setTableDefinition()
-	{
-		$this->setTableName('module_polls_answers');
-		
-		$this->hasColumn('id_poll', 'integer', null, array('notnull' => true));
-		$this->hasColumn('answer', 'string', 256);
-		$this->hasColumn('votes', 'integer', null, array('notnull' => true, 'default' => 0));
-		$this->hasColumn('position', 'integer');
-	}
-	
-	public function setUp()
-	{
-		$this->hasOne('Ticket_DC241_Poll as Poll', array('local' => 'id_poll', 'foreign' => 'id', 'onDelete' => 'CASCADE'));
-	}
+    public function setTableDefinition()
+    {
+        $this->setTableName('module_polls_answers');
+
+        $this->hasColumn('id_poll', 'integer', null, ['notnull' => true]);
+        $this->hasColumn('answer', 'string', 256);
+        $this->hasColumn('votes', 'integer', null, ['notnull' => true, 'default' => 0]);
+        $this->hasColumn('position', 'integer');
+    }
+
+    public function setUp()
+    {
+        $this->hasOne('Ticket_DC241_Poll as Poll', ['local' => 'id_poll', 'foreign' => 'id', 'onDelete' => 'CASCADE']);
+    }
 }

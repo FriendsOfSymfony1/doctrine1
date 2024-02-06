@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1480_TestCase
+ * Doctrine_Ticket_1480_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1480_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1480_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -44,7 +46,8 @@ class Doctrine_Ticket_1480_TestCase extends Doctrine_UnitTestCase
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, true);
         $q = Doctrine_Query::create()
             ->from('Foo f')
-            ->addWhere('f.id IN (SELECT b.user_id FROM Bar b)');
+            ->addWhere('f.id IN (SELECT b.user_id FROM Bar b)')
+        ;
         $this->assertEqual($q->getSqlQuery(), 'SELECT f.id AS f__id, f.name AS f__name, f.password AS f__password, f.deleted_at AS f__deleted_at FROM foo f WHERE (f.id IN (SELECT b.user_id AS b__user_id FROM bar b) AND (f.deleted_at IS NULL))');
         $this->assertEqual(count($q->getFlattenedParams()), 0);
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);

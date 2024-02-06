@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_UnitTestCase
+ * Doctrine_UnitTestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_UnitTestCase extends UnitTestCase
 {
@@ -42,7 +44,7 @@ class Doctrine_UnitTestCase extends UnitTestCase
 
     protected $users;
     protected $valueHolder;
-    protected $tables = array();
+    protected $tables = [];
     protected $unitOfWork;
     protected $driverName = false;
     protected $generic = false;
@@ -64,13 +66,13 @@ class Doctrine_UnitTestCase extends UnitTestCase
     /**
      * @var Doctrine_Connection[]
      */
-    private $additionalConnections = array();
+    private $additionalConnections = [];
 
     public function setUp()
     {
         parent::setUp();
 
-        if ( ! $this->init) {
+        if (!$this->init) {
             $this->init();
         }
         if (isset($this->objTable)) {
@@ -96,59 +98,58 @@ class Doctrine_UnitTestCase extends UnitTestCase
     {
         $this->_name = get_class($this);
 
-        $this->manager   = Doctrine_Manager::getInstance();
+        $this->manager = Doctrine_Manager::getInstance();
         $this->manager->setAttribute(Doctrine_Core::ATTR_EXPORT, Doctrine_Core::EXPORT_ALL);
 
-        $this->tables = array_merge($this->tables,
-                        array('entity',
-                              'entityReference',
-                              'email',
-                              'phonenumber',
-                              'groupuser',
-                              'album',
-                              'song',
-                              'element',
-                              'testerror',
-                              'description',
-                              'address',
-                              'account',
-                              'task',
-                              'resource',
-                              'assignment',
-                              'resourceType',
-                              'resourceReference')
-                              );
-
+        $this->tables = array_merge(
+            $this->tables,
+            ['entity',
+                'entityReference',
+                'email',
+                'phonenumber',
+                'groupuser',
+                'album',
+                'song',
+                'element',
+                'testerror',
+                'description',
+                'address',
+                'account',
+                'task',
+                'resource',
+                'assignment',
+                'resourceType',
+                'resourceReference']
+        );
 
         $class = get_class($this);
-        $e     = explode('_', $class);
+        $e = explode('_', $class);
 
-
-        if ( ! $this->driverName) {
+        if (!$this->driverName) {
             $this->driverName = 'main';
 
-            switch($e[1]) {
+            switch ($e[1]) {
                 case 'Export':
                 case 'Import':
                 case 'Transaction':
                 case 'DataDict':
                 case 'Sequence':
                     $this->driverName = 'Sqlite';
-                break;
+                    break;
             }
 
             $module = $e[1];
 
             if (count($e) > 3) {
                 $driver = $e[2];
-                switch($e[2]) {
+                switch ($e[2]) {
                     case 'Mysql':
                     case 'Mssql':
                     case 'Oracle':
                     case 'Pgsql':
                     case 'Sqlite':
                         $this->driverName = $e[2];
-                    break;
+                        break;
                 }
             }
         }
@@ -158,13 +159,12 @@ class Doctrine_UnitTestCase extends UnitTestCase
             $this->manager->setCurrentConnection($this->driverName);
 
             $this->connection->evictTables();
-            $this->dbh      = $this->adapter = $this->connection->getDbh();
+            $this->dbh = $this->adapter = $this->connection->getDbh();
             $this->listener = $this->manager->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
             $this->manager->setAttribute(Doctrine_Core::ATTR_LISTENER, $this->listener);
-
-        } catch(Doctrine_Manager_Exception $e) {
-            if ($this->driverName == 'main') {
+        } catch (Doctrine_Manager_Exception $e) {
+            if ('main' == $this->driverName) {
                 $this->dbh = new PDO('sqlite::memory:');
                 $this->dbh->sqliteCreateFunction('trim', 'trim', 1);
             } else {
@@ -173,21 +173,18 @@ class Doctrine_UnitTestCase extends UnitTestCase
 
             $this->conn = $this->connection = $this->manager->openConnection($this->dbh, $this->driverName);
 
-            if ($this->driverName !== 'main') {
-                $exc  = 'Doctrine_Connection_' . ucwords($this->driverName) . '_Exception';
+            if ('main' !== $this->driverName) {
+                $exc = 'Doctrine_Connection_'.ucwords($this->driverName).'_Exception';
 
                 $this->exc = new $exc();
-
-            } else {
             }
 
             $this->listener = new Doctrine_EventListener();
             $this->manager->setAttribute(Doctrine_Core::ATTR_LISTENER, $this->listener);
         }
-        if ($this->driverName !== 'main') {
-
+        if ('main' !== $this->driverName) {
             if (isset($module)) {
-                switch($module) {
+                switch ($module) {
                     case 'Export':
                     case 'Import':
                     case 'Transaction':
@@ -195,11 +192,11 @@ class Doctrine_UnitTestCase extends UnitTestCase
                     case 'Expression':
                         $lower = strtolower($module);
 
-                        $this->$lower = $this->connection->$lower;
-                    break;
+                        $this->{$lower} = $this->connection->{$lower};
+                        break;
                     case 'DataDict':
                         $this->dataDict = $this->connection->dataDict;
-                    break;
+                        break;
                 }
             }
         }
@@ -207,28 +204,30 @@ class Doctrine_UnitTestCase extends UnitTestCase
         $this->connection->setListener(new Doctrine_EventListener());
         $this->query = new Doctrine_Query($this->connection);
 
-        if ($this->driverName === 'main') {
+        if ('main' === $this->driverName) {
             $this->prepareTables();
             $this->prepareData();
             foreach ($this->tables as $name) {
-            	$this->connection->getTable(ucwords($name))->clear();
+                $this->connection->getTable(ucwords($name))->clear();
             }
         }
     }
-    public function prepareTables() {
-        foreach($this->tables as $name) {
+
+    public function prepareTables()
+    {
+        foreach ($this->tables as $name) {
             $name = ucwords($name);
             $table = $this->connection->getTable($name);
-            $query = 'DROP TABLE ' . $table->getTableName();
+            $query = 'DROP TABLE '.$table->getTableName();
             try {
                 $this->conn->exec($query);
-            } catch(Doctrine_Connection_Exception $e) {
-
+            } catch (Doctrine_Connection_Exception $e) {
             }
         }
         $this->conn->export->exportClasses($this->tables);
         $this->objTable = $this->connection->getTable('User');
     }
+
     public function prepareData()
     {
         $groups = new Doctrine_Collection($this->connection->getTable('Group'));
@@ -237,13 +236,11 @@ class Doctrine_UnitTestCase extends UnitTestCase
 
         $groups[1]->name = 'Quality Actors';
 
-
         $groups[2]->name = 'Action Actors';
         $groups[2]['Phonenumber'][0]->phonenumber = '123 123';
         $groups->save();
 
         $users = new Doctrine_Collection('User');
-
 
         $users[0]->name = 'zYne';
         $users[0]['Email']->address = 'zYne@example.com';
@@ -287,23 +284,26 @@ class Doctrine_UnitTestCase extends UnitTestCase
         $this->users = $users;
         $this->users->save();
     }
+
     public function getConnection()
     {
         return $this->connection;
     }
+
     public function assertDeclarationType($type, $type2)
     {
         $dec = $this->getDeclaration($type);
 
-        if ( ! is_array($type2)) {
-            $type2 = array($type2);
+        if (!is_array($type2)) {
+            $type2 = [$type2];
         }
 
         $this->assertEqual($dec['type'], $type2);
     }
+
     public function getDeclaration($type)
     {
-        return $this->dataDict->getPortableDeclaration(array('type' => $type, 'name' => 'colname', 'length' => 1, 'fixed' => true));
+        return $this->dataDict->getPortableDeclaration(['type' => $type, 'name' => 'colname', 'length' => 1, 'fixed' => true]);
     }
 
     protected function openAdditionalConnection($adapter = null, $name = null)

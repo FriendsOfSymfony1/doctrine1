@@ -20,22 +20,24 @@
  */
 
 /**
- * Doctrine_Import_Pgsql_TestCase
+ * Doctrine_Import_Pgsql_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase
 {
-    public function testListSequencesExecutesSql() 
+    public function testListSequencesExecutesSql()
     {
         $this->import->listSequences('table');
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT
                                                 regexp_replace(relname, '_seq$', '')
                                             FROM
@@ -44,10 +46,11 @@ class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase
                                                 (SELECT oid FROM pg_namespace
                                                  WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema')");
     }
+
     public function testListTableColumnsExecutesSql()
     {
         $this->import->listTableColumns('table');
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT
                                                      ordinal_position as attnum,
                                                      column_name as field,
@@ -68,10 +71,11 @@ class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase
                                                    WHERE table_name = 'table'
                                                    ORDER BY ordinal_position");
     }
+
     public function testListTableIndexesExecutesSql()
     {
         $this->import->listTableIndexes('table');
-        
+
         $this->assertEqual($this->adapter->pop(), "SELECT
                                                         relname
                                                    FROM
@@ -85,10 +89,11 @@ class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase
                                                             AND indisprimary != 't'
                                                         )");
     }
+
     public function testListTablesExecutesSql()
     {
         $this->import->listTables();
-        
+
         $q = "SELECT
                                                 c.relname AS table_name
                                             FROM pg_class c, pg_user u
@@ -105,31 +110,35 @@ class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase
                                                 AND c.relname !~ '^pg_'";
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListDatabasesExecutesSql()
     {
         $this->import->listDatabases();
-        
+
         $q = 'SELECT datname FROM pg_database';
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListUsersExecutesSql()
     {
         $this->import->listUsers();
-        
+
         $q = 'SELECT usename FROM pg_user';
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListViewsExecutesSql()
     {
         $this->import->listViews();
-        
+
         $q = 'SELECT viewname FROM pg_views';
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListFunctionsExecutesSql()
     {
         $this->import->listFunctions();
-        
+
         $q = "SELECT
                                                 proname
                                             FROM
@@ -144,10 +153,10 @@ class Doctrine_Import_Pgsql_TestCase extends Doctrine_UnitTestCase
                                                      WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema'";
         $this->assertEqual($this->adapter->pop(), $q);
     }
+
     public function testListTableConstraintsExecutesSql()
     {
         $this->import->listTableConstraints('table');
-
 
         $q = "SELECT
                                                         relname

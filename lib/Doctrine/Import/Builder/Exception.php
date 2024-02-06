@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Import_Builder_Exception
+ * Doctrine_Import_Builder_Exception.
  *
- * @package     Doctrine
- * @subpackage  Import
- * @link        www.doctrine-project.org
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Import_Builder_Exception extends Doctrine_Import_Exception
-{ }
+{
+}

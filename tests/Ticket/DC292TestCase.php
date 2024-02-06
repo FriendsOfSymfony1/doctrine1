@@ -20,26 +20,28 @@
  */
 
 /**
- * Doctrine_Ticket_DC292_TestCase
+ * Doctrine_Ticket_DC292_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_DC292_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC292_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
-        $dir = dirname(__FILE__) . '/DC292/migrations';
-        if ( ! is_dir($dir)) {
+        $dir = dirname(__FILE__).'/DC292/migrations';
+        if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
         $migration = new Doctrine_Migration($dir);
-        $diff = new Doctrine_Migration_Diff(dirname(__FILE__) . '/DC292/from.yml', dirname(__FILE__) . '/DC292/to.yml', $migration);
+        $diff = new Doctrine_Migration_Diff(dirname(__FILE__).'/DC292/from.yml', dirname(__FILE__).'/DC292/to.yml', $migration);
         $changes = $diff->generateChanges();
         $this->assertEqual(2, count($changes['created_columns']['article']));
         $this->assertTrue(isset($changes['created_columns']['article']['created_at']));

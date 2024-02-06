@@ -20,15 +20,12 @@
  */
 
 /**
- * Doctrine_Tree_AdjacencyList
+ * Doctrine_Tree_AdjacencyList.
  *
- * @package     Doctrine
- * @subpackage  Tree
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Joe Simms <joe.simms@websites4.com>
  */
 abstract class Doctrine_Tree_AdjacencyList extends Doctrine_Tree implements Doctrine_Tree_Interface
-{ }
+{
+}

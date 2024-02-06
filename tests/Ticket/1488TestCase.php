@@ -20,15 +20,17 @@
  */
 
 /**
- * Doctrine_Ticket_1488_TestCase
+ * Doctrine_Ticket_1488_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_1488_TestCase extends Doctrine_UnitTestCase
 {
@@ -36,7 +38,8 @@ class Doctrine_Ticket_1488_TestCase extends Doctrine_UnitTestCase
     {
         $q = Doctrine_Query::create()
             ->from('T1488_Class1 c1')
-            ->leftJoin('c1.Classes2 c2 WITH c2.value BETWEEN c1.min AND c1.max');
+            ->leftJoin('c1.Classes2 c2 WITH c2.value BETWEEN c1.min AND c1.max')
+        ;
         $this->assertEqual($q->getSqlQuery(), 'SELECT t.id AS t__id, t.min AS t__min, t.max AS t__max, t2.id AS t2__id, t2.value AS t2__value FROM t1488__class1 t LEFT JOIN t1488__relation t3 ON (t.id = t3.c1_id) LEFT JOIN t1488__class2 t2 ON t2.id = t3.c2_id AND (t2.value BETWEEN t.min AND t.max)');
     }
 }
@@ -51,9 +54,9 @@ class T1488_Class1 extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('T1488_Class2 as Classes2', array('local'    => 'c1_id',
-                                                            'foreign'  => 'c2_id',
-                                                            'refClass' => 'T1488_Relation'));
+        $this->hasMany('T1488_Class2 as Classes2', ['local' => 'c1_id',
+            'foreign' => 'c2_id',
+            'refClass' => 'T1488_Relation']);
     }
 }
 
@@ -66,12 +69,11 @@ class T1488_Class2 extends Doctrine_Record
 
     public function setUp()
     {
-        $this->hasMany('T1488_Class1 as Classes1', array('local'    => 'c2_id',
-                                                          'foreign'  => 'c1_id',
-                                                          'refClass' => 'T1488_Relation'));
+        $this->hasMany('T1488_Class1 as Classes1', ['local' => 'c2_id',
+            'foreign' => 'c1_id',
+            'refClass' => 'T1488_Relation']);
     }
 }
-
 
 class T1488_Relation extends Doctrine_Record
 {

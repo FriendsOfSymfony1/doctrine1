@@ -20,25 +20,27 @@
  */
 
 /**
- * Doctrine_I18nRelation_TestCase
+ * Doctrine_I18nRelation_TestCase.
  *
- * @package     Doctrine
  * @author      Brice Figureau <brice+doctrine@daysofwonder.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Ticket_1028_TestCase extends Doctrine_UnitTestCase
 {
-
     public function prepareData()
-    { }
+    {
+    }
 
     public function prepareTables()
     {
-        $this->tables = array('I18nRelationTest','I18nAuthorTest');
+        $this->tables = ['I18nRelationTest', 'I18nAuthorTest'];
 
         parent::prepareTables();
     }
@@ -46,28 +48,25 @@ class Doctrine_Ticket_1028_TestCase extends Doctrine_UnitTestCase
     public function testRelationIsNotInOriginalTableAnymore()
     {
         $i18n = Doctrine_Core::getTable('I18nRelationTest');
-        $relation = NULL;
+        $relation = null;
         try {
             $relation = $i18n->getRelation('I18nAuthorTest');
             $this->fail();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->pass();
         }
     }
-
 
     public function testRelationsAreMovedToTranslationTable()
     {
         $translation = Doctrine_Core::getTable('I18nRelationTestTranslation');
-        $relation = NULL;
+        $relation = null;
         try {
             $relation = $translation->getRelation('I18nAuthorTest');
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
         $this->assertTrue($relation instanceof Doctrine_Relation_LocalKey);
     }
-
-   
 }

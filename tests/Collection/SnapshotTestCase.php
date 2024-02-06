@@ -20,28 +20,30 @@
  */
 
 /**
- * Doctrine_Collection_Snapshot_TestCase
+ * Doctrine_Collection_Snapshot_TestCase.
  *
  * This test case is used for testing the snapshot functionality
  * of the Doctrine_Collection
  *
- * Snapshots are used for counting the diff between original and changed 
+ * Snapshots are used for counting the diff between original and changed
  * state of the collection.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class Doctrine_Collection_Snapshot_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array('Entity', 'User', 'Group', 'GroupUser', 'Account', 'Album', 'Phonenumber', 'Email', 'Book');
-        
+        $this->tables = ['Entity', 'User', 'Group', 'GroupUser', 'Account', 'Album', 'Phonenumber', 'Email', 'Book'];
+
         parent::prepareTables();
     }
 
@@ -52,8 +54,7 @@ class Doctrine_Collection_Snapshot_TestCase extends Doctrine_UnitTestCase
         $coll = $q->execute();
         $this->assertEqual($coll->count(), 8);
 
-        unset($coll[0]);
-        unset($coll[1]);
+        unset($coll[0], $coll[1]);
 
         $coll[]->name = 'new user';
 
@@ -73,7 +74,8 @@ class Doctrine_Collection_Snapshot_TestCase extends Doctrine_UnitTestCase
     {
         $q = new Doctrine_Query();
         $q->from('User u LEFT JOIN u.Phonenumber p')
-             ->where('u.id = 8');
+            ->where('u.id = 8')
+        ;
 
         $coll = $q->execute();
 
@@ -98,7 +100,6 @@ class Doctrine_Collection_Snapshot_TestCase extends Doctrine_UnitTestCase
         $coll = $q->execute();
 
         $this->assertEqual($coll[0]->Phonenumber->count(), 1);
-
     }
 
     public function testDiffForManyToManyRelatedCollection()
@@ -112,7 +113,8 @@ class Doctrine_Collection_Snapshot_TestCase extends Doctrine_UnitTestCase
         $this->connection->clear();
 
         $users = Doctrine_Query::create()->from('User u LEFT JOIN u.Group g')
-                 ->where('u.id = ' . $user->id)->execute();
+            ->where('u.id = '.$user->id)->execute()
+        ;
 
         $this->assertEqual($users[0]->Group[0]->name, 'PHP');
         $this->assertEqual($users[0]->Group[1]->name, 'Web');
@@ -125,19 +127,18 @@ class Doctrine_Collection_Snapshot_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual(count($user->Group->getSnapshot()), 1);
         unset($user->Group[1]);
         $this->assertEqual(count($user->Group->getSnapshot()), 1);
-        
+
         $count = count($this->conn);
         $user->save();
 
         $this->assertEqual(count($user->Group->getSnapshot()), 0);
-        
+
         $this->conn->clear();
 
         $users = Doctrine_Query::create()->from('User u LEFT JOIN u.Group g')
-                 ->where('u.id = ' . $user->id)->execute();
-        
+            ->where('u.id = '.$user->id)->execute()
+        ;
+
         $this->assertEqual(count($user->Group), 0);
-
     }
-
 }

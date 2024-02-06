@@ -20,69 +20,73 @@
  */
 
 /**
- * Doctrine_Relation_Parser_TestCase
+ * Doctrine_Relation_Parser_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Relation_ManyToMany2_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Relation_ManyToMany2_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareData() 
+    public function prepareData()
     {
     }
-    
-    public function prepareTables() 
+
+    public function prepareTables()
     {
-        $this->tables = array('TestUser', 'TestMovie', 'TestMovieUserBookmark', 'TestMovieUserVote');
+        $this->tables = ['TestUser', 'TestMovie', 'TestMovieUserBookmark', 'TestMovieUserVote'];
         parent::prepareTables();
     }
-    
-    public function testManyToManyCreateSelectAndUpdate() 
+
+    public function testManyToManyCreateSelectAndUpdate()
     {
         $user = new TestUser();
         $user['name'] = 'tester';
         $user->save();
-        
+
         $data = new TestMovie();
         $data['name'] = 'movie';
-        $data['User'] =  $user;
+        $data['User'] = $user;
         $data['MovieBookmarks'][0] = $user;
         $data['MovieVotes'][0] = $user;
-        $data->save(); //All ok here
-        
+        $data->save(); // All ok here
+
         $this->conn->clear();
 
         $q = new Doctrine_Query();
         $newdata = $q->select('m.*')
-                      ->from('TestMovie m')
-                      ->execute()
-                      ->getFirst();     
-        $newdata['name'] = 'movie2';    
+            ->from('TestMovie m')
+            ->execute()
+            ->getFirst()
+        ;
+        $newdata['name'] = 'movie2';
         try {
-            $newdata->save(); //big failure here
+            $newdata->save(); // big failure here
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
-        
     }
+
     public function testManyToManyJoinsandSave()
     {
         $q = new Doctrine_Query();
         $newdata = $q->select('d.*, i.*, u.*, c.*')
-                       ->from('TestMovie d, d.MovieBookmarks i, i.UserVotes u, u.User c')
-                       ->execute()
-                       ->getFirst();
+            ->from('TestMovie d, d.MovieBookmarks i, i.UserVotes u, u.User c')
+            ->execute()
+            ->getFirst()
+        ;
         $newdata['MovieBookmarks'][0]['UserVotes'][0]['User']['name'] = 'user2';
         try {
             $newdata->save();
             $this->pass();
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
     }
@@ -115,7 +119,7 @@ class Doctrine_Relation_ManyToMany2_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($movies->count(), 2);
 
         $profiler = new Doctrine_Connection_Profiler();
-        
+
         $this->conn->addListener($profiler);
 
         $this->assertEqual($users[0]->UserBookmarks->count(), 0);
@@ -125,10 +129,10 @@ class Doctrine_Relation_ManyToMany2_TestCase extends Doctrine_UnitTestCase
         $users[0]->save();
 
         $this->assertEqual($users[0]->UserBookmarks->count(), 2);
-        /**
-        foreach ($profiler->getAll() as $event) {
-            print $event->getQuery() . "<br>";
-        }
-        */
+        /*
+         * foreach ($profiler->getAll() as $event) {
+         * print $event->getQuery() . "<br>";
+         * }
+         */
     }
 }

@@ -20,120 +20,147 @@
  */
 
 /**
- * Doctrine_UnitOfWork_TestCase
+ * Doctrine_UnitOfWork_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_UnitOfWork_TestCase extends Doctrine_UnitTestCase {
-    private $correct  = array('Task', 'ResourceType', 'Resource', 'Assignment', 'ResourceReference');
-    private $correct2 = array (
-              0 => 'Resource',
-              1 => 'Task',
-              2 => 'ResourceType',
-              3 => 'Assignment',
-              4 => 'ResourceReference',
-            );
-    public function testbuildFlushTree() {
+class Doctrine_UnitOfWork_TestCase extends Doctrine_UnitTestCase
+{
+    private $correct = ['Task', 'ResourceType', 'Resource', 'Assignment', 'ResourceReference'];
+    private $correct2 = [
+        0 => 'Resource',
+        1 => 'Task',
+        2 => 'ResourceType',
+        3 => 'Assignment',
+        4 => 'ResourceReference',
+    ];
+
+    public function testbuildFlushTree()
+    {
         $task = new Task();
 
-        $tree = $this->unitOfWork->buildFlushTree(array('Task'));
-        $this->assertEqual($tree, array('Task'));
+        $tree = $this->unitOfWork->buildFlushTree(['Task']);
+        $this->assertEqual($tree, ['Task']);
 
-        $tree = $this->unitOfWork->buildFlushTree(array('Task','Resource'));
-        $this->assertEqual($tree, array('Task', 'Resource', 'Assignment'));
+        $tree = $this->unitOfWork->buildFlushTree(['Task', 'Resource']);
+        $this->assertEqual($tree, ['Task', 'Resource', 'Assignment']);
 
-        $tree = $this->unitOfWork->buildFlushTree(array('Task', 'Assignment', 'Resource'));
-        $this->assertEqual($tree, array('Task', 'Resource', 'Assignment'));
+        $tree = $this->unitOfWork->buildFlushTree(['Task', 'Assignment', 'Resource']);
+        $this->assertEqual($tree, ['Task', 'Resource', 'Assignment']);
 
-        $tree = $this->unitOfWork->buildFlushTree(array('Assignment', 'Task', 'Resource'));
-        $this->assertEqual($tree, array('Resource', 'Task', 'Assignment'));
+        $tree = $this->unitOfWork->buildFlushTree(['Assignment', 'Task', 'Resource']);
+        $this->assertEqual($tree, ['Resource', 'Task', 'Assignment']);
     }
-    public function testbuildFlushTree2() {
-        $this->correct = array('Forum_Category','Forum_Board','Forum_Thread');
 
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Board'));
-        
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Category','Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Category', 'Forum_Board'));
-    }
-    public function testBuildFlushTree3() {
-        $this->correct = array('Forum_Category','Forum_Board','Forum_Thread','Forum_Entry');
+    public function testbuildFlushTree2()
+    {
+        $this->correct = ['Forum_Category', 'Forum_Board', 'Forum_Thread'];
 
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Entry','Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Entry','Forum_Board'));
-        
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Entry'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Entry'));
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Board']);
+
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Category', 'Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Category', 'Forum_Board']);
     }
-    public function testBuildFlushTree4() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Board', 'Forum_Thread'));
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Thread'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread'));
+
+    public function testBuildFlushTree3()
+    {
+        $this->correct = ['Forum_Category', 'Forum_Board', 'Forum_Thread', 'Forum_Entry'];
+
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Entry', 'Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Entry', 'Forum_Board']);
+
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Entry']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Entry']);
     }
-    public function testBuildFlushTree5() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Thread','Forum_Entry'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread','Forum_Entry'));
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Entry','Forum_Thread'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread','Forum_Entry'));
+
+    public function testBuildFlushTree4()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread']);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Thread']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread']);
     }
-    public function testBuildFlushTree6() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Entry','Forum_Board','Forum_Thread'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread','Forum_Entry'));
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Entry','Forum_Thread','Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread','Forum_Entry'));
+
+    public function testBuildFlushTree5()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Entry', 'Forum_Thread']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
     }
-    public function testBuildFlushTree7() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Board','Forum_Entry'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread','Forum_Entry'));
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Entry','Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Board','Forum_Thread','Forum_Entry'));
+
+    public function testBuildFlushTree6()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Entry', 'Forum_Board', 'Forum_Thread']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Entry', 'Forum_Thread', 'Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
     }
-    public function testBuildFlushTree8() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Thread','Forum_Category'));
-        $this->assertEqual($tree, array('Forum_Category','Forum_Board','Forum_Thread'));
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Category','Forum_Thread','Forum_Board'));
-        $this->assertEqual($tree, array('Forum_Category','Forum_Board','Forum_Thread'));
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Board','Forum_Category'));
-        $this->assertEqual($tree, array('Forum_Category','Forum_Board','Forum_Thread'));
+
+    public function testBuildFlushTree7()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Board', 'Forum_Entry']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Entry', 'Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Board', 'Forum_Thread', 'Forum_Entry']);
     }
-    public function testBuildFlushTree9() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Thread','Forum_Category','Forum_Entry'));
-        $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Thread','Forum_Entry','Forum_Category'));
-        $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Board','Forum_Category','Forum_Thread','Forum_Entry'));
-        $this->assertEqual($tree, $this->correct);
+
+    public function testBuildFlushTree8()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Thread', 'Forum_Category']);
+        $this->assertEqual($tree, ['Forum_Category', 'Forum_Board', 'Forum_Thread']);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Category', 'Forum_Thread', 'Forum_Board']);
+        $this->assertEqual($tree, ['Forum_Category', 'Forum_Board', 'Forum_Thread']);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Board', 'Forum_Category']);
+        $this->assertEqual($tree, ['Forum_Category', 'Forum_Board', 'Forum_Thread']);
     }
-    public function testBuildFlushTree10() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Entry','Forum_Thread','Forum_Board','Forum_Category'));
+
+    public function testBuildFlushTree9()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Thread', 'Forum_Category', 'Forum_Entry']);
         $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Entry','Forum_Thread','Forum_Category','Forum_Board'));
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Thread', 'Forum_Entry', 'Forum_Category']);
         $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Entry','Forum_Category','Forum_Board','Forum_Thread'));
-        $this->assertEqual($tree, $this->correct);
-    }
-    public function testBuildFlushTree11() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Category','Forum_Board','Forum_Entry'));
-        $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Entry','Forum_Category','Forum_Board'));
-        $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Thread','Forum_Board','Forum_Entry','Forum_Category'));
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Board', 'Forum_Category', 'Forum_Thread', 'Forum_Entry']);
         $this->assertEqual($tree, $this->correct);
     }
-    public function testBuildFlushTree12() {
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Category','Forum_Entry','Forum_Board','Forum_Thread'));
+
+    public function testBuildFlushTree10()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Entry', 'Forum_Thread', 'Forum_Board', 'Forum_Category']);
         $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Category','Forum_Thread','Forum_Entry','Forum_Board'));
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Entry', 'Forum_Thread', 'Forum_Category', 'Forum_Board']);
         $this->assertEqual($tree, $this->correct);
-        $tree = $this->unitOfWork->buildFlushTree(array('Forum_Category','Forum_Board','Forum_Thread','Forum_Entry'));
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Entry', 'Forum_Category', 'Forum_Board', 'Forum_Thread']);
+        $this->assertEqual($tree, $this->correct);
+    }
+
+    public function testBuildFlushTree11()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Category', 'Forum_Board', 'Forum_Entry']);
+        $this->assertEqual($tree, $this->correct);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Entry', 'Forum_Category', 'Forum_Board']);
+        $this->assertEqual($tree, $this->correct);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Thread', 'Forum_Board', 'Forum_Entry', 'Forum_Category']);
+        $this->assertEqual($tree, $this->correct);
+    }
+
+    public function testBuildFlushTree12()
+    {
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Category', 'Forum_Entry', 'Forum_Board', 'Forum_Thread']);
+        $this->assertEqual($tree, $this->correct);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Category', 'Forum_Thread', 'Forum_Entry', 'Forum_Board']);
+        $this->assertEqual($tree, $this->correct);
+        $tree = $this->unitOfWork->buildFlushTree(['Forum_Category', 'Forum_Board', 'Forum_Thread', 'Forum_Entry']);
         $this->assertEqual($tree, $this->correct);
     }
 }

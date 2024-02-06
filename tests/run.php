@@ -4,15 +4,15 @@ $_SERVER['DOCTRINE_DIR'] = realpath(dirname(__FILE__).'/../');
 
 require 'bootstrap.php';
 
-$excludeTickets = array(
+$excludeTickets = [
     '1830', // MySQL specific error
     '1876b',
     '1935',
     '2015',
     '2292',
     '1783', // Known bug integer validation with numbers greater than PHP_INT_MAX.
-    'DC521' // PostgreSQL specific error
-);
+    'DC521', // PostgreSQL specific error
+];
 
 $test = new DoctrineTest();
 
@@ -39,14 +39,13 @@ $test->addTestCase($behaviors);
 // Ticket Tests
 $tickets = new GroupTest('Tickets Tests', 'tickets');
 
-$ticketTestCases = glob(dirname(__FILE__) . '/Ticket/*TestCase.php');
+$ticketTestCases = glob(dirname(__FILE__).'/Ticket/*TestCase.php');
 
-foreach ($ticketTestCases as $testCase)
-{
+foreach ($ticketTestCases as $testCase) {
     $fileInfo = pathinfo($testCase);
     $name = str_replace('TestCase', '', $fileInfo['filename']);
 
-    if ( ! in_array($name, $excludeTickets)) {
+    if (!in_array($name, $excludeTickets)) {
         $name = sprintf('Doctrine_Ticket_%s_TestCase', $name);
         $tickets->addTestCase(new $name());
     }
@@ -195,13 +194,13 @@ $db->addTestCase(new Doctrine_Connection_Profiler_TestCase());
 $test->addTestCase($db);
 
 // Event Listener Tests
-$event_listener = new GroupTest('EventListener Tests','event_listener');
+$event_listener = new GroupTest('EventListener Tests', 'event_listener');
 $event_listener->addTestCase(new Doctrine_EventListener_TestCase());
 $event_listener->addTestCase(new Doctrine_EventListener_Chain_TestCase());
 $test->addTestCase($event_listener);
 
 // Query Tests
-$query_tests = new GroupTest('Query Tests','query');
+$query_tests = new GroupTest('Query Tests', 'query');
 $query_tests->addTestCase(new Doctrine_Query_TestCase());
 $query_tests->addTestCase(new Doctrine_Query_Condition_TestCase());
 $query_tests->addTestCase(new Doctrine_Query_MultiJoin_TestCase());

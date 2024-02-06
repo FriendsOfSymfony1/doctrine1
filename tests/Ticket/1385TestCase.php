@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1385_TestCase
+ * Doctrine_Ticket_1385_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1385_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1385_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -72,7 +74,7 @@ class Ticket_1385_User1 extends Doctrine_Record
     {
         $this->hasColumn('username', 'string', 255);
         $this->hasColumn('password', 'string', 255);
-        $this->hasColumn('email_address', 'string', 255, array('email' => array('check_mx' => false)));
+        $this->hasColumn('email_address', 'string', 255, ['email' => ['check_mx' => false]]);
     }
 }
 
@@ -82,7 +84,7 @@ class Ticket_1385_User2 extends Doctrine_Record
     {
         $this->hasColumn('username', 'string', 255);
         $this->hasColumn('password', 'string', 255);
-        $this->hasColumn('email_address', 'string', 255, array('email' => array('check_mx' => true)));
+        $this->hasColumn('email_address', 'string', 255, ['email' => ['check_mx' => true]]);
     }
 }
 
@@ -92,6 +94,6 @@ class Ticket_1385_User3 extends Doctrine_Record
     {
         $this->hasColumn('username', 'string', 255);
         $this->hasColumn('password', 'string', 255);
-        $this->hasColumn('email_address', 'string', 255, array('email'));
+        $this->hasColumn('email_address', 'string', 255, ['email']);
     }
 }

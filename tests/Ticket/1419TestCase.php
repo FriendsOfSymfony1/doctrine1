@@ -20,34 +20,38 @@
  */
 
 /**
- * Doctrine_Ticket_1419_TestCase
+ * Doctrine_Ticket_1419_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1419_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1419_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
         $user = Doctrine_Query::create()
-                ->from('User u')
-                ->leftJoin('u.Phonenumber p')
-                ->where('u.id = ?', 4)
-                ->fetchOne();
+            ->from('User u')
+            ->leftJoin('u.Phonenumber p')
+            ->where('u.id = ?', 4)
+            ->fetchOne()
+        ;
         $user->Phonenumber[0]->phonenumber = '6155139185';
         $user->save();
         $user->free();
 
         $user = Doctrine_Query::create()
-                ->from('User u')
-                ->leftJoin('u.Phonenumber p')
-                ->where('u.id = ?', 4)
-                ->fetchOne();
+            ->from('User u')
+            ->leftJoin('u.Phonenumber p')
+            ->where('u.id = ?', 4)
+            ->fetchOne()
+        ;
         $this->assertTrue($user->Phonenumber->getLast()->id);
         $this->assertEqual($user->Phonenumber->getLast()->phonenumber, '6155139185');
     }

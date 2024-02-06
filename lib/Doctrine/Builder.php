@@ -20,14 +20,10 @@
  */
 
 /**
- * Base class for any code builders/generators for Doctrine
+ * Base class for any code builders/generators for Doctrine.
  *
- * @package     Doctrine
- * @subpackage  Builder
- * @link        www.doctrine-project.org
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @since       1.0
- * @version     $Revision: 4593 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Jonathan H. Wage <jwage@mac.com>
  */
 class Doctrine_Builder
@@ -35,22 +31,20 @@ class Doctrine_Builder
     /**
      * Special function for var_export()
      * The normal code which is returned is malformed and does not follow Doctrine standards
-     * So we do some string replacing to clean it up
+     * So we do some string replacing to clean it up.
      *
      * @param string $var
-     * @return void
      */
     public function varExport($var)
     {
         $export = var_export($var, true);
-        $export = str_replace("\n", PHP_EOL . str_repeat(' ', 50), $export);
+        $export = str_replace("\n", PHP_EOL.str_repeat(' ', 50), $export);
         $export = str_replace('  ', ' ', $export);
         $export = str_replace('array (', 'array(', $export);
         $export = str_replace('array( ', 'array(', $export);
         $export = str_replace(',)', ')', $export);
         $export = str_replace(', )', ')', $export);
-        $export = str_replace('  ', ' ', $export);
 
-        return $export;
+        return str_replace('  ', ' ', $export);
     }
 }

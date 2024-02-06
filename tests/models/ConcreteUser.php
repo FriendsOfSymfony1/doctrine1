@@ -1,4 +1,5 @@
 <?php
+
 class ConcreteUser extends Doctrine_Record
 {
     public function setUp()
@@ -6,4 +7,3 @@ class ConcreteUser extends Doctrine_Record
         $this->actAs('UserTemplate');
     }
 }
-

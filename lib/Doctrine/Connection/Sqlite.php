@@ -20,74 +20,67 @@
  */
 
 /**
- * Doctrine_Connection_Sqlite
+ * Doctrine_Connection_Sqlite.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 7490 $
- * @link        www.doctrine-project.org
- * @since       1.0
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
 {
     /**
-     * @var string $driverName                  the name of this connection driver
+     * @var string the name of this connection driver
      */
     protected $driverName = 'Sqlite';
 
     /**
-     * the constructor
-     *
-     * @param Doctrine_Manager $manager
-     * @param PDO $pdo                          database handle
+     * the constructor.
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        $this->supported = array('sequences'            => 'emulated',
-                          'indexes'              => true,
-                          'affected_rows'        => true,
-                          'summary_functions'    => true,
-                          'order_by_text'        => true,
-                          'current_id'           => 'emulated',
-                          'limit_queries'        => true,
-                          'LOBs'                 => true,
-                          'replace'              => true,
-                          'transactions'         => true,
-                          'savepoints'           => false,
-                          'sub_selects'          => true,
-                          'auto_increment'       => true,
-                          'primary_key'          => true,
-                          'result_introspection' => false, // not implemented
-                          'prepared_statements'  => 'emulated',
-                          'identifier_quoting'   => true,
-                          'pattern_escaping'     => false,
-                          );
+        $this->supported = ['sequences' => 'emulated',
+            'indexes' => true,
+            'affected_rows' => true,
+            'summary_functions' => true,
+            'order_by_text' => true,
+            'current_id' => 'emulated',
+            'limit_queries' => true,
+            'LOBs' => true,
+            'replace' => true,
+            'transactions' => true,
+            'savepoints' => false,
+            'sub_selects' => true,
+            'auto_increment' => true,
+            'primary_key' => true,
+            'result_introspection' => false, // not implemented
+            'prepared_statements' => 'emulated',
+            'identifier_quoting' => true,
+            'pattern_escaping' => false,
+        ];
         parent::__construct($manager, $adapter);
 
         if ($this->isConnected) {
-
             // PHP8.1 require default to true to keep BC
             // https://www.php.net/manual/en/migration81.incompatible.php#migration81.incompatible.pdo.sqlite
             // Can be overwritten by user later
             $this->dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
 
-            $this->dbh->sqliteCreateFunction('mod',    array('Doctrine_Expression_Sqlite', 'modImpl'), 2);
-            $this->dbh->sqliteCreateFunction('concat', array('Doctrine_Expression_Sqlite', 'concatImpl'));
+            $this->dbh->sqliteCreateFunction('mod', ['Doctrine_Expression_Sqlite', 'modImpl'], 2);
+            $this->dbh->sqliteCreateFunction('concat', ['Doctrine_Expression_Sqlite', 'concatImpl']);
             $this->dbh->sqliteCreateFunction('md5', 'md5', 1);
-            $this->dbh->sqliteCreateFunction('now', array('Doctrine_Expression_Sqlite', 'nowImpl'), 0);
+            $this->dbh->sqliteCreateFunction('now', ['Doctrine_Expression_Sqlite', 'nowImpl'], 0);
         }
     }
 
     /**
-     * initializes database functions missing in sqlite
+     * initializes database functions missing in sqlite.
      *
      * @see Doctrine_Expression
-     * @return boolean
+     *
+     * @return bool
      */
-    public function connect() 
+    public function connect()
     {
         if ($this->isConnected) {
             return;
@@ -98,29 +91,27 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
 
         $connected = parent::connect();
 
-        if(!$hasConfigureStringify) {
+        if (!$hasConfigureStringify) {
             // PHP8.1 require default to true to keep BC
             // https://www.php.net/manual/en/migration81.incompatible.php#migration81.incompatible.pdo.sqlite
             // Can be overwritten by user later
             $this->dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
         }
 
-        $this->dbh->sqliteCreateFunction('mod',    array('Doctrine_Expression_Sqlite', 'modImpl'), 2);
-        $this->dbh->sqliteCreateFunction('concat', array('Doctrine_Expression_Sqlite', 'concatImpl'));
+        $this->dbh->sqliteCreateFunction('mod', ['Doctrine_Expression_Sqlite', 'modImpl'], 2);
+        $this->dbh->sqliteCreateFunction('concat', ['Doctrine_Expression_Sqlite', 'concatImpl']);
         $this->dbh->sqliteCreateFunction('md5', 'md5', 1);
-        $this->dbh->sqliteCreateFunction('now', array('Doctrine_Expression_Sqlite', 'nowImpl'), 0);
+        $this->dbh->sqliteCreateFunction('now', ['Doctrine_Expression_Sqlite', 'nowImpl'], 0);
 
         return $connected;
     }
 
     /**
-     * createDatabase
-     *
-     * @return void
+     * createDatabase.
      */
     public function createDatabase()
     {
-        if ( ! $dsn = $this->getOption('dsn')) {
+        if (!$dsn = $this->getOption('dsn')) {
             throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
         }
 
@@ -130,16 +121,14 @@ class Doctrine_Connection_Sqlite extends Doctrine_Connection_Common
     }
 
     /**
-     * dropDatabase
-     *
-     * @return void
+     * dropDatabase.
      */
     public function dropDatabase()
     {
-        if ( ! $dsn = $this->getOption('dsn')) {
+        if (!$dsn = $this->getOption('dsn')) {
             throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
         }
-        
+
         $info = $this->getManager()->parseDsn($dsn);
 
         $this->export->dropDatabase($info['database']);

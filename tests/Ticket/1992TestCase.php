@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1992_TestCase
+ * Doctrine_Ticket_1992_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase
 {
     protected $person;
     protected $profile1;
@@ -46,15 +48,15 @@ class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase
 
     public function prepareData()
     {
-      $this->person = new Ticket_1992_Person();
-      $this->person->nummer = '1';
-      $this->profile1 = new Ticket_1992_Profile();
-      $this->profile1->name = 'test 2';
-      $this->person->Profile[] = $this->profile1;
-      $this->profile2 = new Ticket_1992_Profile();
-      $this->profile2->name = 'test 2';
-      $this->person->Profile[] = $this->profile2;
-      $this->person->save();
+        $this->person = new Ticket_1992_Person();
+        $this->person->nummer = '1';
+        $this->profile1 = new Ticket_1992_Profile();
+        $this->profile1->name = 'test 2';
+        $this->person->Profile[] = $this->profile1;
+        $this->profile2 = new Ticket_1992_Profile();
+        $this->profile2->name = 'test 2';
+        $this->person->Profile[] = $this->profile2;
+        $this->person->save();
     }
 
     public function testTest()
@@ -64,7 +66,8 @@ class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase
         $person = Doctrine_Query::create()
             ->from('Ticket_1992_Person p')
             ->innerJoin('p.Profile pr')
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($person['nummer'], 1);
         $this->assertEqual(count($person['Profile']), 2);
 
@@ -73,7 +76,8 @@ class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase
         $person = Doctrine_Query::create()
             ->from('Ticket_1992_Person p')
             ->innerJoin('p.Profile pr')
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($person['nummer'], 1);
         $this->assertEqual(count($person['Profile']), 1);
 
@@ -82,13 +86,15 @@ class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase
         $person = Doctrine_Query::create()
             ->from('Ticket_1992_Person p')
             ->innerJoin('p.Profile pr')
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($person, false);
 
         $person = Doctrine_Query::create()
             ->from('Ticket_1992_Person p')
             ->leftJoin('p.Profile pr')
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($person['nummer'], 1);
         $this->assertEqual(count($person['Profile']), 0);
 
@@ -96,7 +102,8 @@ class Doctrine_Ticket_1992_TestCase extends Doctrine_UnitTestCase
 
         $person = Doctrine_Query::create()
             ->from('Ticket_1992_Person p')
-            ->fetchOne();
+            ->fetchOne()
+        ;
         $this->assertEqual($person, false);
 
         Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_DQL_CALLBACKS, false);
@@ -107,12 +114,12 @@ class Ticket_1992_Person extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('nummer', 'string', 16, array('type' => 'string', 'length' => 16, 'primary' => true));        
+        $this->hasColumn('nummer', 'string', 16, ['type' => 'string', 'length' => 16, 'primary' => true]);
     }
 
     public function setUp()
     {
-        $this->hasMany('Ticket_1992_Profile as Profile', array('local' => 'person_nummer', 'foreign' => 'profile_id', 'refClass' => 'Ticket_1992_PersonProfile'));
+        $this->hasMany('Ticket_1992_Profile as Profile', ['local' => 'person_nummer', 'foreign' => 'profile_id', 'refClass' => 'Ticket_1992_PersonProfile']);
         $this->actAs('SoftDelete');
     }
 }
@@ -121,13 +128,13 @@ class Ticket_1992_Profile extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('id', 'integer', 4, array('type' => 'integer', 'length' => 4, 'unsigned' => 1, 'primary' => true, 'autoincrement' => true));        
+        $this->hasColumn('id', 'integer', 4, ['type' => 'integer', 'length' => 4, 'unsigned' => 1, 'primary' => true, 'autoincrement' => true]);
         $this->hasColumn('name', 'string');
     }
 
     public function setUp()
     {
-        $this->hasMany('Ticket_1992_Person as Person', array('local' => 'profile_id', 'foreign' => 'person_nummer', 'refClass' => 'Ticket_1992_PersonProfile'));
+        $this->hasMany('Ticket_1992_Person as Person', ['local' => 'profile_id', 'foreign' => 'person_nummer', 'refClass' => 'Ticket_1992_PersonProfile']);
         $this->actAs('SoftDelete');
     }
 }
@@ -136,8 +143,8 @@ class Ticket_1992_PersonProfile extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('person_nummer', 'string', 16, array('type' => 'string', 'length' => 16, 'notnull' => true));
-        $this->hasColumn('profile_id', 'integer', 4, array('type' => 'integer', 'length' => 4, 'unsigned' => 1, 'notnull' => true));        
+        $this->hasColumn('person_nummer', 'string', 16, ['type' => 'string', 'length' => 16, 'notnull' => true]);
+        $this->hasColumn('profile_id', 'integer', 4, ['type' => 'integer', 'length' => 4, 'unsigned' => 1, 'notnull' => true]);
     }
 
     public function setUp()

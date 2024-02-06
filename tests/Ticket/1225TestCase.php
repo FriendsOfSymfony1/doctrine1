@@ -1,17 +1,23 @@
 <?php
+
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class Doctrine_Ticket_1225_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
-        $this->tables = array('Ticket_1225_Tree');
+        $this->tables = ['Ticket_1225_Tree'];
         parent::prepareTables();
     }
-    
+
     public function prepareData()
     {
     }
 
-    public function testMoveAsSameNodeThrowsException() 
+    public function testMoveAsSameNodeThrowsException()
     {
         $root1 = new Ticket_1225_Tree();
         $tree = $root1->getTable()->getTree();
@@ -41,7 +47,7 @@ class Doctrine_Ticket_1225_TestCase extends Doctrine_UnitTestCase
         }
 
         try {
-	      $root1->getNode()->moveAsLastChildOf($root1);
+            $root1->getNode()->moveAsLastChildOf($root1);
             $this->fail();
         } catch (Doctrine_Tree_Exception $e) {
             $this->pass();

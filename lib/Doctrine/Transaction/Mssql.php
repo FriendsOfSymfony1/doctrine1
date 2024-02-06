@@ -20,15 +20,10 @@
  */
 
 /**
- *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @package     Doctrine
- * @subpackage  Transaction
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Transaction_Mssql extends Doctrine_Transaction
 {
@@ -44,12 +39,13 @@ class Doctrine_Transaction_Mssql extends Doctrine_Transaction
      *      mssql specific modes:
      *                  SNAPSHOT
      *
-     * @link http://msdn2.microsoft.com/en-us/library/ms173763.aspx
-     * @throws PDOException                         if something fails at the PDO level
-     * @throws Doctrine_Transaction_Exception       if using unknown isolation level or unknown wait option
-     * @return void
+     * @see http://msdn2.microsoft.com/en-us/library/ms173763.aspx
+     *
+     * @throws PDOException                   if something fails at the PDO level
+     * @throws Doctrine_Transaction_Exception if using unknown isolation level or unknown wait option
      */
-    public function setIsolation($isolation, $options = array()) {
+    public function setIsolation($isolation, $options = [])
+    {
         switch ($isolation) {
             case 'READ UNCOMMITTED':
             case 'READ COMMITTED':
@@ -58,14 +54,14 @@ class Doctrine_Transaction_Mssql extends Doctrine_Transaction
             case 'SNAPSHOT':
                 break;
             default:
-                throw new Doctrine_Transaction_Exception('isolation level is not supported: ' . $isolation);
+                throw new Doctrine_Transaction_Exception('isolation level is not supported: '.$isolation);
         }
 
-        $query = 'SET TRANSACTION ISOLATION LEVEL ' . $isolation;
+        $query = 'SET TRANSACTION ISOLATION LEVEL '.$isolation;
 
         $this->conn->execute($query);
     }
-    
+
     /**
      * Performs the rollback.
      */
@@ -73,7 +69,7 @@ class Doctrine_Transaction_Mssql extends Doctrine_Transaction
     {
         $this->conn->getDbh()->exec('ROLLBACK TRANSACTION');
     }
-    
+
     /**
      * Performs the commit.
      */
@@ -81,7 +77,7 @@ class Doctrine_Transaction_Mssql extends Doctrine_Transaction
     {
         $this->conn->getDbh()->exec('COMMIT TRANSACTION');
     }
-    
+
     /**
      * Begins a database transaction.
      */

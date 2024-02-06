@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1567_TestCase
+ * Doctrine_Ticket_1567_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1567_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1567_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -50,7 +52,7 @@ class Doctrine_Ticket_1567_TestCase extends Doctrine_UnitTestCase
         $query->from('Ticket_1567_Project p');
         $query->addWhere('p.user_id = ?', 1);
         $query->addWhere('p.deleted = ?', true);
-        
+
         $this->assertEqual($query->count(), 1);
         $this->assertEqual($query->execute()->count(), 1);
     }
@@ -60,9 +62,9 @@ class Ticket_1567_Project extends Doctrine_Record
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('name', 'string', 255, array('notnull' => true));
+        $this->hasColumn('name', 'string', 255, ['notnull' => true]);
         $this->hasColumn('user_id', 'integer');
-        $this->hasColumn('deleted', 'boolean', 1, array('notnull' => true, 'default' => 'false'));
+        $this->hasColumn('deleted', 'boolean', 1, ['notnull' => true, 'default' => 'false']);
     }
 
     public function setUp()

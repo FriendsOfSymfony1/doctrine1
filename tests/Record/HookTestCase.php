@@ -20,23 +20,27 @@
  */
 
 /**
- * Doctrine_Record_Hook_TestCase
+ * Doctrine_Record_Hook_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Record_Hook_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Record_Hook_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareData()
-    { }
-    public function prepareTables() 
-    { 
-        $this->tables = array('RecordHookTest', 'SoftDeleteTest');
+    {
+    }
+
+    public function prepareTables()
+    {
+        $this->tables = ['RecordHookTest', 'SoftDeleteTest'];
 
         parent::prepareTables();
     }
@@ -44,7 +48,7 @@ class Doctrine_Record_Hook_TestCase extends Doctrine_UnitTestCase
     public function testInsertHooksGetInvoked()
     {
         $r = new RecordHookTest();
-        
+
         $r->name = 'record';
         $r->save();
 
@@ -83,7 +87,7 @@ class Doctrine_Record_Hook_TestCase extends Doctrine_UnitTestCase
     {
         $r = new SoftDeleteTest();
         $r->name = 'something';
-        $r->something ='something';
+        $r->something = 'something';
         $r->save();
 
         $this->assertEqual($r->name, 'something');
@@ -96,7 +100,7 @@ class Doctrine_Record_Hook_TestCase extends Doctrine_UnitTestCase
             $r->delete();
             $this->assertEqual($r->state(), Doctrine_Record::STATE_CLEAN);
             $this->assertTrue(strtotime($r->deleted_at) > 0);
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             $this->fail();
         }
     }

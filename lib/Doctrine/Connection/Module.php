@@ -20,36 +20,32 @@
  */
 
 /**
- * Doctrine_Connection_Module
+ * Doctrine_Connection_Module.
  *
- * @package     Doctrine
- * @subpackage  Connection
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Connection_Module
 {
     /**
-     * @var Doctrine_Connection $conn       Doctrine_Connection object, every connection
-     *                                      module holds an instance of Doctrine_Connection
+     * @var Doctrine_Connection Doctrine_Connection object, every connection
+     *                          module holds an instance of Doctrine_Connection
      */
     protected $conn;
 
     /**
-     * @var string $moduleName              the name of this module
+     * @var string the name of this module
      */
     protected $moduleName;
 
     /**
-     * @param Doctrine_Connection $conn     Doctrine_Connection object, every connection
-     *                                      module holds an instance of Doctrine_Connection
+     * @param Doctrine_Connection $conn Doctrine_Connection object, every connection
+     *                                  module holds an instance of Doctrine_Connection
      */
     public function __construct($conn = null)
     {
-        if ( ! ($conn instanceof Doctrine_Connection)) {
+        if (!($conn instanceof Doctrine_Connection)) {
             $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
         }
         $this->conn = $conn;
@@ -61,7 +57,7 @@ class Doctrine_Connection_Module
 
     /**
      * getConnection
-     * returns the connection object this module uses
+     * returns the connection object this module uses.
      *
      * @return Doctrine_Connection
      */
@@ -72,9 +68,9 @@ class Doctrine_Connection_Module
 
     /**
      * getModuleName
-     * returns the name of this module
+     * returns the name of this module.
      *
-     * @return string       the name of this module
+     * @return string the name of this module
      */
     public function getModuleName()
     {

@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1843_TestCase
+ * Doctrine_Ticket_1843_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1843_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1843_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -48,21 +50,21 @@ class Doctrine_Ticket_1843_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($user->isValid());
         $user->save();
 
-        $check = array(
-          'preSave' => 1,
-          'preInsert' => 1,
-          'postInsert' => 1,
-          'postSave' => 1,
-        );
+        $check = [
+            'preSave' => 1,
+            'preInsert' => 1,
+            'postInsert' => 1,
+            'postSave' => 1,
+        ];
         $this->assertEqual($check, $user->hooks);
-        $user->hooks = array();
+        $user->hooks = [];
 
-        $check = array(
-          'preSave' => 1,
-          'preUpdate' => 1,
-          'postUpdate' => 1,
-          'postSave' => 1,
-        );
+        $check = [
+            'preSave' => 1,
+            'preUpdate' => 1,
+            'postUpdate' => 1,
+            'postSave' => 1,
+        ];
         $user->username = 'test';
         $user->save();
         $this->assertEqual($check, $user->hooks);
@@ -73,7 +75,7 @@ class Doctrine_Ticket_1843_TestCase extends Doctrine_UnitTestCase
 
 class Ticket_1843_User extends Doctrine_Record
 {
-    public $hooks = array();
+    public $hooks = [];
 
     public function setTableDefinition()
     {
@@ -83,42 +85,49 @@ class Ticket_1843_User extends Doctrine_Record
 
     public function preSave($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function postSave($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function preInsert($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function postInsert($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function preUpdate($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function postUpdate($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function preDelete($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
+
     public function postDelete($event)
     {
-        $num = isset($this->hooks[__FUNCTION__]) ? $this->hooks[__FUNCTION__]:0;
+        $num = $this->hooks[__FUNCTION__] ?? 0;
         $this->hooks[__FUNCTION__] = $num + 1;
     }
 

@@ -29,29 +29,24 @@
 
 /**
  * Doctrine_AnsiColorFormatter provides methods to colorize text to be displayed on a console.
- * This class was taken from the symfony-project source
+ * This class was taken from the symfony-project source.
  *
- * @package    Doctrine
- * @subpackage Cli
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 4252 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
 {
-    protected
-        $_styles = array(
-            'HEADER'  => array('fg' => 'black', 'bold' => true),
-            'ERROR'   => array('bg' => 'red', 'fg' => 'white', 'bold' => true),
-            'INFO'    => array('fg' => 'green', 'bold' => true),
-            'COMMENT' => array('fg' => 'yellow'),
-            ),
-        $_options    = array('bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8),
-        $_foreground = array('black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37),
-        $_background = array('black' => 40, 'red' => 41, 'green' => 42, 'yellow' => 43, 'blue' => 44, 'magenta' => 45, 'cyan' => 46, 'white' => 47);
+    protected $_styles = [
+        'HEADER' => ['fg' => 'black', 'bold' => true],
+        'ERROR' => ['bg' => 'red', 'fg' => 'white', 'bold' => true],
+        'INFO' => ['fg' => 'green', 'bold' => true],
+        'COMMENT' => ['fg' => 'yellow'],
+    ];
+    protected $_options = ['bold' => 1, 'underscore' => 4, 'blink' => 5, 'reverse' => 7, 'conceal' => 8];
+    protected $_foreground = ['black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33, 'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37];
+    protected $_background = ['black' => 40, 'red' => 41, 'green' => 42, 'yellow' => 43, 'blue' => 44, 'magenta' => 45, 'cyan' => 46, 'white' => 47];
 
     /**
      * Sets a new style.
@@ -59,7 +54,7 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
      * @param string The style name
      * @param array  An array of options
      */
-    public function setStyle($name, $options = array())
+    public function setStyle($name, $options = [])
     {
         $this->_styles[$name] = $options;
     }
@@ -69,32 +64,31 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
      *
      * @param  string The test to style
      * @param  mixed  An array of options or a style name
-     *
      * @return string The styled text
      */
-    public function format($text = '', $parameters = array(), $stream = STDOUT)
+    public function format($text = '', $parameters = [], $stream = STDOUT)
     {
-        if ( ! $this->supportsColors($stream)) {
+        if (!$this->supportsColors($stream)) {
             return $text;
         }
 
-        if ( ! is_array($parameters) && 'NONE' == $parameters) {
+        if (!is_array($parameters) && 'NONE' == $parameters) {
             return $text;
         }
 
-        if ( ! is_array($parameters) && isset($this->_styles[$parameters])) {
+        if (!is_array($parameters) && isset($this->_styles[$parameters])) {
             $parameters = $this->_styles[$parameters];
         }
 
-        $codes = array();
+        $codes = [];
         if (isset($parameters['fg'])) {
             $codes[] = $this->_foreground[$parameters['fg']];
         }
-        
+
         if (isset($parameters['bg'])) {
             $codes[] = $this->_background[$parameters['bg']];
         }
-        
+
         foreach ($this->_options as $option => $value) {
             if (isset($parameters[$option]) && $parameters[$option]) {
                 $codes[] = $value;
@@ -109,7 +103,8 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
      *
      * @param string  The section name
      * @param string  The text message
-     * @param integer The maximum size allowed for a line (65 by default)
+     * @param int The maximum size allowed for a line (65 by default)
+     * @param mixed|null $size
      */
     public function formatSection($section, $text, $size = null)
     {
@@ -122,13 +117,13 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
      * Truncates a line.
      *
      * @param string  The text
-     * @param integer The maximum size of the returned string (65 by default)
-     *
-     * @return string The truncated string
+     * @param int The maximum size of the returned string (65 by default)
+     * @param  mixed|null $size
+     * @return string     The truncated string
      */
     public function excerpt($text, $size = null)
     {
-        if ( ! $size) {
+        if (!$size) {
             $size = $this->size;
         }
 
@@ -138,7 +133,7 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
 
         $subsize = floor(($size - 3) / 2);
 
-        return substr($text, 0, $subsize) . $this->format('...', 'INFO').substr($text, -$subsize);
+        return substr($text, 0, $subsize).$this->format('...', 'INFO').substr($text, -$subsize);
     }
 
     /**
@@ -150,8 +145,7 @@ class Doctrine_Cli_AnsiColorFormatter extends Doctrine_Cli_Formatter
      *  -  non tty consoles
      *
      * @param  mixed A stream
-     *
-     * @return Boolean true if the stream supports colorization, false otherwise
+     * @return bool true if the stream supports colorization, false otherwise
      */
     public function supportsColors($stream)
     {

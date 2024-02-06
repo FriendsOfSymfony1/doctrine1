@@ -20,23 +20,18 @@
  */
 
 /**
- * Doctrine_Validator_Ip
+ * Doctrine_Validator_Ip.
  *
- * @package     Doctrine
- * @subpackage  Validator
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ * @see        www.doctrine-project.org
+ *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Validator_Ip extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is valid ip address
+     * checks if given value is valid ip address.
      *
-     * @param mixed $value
-     * @return boolean
+     * @return bool
      */
     public function validate($value)
     {

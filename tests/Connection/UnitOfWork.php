@@ -20,26 +20,28 @@
  */
 
 /**
- * Doctrine_Connection_UnitOfWork_TestCase
+ * Doctrine_Connection_UnitOfWork_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
 {
-    public function testFlush() 
+    public function testFlush()
     {
         $user = $this->connection->getTable('User')->find(4);
         $this->assertTrue(is_numeric($user->Phonenumber[0]->entity_id));
 
-        $user    = $this->connection->create('Email');
-        $user    = $this->connection->create('User');
-        $record  = $this->connection->create('Phonenumber');
+        $user = $this->connection->create('Email');
+        $user = $this->connection->create('User');
+        $record = $this->connection->create('Phonenumber');
 
         $user->Email->address = 'example@drinkmore.info';
         $this->assertTrue($user->email_id instanceof Email);
@@ -53,8 +55,6 @@ class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
         $user->Phonenumber[1]->phonenumber = '321 2132';
         $user->Phonenumber[2]->phonenumber = '123 123';
         $user->Phonenumber[3]->phonenumber = '321 2132';
-
-
 
         $this->assertTrue($user->Phonenumber[0]->entity_id instanceof User);
         $this->assertTrue($user->Phonenumber[2]->entity_id instanceof User);
@@ -77,18 +77,17 @@ class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($user->Phonenumber->count(), 4);
         $this->assertEqual($user->Group->count(), 2);
 
-
         $user = $this->objTable->find(5);
 
-        $pf   = $this->connection->getTable('Phonenumber');
+        $pf = $this->connection->getTable('Phonenumber');
 
         $this->assertTrue($user->Phonenumber instanceof Doctrine_Collection);
-        $this->assertTrue($user->Phonenumber->count() == 3);
+        $this->assertTrue(3 == $user->Phonenumber->count());
 
         $coll = new Doctrine_Collection($pf);
 
         $user->Phonenumber = $coll;
-        $this->assertTrue($user->Phonenumber->count() == 0);
+        $this->assertTrue(0 == $user->Phonenumber->count());
 
         $this->connection->flush();
         unset($user);
@@ -103,7 +102,6 @@ class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
 
         $user->Phonenumber[1]->phonenumber = '123 123';
         $this->connection->flush();
-
 
         $this->assertEqual($user->Phonenumber->count(), 2);
 
@@ -127,7 +125,7 @@ class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
         unset($user);
         $user = $this->objTable->find(5);
         $this->assertEqual($user->Phonenumber->count(), 0);
-        
+
         // ADDING REFERENCES WITH STRING KEYS
 
         $user->Phonenumber['home']->phonenumber = '123 123';
@@ -149,16 +147,12 @@ class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
         $coll['home']->phonenumber = '444 444';
         $coll['work']->phonenumber = '444 444';
 
-
-
-
         $user->Phonenumber = $coll;
         $this->connection->flush();
         $this->assertEqual($user->Phonenumber->count(), 3);
         $user = $this->objTable->find(5);
         $this->assertEqual($user->Phonenumber->count(), 3);
 
-        
         // ONE-TO-ONE REFERENCES
 
         $user->Email->address = 'drinker@drinkmore.info';
@@ -183,31 +177,27 @@ class Doctrine_Connection_UnitOfWork_TestCase extends Doctrine_UnitTestCase
         $user = $this->objTable->find(5);
         $this->assertTrue($user->Email instanceof Email);
         $this->assertEqual($user->Email->address, 'absolutist@nottodrink.com');
-        
-        $emails = $this->connection->query("FROM Email WHERE Email.id = $id");
-        //$this->assertEqual(count($emails),0);
+
+        $emails = $this->connection->query("FROM Email WHERE Email.id = {$id}");
+        // $this->assertEqual(count($emails),0);
     }
 
-    public function testTransactions() 
+    public function testTransactions()
     {
-
         $this->connection->beginTransaction();
-        $this->assertEqual($this->connection->transaction->getState(),Doctrine_Transaction::STATE_ACTIVE);
+        $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_ACTIVE);
         $this->connection->commit();
-        $this->assertEqual($this->connection->transaction->getState(),Doctrine_Transaction::STATE_SLEEP);
+        $this->assertEqual($this->connection->transaction->getState(), Doctrine_Transaction::STATE_SLEEP);
 
         $this->connection->beginTransaction();
-        
+
         $user = $this->objTable->find(6);
-        
+
         $user->name = 'Jack Daniels';
         $this->connection->flush();
         $this->connection->commit();
 
         $user = $this->objTable->find(6);
         $this->assertEqual($user->name, 'Jack Daniels');
-
     }
-
-
 }

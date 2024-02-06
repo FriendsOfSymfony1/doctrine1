@@ -20,77 +20,71 @@
  */
 
 /**
- * Doctrine_View
+ * Doctrine_View.
  *
  * this class represents a database view
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @package     Doctrine
- * @subpackage  View
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision: 7490 $
+ *
+ * @see        www.doctrine-project.org
  */
 class Doctrine_View
 {
     /**
-     * SQL DROP constant
+     * SQL DROP constant.
      */
-    const DROP   = 'DROP VIEW %s';
+    public const DROP = 'DROP VIEW %s';
 
     /**
-     * SQL CREATE constant
+     * SQL CREATE constant.
      */
-    const CREATE = 'CREATE VIEW %s AS %s';
+    public const CREATE = 'CREATE VIEW %s AS %s';
 
     /**
-     * SQL SELECT constant
+     * SQL SELECT constant.
      */
-    const SELECT = 'SELECT * FROM %s';
+    public const SELECT = 'SELECT * FROM %s';
 
     /**
-     * @var string $name                the name of the view
+     * @var string the name of the view
      */
     protected $_name;
 
     /**
-     * @var Doctrine_Query $query       the DQL query object this view is hooked into
+     * @var Doctrine_Query the DQL query object this view is hooked into
      */
     protected $_query;
 
     /**
-     * @var Doctrine_Connection $conn   the connection object
+     * @var Doctrine_Connection the connection object
      */
     protected $_conn;
 
     /**
-     * @var string $_dql The view dql string
+     * @var string The view dql string
      */
     protected $_dql;
 
     /**
-     * @var string $_sql The view sql string
+     * @var string The view sql string
      */
     protected $_sql;
 
     /**
-     * constructor
-     *
-     * @param Doctrine_Query $query
+     * constructor.
      */
     public function __construct(Doctrine_Query $query, $viewName)
     {
-        $this->_name  = $viewName;
+        $this->_name = $viewName;
         $this->_query = $query;
         $this->_query->setView($this);
-        $this->_conn   = $query->getConnection();
+        $this->_conn = $query->getConnection();
         $this->_dql = $query->getDql();
         $this->_sql = $query->getSqlQuery();
     }
 
     /**
-     * returns the associated query object
+     * returns the associated query object.
      *
      * @return Doctrine_Query
      */
@@ -100,7 +94,7 @@ class Doctrine_View
     }
 
     /**
-     * returns the name of this view
+     * returns the name of this view.
      *
      * @return string
      */
@@ -110,7 +104,7 @@ class Doctrine_View
     }
 
     /**
-     * returns the connection object
+     * returns the connection object.
      *
      * @return Doctrine_Connection
      */
@@ -120,38 +114,36 @@ class Doctrine_View
     }
 
     /**
-     * creates this view
+     * creates this view.
      *
      * @throws Doctrine_View_Exception
-     * @return void
      */
     public function create()
     {
         $sql = sprintf(self::CREATE, $this->_name, $this->_query->getSqlQuery());
         try {
             $this->_conn->execute($sql, $this->_query->getFlattenedParams());
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
     }
 
     /**
-     * drops this view from the database
+     * drops this view from the database.
      *
      * @throws Doctrine_View_Exception
-     * @return void
      */
     public function drop()
     {
         try {
             $this->_conn->execute(sprintf(self::DROP, $this->_name));
-        } catch(Doctrine_Exception $e) {
+        } catch (Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
     }
 
     /**
-     * returns a collection of Doctrine_Record objects
+     * returns a collection of Doctrine_Record objects.
      *
      * @return Doctrine_Collection
      */
@@ -161,7 +153,7 @@ class Doctrine_View
     }
 
     /**
-     * returns the select sql for this view
+     * returns the select sql for this view.
      *
      * @return string
      */
@@ -171,7 +163,7 @@ class Doctrine_View
     }
 
     /**
-     * Get the view sql string
+     * Get the view sql string.
      *
      * @return string $sql
      */
@@ -181,7 +173,7 @@ class Doctrine_View
     }
 
     /**
-     * Get the view dql string
+     * Get the view dql string.
      *
      * @return string $dql
      */

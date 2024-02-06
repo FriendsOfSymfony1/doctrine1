@@ -20,17 +20,19 @@
  */
 
 /**
- * Doctrine_Ticket_1230_TestCase
+ * Doctrine_Ticket_1230_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_1230_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1230_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -52,7 +54,8 @@ class Doctrine_Ticket_1230_TestCase extends Doctrine_UnitTestCase
         $baseQuery = Doctrine_Query::create()
             ->select('*')
             ->from('Ticket_1230_Category c')
-            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY);
+            ->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY)
+        ;
 
         $categoriesTreeObject->setBaseQuery($baseQuery);
         $categoriesArray = $categoriesTreeObject->fetchTree();

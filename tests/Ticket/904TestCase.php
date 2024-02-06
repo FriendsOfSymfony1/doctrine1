@@ -20,55 +20,57 @@
  */
 
 /**
- * Doctrine_Ticket_904_TestCase
+ * Doctrine_Ticket_904_TestCase.
  *
- * @package     Doctrine
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @category    Object Relational Mapping
- * @link        www.doctrine-project.org
- * @since       1.0
- * @version     $Revision$
+ *
+ * @see        www.doctrine-project.org
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class Doctrine_Ticket_904_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_904_TestCase extends Doctrine_UnitTestCase
 {
-  public function prepareTables()
-  {
-    $this->tables[] = 'T904_Section';
-    parent::prepareTables();
-  }
-  
-  public function testTicket()
-  {
-      try {
-          $s = new T904_Section();
-          $s->state('TDIRTY');
-          $s->Translation['en']->title = 'Test title';
-          $s->Translation['en']->summary = 'Test summary';
-          $s->save();
-          
-          $this->assertTrue($s->id > 0);
-          $this->assertEqual($s->Translation['en']->title, 'Test title');
-          $this->assertEqual($s->Translation['en']->summary, 'Test summary');
-          $this->pass();
-      } catch (Exception $e) {
-          $this->fail($e->getMessage());
-      }
-  }
+    public function prepareTables()
+    {
+        $this->tables[] = 'T904_Section';
+        parent::prepareTables();
+    }
+
+    public function testTicket()
+    {
+        try {
+            $s = new T904_Section();
+            $s->state('TDIRTY');
+            $s->Translation['en']->title = 'Test title';
+            $s->Translation['en']->summary = 'Test summary';
+            $s->save();
+
+            $this->assertTrue($s->id > 0);
+            $this->assertEqual($s->Translation['en']->title, 'Test title');
+            $this->assertEqual($s->Translation['en']->summary, 'Test summary');
+            $this->pass();
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
 }
 
 class T904_Section extends Doctrine_Record
 {
-  public function setTableDefinition()
-  {
-    $this->hasColumn('id', 'integer', 4, array('primary' => true, 'autoincrement' => true));
-    $this->hasColumn('title', 'string', 60, array('notnull' => true));
-    $this->hasColumn('summary', 'string', 255);
-  }
-  
-  public function setUp()
-  {
-    parent::setUp();
-    $this->actAs('I18n', array('fields' =>  array(  0 => 'title',   1 => 'summary', ), 'className' => '%CLASS%_i18n'));
-  }
+    public function setTableDefinition()
+    {
+        $this->hasColumn('id', 'integer', 4, ['primary' => true, 'autoincrement' => true]);
+        $this->hasColumn('title', 'string', 60, ['notnull' => true]);
+        $this->hasColumn('summary', 'string', 255);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->actAs('I18n', ['fields' => [0 => 'title',   1 => 'summary'], 'className' => '%CLASS%_i18n']);
+    }
 }
