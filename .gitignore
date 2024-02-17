@@ -4,3 +4,5 @@ tests/DoctrineTest/doctrine_tests/*
 /tests/tmp
 /tests/foo.sq3
 /vendor/
+/.phpcs-cache
+/phpcs.xml
