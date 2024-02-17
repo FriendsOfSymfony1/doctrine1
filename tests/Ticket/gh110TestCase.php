@@ -39,8 +39,8 @@ class Doctrine_Ticket_gh110_TestCase extends Doctrine_UnitTestCase
         );
 
         // Can be used to update the snapshot.
-        //file_put_contents(dirname(__FILE__) . '/gh110/Ticket_gh110_TestRecord.snapshot', $class);
-        $this->assertEqual($class, file_get_contents(dirname(__FILE__) . '/gh110/Ticket_gh110_TestRecord.snapshot'));
+        //file_put_contents(__DIR__ . '/gh110/Ticket_gh110_TestRecord.snapshot', $class);
+        $this->assertEqual($class, file_get_contents(__DIR__ . '/gh110/Ticket_gh110_TestRecord.snapshot'));
     }
 }
 
