@@ -115,11 +115,14 @@ class DoctrineTest_Coverage
     /**
      * Return the revision the coverage was made against
      *
-     *@param int The revision number
+     * @return int The revision number
+     * @deprecated Coverage revision is not supported anymore.
      */
     public function getRevision()
     {
-        return $this->result["revision"];
+        trigger_error('Coverage revision is not supported anymore.', E_USER_DEPRECATED);
+
+        return 0;
     }
 
     /**
@@ -140,10 +143,6 @@ class DoctrineTest_Coverage
      */
     public function generateReport()
     {
-        // $svn_info = explode(" ", exec("svn info | grep Revision"));
-        $svn_info = 'svn is not used anymore. maybe adding some git infos or drop it?';
-        $this->result["revision"] = $svn_info[1];
-
         //loop through all files and generate coverage files for them
         $it = new RecursiveDirectoryIterator(Doctrine_Core::getPath());
         $notCoveredArray = array();
