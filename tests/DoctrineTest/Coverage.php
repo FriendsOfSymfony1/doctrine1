@@ -46,6 +46,8 @@ class DoctrineTest_Coverage
     private $totalnotcovered = 0;
     private $result;
 
+    public $sortBy;
+
     /*
      * Create a new Coverage object. We read data from a fixed file. 
      */
