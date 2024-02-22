@@ -140,7 +140,8 @@ class DoctrineTest_Coverage
      */
     public function generateReport()
     {
-        $svn_info = explode(" ", exec("svn info | grep Revision"));
+        // $svn_info = explode(" ", exec("svn info | grep Revision"));
+        $svn_info = 'svn is not used anymore. maybe adding some git infos or drop it?';
         $this->result["revision"] = $svn_info[1];
 
         //loop through all files and generate coverage files for them
