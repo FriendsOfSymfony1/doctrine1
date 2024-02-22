@@ -163,6 +163,10 @@ class DoctrineTest_Coverage
                 continue;
             }
 
+            if (strpos($class, 'sfYaml')) {
+                continue;
+            }
+
             if ( ! class_exists($class)) {
                 continue;
             }
