@@ -1,10 +1,23 @@
 name: "Continuous Integration"
 
 on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - .github/workflows/continuous-integration.yml
+      - composer.*
+      - lib/**
+      - tests/**
+
   push:
     branches:
       - master
-  pull_request:
+    paths:
+      - .github/workflows/continuous-integration.yml
+      - composer.*
+      - lib/**
+      - tests/**
 
 env:
   fail-fast: true
