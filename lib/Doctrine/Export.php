@@ -1221,7 +1221,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  }
              }
 
-             $connection->commit();
+             Doctrine_Transaction_Helper::commitIfInTransaction($connection);
          }
      }
 
