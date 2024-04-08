@@ -3,6 +3,8 @@
 __DIR__=`dirname "$0"`
 ROOT_DIR="${__DIR__}/../.."
 
+PHP_VERSIONS_SUPPORTED_PATTERN='(php74|php8)'
+
 main ()
 {
     importEnvironmentVariablesFromDirectory "${ROOT_DIR}"
@@ -10,8 +12,6 @@ main ()
     configureWithArguments ${1+"$@"}
 
     startDockerComposeServices
-
-    populatePHPVersions
 
     runTests
 }
@@ -28,7 +28,7 @@ Usage:
 
 Options:
   --help                    Show this screen.
-  --php-versions            Select specific php versions. [default: ${PHP_VERSIONS}]
+  --php-versions            Select specific php versions. [default: '`echo ${PHP_VERSIONS}`']
                             Examples:
                                 php53
                                 'php53 php54'
@@ -86,7 +86,7 @@ importEnvironmentVariablesFromDirectory ()
 startDockerComposeServices ()
 {
     echo "+ ${DOCKER_COMPOSE} build"
-    ${DOCKER_COMPOSE} up -d --build --remove-orphans > /dev/null
+    ${DOCKER_COMPOSE} up -d --build --remove-orphans ${PHP_VERSIONS} > /dev/null
 }
 
 configureWithArguments ()
@@ -104,6 +104,8 @@ configureWithArguments ()
     PHP_VERSIONS='all'
     PHP_TEST_RUNTIME='tests/run.php'
     hasHelpOption=false
+
+    populatePHPVersions
 
     parseOperands ${1+"$@"}
 
@@ -141,13 +143,18 @@ hasTty ()
 populatePHPVersions ()
 {
     if test x'all' = x"${PHP_VERSIONS}"; then
-        PHP_VERSIONS=`fetchAllPHPVersions`
+        PHP_VERSIONS=`fetchSupportedPHPVersions`
     else :; fi
+}
+
+fetchSupportedPHPVersions ()
+{
+    fetchAllPHPVersions | grep -E "${PHP_VERSIONS_SUPPORTED_PATTERN}"
 }
 
 fetchAllPHPVersions ()
 {
-    ${DOCKER_COMPOSE} 2>/dev/null ps --services --filter status=running \
+    ${DOCKER_COMPOSE} 2>/dev/null ps --services \
         | grep php \
         | sort
 }
