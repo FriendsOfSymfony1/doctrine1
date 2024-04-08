@@ -17,6 +17,7 @@ services:
     environment:
       COMPOSER_HOME: /app/var/cache/composer
       MEMCACHED_HOST: memcached
+      MYSQL_DSN: 'mysql:unix_socket=/var/run/mysqld/mysql.sock;dbname=test;user=root'
     entrypoint:
       - sh
       - -c
