@@ -31,7 +31,7 @@
  * @version     $Revision$
  * @author      Kyle McGrogan <mcgrogan91@gmail.com>
  */
-final class Doctrine_Transaction_Helper
+final class Doctrine_TransactionHelper
 {
     public static function commitIfInTransaction(Doctrine_Connection $connection): void
     {
