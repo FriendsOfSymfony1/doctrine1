@@ -879,21 +879,19 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      */
     public function addIndex($index, array $definition)
     {
-        if (isset($definition['fields'])) {
-            foreach ((array) $definition['fields'] as $key => $field) {
-                if (is_numeric($key)) {
-                    $definition['fields'][$key] = $this->getColumnName($field);
-                } else {
-                    $columnName = $this->getColumnName($key);
-
-                    unset($definition['fields'][$key]);
-
-                    $definition['fields'][$columnName] = $field;
-                }
-            }
+      if (!isset($definition['fields']) || !is_array($definition['fields'])) {
+        $definition['fields'] = [];
+      }
+      foreach ((array)$definition['fields'] as $key => $field) {
+        if (is_numeric($key)) {
+          $definition['fields'][$key] = $this->getColumnName($field);
+        } else {
+          $columnName = $this->getColumnName($key);
+          unset($definition['fields'][$key]);
+          $definition['fields'][$columnName] = $field;
         }
-
-        $this->_options['indexes'][$index] = $definition;
+      }
+      $this->_options['indexes'][$index] = $definition;
     }
 
     /**
@@ -1171,10 +1169,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      */
     public function getColumnName($fieldName)
     {
-        // FIX ME: This is being used in places where an array is passed, but it should not be an array
-        // For example in places where Doctrine should support composite foreign/primary keys
-        $fieldName = is_array($fieldName) ? $fieldName[0]:$fieldName;
-
+        if (is_array($fieldName) && !empty($fieldName)) {
+        $fieldName = $fieldName[0];
+        } else {
+            $fieldName = is_array($fieldName) ? null : $fieldName;
+        }
         if (isset($this->_columnNames[$fieldName])) {
             return $this->_columnNames[$fieldName];
         }
