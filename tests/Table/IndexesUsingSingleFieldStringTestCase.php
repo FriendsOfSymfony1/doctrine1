@@ -2,12 +2,7 @@
 
 class Doctrine_Table_IndexesUsingSingleFieldString_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables()
-    {
-        $this->tables = array('IndexDeclaredWithSingleFieldStringRecord');
-
-        parent::prepareTables();
-    }
+    protected $tables = array('IndexDeclaredWithSingleFieldStringRecord');
 
     public function testSupportIndexesUsingSingleFieldString()
     {
