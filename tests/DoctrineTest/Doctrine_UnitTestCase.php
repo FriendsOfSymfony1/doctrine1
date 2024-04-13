@@ -338,7 +338,5 @@ class Doctrine_UnitTestCase extends UnitTestCase
         foreach ($this->additionalConnections as $connection) {
             $this->manager->closeConnection($connection);
         }
-
-        $this->conn = $this->connection = Doctrine_Manager::getInstance()->getCurrentConnection();
     }
 }
