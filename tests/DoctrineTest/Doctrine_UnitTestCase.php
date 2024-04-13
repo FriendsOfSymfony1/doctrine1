@@ -217,22 +217,29 @@ class Doctrine_UnitTestCase extends UnitTestCase
             }
         }
     }
+
     public function prepareTables() {
-        foreach($this->tables as $name) {
-            $name = ucwords($name);
-            $table = $this->connection->getTable($name);
-            $query = 'DROP TABLE ' . $table->getTableName();
-            try {
-                $this->conn->exec($query);
-            } catch(Doctrine_Connection_Exception $e) {
-
-            }
-        }
-
-        $this->conn->export->exportClasses($this->tables);
+        $this->resetTablesOnConnection($this->tables, $this->connection);
 
         $this->objTable = $this->connection->getTable('User');
     }
+
+    protected function resetTablesOnConnection(array $tables, Doctrine_Connection $connection)
+    {
+        foreach($tables as $name) {
+            $name = ucwords($name);
+            $table = $connection->getTable($name);
+            $query = 'DROP TABLE ' . $table->getTableName();
+
+            try {
+                $connection->exec($query);
+            } catch(Doctrine_Connection_Exception $e) {
+            }
+        }
+
+        $connection->export->exportClasses($tables);
+    }
+
     public function prepareData()
     {
         $groups = new Doctrine_Collection($this->connection->getTable('Group'));
@@ -310,17 +317,11 @@ class Doctrine_UnitTestCase extends UnitTestCase
         return $this->dataDict->getPortableDeclaration(array('type' => $type, 'name' => 'colname', 'length' => 1, 'fixed' => true));
     }
 
-    protected function openAndBindMysqlConnection()
+    protected function openMysqlAdditionalConnection()
     {
-        $this->dbh = new PDO(getenv('MYSQL_DSN'));
+        $dbh = new PDO(getenv('MYSQL_DSN'));
 
-        $this->conn = $this->connection = $this->openAdditionalConnection($this->dbh);
-
-        $this->exc = new Doctrine_Connection_Mysql_Exception();
-
-        $this->unitOfWork = $this->connection->unitOfWork;
-        $this->connection->setListener(new Doctrine_EventListener());
-        $this->query = new Doctrine_Query($this->connection);
+        return $this->openAdditionalConnection($dbh);
     }
 
     protected function openAdditionalConnection($adapter = null, $name = null)
