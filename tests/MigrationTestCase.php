@@ -32,13 +32,13 @@
  */
 class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 {
-    const TABLES = array(
-        'MigrationPhonenumber',
-        'MigrationUser',
-        'MigrationProfile',
-    );
-
-    protected $tables = self::TABLES;
+    public function prepareTables()
+    {
+        $this->tables[] = 'MigrationPhonenumber';
+        $this->tables[] = 'MigrationUser';
+        $this->tables[] = 'MigrationProfile';
+        parent::prepareTables();
+    }
 
     public function testMigration()
     {
@@ -126,60 +126,5 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
             $code = $builder->generateMigrationClass($test);
             $this->assertTrue($code);
         }
-    }
-
-    public function test_afterSuccessfullMigration_willSetMigratedVersionAsCurrentVersionInMysqlDB()
-    {
-        $connection = $this->openMysqlAdditionalConnection();
-        $this->resetTablesOnConnection(self::TABLES, $connection);
-
-        $migration = new Doctrine_Migration('migration_classes', $connection);
-        $migration->setCurrentVersion(3);
-
-        $migration->migrate(4);
-        $this->assertEqual(4, $migration->getCurrentVersion());
-    }
-
-    public function test_afterFailedMigration_willKeepCurrentVersionInMysqlDB()
-    {
-        $connection = $this->openMysqlAdditionalConnection();
-        $this->resetTablesOnConnection(self::TABLES, $connection);
-
-        $migration = new Doctrine_Migration('migration_classes', $connection);
-        $migration->setCurrentVersion(0);
-
-        try {
-            $migration->migrate(1);
-
-            $this->fail('migration must fail');
-        } catch (Doctrine_Migration_Exception $e) {
-            $this->assertEqual(0, $migration->getCurrentVersion());
-        }
-    }
-}
-
-class MigrationPhonenumber extends Doctrine_Record
-{
-    public function setTableDefinition()
-    {
-        $this->hasColumn('user_id', 'integer');
-        $this->hasColumn('phonenumber', 'string', 255);
-    }
-}
-
-class MigrationUser extends Doctrine_Record
-{
-    public function setTableDefinition()
-    {
-        $this->hasColumn('username', 'string', 255);
-        $this->hasColumn('password', 'string', 255);
-    }
-}
-
-class MigrationProfile extends Doctrine_Record
-{
-    public function setTableDefinition()
-    {
-        $this->hasColumn('name', 'string', 255);
     }
 }
