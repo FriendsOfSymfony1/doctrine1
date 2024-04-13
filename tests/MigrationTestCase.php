@@ -128,11 +128,16 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 
     public function test_afterSuccessfullMigration_willSetMigratedVersionAsCurrentVersionInMysqlDB()
     {
-        $this->openAndBindMysqlConnection();
+        $tables = array(
+            'MigrationPhonenumber',
+            'MigrationUser',
+            'MigrationProfile',
+        );
 
-        parent::prepareTables();
+        $connection = $this->openMysqlAdditionalConnection();
+        $this->resetTablesOnConnection($tables, $connection);
 
-        $migration = new Doctrine_Migration('migration_classes');
+        $migration = new Doctrine_Migration('migration_classes', $connection);
         $migration->setCurrentVersion(3);
 
         $migration->migrate(4);
@@ -141,11 +146,16 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 
     public function test_afterFailedMigration_willKeepCurrentVersionInMysqlDB()
     {
-        $this->openAndBindMysqlConnection();
+        $tables = array(
+            'MigrationPhonenumber',
+            'MigrationUser',
+            'MigrationProfile',
+        );
 
-        parent::prepareTables();
+        $connection = $this->openMysqlAdditionalConnection();
+        $this->resetTablesOnConnection($tables, $connection);
 
-        $migration = new Doctrine_Migration('migration_classes');
+        $migration = new Doctrine_Migration('migration_classes', $connection);
         $migration->setCurrentVersion(0);
 
         try {
