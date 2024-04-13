@@ -32,13 +32,11 @@
  */
 class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables()
-    {
-        $this->tables[] = 'MigrationPhonenumber';
-        $this->tables[] = 'MigrationUser';
-        $this->tables[] = 'MigrationProfile';
-        parent::prepareTables();
-    }
+    protected $tables = array(
+        'MigrationPhonenumber',
+        'MigrationUser',
+        'MigrationProfile',
+    );
 
     public function testMigration()
     {

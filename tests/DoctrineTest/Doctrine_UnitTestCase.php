@@ -229,12 +229,7 @@ class Doctrine_UnitTestCase extends UnitTestCase
             }
         }
 
-        foreach ($this->tables as $table) {
-            try {
-                $this->conn->export->exportClasses(array($table));
-            } catch (Doctrine_Export_Exception $e) {
-            }
-        }
+        $this->conn->export->exportClasses($this->tables);
 
         $this->objTable = $this->connection->getTable('User');
     }
@@ -320,6 +315,12 @@ class Doctrine_UnitTestCase extends UnitTestCase
         $this->dbh = new PDO(getenv('MYSQL_DSN'));
 
         $this->conn = $this->connection = $this->openAdditionalConnection($this->dbh);
+
+        $this->exc = new Doctrine_Connection_Mysql_Exception();
+
+        $this->unitOfWork = $this->connection->unitOfWork;
+        $this->connection->setListener(new Doctrine_EventListener());
+        $this->query = new Doctrine_Query($this->connection);
     }
 
     protected function openAdditionalConnection($adapter = null, $name = null)
