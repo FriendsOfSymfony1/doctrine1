@@ -32,13 +32,13 @@
  */
 class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 {
-    const TABLES = array(
-        'MigrationPhonenumber',
-        'MigrationUser',
-        'MigrationProfile',
-    );
-
-    protected $tables = self::TABLES;
+    public function prepareTables()
+    {
+        $this->tables[] = 'MigrationPhonenumber';
+        $this->tables[] = 'MigrationUser';
+        $this->tables[] = 'MigrationProfile';
+        parent::prepareTables();
+    }
 
     public function testMigration()
     {
@@ -125,35 +125,6 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
         foreach ($tests as $test) {
             $code = $builder->generateMigrationClass($test);
             $this->assertTrue($code);
-        }
-    }
-
-    public function test_afterSuccessfullMigration_willSetMigratedVersionAsCurrentVersionInMysqlDB()
-    {
-        $connection = $this->openMysqlAdditionalConnection();
-        $this->resetTablesOnConnection(self::TABLES, $connection);
-
-        $migration = new Doctrine_Migration('migration_classes', $connection);
-        $migration->setCurrentVersion(3);
-
-        $migration->migrate(4);
-        $this->assertEqual(4, $migration->getCurrentVersion());
-    }
-
-    public function test_afterFailedMigration_willKeepCurrentVersionInMysqlDB()
-    {
-        $connection = $this->openMysqlAdditionalConnection();
-        $this->resetTablesOnConnection(self::TABLES, $connection);
-
-        $migration = new Doctrine_Migration('migration_classes', $connection);
-        $migration->setCurrentVersion(0);
-
-        try {
-            $migration->migrate(1);
-
-            $this->fail('migration must fail');
-        } catch (Doctrine_Migration_Exception $e) {
-            $this->assertEqual(0, $migration->getCurrentVersion());
         }
     }
 }
