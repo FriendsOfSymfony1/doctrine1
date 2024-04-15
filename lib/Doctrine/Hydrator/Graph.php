@@ -311,6 +311,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
                 $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];
                 $fieldName = $table->getFieldName($last);
                 $cache[$key]['fieldName'] = $fieldName;
+                $cache[$key]['isRelation'] = isset($this->_queryComponents[$cache[$key]['dqlAlias']]['relation']);
 
                 if (isset($this->_queryComponents[$cache[$key]['dqlAlias']]['agg_field'][$last])) {
                     $fieldName = $this->_queryComponents[$cache[$key]['dqlAlias']]['agg_field'][$last];
@@ -351,11 +352,19 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
                 $preparedValue = $table->prepareValue($fieldName, $value, $cache[$key]['type']);
             }
 
+
             // Ticket #1380
             // Hydrate aggregates in to the root component as well.
             // So we know that all aggregate values will always be available in the root component
             if ($agg) {
                 $rowData[$this->_rootAlias][$fieldName] = $preparedValue;
+
+                if (!isset($rowData[$dqlAlias])) {
+                    if ($cache[$key]['isRelation'] && $this instanceof Doctrine_Hydrator_ArrayDriver) {
+                        $rowData[$dqlAlias] = array();
+                    }
+                }
+
                 if (isset($rowData[$dqlAlias])) {
                     $rowData[$dqlAlias][$fieldName] = $preparedValue;
                 }
