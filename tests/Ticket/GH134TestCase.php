@@ -56,4 +56,26 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
         $this->doTestWithAllColumnsAliased($hydrateType, $expectedKeys, $expectedRelationKeys);
     }
+
+    public function test_hydrateArray_identifierOfRelations()
+    {
+        $query = Doctrine_Query::create()
+            ->select('u.id, e.address as aliasAddress')
+            ->from('User u')
+            ->innerJoin('u.Email e')
+        ;
+
+        $results = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+        $expected = array (
+            'id' => '4',
+            'aliasAddress' => 'zYne@example.com',
+            'Email' => array (
+                'id' => null,
+                'aliasAddress' => 'zYne@example.com',
+            ),
+        );
+
+        $this->assertEqual($expected, $results[0]);
+    }
 }
