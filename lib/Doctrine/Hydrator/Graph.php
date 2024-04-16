@@ -363,14 +363,14 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             // Hydrate aggregates in to the root component as well.
             // So we know that all aggregate values will always be available in the root component
             if ($agg) {
-                if (!isset($rowData[$dqlAlias])) {
-                    if ($cache[$key]['isRelation'] && $this instanceof Doctrine_Hydrator_ArrayDriver) {
-                        $rowData[$dqlAlias] = array();
-                    }
-                }
-
                 if ($this instanceof Doctrine_Hydrator_ArrayDriver) {
-                    if ($cache[$key]['isIdentifier']) {
+                    if (!isset($rowData[$dqlAlias])) {
+                        if ($cache[$key]['isRelation']) {
+                            $rowData[$dqlAlias] = array();
+                        }
+                    }
+
+                    if ($cache[$key]['isIdentifier'] && !isset($rowData[$dqlAlias][$cache[$key]['columnName']])) {
                         $rowData[$dqlAlias][$cache[$key]['columnName']] = $preparedValue;
                     }
                 }
