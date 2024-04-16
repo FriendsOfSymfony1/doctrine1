@@ -312,6 +312,8 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
                 $fieldName = $table->getFieldName($last);
                 $cache[$key]['fieldName'] = $fieldName;
 
+                $cache[$key]['identifiers'] = (array) $table->getIdentifier();
+
                 $cache[$key]['isRelation'] = isset($this->_queryComponents[$cache[$key]['dqlAlias']]['relation']);
 
                 if (isset($this->_queryComponents[$cache[$key]['dqlAlias']]['agg'][$fieldName])) {

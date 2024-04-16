@@ -104,6 +104,10 @@ class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_Graph
         if (!isset($rowData[$dqlAlias])) {
             if ($cache['isRelation']) {
                 $rowData[$dqlAlias] = array();
+
+                foreach ($cache['identifiers'] as $identifierField) {
+                    $rowData[$dqlAlias][$identifierField] = null;
+                }
             }
         }
 
