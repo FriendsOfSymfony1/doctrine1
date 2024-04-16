@@ -2,7 +2,7 @@
 
 class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 {
-    private function doTestWithAllColumnsAliased($hydrateType, $expectedKeys)
+    private function doTestWithAllColumnsAliased($hydrateType, $expectedKeys, $expectedRelationKeys = null)
     {
         try {
             $query = Doctrine_Query::create()
@@ -17,6 +17,11 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
             $this->assertEqual($expectedSql, $query->getSqlQuery());
             $this->assertEqual($expectedKeys, array_keys($results[0]));
+            if (null !== $expectedRelationKeys) {
+                foreach ($expectedRelationKeys as $relationName => $relationKeys) {
+                    $this->assertEqual($relationKeys, array_keys($results[0][$relationName]));
+                }
+            }
             $this->assertEqual(count($this->users), count($results));
 
             $this->pass();
@@ -45,7 +50,10 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
     {
         $hydrateType = Doctrine_Core::HYDRATE_ARRAY;
         $expectedKeys = array('id', 'aliasAddress', 'Email');
+        $expectedRelationKeys = array(
+            'Email' => array('id', 'aliasAddress'),
+        );
 
-        $this->doTestWithAllColumnsAliased($hydrateType, $expectedKeys);
+        $this->doTestWithAllColumnsAliased($hydrateType, $expectedKeys, $expectedRelationKeys);
     }
 }
