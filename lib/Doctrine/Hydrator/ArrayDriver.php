@@ -110,7 +110,7 @@ class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_Graph
         return $rowData;
     }
 
-    private function addIdentifierColumnToRowData($cache, $rowData, $dqlAlias, $value)
+    private function addIdentifierColumnToRowData($rowData, $cache, $dqlAlias, $value)
     {
         if ($cache['isIdentifier'] && !isset($rowData[$dqlAlias][$cache['columnName']])) {
             $rowData[$dqlAlias][$cache['columnName']] = $value;
