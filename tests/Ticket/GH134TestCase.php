@@ -67,6 +67,10 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
         $results = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
+        $expectedSql = 'SELECT e.id AS e__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)';
+
+        $this->assertEqual($expectedSql, $query->getSqlQuery());
+
         $expected = array (
             'id' => '4',
             'aliasAddress' => 'zYne@example.com',
@@ -89,13 +93,13 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
         $results = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY_SHALLOW);
 
+        $expectedSql = 'SELECT e.id AS e__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)';
+
+        $this->assertEqual($expectedSql, $query->getSqlQuery());
+
         $expected = array (
             'id' => '4',
             'aliasAddress' => 'zYne@example.com',
-            'Email' => array (
-                'id' => 1,
-                'aliasAddress' => 'zYne@example.com',
-            ),
         );
 
         $this->assertEqual($expected, $results[0]);
@@ -111,13 +115,13 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
         $results = $query->execute(array(), Doctrine_Core::HYDRATE_SCALAR);
 
+        $expectedSql = 'SELECT e.id AS e__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)';
+
+        $this->assertEqual($expectedSql, $query->getSqlQuery());
+
         $expected = array (
-            'id' => '4',
-            'aliasAddress' => 'zYne@example.com',
-            'Email' => array (
-                'id' => 1,
-                'aliasAddress' => 'zYne@example.com',
-            ),
+            'u_id' => '4',
+            'e_aliasAddress' => 'zYne@example.com',
         );
 
         $this->assertEqual($expected, $results[0]);
