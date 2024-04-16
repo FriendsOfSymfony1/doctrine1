@@ -363,17 +363,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
             // Hydrate aggregates in to the root component as well.
             // So we know that all aggregate values will always be available in the root component
             if ($agg) {
-                if ($this instanceof Doctrine_Hydrator_ArrayDriver) {
-                    if (!isset($rowData[$dqlAlias])) {
-                        if ($cache[$key]['isRelation']) {
-                            $rowData[$dqlAlias] = array();
-                        }
-                    }
-
-                    if ($cache[$key]['isIdentifier'] && !isset($rowData[$dqlAlias][$cache[$key]['columnName']])) {
-                        $rowData[$dqlAlias][$cache[$key]['columnName']] = $preparedValue;
-                    }
-                }
+                $rowData = $this->beforeAddingAggregateValue($rowData, $cache[$key], $dqlAlias, $preparedValue);
 
                 $rowData[$this->_rootAlias][$fieldName] = $preparedValue;
 
@@ -386,6 +376,23 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
 
             if ( ! isset($nonemptyComponents[$dqlAlias]) && $value !== null) {
                 $nonemptyComponents[$dqlAlias] = true;
+            }
+        }
+
+        return $rowData;
+    }
+
+    protected function beforeAddingAggregateValue($rowData, $cache, $dqlAlias, $value)
+    {
+        if ($this instanceof Doctrine_Hydrator_ArrayDriver) {
+            if (!isset($rowData[$dqlAlias])) {
+                if ($cache['isRelation']) {
+                    $rowData[$dqlAlias] = array();
+                }
+            }
+
+            if ($cache['isIdentifier'] && !isset($rowData[$dqlAlias][$cache['columnName']])) {
+                $rowData[$dqlAlias][$cache['columnName']] = $value;
             }
         }
 
