@@ -384,18 +384,6 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
 
     protected function beforeAddingAggregateValue($rowData, $cache, $dqlAlias, $value)
     {
-        if ($this instanceof Doctrine_Hydrator_ArrayDriver) {
-            if (!isset($rowData[$dqlAlias])) {
-                if ($cache['isRelation']) {
-                    $rowData[$dqlAlias] = array();
-                }
-            }
-
-            if ($cache['isIdentifier'] && !isset($rowData[$dqlAlias][$cache['columnName']])) {
-                $rowData[$dqlAlias][$cache['columnName']] = $value;
-            }
-        }
-
         return $rowData;
     }
 

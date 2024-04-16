@@ -89,4 +89,19 @@ class Doctrine_Hydrator_ArrayDriver extends Doctrine_Hydrator_Graph
             }
         }
     }
+
+    protected function beforeAddingAggregateValue($rowData, $cache, $dqlAlias, $value)
+    {
+        if (!isset($rowData[$dqlAlias])) {
+            if ($cache['isRelation']) {
+                $rowData[$dqlAlias] = array();
+            }
+        }
+
+        if ($cache['isIdentifier'] && !isset($rowData[$dqlAlias][$cache['columnName']])) {
+            $rowData[$dqlAlias][$cache['columnName']] = $value;
+        }
+
+        return $rowData;
+    }
 }
