@@ -71,7 +71,51 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
             'id' => '4',
             'aliasAddress' => 'zYne@example.com',
             'Email' => array (
-                'id' => null,
+                'id' => 1,
+                'aliasAddress' => 'zYne@example.com',
+            ),
+        );
+
+        $this->assertEqual($expected, $results[0]);
+    }
+
+    public function test_hydrateArrayShallow_identifierOfRelations()
+    {
+        $query = Doctrine_Query::create()
+            ->select('u.id, e.address as aliasAddress')
+            ->from('User u')
+            ->innerJoin('u.Email e')
+        ;
+
+        $results = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY_SHALLOW);
+
+        $expected = array (
+            'id' => '4',
+            'aliasAddress' => 'zYne@example.com',
+            'Email' => array (
+                'id' => 1,
+                'aliasAddress' => 'zYne@example.com',
+            ),
+        );
+
+        $this->assertEqual($expected, $results[0]);
+    }
+
+    public function test_hydrateScalar_identifierOfRelations()
+    {
+        $query = Doctrine_Query::create()
+            ->select('u.id, e.address as aliasAddress')
+            ->from('User u')
+            ->innerJoin('u.Email e')
+        ;
+
+        $results = $query->execute(array(), Doctrine_Core::HYDRATE_SCALAR);
+
+        $expected = array (
+            'id' => '4',
+            'aliasAddress' => 'zYne@example.com',
+            'Email' => array (
+                'id' => 1,
                 'aliasAddress' => 'zYne@example.com',
             ),
         );
