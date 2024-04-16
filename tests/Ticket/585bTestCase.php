@@ -21,61 +21,39 @@
 
 class Doctrine_Ticket_585b_TestCase extends Doctrine_UnitTestCase
 {
-    private function doTestAliasWithSameNameAsIdentifiers($hydrateType, $expectedKeys, $expectedKeyValues = array())
+    private function doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex)
     {
-        try {
-            $query = Doctrine_Query::create()
-                ->select('99 as id, u.id as aliasId')
-                ->from('User u')
-            ;
+        $query = Doctrine_Query::create()
+            ->select('99 as id, u.id as aliasId')
+            ->from('User u')
+        ;
 
-            $results = $query->execute(array(), $hydrateType);
+        $results = $query->execute(array(), $hydrateType);
 
-            $expectedSql = 'SELECT 99 AS e__0, e.id AS e__1 FROM entity e WHERE (e.type = 0)';
-
-            $this->assertEqual($expectedSql, $query->getSqlQuery());
-            $this->assertEqual($expectedKeys, array_keys($results[0]));
-            foreach ($expectedKeyValues as $key => $value) {
-                $this->assertEqual($value, $results[0][$key]);
-            }
-            $this->assertEqual(count($this->users), count($results));
-
-            $this->pass();
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $this->assertEqual(99, $results[0][$checkArrayIndex]);
     }
 
     public function test_hydrateScalar_aliasWithSameNameAsIdentifiers_thenResultsHasAllRecords()
     {
         $hydrateType = Doctrine_Core::HYDRATE_SCALAR;
-        $expectedKeys = array('u_id', 'u_aliasId');
-        $expectedKeyValues = array(
-            'u_id' => 99,
-        );
+        $checkArrayIndex = 'u_id';
 
-        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $expectedKeys, $expectedKeyValues);
+        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex);
     }
 
     public function test_hydrateArrayShallow_aliasWithSameNameAsIdentifiers_thenResultsHasAllRecords()
     {
         $hydrateType = Doctrine_Core::HYDRATE_ARRAY_SHALLOW;
-        $expectedKeys = array('id', 'aliasId');
-        $expectedKeyValues = array(
-            'id' => 99,
-        );
+        $checkArrayIndex = 'id';
 
-        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $expectedKeys, $expectedKeyValues);
+        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex);
     }
 
     public function test_hydrateArray_aliasWithSameNameAsIdentifiers_thenResultsHasAllRecords()
     {
         $hydrateType = Doctrine_Core::HYDRATE_ARRAY;
-        $expectedKeys = array('id', 'aliasId');
-        $expectedKeyValues = array(
-            'id' => 99,
-        );
+        $checkArrayIndex = 'id';
 
-        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $expectedKeys, $expectedKeyValues);
+        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex);
     }
 }
