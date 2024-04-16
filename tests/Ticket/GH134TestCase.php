@@ -74,4 +74,40 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual($expected, $results[0]);
         $this->assertEqual(count($this->users), count($results));
     }
+
+    private function doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex)
+    {
+        $query = Doctrine_Query::create()
+            ->select('99 as id, u.id as aliasId')
+            ->from('User u')
+        ;
+
+        $results = $query->execute(array(), $hydrateType);
+
+        $this->assertEqual(99, $results[0][$checkArrayIndex]);
+    }
+
+    public function test_hydrateScalar_aliasWithSameNameAsIdentifiers_willKeepOverwriteIdentifierByAlias()
+    {
+        $hydrateType = Doctrine_Core::HYDRATE_SCALAR;
+        $checkArrayIndex = 'u_id';
+
+        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex);
+    }
+
+    public function test_hydrateArrayShallow_aliasWithSameNameAsIdentifiers_willKeepOverwriteIdentifierByAlias()
+    {
+        $hydrateType = Doctrine_Core::HYDRATE_ARRAY_SHALLOW;
+        $checkArrayIndex = 'id';
+
+        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex);
+    }
+
+    public function test_hydrateArray_aliasWithSameNameAsIdentifiers_willKeepOverwriteIdentifierByAlias()
+    {
+        $hydrateType = Doctrine_Core::HYDRATE_ARRAY;
+        $checkArrayIndex = 'id';
+
+        $this->doTestAliasWithSameNameAsIdentifiers($hydrateType, $checkArrayIndex);
+    }
 }
