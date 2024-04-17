@@ -647,6 +647,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 $this->_expressionMap[$alias][0] = $expression;
 
                 $this->_queryComponents[$componentAlias]['agg'][$index] = $alias;
+                $this->_queryComponents[$componentAlias]['has_selected_column'] ??= false;
+                $this->_queryComponents[$componentAlias]['has_selected_column'] |= $pos === false;
 
                 if (preg_match('/^([^\(]+)\.(\'?)(.*?)(\'?)$/', $expression, $field)) {
                     $this->_queryComponents[$componentAlias]['agg_field'][$index] = $field[3];
@@ -682,7 +684,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
         if ($shouldSelectRelationIdentifier) {
             foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
-                if (isset($queryComponent['relation']) && isset($queryComponent['agg'])) {
+                if (
+                    isset($queryComponent['relation'])
+                    && isset($queryComponent['agg'])
+                    && !empty($queryComponent['has_selected_column'])
+                ) {
                     $table = $queryComponent['table'];
 
                     foreach ((array) $table->getIdentifier() as $field) {
