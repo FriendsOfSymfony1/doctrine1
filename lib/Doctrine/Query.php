@@ -480,7 +480,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         }
 
         $sql = array();
-        foreach ($fields as $fieldName) {
+        foreach ($fields as $fieldAlias => $fieldName) {
             $columnName = $table->getColumnName($fieldName);
             if (($owner = $table->getColumnOwner($columnName)) !== null &&
                     $owner !== $table->getComponentName()) {
@@ -492,10 +492,17 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                        . ' AS '
                        . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
             } else {
-                $columnName = $table->getColumnName($fieldName);
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-585
+                // Take the field alias if available
+                if (isset($this->_aggregateAliasMap[$fieldAlias])) {
+                    $aliasSql = $this->_aggregateAliasMap[$fieldAlias];
+                } else {
+                    $columnName = $table->getColumnName($fieldName);
+                    $aliasSql = $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
+                }
                 $sql[] = $this->_conn->quoteIdentifier($tableAlias) . '.' . $this->_conn->quoteIdentifier($columnName)
                        . ' AS '
-                       . $this->_conn->quoteIdentifier($tableAlias . '__' . $columnName);
+                       . $aliasSql;
             }
         }
 
@@ -648,11 +655,14 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
                 $this->_queryComponents[$componentAlias]['agg'][$index] = $alias;
 
+                $this->_neededTables[] = $tableAlias;
+
+                // Fix for http://www.doctrine-project.org/jira/browse/DC-585
+                // Add selected columns to pending fields
                 if (preg_match('/^([^\(]+)\.(\'?)(.*?)(\'?)$/', $expression, $field)) {
-                    $this->_queryComponents[$componentAlias]['agg_field'][$index] = $field[3];
+                    $this->_pendingFields[$componentAlias][$alias] = $field[3];
                 }
 
-                $this->_neededTables[] = $tableAlias;
             } else {
                 $e = explode('.', $terms[0]);
 
@@ -666,29 +676,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 }
 
                 $this->_pendingFields[$componentAlias][] = $field;
-            }
-        }
-
-        $this->appendRelationIdentifierOnSqlSelect();
-    }
-
-    private function appendRelationIdentifierOnSqlSelect()
-    {
-        $shouldSelectRelationIdentifier = in_array($this->_hydrator->getHydrationMode(), [
-            Doctrine_Core::HYDRATE_ARRAY,
-            Doctrine_Core::HYDRATE_RECORD,
-            Doctrine_Core::HYDRATE_ON_DEMAND,
-        ], true);
-
-        if ($shouldSelectRelationIdentifier) {
-            foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
-                if (isset($queryComponent['relation']) && isset($queryComponent['agg'])) {
-                    $table = $queryComponent['table'];
-
-                    foreach ((array) $table->getIdentifier() as $field) {
-                        $this->_pendingFields[$componentAlias][] = $field;
-                    }
-                }
             }
         }
     }
