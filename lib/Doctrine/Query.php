@@ -615,6 +615,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
             $terms = $this->_tokenizer->sqlExplode($reference, ' ');
             $pos   = strpos($terms[0], '(');
+            $isColumnSelect = $pos === false;
 
             if (count($terms) > 1 || $pos !== false) {
                 $expression = array_shift($terms);
@@ -648,7 +649,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
                 $this->_queryComponents[$componentAlias]['agg'][$index] = $alias;
                 $this->_queryComponents[$componentAlias]['has_selected_column'] ??= false;
-                $this->_queryComponents[$componentAlias]['has_selected_column'] |= $pos === false;
+                $this->_queryComponents[$componentAlias]['has_selected_column'] |= $isColumnSelect;
 
                 if (preg_match('/^([^\(]+)\.(\'?)(.*?)(\'?)$/', $expression, $field)) {
                     $this->_queryComponents[$componentAlias]['agg_field'][$index] = $field[3];
