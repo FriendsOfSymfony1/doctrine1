@@ -206,6 +206,16 @@ abstract class Doctrine_Query_Abstract
      *
      *          map                 the name of the column / aggregate value this
      *                              component is mapped to a collection
+     *
+     *          agg_field     the field names for each aggregates
+     *                              Example:
+     *                                  DQL: COMPONENT.FIELD as ALIAS
+     *                                  SQL: TABLE.COLUMN as TABLE__0
+     *                                  $_queryComponents
+     *                                      agg:
+     *                                          0: ALIAS
+     *                                      agg_field:
+     *                                          0: FIELD
      */
     protected $_queryComponents = array();
 
@@ -1259,6 +1269,9 @@ abstract class Doctrine_Query_Abstract
             if (isset($components['agg'])) {
                 $queryComponents[$alias]['agg'] = $components['agg'];
             }
+            if (isset($components['agg_field'])) {
+                $queryComponents[$alias]['agg_field'] = $components['agg_field'];
+            }
             if (isset($components['map'])) {
                 $queryComponents[$alias]['map'] = $components['map'];
             }
@@ -1288,6 +1301,9 @@ abstract class Doctrine_Query_Abstract
             }
             if (isset($components['agg'])) {
                 $componentInfo[$alias]['agg'] = $components['agg'];
+            }
+            if (isset($components['agg_field'])) {
+                $componentInfo[$alias]['agg_field'] = $components['agg_field'];
             }
             if (isset($components['map'])) {
                 $componentInfo[$alias]['map'] = $components['map'];
