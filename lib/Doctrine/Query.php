@@ -470,11 +470,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         if (in_array('*', $fields)) {
             $fields = $table->getFieldNames();
         } else {
-            $driverClassName = $this->_hydrator->getHydratorDriverClassName();
-            // only auto-add the primary key fields if this query object is not
-            // a subquery of another query object or we're using a child of the Object Graph
-            // hydrator
-            if ( ! $this->_isSubquery && is_subclass_of($driverClassName, 'Doctrine_Hydrator_Graph')) {
+            if ($this->shouldAutoSelectIdentifiers()) {
                 $fields = array_unique(array_merge((array) $table->getIdentifier(), $fields));
             }
         }
@@ -502,6 +498,18 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $this->_neededTables[] = $tableAlias;
 
         return implode(', ', $sql);
+    }
+
+    /*
+     * only auto-add the primary key fields if this query object is not
+     * a subquery of another query object or we're using
+     * a child of the Object Graph hydrator
+     */
+    private function shouldAutoSelectIdentifiers()
+    {
+        $driverClassName = $this->_hydrator->getHydratorDriverClassName();
+
+        return ! $this->_isSubquery && is_subclass_of($driverClassName, 'Doctrine_Hydrator_Graph');
     }
 
     /**
@@ -677,15 +685,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
     private function appendRelationIdentifierOnSqlSelect()
     {
-        $shouldSelectRelationIdentifier = in_array($this->_hydrator->getHydrationMode(), [
-            Doctrine_Core::HYDRATE_ARRAY,
-            Doctrine_Core::HYDRATE_ARRAY_HIERARCHY,
-            Doctrine_Core::HYDRATE_RECORD,
-            Doctrine_Core::HYDRATE_RECORD_HIERARCHY,
-            Doctrine_Core::HYDRATE_ON_DEMAND,
-        ], true);
-
-        if ($shouldSelectRelationIdentifier) {
+        if ($this->shouldAutoSelectIdentifiers()) {
             foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
                 if (
                     isset($queryComponent['relation'])
