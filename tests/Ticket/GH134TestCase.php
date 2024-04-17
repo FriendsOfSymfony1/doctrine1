@@ -15,9 +15,13 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
             $this->assertEqual($expectedSql, $query->getSqlQuery());
 
-            $firstResult = $results[0];
+            foreach ($results as $firstResult) {
+                break;
+            }
 
-            if (Doctrine_Core::HYDRATE_RECORD === $hydrateType) {
+            if (Doctrine_Core::HYDRATE_RECORD === $hydrateType
+                || Doctrine_Core::HYDRATE_ON_DEMAND === $hydrateType
+            ) {
                 $firstResult = $firstResult->toArray();
 
                 $firstResult = array_intersect_key($firstResult, $expectedFirstResult);
@@ -32,7 +36,10 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
             }
 
             $this->assertEqual($expectedFirstResult, $firstResult);
-            $this->assertEqual(count($this->users), count($results));
+
+            if (Doctrine_Core::HYDRATE_ON_DEMAND !== $hydrateType) {
+                $this->assertEqual(count($this->users), count($results));
+            }
         }
     }
 
@@ -71,6 +78,19 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
         yield [
             Doctrine_Core::HYDRATE_RECORD,
+            'SELECT e.id AS e__id, e2.id AS e2__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
+            array (
+                'id' => '4',
+                'aliasAddress' => 'zYne@example.com',
+                'Email' => array (
+                    'id' => 1,
+                    'aliasAddress' => 'zYne@example.com',
+                ),
+            ),
+        ];
+
+        yield [
+            Doctrine_Core::HYDRATE_ON_DEMAND,
             'SELECT e.id AS e__id, e2.id AS e2__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
             array (
                 'id' => '4',
