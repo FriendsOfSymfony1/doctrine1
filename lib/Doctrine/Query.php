@@ -674,18 +674,12 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
     private function appendRelationIdentifierOnSqlSelect()
     {
-        if (Doctrine_Core::HYDRATE_ARRAY === $this->_hydrator->getHydrationMode()) {
-            foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
-                if (isset($queryComponent['relation']) && isset($queryComponent['agg'])) {
-                    $table = $queryComponent['table'];
+        $shouldSelectRelationIdentifier = in_array($this->_hydrator->getHydrationMode(), [
+            Doctrine_Core::HYDRATE_ARRAY,
+            Doctrine_Core::HYDRATE_RECORD,
+        ], true);
 
-                    foreach ((array) $table->getIdentifier() as $field) {
-                        $this->_pendingFields[$componentAlias][] = $field;
-                    }
-                }
-            }
-        }
-        if (Doctrine_Core::HYDRATE_RECORD === $this->_hydrator->getHydrationMode()) {
+        if ($shouldSelectRelationIdentifier) {
             foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
                 if (isset($queryComponent['relation']) && isset($queryComponent['agg'])) {
                     $table = $queryComponent['table'];
