@@ -668,6 +668,18 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 $this->_pendingFields[$componentAlias][] = $field;
             }
         }
+
+        if (Doctrine_Core::HYDRATE_ARRAY === $this->_hydrator->getHydrationMode()) {
+            foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
+                if (isset($queryComponent['relation']) && isset($queryComponent['agg'])) {
+                    $table = $queryComponent['table'];
+
+                    foreach ((array) $table->getIdentifier() as $field) {
+                        $this->_pendingFields[$componentAlias][] = $field;
+                    }
+                }
+            }
+        }
     }
 
     /**
