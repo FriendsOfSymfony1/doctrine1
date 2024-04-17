@@ -91,7 +91,7 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 
         yield [
             Doctrine_Core::HYDRATE_ON_DEMAND,
-            'SELECT e.id AS e__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
+            'SELECT e.id AS e__id, e2.id AS e2__id, e2.address AS e2__0 FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
             array (
                 'id' => '4',
                 'aliasAddress' => 'zYne@example.com',
