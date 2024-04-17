@@ -24,9 +24,11 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
                 ksort($firstResult);
                 ksort($expectedFirstResult);
 
-                $firstResult['Email'] = array_intersect_key($firstResult['Email'], $expectedFirstResult['Email']);
-                ksort($firstResult['Email']);
-                ksort($expectedFirstResult['Email']);
+                if (isset($firstResult['Email'])) {
+                    $firstResult['Email'] = array_intersect_key($firstResult['Email'], $expectedFirstResult['Email']);
+                    ksort($firstResult['Email']);
+                    ksort($expectedFirstResult['Email']);
+                }
             }
 
             $this->assertEqual($expectedFirstResult, $firstResult);
