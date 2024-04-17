@@ -2,7 +2,7 @@
 
 class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 {
-    public function test_identifierAndRelation()
+    public function test_addIdentifierForSelectedRelation_withAliases()
     {
         foreach ($this->provideIdentifierAndRelationData() as [$hydrateType, $expectedSql, $expectedFirstResult]) {
             $query = Doctrine_Query::create()
@@ -50,6 +50,57 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
             array (
                 'u_id' => '4',
                 'e_aliasAddress' => 'zYne@example.com',
+            ),
+        ];
+    }
+
+    public function test_addIdentifierForSelectedRelation_withoutAlias()
+    {
+        foreach ($this->provideIdentifierAndRelationWithoutAliasData() as [$hydrateType, $expectedSql, $expectedFirstResult]) {
+            $query = Doctrine_Query::create()
+                ->select('u.id, e.address')
+                ->from('User u')
+                ->innerJoin('u.Email e')
+            ;
+
+            $results = $query->execute(array(), $hydrateType);
+
+            $this->assertEqual($expectedSql, $query->getSqlQuery());
+
+            $this->assertEqual($expectedFirstResult, $results[0]);
+            $this->assertEqual(count($this->users), count($results));
+        }
+    }
+
+    private function provideIdentifierAndRelationWithoutAliasData()
+    {
+        yield [
+            Doctrine_Core::HYDRATE_ARRAY,
+            'SELECT e.id AS e__id, e2.id AS e2__id, e2.address AS e2__address FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
+            array (
+                'id' => '4',
+                'Email' => array (
+                    'id' => 1,
+                    'address' => 'zYne@example.com',
+                ),
+            ),
+        ];
+
+        yield [
+            Doctrine_Core::HYDRATE_ARRAY_SHALLOW,
+            'SELECT e.id AS e__id, e2.address AS e2__address FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
+            array (
+                'id' => '4',
+                'address' => 'zYne@example.com',
+            ),
+        ];
+
+        yield [
+            Doctrine_Core::HYDRATE_SCALAR,
+            'SELECT e.id AS e__id, e2.address AS e2__address FROM entity e INNER JOIN email e2 ON e.email_id = e2.id WHERE (e.type = 0)',
+            array (
+                'u_id' => '4',
+                'e_address' => 'zYne@example.com',
             ),
         ];
     }
