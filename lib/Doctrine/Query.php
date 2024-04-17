@@ -677,7 +677,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $shouldSelectRelationIdentifier = in_array($this->_hydrator->getHydrationMode(), [
             Doctrine_Core::HYDRATE_ARRAY,
             Doctrine_Core::HYDRATE_RECORD,
-            Doctrine_Core::HYDRATE_ON_DEMAND,
         ], true);
 
         if ($shouldSelectRelationIdentifier) {
