@@ -4,7 +4,7 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
 {
     public function test_addIdentifierForSelectedRelation_withAliases()
     {
-        foreach ($this->provideIdentifierAndRelationData() as [$hydrateType, $expectedSql, $expectedFirstResult]) {
+        foreach ($this->provideIdentifierAndRelationWithAliasData() as [$hydrateType, $expectedSql, $expectedFirstResult]) {
             $query = Doctrine_Query::create()
                 ->select('u.id, e.address as aliasAddress')
                 ->from('User u')
@@ -20,7 +20,7 @@ class Doctrine_Ticket_GH134_TestCase extends Doctrine_UnitTestCase
         }
     }
 
-    private function provideIdentifierAndRelationData()
+    private function provideIdentifierAndRelationWithAliasData()
     {
         yield [
             Doctrine_Core::HYDRATE_ARRAY,
