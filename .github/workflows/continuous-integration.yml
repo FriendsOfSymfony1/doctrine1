@@ -72,5 +72,5 @@ jobs:
 
       - name: Run Tests
         env:
-          MYSQL_DSN: 'mysql:host=127.0.0.1;dbname=test;user=root;pass=testrootpass'
+          MYSQL_DSN: 'mysql:host=127.0.0.1;dbname=test;user=root;password=testrootpass'
         run: cd tests && php run.php
