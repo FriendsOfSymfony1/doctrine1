@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase
 {
     public $tables =   array('Entity',
                       'EntityReference',
@@ -52,11 +52,18 @@ class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase
                       'Assignment',
                       'ResourceType',
                       'ResourceReference');
-    
+
     public function testYmlExport()
     {
         $export = new Doctrine_Export_Schema();
-        $export->exportSchema('schema-export.yml', 'yml', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'models', $this->tables);
-        unlink('schema-export.yml');
+        $file = null;
+        try {
+            $file = $this->createTempFile('schema-export', 'yml');
+            $export->exportSchema($file, 'yml', __DIR__ . '/../models', $this->tables);
+            $this->pass();
+        } catch (\Exception $exception) {
+            $this->fail($exception->getMessage());
+        }
+        $this->removeTempFile($file);
     }
 }

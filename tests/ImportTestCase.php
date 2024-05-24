@@ -30,11 +30,11 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Import_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Import_TestCase extends Doctrine_UnitTestCase
 {
-    public function prepareTables() 
+    public function prepareTables()
     { }
-    public function prepareData() 
+    public function prepareData()
     { }
 
     public function testImport()
@@ -45,10 +45,11 @@ class Doctrine_Import_TestCase extends Doctrine_UnitTestCase
 
         $this->conn = Doctrine_Manager::connection($this->dbh, 'tmp123');
 
-        $this->conn->import->importSchema('Import/_files', array('tmp123'));
+        $tmpDirectory = $this->createTempDirname('import-test');
+        $this->conn->import->importSchema($tmpDirectory, array('tmp123'));
 
-        $this->assertTrue(file_exists('Import/_files/ImportTestUser.php'));
-        $this->assertTrue(file_exists('Import/_files/generated/BaseImportTestUser.php'));
-        Doctrine_Lib::removeDirectories('Import/_files');
+        $this->assertTrue(file_exists($tmpDirectory.'/ImportTestUser.php'));
+        $this->assertTrue(file_exists($tmpDirectory.'/generated/BaseImportTestUser.php'));
+        Doctrine_Lib::removeDirectories($tmpDirectory);
     }
 }

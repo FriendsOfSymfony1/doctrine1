@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_2355_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_2355_TestCase extends Doctrine_UnitTestCase
 {
     public function setUp()
     {
@@ -81,9 +81,11 @@ Episode:
     Directors: [david_nutter]
     Writers: [alfred_gough, miles_millar]
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('case2355', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -117,7 +119,7 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 }
 
@@ -163,7 +165,7 @@ class Episode extends Doctrine_Record
 
 
         $this->index('episode', array(
-             'fields' => 
+             'fields' =>
              array(
               0 => 'season',
               1 => 'number',

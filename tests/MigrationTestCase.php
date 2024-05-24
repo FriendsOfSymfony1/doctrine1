@@ -42,7 +42,7 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 
     public function testMigration()
     {
-        $migration = new Doctrine_Migration('migration_classes');
+        $migration = new Doctrine_Migration(__DIR__.'/migration_classes');
         $this->assertFalse($migration->hasMigrated());
         $migration->setCurrentVersion(3);
         $migration->migrate(0);
@@ -89,7 +89,7 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
 
     public function testMigrateClearsErrors()
     {
-        $migration = new Doctrine_Migration('migration_classes');
+        $migration = new Doctrine_Migration(__DIR__.'/migration_classes');
         $migration->setCurrentVersion(3);
         try {
             $migration->migrate(3);

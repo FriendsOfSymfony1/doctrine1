@@ -1,10 +1,9 @@
 <?php
 class UnitTestCase
 {
+    protected $_testCases = array();
     protected $_passed = 0;
-    
     protected $_failed = 0;
-    
     protected $_messages = array();
 
     protected static $_passesAndFails = array('passes' => array(), 'fails' => array());
@@ -115,7 +114,7 @@ class UnitTestCase
         }
     }
 
-    public function pass() 
+    public function pass()
     {
         $class = get_class($this);
         if ( ! isset(self::$_passesAndFails['fails'][$class])) {
@@ -126,7 +125,7 @@ class UnitTestCase
 
     public function fail($message = "")
     {
-        $this->_fail($message);    
+        $this->_fail($message);
     }
 
     public function _fail($message = "")
@@ -166,7 +165,7 @@ class UnitTestCase
         }
     }
 
-    public function getMessages() 
+    public function getMessages()
     {
         return $this->_messages;
     }
@@ -183,13 +182,15 @@ class UnitTestCase
 
     public function getPassesAndFailsCachePath()
     {
-        $dir = dirname(__FILE__) . '/doctrine_tests';
+
+        $dir = '/tmp/doctrine_tests';
         if ( ! is_dir($dir)) {
-            mkdir($dir, 0777, true);
+            if (!mkdir($dir, 0777, true) && !is_dir($dir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            }
         }
 
-        $path = $dir . '/' . md5(serialize(array_keys($this->_testCases)));
-        return $path;
+        return $dir . '/' . md5(serialize(array_keys($this->_testCases)));
     }
 
     public function cachePassesAndFails()

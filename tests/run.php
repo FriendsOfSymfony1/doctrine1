@@ -1,7 +1,5 @@
 <?php
 
-$_SERVER['DOCTRINE_DIR'] = realpath(dirname(__FILE__).'/../');
-
 require 'bootstrap.php';
 
 $excludeTickets = array(

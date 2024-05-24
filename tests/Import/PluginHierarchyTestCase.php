@@ -53,13 +53,14 @@ WikiTest:
     title: string(255)
     content: string
 END;
-        
-        file_put_contents('wiki.yml', $yml);
-        $path = dirname(__FILE__) . '/tmp/import_builder_test';
+
+        $file = $this->createTempFile('wiki', 'yml');
+        file_put_contents($file, $yml);
+        $path = $this->createTempDirName('import-builder');
 
         $import = new Doctrine_Import_Schema();
         $import->setOption('generateTableClasses', true);
-        $import->importSchema('wiki.yml', 'yml', $path);
+        $import->importSchema($file, 'yml', $path);
 
         // check that the plugin hierarchy will produce the right sql statements
         // this is almost an end-to-end testing :-)
@@ -75,12 +76,12 @@ END;
             3 => 'CREATE TABLE wiki_test (id INTEGER PRIMARY KEY AUTOINCREMENT)',
             4 => 'CREATE UNIQUE INDEX wiki_test_translation_sluggable_idx ON wiki_test_translation (slug)',
         );
-            
+
         foreach($sql as $idx => $req) {
             $this->assertEqual($req, $result[$idx]);
-        }        
-        
+        }
+
         Doctrine_Lib::removeDirectories($path);
-        unlink('wiki.yml');
+        $this->removeTempFile($file);
     }
 }

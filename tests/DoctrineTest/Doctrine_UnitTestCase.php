@@ -48,6 +48,7 @@ class Doctrine_UnitTestCase extends UnitTestCase
     protected $generic = false;
     protected $conn;
     protected $adapter;
+    /** @var Doctrine_Export */
     protected $export;
     protected $expr;
     protected $dataDict;
@@ -320,5 +321,37 @@ class Doctrine_UnitTestCase extends UnitTestCase
         foreach ($this->additionalConnections as $connection) {
             $this->manager->closeConnection($connection);
         }
+    }
+
+    protected function removeTempFile(?string $file): void
+    {
+        if (!$file) {
+            return;
+        }
+
+        unlink($file);
+    }
+
+    protected function createTempDirName(string $prefix): string
+    {
+        return  '/tmp/test-'.$prefix.random_int(0, 12346);
+    }
+
+    protected function createTempFile(string $prefix, string $extension, string $dirname = null): string
+    {
+        $file = tempnam('/tmp', $prefix);
+        if (false === $file) {
+            throw new \RuntimeException('Unable to create temporary file for:'.$prefix);
+        }
+
+        if ($dirname) {
+            $filename = $dirname.'/'.basename($file).'.'.$extension;
+        } else {
+            $filename = $file.'.'.$extension;
+        }
+
+        rename($file, $filename);
+
+        return $filename;
     }
 }

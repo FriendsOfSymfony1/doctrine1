@@ -29,12 +29,12 @@
  * @since       1.1
  * @version     $Revision$
  */
-class Doctrine_Ticket_1617_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1617_TestCase extends Doctrine_UnitTestCase
 {
     public function testBuildSchema()
     {
         $import = new Doctrine_Import_Schema();
-        $array = $import->buildSchema('Ticket/1617_schema.yml', 'yml');
+        $array = $import->buildSchema(__DIR__.'/1617_schema.yml', 'yml');
 
         $this->assertEqual($array['term']['columns']['language']['name'], 'lang as language');
     }

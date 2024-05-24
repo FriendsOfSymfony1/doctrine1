@@ -10,13 +10,11 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('max_execution_time', 900);
 ini_set('date.timezone', 'GMT+0');
 
-define('DOCTRINE_DIR', $_SERVER['DOCTRINE_DIR']);
-
-require_once(DOCTRINE_DIR . '/lib/Doctrine/Core.php');
+require_once(__DIR__ . '/../lib/Doctrine/Core.php');
 
 spl_autoload_register(array('Doctrine_Core', 'autoload'));
 spl_autoload_register(array('Doctrine_Core', 'modelsAutoload'));
 
-require_once(DOCTRINE_DIR . '/tests/DoctrineTest.php');
+require_once(__DIR__ . '/../tests/DoctrineTest.php');
 
 spl_autoload_register(array('DoctrineTest', 'autoload'));

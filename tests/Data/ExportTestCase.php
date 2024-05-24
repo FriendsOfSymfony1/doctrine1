@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -40,7 +40,10 @@ class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase
 
     public function testI18nExport()
     {
+        $file = null;
         try {
+            $file = $this->createTempFile('i18n-export', 'yml');
+
             $i = new I18nTestExport();
             $i->Translation['en']->title = 'english test';
             $i->Translation['fr']->title = 'french test';
@@ -48,9 +51,9 @@ class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase
             $i->save();
 
             $data = new Doctrine_Data();
-            $data->exportData('test.yml', 'yml', array('I18nTestExport', 'I18nTestExportTranslation'));
+            $data->exportData($file, 'yml', array('I18nTestExport', 'I18nTestExportTranslation'));
 
-            $array = Doctrine_Parser::load('test.yml', 'yml');
+            $array = Doctrine_Parser::load($file, 'yml');
 
             $this->assertTrue( ! empty($array));
             $this->assertTrue(isset($array['I18nTestExport']['I18nTestExport_1']));
@@ -60,7 +63,7 @@ class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase
             $i->Translation->delete();
             $i->delete();
 
-            Doctrine_Core::loadData('test.yml');
+            Doctrine_Core::loadData($file);
 
             $q = Doctrine_Query::create()
                 ->from('I18nTestExport e')
@@ -74,9 +77,7 @@ class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase
             $this->fail($e->getMessage());
         }
 
-        if (file_exists('test.yml')) {
-            unlink('test.yml');
-        }
+        $this->removeTempFile($file);
     }
 }
 

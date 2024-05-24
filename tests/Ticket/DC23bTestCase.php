@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_DC23b_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC23b_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,15 +45,17 @@ class Doctrine_Ticket_DC23b_TestCase extends Doctrine_UnitTestCase
     {
         $yml = <<<END
 ---
-Ticket_Product: 
-  Product_1: 
+Ticket_Product:
+  Product_1:
     name: book
     Site:
       name: test
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('dc23b', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -73,7 +75,7 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 
     public function testMultiple()
@@ -84,8 +86,8 @@ Ticket_Multiple:
   ISBN:
     name: isbn
 
-Ticket_Product: 
-  Product_1: 
+Ticket_Product:
+  Product_1:
     name: book2
 
 Ticket_MultipleValue:
@@ -94,9 +96,11 @@ Ticket_MultipleValue:
     Multiple: ISBN
     Product: Product_1
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('dc23bm', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -118,7 +122,7 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 
     public function testInlineMultiple()
@@ -129,17 +133,19 @@ Ticket_Multiple:
   ISBN2:
     name: isbn2
 
-Ticket_Product: 
-  Product_1: 
+Ticket_Product:
+  Product_1:
     name: book3
     MultipleValues:
       Multi_1:
         value: 123345678
         Multiple: ISBN2
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('dc23bim', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -160,7 +166,7 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 }
 

@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -43,22 +43,24 @@ class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase
         $this->tables[] = 'I18nNumberLang';
         parent::prepareTables();
     }
-    
+
     public function testInlineMany()
     {
         $yml = <<<END
 ---
-User: 
-  User_1: 
+User:
+  User_1:
     name: jwage
     password: changeme
-    Phonenumber: 
-      Phonenumber_1: 
+    Phonenumber:
+      Phonenumber_1:
         phonenumber: 6155139185
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -77,7 +79,7 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 
     public function testInlineOne()
@@ -91,9 +93,11 @@ Album:
       name: zYne-
       password: changeme
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -111,15 +115,16 @@ END;
         } catch (Exception $e) {
             $this->fail();
         }
-        unlink('test.yml');
+
+        $this->removeTempFile($file);
     }
 
     public function testNormalMany()
     {
         $yml = <<<END
 ---
-User: 
-  User_1: 
+User:
+  User_1:
     name: jwage2
     password: changeme
     Phonenumber: [Phonenumber_1, Phonenumber_2]
@@ -129,9 +134,11 @@ Phonenumber:
   Phonenumber_2:
     phonenumber: 6153137679
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -150,7 +157,8 @@ END;
         } catch (Exception $e) {
             $this->fail();
         }
-        unlink('test.yml');
+
+        $this->removeTempFile($file);
     }
 
     public function testI18nImport()
@@ -167,9 +175,11 @@ I18nTestImport:
         name: french name
         title: french title
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -188,7 +198,7 @@ END;
             $this->fail($e->getMessage());
         }
 
-        unlink('test.yml'); 
+        $this->removeTempFile($file);
     }
 
     public function testImportNestedSetData()
@@ -207,9 +217,11 @@ ImportNestedSet:
           ImportNestedSet_4:
             name: Sub-Child 1
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -242,9 +254,9 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml'); 
+        $this->removeTempFile($file);
     }
-    
+
     public function testImportNestedSetMultipleTreeData()
     {
         $yml = <<<END
@@ -280,9 +292,11 @@ ImportNestedSetMultipleTree:
           ImportNestedSetMultipleTree_Item2_2_3:
             name: Item 2.2.3
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -315,7 +329,7 @@ END;
             $this->assertEqual($i[4]['rgt'], 3);
             $this->assertEqual($i[4]['level'], 1);
             $this->assertEqual($i[4]['root_id'], $i[3]['root_id']);
-            
+
             $this->assertEqual($i[5]['name'], 'Item 2.2');
             $this->assertEqual($i[5]['lft'], 4);
             $this->assertEqual($i[5]['rgt'], 11);
@@ -327,7 +341,7 @@ END;
             $this->fail();
         }
 
-        unlink('test.yml'); 
+        $this->removeTempFile($file);
     }
 
     public function testMany2ManyManualDataFixtures()
@@ -349,9 +363,11 @@ Group:
   Group_1:
     name: test
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -365,9 +381,9 @@ END;
             $this->fail($e->getMessage());
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
-    
+
     public function testInvalidElementThrowsException()
     {
         self::prepareTables();
@@ -387,15 +403,18 @@ Group:
   Group_1:
     name: test
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
+
             $this->fail();
         } catch (Exception $e) {
             $this->pass();
         }
-        
-        unlink('test.yml');
+
+        $this->removeTempFile($file);
     }
 
     public function testNormalNonRecursiveFixturesLoading()
@@ -417,10 +436,18 @@ User:
     pass: changeme2
 END;
 
-        mkdir('test_data_fixtures');
-        file_put_contents('test_data_fixtures/test1.yml', $yml1);
-        file_put_contents('test_data_fixtures/test2.yml', $yml2);
-        $import = new Doctrine_Data_Import(getcwd() . '/test_data_fixtures');
+        $path = $this->createTempDirName('data-fixtures');
+        if (!mkdir($path) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
+        }
+
+        $f1 = $this->createTempFile('fixture','yml', $path);
+        file_put_contents($f1, $yml1);
+
+        $f2 = $this->createTempFile('fixture','yml', $path);
+        file_put_contents($f2, $yml2);
+
+        $import = new Doctrine_Data_Import($path);
         $import->setFormat('yml');
 
         $array = $import->doParsing();
@@ -428,9 +455,7 @@ END;
         // Last User definition in test2.yml takes presedence
         $this->assertTrue(isset($array['User']['User_2']));
 
-        unlink('test_data_fixtures/test1.yml');
-        unlink('test_data_fixtures/test2.yml');
-        rmdir('test_data_fixtures');
+        Doctrine_Lib::removeDirectories($path);
     }
 
     public function testRecursiveFixturesLoading()
@@ -453,10 +478,18 @@ User:
     pass: changeme2
 END;
 
-        mkdir('test_data_fixtures');
-        file_put_contents('test_data_fixtures/test1.yml', $yml1);
-        file_put_contents('test_data_fixtures/test2.yml', $yml2);
-        $import = new Doctrine_Data_Import(getcwd() . '/test_data_fixtures');
+        $path = $this->createTempDirName('data-fixtures');
+        if (!mkdir($path) && !is_dir($path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
+        }
+
+        $f1 = $this->createTempFile('fixture','yml', $path);
+        file_put_contents($f1, $yml1);
+
+        $f2 = $this->createTempFile('fixture','yml', $path);
+        file_put_contents($f2, $yml2);
+
+        $import = new Doctrine_Data_Import($path);
         $import->setFormat('yml');
 
         $array = $import->doParsing();
@@ -464,10 +497,12 @@ END;
         $this->assertTrue(isset($array['User']['User_1']));
         $this->assertTrue(isset($array['User']['User_2']));
 
-        unlink('test_data_fixtures/test1.yml');
-        unlink('test_data_fixtures/test2.yml');
-        rmdir('test_data_fixtures');
-        Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_RECURSIVE_MERGE_FIXTURES, false);
+        Doctrine_Lib::removeDirectories($path);
+
+        Doctrine_Manager::getInstance()->setAttribute(
+            Doctrine_Core::ATTR_RECURSIVE_MERGE_FIXTURES,
+            false
+        );
     }
 
     public function testIncorrectYamlRelationThrowsException()
@@ -489,9 +524,11 @@ Group:
   Group_1:
     name: test
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -506,7 +543,7 @@ END;
             $this->assertEqual($e->getMessage(), 'Class referred to in "(groupuser) Groupuser_1" is expected to be "User" and "Group" was given');
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 
     public function testI18nImportWithInteger()
@@ -524,9 +561,11 @@ I18nNumberLang:
         title: french title
         body: french body
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('data-import', 'yml');
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $this->conn->clear();
 
@@ -546,7 +585,7 @@ END;
             $this->fail($e->getMessage());
         }
 
-        unlink('test.yml'); 
+        $this->removeTempFile($file);
     }
 
 }

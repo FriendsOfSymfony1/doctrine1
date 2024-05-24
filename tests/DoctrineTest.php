@@ -266,13 +266,13 @@ class DoctrineTest
             return false;
         }
 
-        $dir = array_shift($e);
+        $dir = __DIR__.DIRECTORY_SEPARATOR.array_shift($e);
         $file = $dir . '_' . substr(implode('_', $e), 0, -(strlen('_TestCase'))) . 'TestCase.php';
         $file = str_replace('_', (($count > 3) ? DIRECTORY_SEPARATOR : ''), $file);
 
         // create a test case file if it doesn't exist
         if ( ! file_exists($file)) {
-            $contents = file_get_contents(DOCTRINE_DIR.'/tests/template.tpl');
+            $contents = file_get_contents(__DIR__.'/template.tpl');
             $contents = sprintf($contents, $class, $class);
 
             if ( ! file_exists($dir)) {

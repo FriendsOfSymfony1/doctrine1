@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_1351_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1351_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -51,9 +51,11 @@ Ticket_1351_Article:
         title: Test title french
         body: Test body french
 END;
-        file_put_contents('test.yml', $yml);
-        Doctrine_Core::loadData('test.yml', true);
-        unlink('test.yml');
+
+        $file = $this->createTempFile('case1351', 'yml');
+        file_put_contents($file, $yml);
+        Doctrine_Core::loadData($file, true);
+        $this->removeTempFile($file);
         $results = Doctrine_Query::create()
                     ->from('Ticket_1351_Article a, a.Translation t')
                     ->fetchArray();

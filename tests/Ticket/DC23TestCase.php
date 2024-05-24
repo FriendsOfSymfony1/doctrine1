@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -54,8 +54,8 @@ Ticket_DC23_BlogPost:
         title: Test
         body: Testing
 
-Ticket_DC23_User: 
-  User_1: 
+Ticket_DC23_User:
+  User_1:
     name: jwage
     Contact:
       name: Test Contact
@@ -81,9 +81,12 @@ Ticket_DC23_Address:
   Address_1:
     name: Test Address
 END;
+        $file = null;
         try {
-            file_put_contents('test.yml', $yml);
-            Doctrine_Core::loadData('test.yml', true);
+            $file = $this->createTempFile('dc23', 'yml');
+
+            file_put_contents($file, $yml);
+            Doctrine_Core::loadData($file, true);
 
             $q = Doctrine_Query::create()
                 ->from('Ticket_DC23_User u')
@@ -109,7 +112,7 @@ END;
             $this->fail($e->getMessage());
         }
 
-        unlink('test.yml');
+        $this->removeTempFile($file);
     }
 }
 

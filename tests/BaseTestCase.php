@@ -34,8 +34,7 @@ class Doctrine_Base_TestCase extends Doctrine_UnitTestCase
 {
     public function testAggressiveModelLoading()
     {
-        $path = realpath('ModelLoadingTest/Aggressive');
-        
+        $path = __DIR__.'/ModelLoadingTest/Aggressive';
         $models = Doctrine_Core::loadModels($path, Doctrine_Core::MODEL_LOADING_AGGRESSIVE);
 
         // Ensure the correct model names were returned
@@ -45,7 +44,7 @@ class Doctrine_Base_TestCase extends Doctrine_UnitTestCase
 
         // Make sure it does not include the base classes
         $this->assertTrue( ! isset($models['BaseAggressiveModelLoadingUser']));
-        
+
         $filteredModels = Doctrine_Core::filterInvalidModels($models);
 
         // Make sure filterInvalidModels filters out base abstract classes
@@ -54,7 +53,7 @@ class Doctrine_Base_TestCase extends Doctrine_UnitTestCase
 
     public function testConservativeModelLoading()
     {
-        $path = realpath('ModelLoadingTest/Conservative');
+        $path = __DIR__.'/ModelLoadingTest/Conservative';
 
         $models = Doctrine_Core::loadModels($path, Doctrine_Core::MODEL_LOADING_CONSERVATIVE);
 
@@ -85,7 +84,7 @@ class Doctrine_Base_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue(in_array('AggressiveModelLoadingUser', $models));
         $this->assertTrue(in_array('ConservativeModelLoadingProfile', $models));
         $this->assertTrue(in_array('ConservativeModelLoadingContact', $models));
-        
+
         $modelFiles = Doctrine_Core::getLoadedModelFiles();
         $this->assertTrue(file_exists($modelFiles['ConservativeModelLoadingUser']));
         $this->assertTrue(file_exists($modelFiles['ConservativeModelLoadingProfile']));

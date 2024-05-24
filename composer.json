@@ -21,10 +21,10 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "ext-zlib": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-zlib": "*"
     },
     "support": {
         "issues": "https://github.com/FriendsOfSymfony1/doctrine1/issues",

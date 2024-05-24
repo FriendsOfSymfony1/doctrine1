@@ -1,7 +1,6 @@
 <?php
 class GroupTest extends UnitTestCase
 {
-    protected $_testCases = array();
     protected $_name;
     protected $_title;
     protected $_onlyRunFailed = false;

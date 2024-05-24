@@ -36,7 +36,7 @@ class Doctrine_Ticket_915_TestCase extends Doctrine_UnitTestCase
     public function prepareTables()
     {
         $this->tables[] = 'Account';
-        parent::prepareTables();    
+        parent::prepareTables();
     }
 
     public function testBug()
@@ -58,8 +58,9 @@ Account:
     Entity_id: -300
 END;
 
-        file_put_contents('test.yml', $yml);
-        $import = new Doctrine_Data_Import('test.yml');
+        $file = $this->createTempFile('case915', 'yml');
+        file_put_contents($file, $yml);
+        $import = new Doctrine_Data_Import($file);
         $import->setFormat("yml");
 
         // try to import garbled records (with incorrect field names,
@@ -71,5 +72,6 @@ END;
         } catch (Exception $e) {
             $this->pass();
         }
+        $this->removeTempFile($file);
     }
 }
