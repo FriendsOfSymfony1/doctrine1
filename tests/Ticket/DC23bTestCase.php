@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_DC23b_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC23b_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -45,8 +45,8 @@ class Doctrine_Ticket_DC23b_TestCase extends Doctrine_UnitTestCase
     {
         $yml = <<<END
 ---
-Ticket_Product: 
-  Product_1: 
+Ticket_Product:
+  Product_1:
     name: book
     Site:
       name: test
@@ -84,8 +84,8 @@ Ticket_Multiple:
   ISBN:
     name: isbn
 
-Ticket_Product: 
-  Product_1: 
+Ticket_Product:
+  Product_1:
     name: book2
 
 Ticket_MultipleValue:
@@ -129,8 +129,8 @@ Ticket_Multiple:
   ISBN2:
     name: isbn2
 
-Ticket_Product: 
-  Product_1: 
+Ticket_Product:
+  Product_1:
     name: book3
     MultipleValues:
       Multi_1:

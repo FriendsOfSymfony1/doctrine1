@@ -36,7 +36,7 @@ class Doctrine_Ticket_915_TestCase extends Doctrine_UnitTestCase
     public function prepareTables()
     {
         $this->tables[] = 'Account';
-        parent::prepareTables();    
+        parent::prepareTables();
     }
 
     public function testBug()

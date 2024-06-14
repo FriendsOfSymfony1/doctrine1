@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Export_Schema_TestCase extends Doctrine_UnitTestCase
 {
     public $tables =   array('Entity',
                       'EntityReference',

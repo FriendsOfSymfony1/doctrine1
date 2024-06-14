@@ -75,11 +75,11 @@ END;
             3 => 'CREATE TABLE wiki_test (id INTEGER PRIMARY KEY AUTOINCREMENT)',
             4 => 'CREATE UNIQUE INDEX wiki_test_translation_sluggable_idx ON wiki_test_translation (slug)',
         );
-            
+
         foreach($sql as $idx => $req) {
             $this->assertEqual($req, $result[$idx]);
-        }        
-        
+        }
+
         Doctrine_Lib::removeDirectories($path);
         unlink('wiki.yml');
     }

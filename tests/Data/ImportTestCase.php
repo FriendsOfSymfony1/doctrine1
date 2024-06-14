@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -43,17 +43,17 @@ class Doctrine_Data_Import_TestCase extends Doctrine_UnitTestCase
         $this->tables[] = 'I18nNumberLang';
         parent::prepareTables();
     }
-    
+
     public function testInlineMany()
     {
         $yml = <<<END
 ---
-User: 
-  User_1: 
+User:
+  User_1:
     name: jwage
     password: changeme
-    Phonenumber: 
-      Phonenumber_1: 
+    Phonenumber:
+      Phonenumber_1:
         phonenumber: 6155139185
 END;
         try {
@@ -118,8 +118,8 @@ END;
     {
         $yml = <<<END
 ---
-User: 
-  User_1: 
+User:
+  User_1:
     name: jwage2
     password: changeme
     Phonenumber: [Phonenumber_1, Phonenumber_2]
@@ -244,7 +244,7 @@ END;
 
         unlink('test.yml'); 
     }
-    
+
     public function testImportNestedSetMultipleTreeData()
     {
         $yml = <<<END
@@ -315,7 +315,7 @@ END;
             $this->assertEqual($i[4]['rgt'], 3);
             $this->assertEqual($i[4]['level'], 1);
             $this->assertEqual($i[4]['root_id'], $i[3]['root_id']);
-            
+
             $this->assertEqual($i[5]['name'], 'Item 2.2');
             $this->assertEqual($i[5]['lft'], 4);
             $this->assertEqual($i[5]['rgt'], 11);
@@ -367,7 +367,7 @@ END;
 
         unlink('test.yml');
     }
-    
+
     public function testInvalidElementThrowsException()
     {
         self::prepareTables();

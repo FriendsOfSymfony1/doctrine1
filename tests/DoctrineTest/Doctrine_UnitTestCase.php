@@ -48,6 +48,7 @@ class Doctrine_UnitTestCase extends UnitTestCase
     protected $generic = false;
     protected $conn;
     protected $adapter;
+    /** @var Doctrine_Export */
     protected $export;
     protected $expr;
     protected $dataDict;

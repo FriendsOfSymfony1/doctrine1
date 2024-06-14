@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_1118_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1118_TestCase extends Doctrine_UnitTestCase
 {
     // Test that when a foreign key is detected that it sets the foreign key to the same type and length
     // of the related table primary key
