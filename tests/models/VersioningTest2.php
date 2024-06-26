@@ -1,5 +1,5 @@
 <?php
-class VersioningTest extends Doctrine_Record 
+class VersioningTest2 extends Doctrine_Record
 {
     public function setTableDefinition()
     {
@@ -8,6 +8,6 @@ class VersioningTest extends Doctrine_Record
     }
     public function setUp()
     {
-        $this->actAs('Versionable');
+        $this->actAs('Versionable', array('auditLog' => false));
     }
 }
