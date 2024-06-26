@@ -36,6 +36,15 @@ jobs:
           - "8.2"
           - "8.3"
 
+    services:
+      mysql:
+        image: mysql:5.5.62
+        env:
+          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: testrootpass
+        ports:
+          - 3306:3306
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -62,4 +71,6 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Run Tests
+        env:
+          MYSQL_DSN: 'mysql:host=127.0.0.1;dbname=test;user=root;password=testrootpass'
         run: cd tests && php run.php

@@ -142,13 +142,14 @@ class Doctrine_UnitTestCase extends UnitTestCase
 
             if (count($e) > 3) {
                 $driver = $e[2];
-                switch($e[2]) {
+
+                switch($driver) {
                     case 'Mysql':
                     case 'Mssql':
                     case 'Oracle':
                     case 'Pgsql':
                     case 'Sqlite':
-                        $this->driverName = $e[2];
+                        $this->driverName = $driver;
                     break;
                 }
             }
@@ -216,20 +217,29 @@ class Doctrine_UnitTestCase extends UnitTestCase
             }
         }
     }
-    public function prepareTables() {
-        foreach($this->tables as $name) {
-            $name = ucwords($name);
-            $table = $this->connection->getTable($name);
-            $query = 'DROP TABLE ' . $table->getTableName();
-            try {
-                $this->conn->exec($query);
-            } catch(Doctrine_Connection_Exception $e) {
 
-            }
-        }
-        $this->conn->export->exportClasses($this->tables);
+    public function prepareTables() {
+        $this->resetTablesOnConnection($this->tables, $this->connection);
+
         $this->objTable = $this->connection->getTable('User');
     }
+
+    protected function resetTablesOnConnection(array $tables, Doctrine_Connection $connection)
+    {
+        foreach($tables as $name) {
+            $name = ucwords($name);
+            $table = $connection->getTable($name);
+            $query = 'DROP TABLE ' . $table->getTableName();
+
+            try {
+                $connection->exec($query);
+            } catch(Doctrine_Connection_Exception $e) {
+            }
+        }
+
+        $connection->export->exportClasses($tables);
+    }
+
     public function prepareData()
     {
         $groups = new Doctrine_Collection($this->connection->getTable('Group'));
@@ -305,6 +315,13 @@ class Doctrine_UnitTestCase extends UnitTestCase
     public function getDeclaration($type)
     {
         return $this->dataDict->getPortableDeclaration(array('type' => $type, 'name' => 'colname', 'length' => 1, 'fixed' => true));
+    }
+
+    protected function openMysqlAdditionalConnection()
+    {
+        $dbh = new PDO(getenv('MYSQL_DSN'));
+
+        return $this->openAdditionalConnection($dbh);
     }
 
     protected function openAdditionalConnection($adapter = null, $name = null)
