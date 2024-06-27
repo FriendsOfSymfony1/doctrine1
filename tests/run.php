@@ -279,6 +279,7 @@ $test->addTestCase($cache);
 // Migration Tests
 $migration = new GroupTest('Migration Tests', 'migration');
 $migration->addTestCase(new Doctrine_Migration_TestCase());
+$migration->addTestCase(new Doctrine_MigrationMysql_TestCase());
 $migration->addTestCase(new Doctrine_Migration_Base_TestCase());
 $migration->addTestCase(new Doctrine_Migration_Diff_TestCase());
 $test->addTestCase($migration);

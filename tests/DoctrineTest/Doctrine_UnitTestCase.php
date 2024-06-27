@@ -307,6 +307,17 @@ class Doctrine_UnitTestCase extends UnitTestCase
         return $this->dataDict->getPortableDeclaration(array('type' => $type, 'name' => 'colname', 'length' => 1, 'fixed' => true));
     }
 
+    /**
+     * @param string $pdoDsn
+     * @return Doctrine_Connection
+     */
+    protected function openAdditionalPdoConnection(string $pdoDsn)
+    {
+        $pdoFromDsn = new PDO($pdoDsn);
+
+        return $this->openAdditionalConnection($pdoFromDsn);
+    }
+
     protected function openAdditionalConnection($adapter = null, $name = null)
     {
         $connection = $this->manager->openConnection($adapter, $name);

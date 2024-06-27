@@ -35,6 +35,16 @@ jobs:
           - "8.1"
           - "8.2"
           - "8.3"
+    services:
+      mysql:
+        image: mysql:5.7.42-debian
+        env:
+          MYSQL_DATABASE: 'doctrine1_test'
+          MYSQL_USER: 'doctrine1'
+          MYSQL_PASSWORD: 'd0ctr1n3'
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+        ports:
+          - 3306:3306
 
     steps:
       - name: Checkout
@@ -62,4 +72,6 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Run Tests
+        env:
+          MYSQL_TEST_DSN: 'mysql:host=127.0.0.1;dbname=doctrine1_test;user=doctrine1;password=d0ctr1n3'
         run: cd tests && php run.php
