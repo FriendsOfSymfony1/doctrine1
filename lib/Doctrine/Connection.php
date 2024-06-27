@@ -1556,7 +1556,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $pdoDsn .= 'unix_socket=' . $info['unix_socket'] . ';';
         }
 
-        $pdoDsn .= 'host=' . $info['host'];
+        if ($info['host']) {
+            $pdoDsn .= 'host=' . $info['host'];
+        }
 
         if ($info['port']) {
             $pdoDsn .= ';port=' . $info['port'];
@@ -1566,8 +1568,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $pdoDsn .= ';dbname=' . $this->export->tmpConnectionDatabase;
         }
 
-        $username = $this->getOption('username');
-        $password = $this->getOption('password');
+        $username = $info['user'] ?: $this->getOption('username');
+        $password = $info['password'] ?: $this->getOption('password');
 
         $conn = $this->getManager()->openConnection(array($pdoDsn, $username, $password), 'doctrine_tmp_connection', false);
         $conn->setOption('username', $username);
