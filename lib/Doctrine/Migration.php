@@ -335,24 +335,21 @@ class Doctrine_Migration
 
             if ($dryRun) {
                 return false;
-            } else {
-                $this->_throwErrorsException();
             }
-        } else {
-            if ($dryRun) {
-                $this->_connection->rollback();
-                if ($this->hasErrors()) {
-                    return false;
-                } else {
-                    return $to;
-                }
-            } else {
-                $this->_connection->commit();
-                $this->setCurrentVersion($to);
-                return $to;
-            }
+
+            $this->_throwErrorsException();
         }
-        return false;
+
+        if ($dryRun) {
+            $this->_connection->rollback();
+
+            return !$this->hasErrors();
+        }
+
+        Doctrine_TransactionHelper::commitIfInTransaction($this->_connection);
+        $this->setCurrentVersion($to);
+
+        return true;
     }
 
     /**
@@ -437,8 +434,9 @@ class Doctrine_Migration
     /**
      * Throw an exception with all the errors trigged during the migration
      *
-     * @return void
-     * @throws Doctrine_Migration_Exception $e
+     * @throws Doctrine_Migration_Exception
+     *
+     * @return never
      */
     protected function _throwErrorsException()
     {
