@@ -187,7 +187,7 @@ class Doctrine_Migration
         }
 
         if ($class === false) {
-            return false;
+            return;
         }
 
         if (empty($this->_migrationClasses)) {
@@ -307,15 +307,13 @@ class Doctrine_Migration
      *
      * @param  integer $to       Version to migrate to
      * @param  boolean $dryRun   Whether or not to run the migrate process as a dry run
-     * @return integer $to       Version number migrated to
+     * @return bool              True if the migration succeeded, false otherwise
      * @throws Doctrine_Exception
      */
     public function migrate($to = null, $dryRun = false)
     {
         $this->clearErrors();
-
         $this->_createMigrationTable();
-
         $this->_connection->beginTransaction();
 
         try {

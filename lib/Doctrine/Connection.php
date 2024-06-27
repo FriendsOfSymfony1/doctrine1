@@ -52,6 +52,8 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (MDB2 library)
+ *
+ * @property Doctrine_Export $export
  */
 abstract class Doctrine_Connection extends Doctrine_Configurable implements Countable, IteratorAggregate, Serializable
 {
@@ -241,11 +243,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * getOptions
-     *
      * Get array of all options
      *
-     * @return void
+     * @return array<string, mixed>
      */
     public function getOptions()
     {
@@ -253,14 +253,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * getOption
-     *
-     * Retrieves option
-     *
-     * @param string $option
-     * @return void
+     * @return null|mixed
      */
-    public function getOption($option)
+    public function getOption(string $option)
     {
         if (isset($this->options[$option])) {
             return $this->options[$option];
@@ -268,14 +263,11 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
-     * setOption
-     *
      * Set option value
      *
-     * @param string $option
-     * @return void
+     * @return mixed
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, $value)
     {
       return $this->options[$option] = $value;
     }
@@ -1545,8 +1537,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * which is always guaranteed to exist. Mysql: 'mysql', PostgreSQL: 'postgres', etc.
      * This value is set in the Doctrine_Export_{DRIVER} classes if required
      *
-     * @param string $info
-     * @return void
+     * @param array $info
+     * @return Doctrine_Connection
      */
     public function getTmpConnection($info)
     {
@@ -1569,7 +1561,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $username = $this->getOption('username');
         $password = $this->getOption('password');
 
-        $conn = $this->getManager()->openConnection(array($pdoDsn, $username, $password), 'doctrine_tmp_connection', false);
+        $conn = $this->getManager()->openConnection([$pdoDsn, $username, $password], 'doctrine_tmp_connection', false);
         $conn->setOption('username', $username);
         $conn->setOption('password', $password);
 
