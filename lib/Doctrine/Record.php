@@ -1985,7 +1985,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @link http://www.doctrine-project.org/documentation/manual/1_1/en/working-with-models
      * @param string $array  array of data, see link for documentation
      * @param bool   $deep   whether or not to act on relations
-     * @return void
+     * @return Doctrine_Record
      */
     public function fromArray(array $array, $deep = true)
     {
