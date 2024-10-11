@@ -1,0 +1,7 @@
+parameters:
+    level: 5
+    paths:
+        - ../../lib
+
+    excludePaths:
+        - ../../lib/Doctrine/Search/Indexer.php
