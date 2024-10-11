@@ -50,10 +50,7 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
      */
     public function init()
     {
-        // check that all aliases exist
-        foreach ($this->_aliases as $alias) {
-            $this->_table->getRelation($alias);
-        }
+        $this->validateAliases();
     }
 
     /**
@@ -67,26 +64,17 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
      */
     public function filterSet(Doctrine_Record $record, $propertyOrRelation, $value)
     {
-        foreach ($this->_aliases as $alias) {
-            // The relationship must be fetched in order to check the field existence.
-            // Related to PHP-7.0 compatibility so an explicit call to method get is required.
-            $record[$alias];
+        try {
+            $this->setAliasedRecordPropertyOrRelation($record, $propertyOrRelation, $value);
 
-            if ( ! $record->exists()) {
-                if (isset($record[$alias][$propertyOrRelation])) {
-                    $record[$alias][$propertyOrRelation] = $value;
-
-                    return $record;
-                }
-            } else {
-                if (isset($record[$alias][$propertyOrRelation])) {
-                    $record[$alias][$propertyOrRelation] = $value;
-                }
-
+            return $record;
+        } catch (Doctrine_Record_UnknownPropertyException $e) {
+            if ($record->exists() && $this->hasAlias()) {
                 return $record;
             }
+
+            throw $e;
         }
-        throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component "%s" on "%s"', $propertyOrRelation, get_class($record)));
     }
 
     /**
@@ -94,27 +82,96 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
      *
      * @param string $propertyOrRelation
      *
-     * @return mixed
+     * @return mixed The value of the given property
      *
      * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
      */
     public function filterGet(Doctrine_Record $record, $propertyOrRelation)
     {
-        foreach ($this->_aliases as $alias) {
-            // The relationship must be fetched in order to check the field existence.
-            // Related to PHP-7.0 compatibility so an explicit call to method get is required.
-            $record[$alias];
+        $aliasedRecord = $this->findAliasedRecordForGet($record, $propertyOrRelation);
 
-            if ( ! $record->exists()) {
-                if (isset($record[$alias][$propertyOrRelation])) {
-                    return $record[$alias][$propertyOrRelation];
-                }
-            } else {
-                if (isset($record[$alias][$propertyOrRelation])) {
-                    return $record[$alias][$propertyOrRelation];
-                }
+        return $aliasedRecord->get($propertyOrRelation);
+    }
+
+    /**
+     * @throws Doctrine_Table_Exception
+     */
+    private function validateAliases()
+    {
+        foreach ($this->_aliases as $alias) {
+            $this->_table->getRelation($alias);
+        }
+    }
+
+    private function hasAlias()
+    {
+        return (bool) $this->_aliases;
+    }
+
+    /**
+     * @param string $propertyOrRelation
+     *
+     * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
+     */
+    private function setAliasedRecordPropertyOrRelation(Doctrine_Record $record, $propertyOrRelation, $value)
+    {
+        $aliasedRecord = $this->findAliasedRecordForSet($record, $propertyOrRelation);
+
+        $aliasedRecord[$propertyOrRelation] = $value;
+    }
+
+    /**
+     * @return Doctrine_Record
+     *
+     * @thrown Doctrine_Record_UnknownPropertyException
+     */
+    private function findAliasedRecordForSet(Doctrine_Record $record, $propertyOrRelation)
+    {
+        foreach ($this->_aliases as $alias) {
+            if ($this->recordAliasHasPropertyOrRelation($record, $alias, $propertyOrRelation)) {
+                return $record->get($alias);
+            }
+
+            $this->stopSearchIfRecordExists($record, $propertyOrRelation);
+        }
+
+        throw Doctrine_Record_UnknownPropertyException::createFromRecordAndProperty($record, $propertyOrRelation);
+    }
+
+    /**
+     * @thrown Doctrine_Record_UnknownPropertyException
+     */
+    private function stopSearchIfRecordExists(Doctrine_Record $record, $propertyOrRelation)
+    {
+        if ($record->exists()) {
+            throw Doctrine_Record_UnknownPropertyException::createFromRecordAndProperty($record, $propertyOrRelation);
+        }
+    }
+
+    /**
+     * @return Doctrine_Record
+     *
+     * @thrown Doctrine_Record_UnknownPropertyException
+     */
+    private function findAliasedRecordForGet(Doctrine_Record $record, $propertyOrRelation)
+    {
+        foreach ($this->_aliases as $alias) {
+            if ($this->recordAliasHasPropertyOrRelation($record, $alias, $propertyOrRelation)) {
+                return $record->get($alias);
             }
         }
-        throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component "%s" on "%s"', $propertyOrRelation, get_class($record)));
+
+        throw Doctrine_Record_UnknownPropertyException::createFromRecordAndProperty($record, $propertyOrRelation);
+    }
+
+    /**
+     * @param string $alias
+     * @param string $propertyOrRelation
+     */
+    private function recordAliasHasPropertyOrRelation(Doctrine_Record $record, $alias, $propertyOrRelation)
+    {
+        $aliasedRecord = $record->get($alias);
+
+        return isset($aliasedRecord[$propertyOrRelation]);
     }
 }
