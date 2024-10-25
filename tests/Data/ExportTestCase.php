@@ -32,51 +32,51 @@
  */
 class Doctrine_Data_Export_TestCase extends Doctrine_UnitTestCase
 {
+    public function tearDown()
+    {
+        if (file_exists('test.yml')) {
+            unlink('test.yml');
+        }
+
+        parent::tearDown();
+    }
+
     public function prepareTables()
     {
         $this->tables[] = 'I18nTestExport';
+
         parent::prepareTables();
     }
 
     public function testI18nExport()
     {
-        try {
-            $i = new I18nTestExport();
-            $i->Translation['en']->title = 'english test';
-            $i->Translation['fr']->title = 'french test';
-            $i->test_object = new stdClass();
-            $i->save();
+        $i = new I18nTestExport();
+        $i->Translation['en']->title = 'english test';
+        $i->Translation['fr']->title = 'french test';
+        $i->test_object = new stdClass();
+        $i->save();
 
-            $data = new Doctrine_Data();
-            $data->exportData('test.yml', 'yml', array('I18nTestExport', 'I18nTestExportTranslation'));
+        $data = new Doctrine_Data();
+        $data->exportData('test.yml', 'yml', array('I18nTestExport', 'I18nTestExportTranslation'));
 
-            $array = Doctrine_Parser::load('test.yml', 'yml');
+        $array = Doctrine_Parser::load('test.yml', 'yml');
 
-            $this->assertTrue( ! empty($array));
-            $this->assertTrue(isset($array['I18nTestExport']['I18nTestExport_1']));
-            $this->assertTrue(isset($array['I18nTestExportTranslation']['I18nTestExportTranslation_1_en']));
-            $this->assertTrue(isset($array['I18nTestExportTranslation']['I18nTestExportTranslation_1_fr']));
+        $this->assertTrue( ! empty($array));
+        $this->assertTrue(isset($array['I18nTestExport']['I18nTestExport_1']));
+        $this->assertTrue(isset($array['I18nTestExportTranslation']['I18nTestExportTranslation_1_en']));
+        $this->assertTrue(isset($array['I18nTestExportTranslation']['I18nTestExportTranslation_1_fr']));
 
-            $i->Translation->delete();
-            $i->delete();
+        $i->Translation->delete();
+        $i->delete();
 
-            Doctrine_Core::loadData('test.yml');
+        Doctrine_Core::loadData('test.yml');
 
-            $q = Doctrine_Query::create()
-                ->from('I18nTestExport e')
-                ->leftJoin('e.Translation t');
+        $q = Doctrine_Query::create()
+            ->from('I18nTestExport e')
+            ->leftJoin('e.Translation t');
 
-            $results = $q->execute();
-            $this->assertEqual(get_class($results[0]->test_object), 'stdClass');
-
-            $this->pass();
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
-
-        if (file_exists('test.yml')) {
-            unlink('test.yml');
-        }
+        $results = $q->execute();
+        $this->assertEqual(get_class($results[0]->test_object), 'stdClass');
     }
 }
 

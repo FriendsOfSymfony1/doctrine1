@@ -12,7 +12,7 @@
 # Configuration
 #
 dependencyPreferences='highest'
-skipPHPVersions='php8'
+skipPHPVersions='php9'
 
 # Commands
 #

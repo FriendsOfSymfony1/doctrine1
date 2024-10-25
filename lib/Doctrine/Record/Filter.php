@@ -33,6 +33,9 @@
  */
 abstract class Doctrine_Record_Filter
 {
+    /**
+     * @var Doctrine_Table
+     */
     protected $_table;
 
     public function setTable(Doctrine_Table $table)
@@ -40,6 +43,9 @@ abstract class Doctrine_Record_Filter
         $this->_table = $table;
     }
 
+    /**
+     * @return Doctrine_Table
+     */
     public function getTable()
     {
         return $this->_table;
