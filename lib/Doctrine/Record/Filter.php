@@ -33,6 +33,9 @@
  */
 abstract class Doctrine_Record_Filter
 {
+    /**
+     * @var Doctrine_Table|null
+     */
     protected $_table;
 
     public function setTable(Doctrine_Table $table)
@@ -56,7 +59,7 @@ abstract class Doctrine_Record_Filter
      *
      * @return Doctrine_Record the given record
      *
-     * @thrown Doctrine_Exception when this way is not available
+     * @throws Doctrine_Exception when this way is not available
      */
     abstract public function filterSet(Doctrine_Record $record, $propertyOrRelation, $value);
 
@@ -67,7 +70,7 @@ abstract class Doctrine_Record_Filter
      *
      * @return mixed
      *
-     * @thrown Doctrine_Exception when this way is not available
+     * @throws Doctrine_Exception when this way is not available
      */
     abstract public function filterGet(Doctrine_Record $record, $propertyOrRelation);
 }

@@ -56,15 +56,6 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
         }
     }
 
-    /**
-     * Provides a way for setting property or relation value to the given record.
-     *
-     * @param string $propertyOrRelation
-     *
-     * @return Doctrine_Record the given record
-     *
-     * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
-     */
     public function filterSet(Doctrine_Record $record, $propertyOrRelation, $value)
     {
         foreach ($this->_aliases as $alias) {
@@ -89,15 +80,6 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
         throw new Doctrine_Record_UnknownPropertyException(sprintf('Unknown record property / related component "%s" on "%s"', $propertyOrRelation, get_class($record)));
     }
 
-    /**
-     * Provides a way for getting property or relation value from the given record.
-     *
-     * @param string $propertyOrRelation
-     *
-     * @return mixed
-     *
-     * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
-     */
     public function filterGet(Doctrine_Record $record, $propertyOrRelation)
     {
         foreach ($this->_aliases as $alias) {
