@@ -1725,7 +1725,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      * @param string $column            field for the WHERE clause
      * @param string|array $value       prepared statement parameter
      * @param int $hydrationMode        Doctrine_Core::HYDRATE_ARRAY or Doctrine_Core::HYDRATE_RECORD
-     * @return Doctrine_Record
+     * @return Doctrine_Record|false
      */
     public function findOneBy($fieldName, $value, $hydrationMode = null)
     {
