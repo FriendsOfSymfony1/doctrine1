@@ -467,11 +467,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         if (in_array('*', $fields)) {
             $fields = $table->getFieldNames();
         } else {
-            $driverClassName = $this->_hydrator->getHydratorDriverClassName();
-            // only auto-add the primary key fields if this query object is not
-            // a subquery of another query object or we're using a child of the Object Graph
-            // hydrator
-            if ( ! $this->_isSubquery && is_subclass_of($driverClassName, 'Doctrine_Hydrator_Graph')) {
+            if ($this->shouldAutoSelectIdentifiers()) {
                 $fields = array_unique(array_merge((array) $table->getIdentifier(), $fields));
             }
         }
@@ -499,6 +495,18 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
         $this->_neededTables[] = $tableAlias;
 
         return implode(', ', $sql);
+    }
+
+    /*
+     * only auto-add the primary key fields if this query object is not
+     * a subquery of another query object or we're using
+     * a child of the Object Graph hydrator
+     */
+    private function shouldAutoSelectIdentifiers()
+    {
+        $driverClassName = $this->_hydrator->getHydratorDriverClassName();
+
+        return ! $this->_isSubquery && is_subclass_of($driverClassName, 'Doctrine_Hydrator_Graph');
     }
 
     /**
@@ -612,6 +620,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
 
             $terms = $this->_tokenizer->sqlExplode($reference, ' ');
             $pos   = strpos($terms[0], '(');
+            $isColumnSelect = $pos === false;
 
             if (count($terms) > 1 || $pos !== false) {
                 $expression = array_shift($terms);
@@ -644,6 +653,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 $this->_expressionMap[$alias][0] = $expression;
 
                 $this->_queryComponents[$componentAlias]['agg'][$index] = $alias;
+                $this->_queryComponents[$componentAlias]['has_selected_column'] ??= false;
+                $this->_queryComponents[$componentAlias]['has_selected_column'] |= $isColumnSelect;
 
                 if (preg_match('/^([^\(]+)\.(\'?)(.*?)(\'?)$/', $expression, $field)) {
                     $this->_queryComponents[$componentAlias]['agg_field'][$index] = $field[3];
@@ -663,6 +674,27 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable
                 }
 
                 $this->_pendingFields[$componentAlias][] = $field;
+            }
+        }
+
+        $this->appendRelationIdentifierOnSqlSelect();
+    }
+
+    private function appendRelationIdentifierOnSqlSelect()
+    {
+        if ($this->shouldAutoSelectIdentifiers()) {
+            foreach ($this->_queryComponents as $componentAlias => $queryComponent) {
+                if (
+                    isset($queryComponent['relation'])
+                    && isset($queryComponent['agg'])
+                    && !empty($queryComponent['has_selected_column'])
+                ) {
+                    $table = $queryComponent['table'];
+
+                    foreach ((array) $table->getIdentifier() as $field) {
+                        $this->_pendingFields[$componentAlias][] = $field;
+                    }
+                }
             }
         }
     }
