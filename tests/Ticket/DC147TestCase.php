@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_DC147_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC147_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -50,8 +50,8 @@ DC147_Multiple:
     name: isbn2
   ISBN3:
     name: isbn3
-DC147_Product: 
-  Product_1: 
+DC147_Product:
+  Product_1:
     name: book3
     MultipleValues:
       Multi_1:
@@ -60,7 +60,7 @@ DC147_Product:
       Multi_2:
         value: 232323233
         Multiple: ISBN3
-  Product_2: 
+  Product_2:
     name: book4
     MultipleValues:
       Multi_3:

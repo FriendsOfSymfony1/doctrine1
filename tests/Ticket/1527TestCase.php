@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_1527_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1527_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
@@ -50,9 +50,9 @@ END;
         $schema = $import->buildSchema($yml, 'yml');
         $this->assertEqual($schema['Ticket_1527_User']['columns']['username']['extra']['test'], '123');
 
-        $path = dirname(__FILE__) . '/../tmp';
+        $path = dirname(__DIR__) . '/tmp';
         $import->importSchema($yml, 'yml', $path);
-        
+
         require_once($path . '/generated/BaseTicket_1527_User.php');
         require_once($path . '/Ticket_1527_User.php');
         $username = Doctrine_Core::getTable('Ticket_1527_User')->getDefinitionOf('username');

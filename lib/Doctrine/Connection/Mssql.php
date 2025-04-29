@@ -108,12 +108,12 @@ class Doctrine_Connection_Mssql extends Doctrine_Connection_Common
      * @param mixed $limit
      * @param mixed $offset
      * @param boolean $isSubQuery
-     * @param Doctrine_Query $queryOrigin
+     * @param Doctrine_Query|null $queryOrigin
      * @link https://github.com/doctrine/dbal/blob/master/lib/Doctrine/DBAL/Platforms/MsSqlPlatform.php#L607
      * @link http://www.toosweettobesour.com/2010/09/16/doctrine-1-2-mssql-alternative-limitpaging/
      * @return string
      */
-    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false, $isSubQuery = false, Doctrine_Query $queryOrigin = null)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false, $isSubQuery = false, ?Doctrine_Query $queryOrigin = null)
     {
         if ($limit === false || !($limit > 0)) {
             return $query;

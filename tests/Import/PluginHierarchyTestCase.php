@@ -55,7 +55,7 @@ WikiTest:
 END;
         
         file_put_contents('wiki.yml', $yml);
-        $path = dirname(__FILE__) . '/tmp/import_builder_test';
+        $path = __DIR__ . '/tmp/import_builder_test';
 
         $import = new Doctrine_Import_Schema();
         $import->setOption('generateTableClasses', true);
@@ -75,11 +75,11 @@ END;
             3 => 'CREATE TABLE wiki_test (id INTEGER PRIMARY KEY AUTOINCREMENT)',
             4 => 'CREATE UNIQUE INDEX wiki_test_translation_sluggable_idx ON wiki_test_translation (slug)',
         );
-            
+
         foreach($sql as $idx => $req) {
             $this->assertEqual($req, $result[$idx]);
-        }        
-        
+        }
+
         Doctrine_Lib::removeDirectories($path);
         unlink('wiki.yml');
     }

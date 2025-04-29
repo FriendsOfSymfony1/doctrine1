@@ -128,29 +128,3 @@ class Doctrine_Migration_TestCase extends Doctrine_UnitTestCase
         }
     }
 }
-
-class MigrationPhonenumber extends Doctrine_Record
-{
-    public function setTableDefinition()
-    {
-        $this->hasColumn('user_id', 'integer');
-        $this->hasColumn('phonenumber', 'string', 255);
-    }
-}
-
-class MigrationUser extends Doctrine_Record
-{
-    public function setTableDefinition()
-    {
-        $this->hasColumn('username', 'string', 255);
-        $this->hasColumn('password', 'string', 255);
-    }
-}
-
-class MigrationProfile extends Doctrine_Record
-{
-    public function setTableDefinition()
-    {
-        $this->hasColumn('name', 'string', 255);
-    }
-}

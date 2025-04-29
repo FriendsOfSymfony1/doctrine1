@@ -123,7 +123,19 @@ class Doctrine_Validator_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue(Doctrine_Validator::isValidType($var, 'object'));
     }
 
-    public function testValidate2() 
+    public function testIsValidLength()
+    {
+        // Test length is less than maximum length
+        $this->assertTrue(Doctrine_Validator::validateLength(1.2345, "decimal", 5));
+
+        // Test null value is less than maximum length
+        $this->assertTrue(Doctrine_Validator::validateLength(null, "decimal", 4));
+
+        // Test length is greater than maximum length
+        $this->assertFalse(Doctrine_Validator::validateLength(1.2345, "decimal", 4));
+    }
+
+    public function testValidate2()
     {
         $test = new ValidatorTest();
         $test->mymixed = "message";

@@ -71,10 +71,10 @@ class Doctrine_Cli
     /**
      * __construct
      *
-     * @param array [$config=array()]
-     * @param object|null [$formatter=null] Doctrine_Cli_Formatter
+     * @param array                       $config
+     * @param Doctrine_Cli_Formatter|null $formatter
      */
-    public function __construct(array $config = array(), Doctrine_Cli_Formatter $formatter = null)
+    public function __construct(array $config = array(), ?Doctrine_Cli_Formatter $formatter = null)
     {
         $this->setConfig($config);
         $this->setFormatter($formatter ? $formatter : new Doctrine_Cli_AnsiColorFormatter());

@@ -20,7 +20,7 @@ Installation
 
 Using [Composer](http://getcomposer.org/doc/00-intro.md) as dependency management:
 
-    composer require friendsofsymfony1/doctrine1 "1.5.*"
+    composer require friendsofsymfony1/doctrine1 "1.4.*"
     composer install
 
 

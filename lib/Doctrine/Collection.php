@@ -811,12 +811,11 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     /**
      * Populate a Doctrine_Collection from an array of data
      *
-     * @param string $array
+     * @param array $array
      * @return void
      */
     public function fromArray($array, $deep = true)
     {
-        $data = array();
         foreach ($array as $rowKey => $row) {
             $this[$rowKey]->fromArray($row, $deep);
         }
@@ -925,10 +924,10 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      * Saves all records of this collection and processes the
      * difference of the last snapshot and the current data
      *
-     * @param Doctrine_Connection $conn     optional connection parameter
+     * @param Doctrine_Connection|null $conn     optional connection parameter
      * @return Doctrine_Collection
      */
-    public function save(Doctrine_Connection $conn = null, $processDiff = true)
+    public function save(?Doctrine_Connection $conn = null, $processDiff = true)
     {
         if ($conn == null) {
             $conn = $this->_table->getConnection();
@@ -960,10 +959,10 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      * Replaces all records of this collection and processes the
      * difference of the last snapshot and the current data
      *
-     * @param Doctrine_Connection $conn     optional connection parameter
+     * @param Doctrine_Connection|null $conn     optional connection parameter
      * @return Doctrine_Collection
      */
-    public function replace(Doctrine_Connection $conn = null, $processDiff = true)
+    public function replace(?Doctrine_Connection $conn = null, $processDiff = true)
     {
         if ($conn == null) {
             $conn = $this->_table->getConnection();
@@ -996,7 +995,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return Doctrine_Collection
      */
-    public function delete(Doctrine_Connection $conn = null, $clearColl = true)
+    public function delete(?Doctrine_Connection $conn = null, $clearColl = true)
     {
         if ($conn == null) {
             $conn = $this->_table->getConnection();

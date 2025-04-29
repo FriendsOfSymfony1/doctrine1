@@ -32,6 +32,10 @@
  */
 class Doctrine_Hydrator_SingleScalarDriver extends Doctrine_Hydrator_Abstract
 {
+    /**
+     * @param mixed $stmt
+     * @return array|mixed
+     */
     public function hydrateResultSet($stmt)
     {
         $result = array();

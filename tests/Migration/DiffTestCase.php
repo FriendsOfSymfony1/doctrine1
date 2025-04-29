@@ -30,13 +30,13 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Migration_Diff_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Migration_Diff_TestCase extends Doctrine_UnitTestCase
 {
     public function testTest()
     {
-        $from = dirname(__FILE__) . '/Diff/schema/from.yml';
-        $to = dirname(__FILE__) . '/Diff/schema/to.yml';
-        $migrationsPath = dirname(__FILE__) . '/Diff/migrations';
+        $from = __DIR__ . '/Diff/schema/from.yml';
+        $to = __DIR__ . '/Diff/schema/to.yml';
+        $migrationsPath = __DIR__ . '/Diff/migrations';
         Doctrine_Lib::makeDirectories($migrationsPath);
 
         $diff = new Doctrine_Migration_Diff($from, $to, $migrationsPath);
@@ -60,7 +60,7 @@ class Doctrine_Migration_Diff_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual(count($files), 2);
         $this->assertTrue(strpos($files[0], '_version1.php'));
         $this->assertTrue(strpos($files[1], '_version2.php'));
-        
+
         $code1 = file_get_contents($files[0]);
         $this->assertTrue(strpos($code1, 'this->dropTable'));
         $this->assertTrue(strpos($code1, 'this->createTable'));

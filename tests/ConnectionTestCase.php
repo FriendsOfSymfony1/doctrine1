@@ -30,10 +30,10 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
 {
 
-    public function testUnknownModule() 
+    public function testUnknownModule()
     {
         try {
             $this->connection->unknown;
@@ -43,7 +43,7 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
         }
     }
 
-    public function testGetModule() 
+    public function testGetModule()
     {
         $this->assertTrue($this->connection->unitOfWork instanceof Doctrine_Connection_UnitOfWork);
         //$this->assertTrue($this->connection->dataDict instanceof Doctrine_DataDict);
@@ -52,7 +52,7 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
         $this->assertTrue($this->connection->export instanceof Doctrine_Export);
     }
 
-    public function testFetchAll() 
+    public function testFetchAll()
     {
         $this->conn->exec('DROP TABLE entity');
         $this->conn->exec('CREATE TABLE entity (id INT, name TEXT)');
@@ -80,16 +80,16 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
     public function testFetchOne()
     {
         $c = $this->conn->fetchOne('SELECT COUNT(1) FROM entity');
-        
+
         $this->assertEqual($c, 2);
-        
+
         $c = $this->conn->fetchOne('SELECT COUNT(1) FROM entity WHERE id = ?', array(1));
-        
+
         $this->assertEqual($c, 1);
     }
-    
 
-    public function testFetchColumn() 
+
+    public function testFetchColumn()
     {
         $a = $this->conn->fetchColumn('SELECT * FROM entity');
 
@@ -105,7 +105,7 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
                             ));
     }
 
-    public function testFetchArray() 
+    public function testFetchArray()
     {
         $a = $this->conn->fetchArray('SELECT * FROM entity');
 
@@ -122,7 +122,7 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
                             ));
     }
 
-    public function testFetchRow() 
+    public function testFetchRow()
     {
         $c = $this->conn->fetchRow('SELECT * FROM entity');
 
@@ -132,24 +132,24 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
                             ));
 
         $c = $this->conn->fetchRow('SELECT * FROM entity WHERE id = ?', array(1));
-        
+
         $this->assertEqual($c, array (
                               'id' => '1',
                               'name' => 'zYne',
                             ));
     }
 
-    public function testFetchPairs() 
+    public function testFetchPairs()
     {
         $this->conn->exec('DROP TABLE entity');
     }
 
-    public function testGetManager() 
+    public function testGetManager()
     {
         $this->assertTrue($this->connection->getManager() === $this->manager);
     }
 
-    public function testDeleteOnTransientRecordIsIgnored() 
+    public function testDeleteOnTransientRecordIsIgnored()
     {
         $user = $this->connection->create('User');
         try {
@@ -159,7 +159,7 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
         }
     }
 
-    public function testGetTable() 
+    public function testGetTable()
     {
         $table = $this->connection->getTable('Group');
         $this->assertTrue($table instanceof Doctrine_Table);
@@ -176,23 +176,23 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
 
     }
 
-    public function testCreate() 
+    public function testCreate()
     {
         $email = $this->connection->create('Email');
         $this->assertTrue($email instanceof Email);
     }
 
-    public function testGetDbh() 
+    public function testGetDbh()
     {
         $this->assertTrue($this->connection->getDbh() instanceof PDO);
     }
 
-    public function testCount() 
+    public function testCount()
     {
         $this->assertTrue(is_integer(count($this->connection)));
     }
 
-    public function testGetIterator() 
+    public function testGetIterator()
     {
         $this->assertTrue($this->connection->getIterator() instanceof ArrayIterator);
     }
@@ -203,12 +203,12 @@ class Doctrine_Connection_TestCase extends Doctrine_UnitTestCase
         $this->assertEqual(Doctrine_Lib::getConnectionStateAsString($this->connection->transaction->getState()), 'open');
     }
 
-    public function testGetTables() 
+    public function testGetTables()
     {
         $this->assertTrue(is_array($this->connection->getTables()));
     }
 
-    public function testRollback() 
+    public function testRollback()
     {
         $this->connection->beginTransaction();
         $this->assertEqual($this->connection->transaction->getTransactionLevel(),1);

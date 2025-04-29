@@ -57,13 +57,9 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
     }
 
     /**
-     * Provides a way for setting property or relation value to the given record.
+     * @return Doctrine_Record
      *
-     * @param string $propertyOrRelation
-     *
-     * @return Doctrine_Record the given record
-     *
-     * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
+     * @throws Doctrine_Record_UnknownPropertyException
      */
     public function filterSet(Doctrine_Record $record, $propertyOrRelation, $value)
     {
@@ -90,13 +86,9 @@ class Doctrine_Record_Filter_Compound extends Doctrine_Record_Filter
     }
 
     /**
-     * Provides a way for getting property or relation value from the given record.
-     *
-     * @param string $propertyOrRelation
-     *
      * @return mixed
      *
-     * @thrown Doctrine_Record_UnknownPropertyException when this way is not available
+     * @throws Doctrine_Record_UnknownPropertyException
      */
     public function filterGet(Doctrine_Record $record, $propertyOrRelation)
     {

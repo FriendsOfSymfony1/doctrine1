@@ -89,7 +89,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
      */
     public static function validateLength($value, $type, $maximumLength)
     {
-        if ($maximumLength === null ) {
+        if ($maximumLength === null || $value === null) {
             return true;
         }
         if ($type == 'timestamp' || $type == 'integer' || $type == 'enum') {

@@ -29,7 +29,7 @@
  * @since       1.1
  * @version     $Revision$
  */
-class Doctrine_Ticket_1617_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_1617_TestCase extends Doctrine_UnitTestCase
 {
     public function testBuildSchema()
     {

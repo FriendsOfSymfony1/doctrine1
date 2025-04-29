@@ -1,29 +1,29 @@
 <?php
 class AdapterMock implements Doctrine_Adapter_Interface {
     private $name;
-    
+
     private $queries = array();
-    
+
     private $exception = array();
-    
+
     private $lastInsertIdFail = false;
 
-    public function __construct($name) 
+    public function __construct($name)
     {
         $this->name = $name;
     }
 
-    public function getName() 
+    public function getName()
     {
         return $this->name;
     }
 
-    public function pop() 
+    public function pop()
     {
         return array_pop($this->queries);
     }
 
-    public function forceException($name, $message = '', $code = 0) 
+    public function forceException($name, $message = '', $code = 0)
     {
         $this->exception = array($name, $message, $code);
     }
@@ -102,7 +102,7 @@ class AdapterMock implements Doctrine_Adapter_Interface {
     }
 
     public function beginTransaction()
-    { 
+    {
         $this->queries[] = 'BEGIN TRANSACTION';
     }
 
@@ -111,8 +111,8 @@ class AdapterMock implements Doctrine_Adapter_Interface {
         $this->queries[] = 'COMMIT';
     }
 
-    public function rollBack() 
-    { 
+    public function rollBack()
+    {
         $this->queries[] = 'ROLLBACK';
     }
 
@@ -142,7 +142,7 @@ class AdapterMock implements Doctrine_Adapter_Interface {
 class AdapterStatementMock
 {
     private $mock;
-    
+
     private $query;
 
     public function __construct(AdapterMock $mock, $query)
@@ -180,6 +180,7 @@ class Doctrine_Driver_UnitTestCase extends UnitTestCase
     protected $manager;
     protected $conn;
     protected $adapter;
+    /** @var Doctrine_Export */
     protected $export;
     protected $dataDict;
     protected $transaction;
@@ -224,12 +225,12 @@ class Doctrine_Driver_UnitTestCase extends UnitTestCase
 
             if ($this->adapter->getName() == 'oci')
                 $name = 'Oracle';
-            
+
             $tx = 'Doctrine_Transaction_' . ucwords($name);
             $dataDict = 'Doctrine_DataDict_' . ucwords($name);
-            
+
             $exc  = 'Doctrine_Connection_' . ucwords($name) . '_Exception';
-            
+
             $this->exc = new $exc();
             if (class_exists($tx))
                 $this->transaction = new $tx($this->conn);

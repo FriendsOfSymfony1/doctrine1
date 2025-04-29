@@ -30,7 +30,7 @@
  * @since       1.0
  * @version     $Revision$
  */
-class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase 
+class Doctrine_Ticket_DC23_TestCase extends Doctrine_UnitTestCase
 {
     public function prepareTables()
     {
@@ -54,8 +54,8 @@ Ticket_DC23_BlogPost:
         title: Test
         body: Testing
 
-Ticket_DC23_User: 
-  User_1: 
+Ticket_DC23_User:
+  User_1:
     name: jwage
     Contact:
       name: Test Contact

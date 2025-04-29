@@ -52,7 +52,7 @@ class GroupTest extends UnitTestCase
         }
         return true;
     }
-    public function run(DoctrineTest_Reporter $reporter = null, $filter = null)
+    public function run(?DoctrineTest_Reporter $reporter = null, $filter = null)
     {
         set_time_limit(900);
 

@@ -33,6 +33,9 @@
  */
 class Doctrine_Hydrator_NoneDriver extends Doctrine_Hydrator_Abstract
 {
+    /**
+     * @return mixed
+     */
     public function hydrateResultSet($stmt)
     {
         return $stmt->fetchAll(PDO::FETCH_NUM);

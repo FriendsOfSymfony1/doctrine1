@@ -34,9 +34,7 @@
 class Doctrine_Record_Filter_Standard extends Doctrine_Record_Filter
 {
     /**
-     * @param string $propertyOrRelation
-     *
-     * @thrown Doctrine_Record_UnknownPropertyException
+     * @return Doctrine_Record the given record
      */
     public function filterSet(Doctrine_Record $record, $propertyOrRelation, $value)
     {
@@ -44,9 +42,7 @@ class Doctrine_Record_Filter_Standard extends Doctrine_Record_Filter
     }
 
     /**
-     * @param string $propertyOrRelation
-     *
-     * @thrown Doctrine_Record_UnknownPropertyException
+     * @return mixed
      */
     public function filterGet(Doctrine_Record $record, $propertyOrRelation)
     {

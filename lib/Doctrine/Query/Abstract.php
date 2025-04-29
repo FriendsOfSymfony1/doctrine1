@@ -206,6 +206,16 @@ abstract class Doctrine_Query_Abstract
      *
      *          map                 the name of the column / aggregate value this
      *                              component is mapped to a collection
+     *
+     *          agg_field     the field names for each aggregates
+     *                              Example:
+     *                                  DQL: COMPONENT.FIELD as ALIAS
+     *                                  SQL: TABLE.COLUMN as TABLE__0
+     *                                  $_queryComponents
+     *                                      agg:
+     *                                          0: ALIAS
+     *                                      agg_field:
+     *                                          0: FIELD
      */
     protected $_queryComponents = array();
 
@@ -282,14 +292,15 @@ abstract class Doctrine_Query_Abstract
     /**
      * Constructor.
      *
-     * @param Doctrine_Connection        $connection The connection object the query will use.
-     * @param Doctrine_Hydrator_Abstract $hydrator   The hydrator that will be used for generating result sets.
+     * @param Doctrine_Connection|null        $connection The connection object the query will use.
+     * @param Doctrine_Hydrator_Abstract|null $hydrator   The hydrator that will be used for generating result sets.
      *
      * @throws Doctrine_Connection_Exception
      */
-    public function __construct(Doctrine_Connection $connection = null,
-            Doctrine_Hydrator_Abstract $hydrator = null)
-    {
+    public function __construct(
+        ?Doctrine_Connection $connection = null,
+        ?Doctrine_Hydrator_Abstract $hydrator = null
+    ) {
         if ($connection === null) {
             $connection = Doctrine_Manager::getInstance()->getCurrentConnection();
         } else {
@@ -1259,6 +1270,9 @@ abstract class Doctrine_Query_Abstract
             if (isset($components['agg'])) {
                 $queryComponents[$alias]['agg'] = $components['agg'];
             }
+            if (isset($components['agg_field'])) {
+                $queryComponents[$alias]['agg_field'] = $components['agg_field'];
+            }
             if (isset($components['map'])) {
                 $queryComponents[$alias]['map'] = $components['map'];
             }
@@ -1288,6 +1302,9 @@ abstract class Doctrine_Query_Abstract
             }
             if (isset($components['agg'])) {
                 $componentInfo[$alias]['agg'] = $components['agg'];
+            }
+            if (isset($components['agg_field'])) {
+                $componentInfo[$alias]['agg_field'] = $components['agg_field'];
             }
             if (isset($components['map'])) {
                 $componentInfo[$alias]['map'] = $components['map'];
@@ -1901,10 +1918,8 @@ abstract class Doctrine_Query_Abstract
 
     /**
      * Resets all the sql parts.
-     *
-     * @return void
      */
-    protected function clear()
+    protected function clear(): void
     {
         $this->_sqlParts = array(
                     'select'    => array(),

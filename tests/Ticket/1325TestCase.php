@@ -41,6 +41,8 @@ class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase
 
     public function testShouldInsertWithoutAlias()
     {
+        $now = time();
+
         $elem = new Ticket_1325_TableName_NoAlias();
         $elem->id = 1;
         $elem->save();
@@ -49,13 +51,14 @@ class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase
             ->from('Ticket_1325_TableName_NoAlias')
             ->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-        $now = time();
         $time = strtotime($res['event_date']);
         $this->assertTrue(($now + 5 >= $time) && ($time >= $now));
     }
 
     public function testShouldInsertWithAlias()
     {
+        $now = time();
+
         $elem = new Ticket_1325_TableName_Aliased();
         $elem->id = 1;
         $elem->save();
@@ -64,9 +67,8 @@ class Doctrine_Ticket_1325_TestCase extends Doctrine_UnitTestCase
             ->from('Ticket_1325_TableName_Aliased')
             ->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-        $now = time();
         $time = strtotime($res['eventDate']);
-        $this->assertTrue(strtotime($res['eventDate']) > 0);
+        $this->assertTrue(($now + 5 >= $time) && ($time >= $now));
     }
 }
 

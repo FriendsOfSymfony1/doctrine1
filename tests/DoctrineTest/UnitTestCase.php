@@ -2,9 +2,7 @@
 class UnitTestCase
 {
     protected $_passed = 0;
-    
     protected $_failed = 0;
-    
     protected $_messages = array();
 
     protected static $_passesAndFails = array('passes' => array(), 'fails' => array());
@@ -115,7 +113,7 @@ class UnitTestCase
         }
     }
 
-    public function pass() 
+    public function pass()
     {
         $class = get_class($this);
         if ( ! isset(self::$_passesAndFails['fails'][$class])) {
@@ -126,7 +124,7 @@ class UnitTestCase
 
     public function fail($message = "")
     {
-        $this->_fail($message);    
+        $this->_fail($message);
     }
 
     public function _fail($message = "")
@@ -157,7 +155,7 @@ class UnitTestCase
         self::$_passesAndFails['fails'][$class] = $class;
     }
 
-    public function run(DoctrineTest_Reporter $reporter = null, $filter = null)
+    public function run(?DoctrineTest_Reporter $reporter = null, $filter = null)
     {
         foreach (get_class_methods($this) as $method) {
             if ($this->isTestMethod($method)) {
@@ -166,7 +164,7 @@ class UnitTestCase
         }
     }
 
-    public function getMessages() 
+    public function getMessages()
     {
         return $this->_messages;
     }
@@ -183,7 +181,7 @@ class UnitTestCase
 
     public function getPassesAndFailsCachePath()
     {
-        $dir = dirname(__FILE__) . '/doctrine_tests';
+        $dir = __DIR__ . '/doctrine_tests';
         if ( ! is_dir($dir)) {
             mkdir($dir, 0777, true);
         }

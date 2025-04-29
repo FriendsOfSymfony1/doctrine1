@@ -187,7 +187,7 @@ class Doctrine_Migration
         }
 
         if ($class === false) {
-            return false;
+            return;
         }
 
         if (empty($this->_migrationClasses)) {
@@ -305,17 +305,15 @@ class Doctrine_Migration
      * migrate to. It will automatically know whether you are migrating up or down
      * based on the current version of the database.
      *
-     * @param  integer $to       Version to migrate to
-     * @param  boolean $dryRun   Whether or not to run the migrate process as a dry run
-     * @return integer $to       Version number migrated to
+     * @param  int       $to       Version to migrate to
+     * @param  bool      $dryRun   Whether or not to run the migrate process as a dry run
+     * @return int|false           Returns the migration version reached by the migration, false otherwise
      * @throws Doctrine_Exception
      */
     public function migrate($to = null, $dryRun = false)
     {
         $this->clearErrors();
-
         $this->_createMigrationTable();
-
         $this->_connection->beginTransaction();
 
         try {
@@ -335,24 +333,22 @@ class Doctrine_Migration
 
             if ($dryRun) {
                 return false;
-            } else {
-                $this->_throwErrorsException();
             }
-        } else {
-            if ($dryRun) {
-                $this->_connection->rollback();
-                if ($this->hasErrors()) {
-                    return false;
-                } else {
-                    return $to;
-                }
-            } else {
-                $this->_connection->commit();
-                $this->setCurrentVersion($to);
-                return $to;
-            }
+            $this->_throwErrorsException();
         }
-        return false;
+
+        if ($dryRun) {
+            $this->_connection->rollback();
+            if ($this->hasErrors()) {
+                return false;
+            }
+            return $to;
+        }
+
+        $this->_connection->commit();
+        $this->setCurrentVersion($to);
+
+        return $to;
     }
 
     /**
@@ -435,12 +431,12 @@ class Doctrine_Migration
     }
 
     /**
-     * Throw an exception with all the errors trigged during the migration
+     * Throw an exception with all the errors triggered during the migration
      *
-     * @return void
-     * @throws Doctrine_Migration_Exception $e
+     * @return never-returns
+     * @throws Doctrine_Migration_Exception
      */
-    protected function _throwErrorsException()
+    protected function _throwErrorsException(): void
     {
         $messages = array();
         $num = 0;

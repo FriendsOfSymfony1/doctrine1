@@ -32,6 +32,7 @@
  */
 class Doctrine_Collection_Iterator_Offset extends Doctrine_Collection_Iterator
 {
+    #[\ReturnTypeWillChange]
     public function valid()
     { }
 }

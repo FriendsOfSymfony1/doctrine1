@@ -66,7 +66,7 @@ class Doctrine_Locator_Injectable
     /**
      * getLocator
      * returns the locator associated with this object
-     * 
+     *
      * if there are no locator locally associated then
      * this method tries to fetch the current global locator
      *
@@ -101,7 +101,7 @@ class Doctrine_Locator_Injectable
             } else {
                 // get the name of the concrete implementation
                 $concreteImpl = $this->_resources[$name];
-                
+
                 return $this->getLocator()->locate($concreteImpl);
             }
         } else {
@@ -115,13 +115,13 @@ class Doctrine_Locator_Injectable
      *
      * @param string $name      the name of the resource to bind
      * @param mixed $value      the value of the resource
-     * @return Doctrine_Locator   this object
+     * @return static           this object
      */
-    public function bind($name, $resource)
+    public function bind($name, $value)
     {
-        $this->_resources[$name] = $resource;
-        
-        return $this;    
+        $this->_resources[$name] = $value;
+
+        return $this;
     }
 
     /**

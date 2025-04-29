@@ -82,9 +82,9 @@ class Doctrine_Tree_NestedSet extends Doctrine_Tree implements Doctrine_Tree_Int
      * the records id will be assigned to the root id. You must use numeric columns for the id
      * and root id columns.
      *
-     * @param object $record        instance of Doctrine_Record
+     * @param Doctrine_Record|null $record        instance of Doctrine_Record
      */
-    public function createRoot(Doctrine_Record $record = null)
+    public function createRoot(?Doctrine_Record $record = null)
     {
         if ($this->getAttribute('hasManyRoots')) {
             if ( ! $record || ( ! $record->exists() && ! $record->getNode()->getRootValue())
