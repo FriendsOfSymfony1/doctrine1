@@ -1725,11 +1725,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * this method also saves the related components
      *
-     * @param Doctrine_Connection $conn     optional connection parameter
-     * @throws Exception                    if record is not valid and validation is active
+     * @param Doctrine_Connection|null $conn optional connection parameter
      * @return void
+     * @throws Exception if record is not valid and validation is active
      */
-    public function save(?Doctrine_Connection $conn = null)
+    public function save(?Doctrine_Connection $conn = null): void
     {
         if ($conn === null) {
             $conn = $this->_table->getConnection();
@@ -1743,10 +1743,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * throw an exception when validation fails but returns TRUE on
      * success or FALSE on failure.
      *
-     * @param Doctrine_Connection $conn                 optional connection parameter
-     * @return TRUE if the record was saved sucessfully without errors, FALSE otherwise.
+     * @param Doctrine_Connection|null $conn optional connection parameter
+     * @return bool TRUE if the record was saved successfully without errors, FALSE otherwise.
+     * @throws Exception
      */
-    public function trySave(?Doctrine_Connection $conn = null) {
+    public function trySave(?Doctrine_Connection $conn = null): bool
+    {
         try {
             $this->save($conn);
             return true;
