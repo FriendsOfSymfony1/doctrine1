@@ -78,16 +78,29 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         if (false !== $this->_options['unique']) {
             $record = $event->getInvoker();
             $name = $record->getTable()->getFieldName($this->_options['name']);
+            $modified = $record->getModified();
+            $fieldsModified = false;
 
+            // Check if any of the slug fields have been modified
+            foreach ($this->_options['fields'] as $field) {
+                if (array_key_exists($field, $modified)) {
+                    $fieldsModified = true;
+                    break;
+                }
+            }
+
+            // Only regenerate slug if:
+            // 1. No slug exists, OR
+            // 2. canUpdate is enabled AND slug fields were actually modified
             if ( ! $record->$name || (
                 false !== $this->_options['canUpdate'] &&
-                ! array_key_exists($name, $record->getModified())
+                $fieldsModified
             )) {
                 $record->$name = $this->buildSlugFromFields($record);
             } else if ( ! empty($record->$name) &&
                 false !== $this->_options['canUpdate'] &&
-                array_key_exists($name, $record->getModified()
-            )) {
+                array_key_exists($name, $modified)
+            ) {
                 $record->$name = $this->buildSlugFromSlugField($record);
             }
         }
