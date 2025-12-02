@@ -2589,7 +2589,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $localFieldDef  = $rel->getAssociationTable()->getColumnDefinition($localFieldName);
 
             if ($localFieldDef['type'] == 'integer') {
-                $identifier = (integer) $identifier;
+                $identifier = (int) $identifier;
             }
 
             $foreignFieldName = $rel->getForeignFieldName();
@@ -2597,7 +2597,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             if ($foreignFieldDef['type'] == 'integer') {
                 foreach ($ids as $i => $id) {
-                    $ids[$i] = (integer) $id;
+                    $ids[$i] = (int) $id;
                 }
             }
 

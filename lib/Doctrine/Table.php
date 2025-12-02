@@ -2374,7 +2374,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
                     return explode(',', $value);
                 break;
                 case 'boolean':
-                    return (boolean) $value;
+                    return (bool) $value;
                 break;
                 case 'array':
                 case 'object':

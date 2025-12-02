@@ -50,7 +50,7 @@ class Doctrine_Validator_Unsigned extends Doctrine_Validator_Driver
             return false;
         }
 
-        if ((double) $value >= 0)
+        if ((float) $value >= 0)
         {
             return true;
         }
