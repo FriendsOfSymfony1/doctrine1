@@ -63,7 +63,7 @@ class Doctrine_Ticket_585_TestCase extends Doctrine_UnitTestCase
     public function test_hydrateArray_withAllColumnsAliased_thenResultsHasAllRecords()
     {
         $hydrateType = Doctrine_Core::HYDRATE_ARRAY;
-        $expectedKeys = array('aliasId', 'aliasName');
+        $expectedKeys = array('id', 'aliasId', 'aliasName');
 
         $this->doTestWithAllColumnsAliased($hydrateType, $expectedKeys);
     }
