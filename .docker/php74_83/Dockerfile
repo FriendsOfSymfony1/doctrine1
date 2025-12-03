@@ -1,27 +1,21 @@
-ARG PHP_TAG
-FROM php:${PHP_TAG}
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-cli
 
-RUN set -eux; \
-  codename='jessie'; \
-  { \
-    echo "deb http://archive.debian.org/debian ${codename} main"; \
-    echo "deb http://archive.debian.org/debian ${codename}-backports main"; \
-    echo "deb http://archive.debian.org/debian-security ${codename}/updates main"; \
-  } > /etc/apt/sources.list;
+RUN docker-php-ext-install pdo
+RUN docker-php-ext-install pdo_mysql
 
+# Install mbstring PHP extension
+#
 RUN set -eux; \
   apt-get update; \
   apt-get install -y --force-yes --no-upgrade --no-install-recommends \
-    ca-certificates \
+    libonig-dev \
   ; \
   \
   apt-get clean; \
   rm -rf /var/lib/apt/lists/*; \
-  :;
-
-RUN docker-php-ext-install pdo
-RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install mbstring
+  \
+  docker-php-ext-install mbstring
 
 # Install APCu PHP extension
 #
@@ -31,10 +25,6 @@ RUN set -eux; \
   packageName=apcu; \
   packageVersion=${APCU_VERSION}; \
   packageFile=${packageName}-${packageVersion}.tgz; \
-  \
-  if test x"4.0.11" = x"${packageVersion}"; then \
-    packageSha256sum=454f302ec13a6047ca4c39e081217ce5a61bbea815aec9c1091fb849e70b4d00; \
-  else :; fi; \
   \
   if test x"5.1.23" = x"${packageVersion}"; then \
     packageSha256sum=67ee7464ccad2335c3fa4aeb0b8edbcf6d8344feea7922620c6a13015d604482; \
@@ -66,12 +56,16 @@ RUN set -eux; \
   packageVersion=${MEMCACHE_VERSION}; \
   packageFile=${packageName}-${packageVersion}.tgz; \
   \
-  if test x"3.0.8" = x"${packageVersion}"; then \
-    packageSha256sum=2cae5b423ffbfd33a259829849f6000d4db018debe3e29ecf3056f06642e8311; \
+  if test x"4.0.5.2" = x"${packageVersion}"; then \
+      packageSha256sum=7b7667813baea003671f174bbec849e43ff235a8ea4ab7e36c3a0380c2a9ed63; \
   else :; fi; \
   \
-  if test x"4.0.5.2" = x"${packageVersion}"; then \
-    packageSha256sum=7b7667813baea003671f174bbec849e43ff235a8ea4ab7e36c3a0380c2a9ed63; \
+  if test x"8.0" = x"${packageVersion}"; then \
+      packageSha256sum=defe33e6f7831d82b7283b95e14a531070531acbf21278f3f0d7050505cf3395; \
+  else :; fi; \
+  \
+  if test x"8.2" = x"${packageVersion}"; then \
+      packageSha256sum=b3f0640eacdeb9046c6c86a1546d7fb8a4e9f219e5d9a36a287e59b2dd8208e5; \
   else :; fi; \
   \
   if test x"" = x"${packageVersion}"; then \
@@ -102,6 +96,22 @@ RUN set -eux; \
   apt-get clean; \
   rm -rf /var/lib/apt/lists/*; \
   rm -r /tmp/pear
+
+# For consistent mime type file guesser
+RUN set -eux; \
+  distFilePath=`which file`; \
+  \
+  mv ${distFilePath} ${distFilePath}.dist; \
+  { \
+    echo '#! /bin/sh -eu'; \
+    echo ''; \
+    echo "${distFilePath}"'.dist "$@" | sed -e s,application/x-pie-executable,application/x-executable,g'; \
+  } | tee ${distFilePath}; \
+  \
+  chmod +x ${distFilePath}; \
+  \
+  file /bin/ls --mime | grep application/x-executable; \
+  :;
 
 # Install composer
 #
