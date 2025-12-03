@@ -1,0 +1,35 @@
+name: Git Archive Content Check
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - .github/workflows/archive-validation.yml
+      - .ci/github/archive_allow.txt
+      - ./*
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/archive-validation.yml
+      - .ci/github/archive_allow.txt
+      - ./*
+
+jobs:
+  archive-validation:
+    name: Git Archive Content Check
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: number-of-changed-files
+        run: |
+          echo "NO_OF_FILES_CHANGED_IN_ROOT=$(.ci/github/files_between_commits.sh origin/$GITHUB_BASE_REF $GITHUB_SHA | .ci/github/number_of_files_changed_in_root.sh)" >> $GITHUB_ENV
+
+      - run: |
+          git archive -o archive.tar $GITHUB_SHA && sh .ci/github/validate_archive.sh archive.tar
+        if: ${{ env.NO_OF_FILES_CHANGED_IN_ROOT > 0 }}
+          
