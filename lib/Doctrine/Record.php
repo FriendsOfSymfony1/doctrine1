@@ -1710,10 +1710,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
     /**
      * resets pending record unlinks
-     *
-     * @return void
      */
-    public function resetPendingUnlinks()
+    public function resetPendingUnlinks(): void
     {
         $this->_pendingUnlinks = array();
     }
@@ -1726,7 +1724,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * this method also saves the related components
      *
      * @param Doctrine_Connection|null $conn optional connection parameter
-     * @return void
      * @throws Exception if record is not valid and validation is active
      */
     public function save(?Doctrine_Connection $conn = null): void
@@ -1785,11 +1782,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     /**
      * retrieves an array of modified fields and associated new values.
      *
-     * @param boolean $old      pick the old values (instead of the new ones)
-     * @param boolean $last     pick only lastModified values (@see getLastModified())
-     * @return array $a
+     * @param bool $old  pick the old values (instead of the new ones)
+     * @param bool $last pick only lastModified values (@see getLastModified())
+     *
+     * @return array<string, mixed>
      */
-    public function getModified($old = false, $last = false)
+    public function getModified(bool $old = false, bool $last = false): array
     {
         $a = array();
 
@@ -1803,16 +1801,18 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $a[$fieldName] = $this->_data[$fieldName];
             }
         }
+
         return $a;
     }
 
     /**
      * returns an array of the modified fields from the last transaction.
      *
-     * @param boolean $old      pick the old values (instead of the new ones)
-     * @return array
+     * @param bool $old pick the old values (instead of the new ones)
+     *
+     * @return array<string, mixed>
      */
-    public function getLastModified($old = false)
+    public function getLastModified(bool $old = false): array
     {
         return $this->getModified($old, true);
     }
