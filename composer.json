@@ -26,6 +26,9 @@
         "ext-pdo": "*",
         "ext-zlib": "*"
     },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10"
+    },
     "support": {
         "issues": "https://github.com/FriendsOfSymfony1/doctrine1/issues",
         "source": "https://github.com/FriendsOfSymfony1/doctrine1"
@@ -42,5 +45,12 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "analyse": [
+            "@phpstan83"
+        ],
+        "phpstan74": "phpstan analyse -c tests/StaticAnalysis/phpstan-74.neon --memory-limit=500M",
+        "phpstan83": "phpstan analyse -c tests/StaticAnalysis/phpstan-83.neon --memory-limit=500M"
     }
 }

@@ -6,3 +6,5 @@
 /docker-compose.yml
 /tests export-ignore
 /tools export-ignore
+
+/phpstan.dist.neon export-ignore

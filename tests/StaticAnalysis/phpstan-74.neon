@@ -1,0 +1,6 @@
+parameters:
+    phpVersion: 70400
+
+includes:
+    - phpstan-params.neon
+    - phpstan-baseline-74.php
