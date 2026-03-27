@@ -905,6 +905,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * prepare
      *
      * @param string $statement
+     * @return Doctrine_Connection_Statement
      */
     public function prepare($statement)
     {
@@ -995,7 +996,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @param string $query     sql query
      * @param array $params     query parameters
      *
-     * @return PDOStatement|Doctrine_Adapter_Statement
+     * @return PDOStatement|Doctrine_Adapter_Statement|Doctrine_Connection_Statement
      */
     public function execute($query, array $params = array())
     {
