@@ -42,7 +42,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      * the constructor
      *
      * @param Doctrine_Manager $manager
-     * @param PDO|Doctrine_Adapter $adapter     database handler
+     * @param PDO|Doctrine_Adapter_Interface $adapter     database handler
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
