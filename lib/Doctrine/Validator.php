@@ -118,18 +118,14 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     }
 
     /**
-     * Get length of passed string. Will use multibyte character functions if they exist
+     * Get length of passed string.
      *
      * @param string $string
      * @return integer $length
      */
     public static function getStringLength($string)
     {
-        if (function_exists('mb_strlen')) {
-            return mb_strlen((string) $string, 'utf8');
-        } else {
-            return strlen(mb_convert_encoding((string) $string, 'ISO-8859-1', 'UTF-8'));
-        }
+        return mb_strlen((string) $string, 'utf8');
     }
 
     /**
